@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "Sistema de Vales Electrónicos BAK UP",
+    "tagline": "Conectando alimentos excedentes con quienes más los necesitan"
+  },
+  "common": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "remove": "Quitar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar"
+  },
+  "auth": {
+    "selectRole": "Seleccione su rol",
+    "vendor": "Vendedor de alimentos / Tienda",
+    "vcse": "Organización VCSE",
+    "recipient": "Receptor de vales",
+    "vendorDesc": "Done alimentos excedentes y acepte vales",
+    "vcseDesc": "Administre vales para familias vulnerables",
+    "recipientDesc": "Explore y canjee vales de alimentos",
+    "loginTitle": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "registerHere": "Regístrate aquí",
+    "forgotPassword": "¿Olvidaste tu contraseña?"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "overview": "Resumen",
+    "myVouchers": "Mis vales",
+    "browseToGo": "Explorar para llevar",
+    "shoppingCart": "Carrito de compras",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "activeBalance": "Saldo activo",
+    "activeVouchers": "Vales activos",
+    "redeemed": "Canjeados",
+    "emptyCart": "Tu carrito está vacío",
+    "noToGoItems": "No hay artículos para llevar disponibles en este momento",
+    "redeemVouchers": "Canjear vales",
+    "toGo": "Para llevar",
+    "issueVouchers": "Emitir vales"
+  },
+  "voucher": {
+    "title": "Vales",
+    "balance": "Saldo",
+    "status": "Estado",
+    "active": "Activo",
+    "used": "Usado",
+    "expired": "Expirado",
+    "validUntil": "Válido hasta",
+    "qrCode": "Código QR",
+    "showQR": "Mostrar código QR",
+    "hideQR": "Ocultar código QR"
+  },
+  "toGo": {
+    "title": "Explorar artículos para llevar disponibles",
+    "noItems": "No hay artículos para llevar disponibles en este momento",
+    "addToCart": "Agregar al carrito",
+    "quantity": "Cantidad",
+    "available": "disponible",
+    "category": "Categoría",
+    "shop": "Tienda",
+    "description": "Descripción",
+    "price": "Precio",
+    "per": "por"
+  },
+  "cart": {
+    "title": "Carrito de compras",
+    "empty": "Tu carrito está vacío",
+    "browseItems": "Explorar artículos para llevar",
+    "continueShopping": "Continuar comprando",
+    "viewVouchers": "Ver mis vales",
+    "nextSteps": "Próximos pasos",
+    "step1": "Revise los artículos de su carrito arriba",
+    "step2": "Visite las ubicaciones de las tiendas para recoger sus artículos",
+    "step3": "Muestre su código QR de vale en la tienda para completar la compra",
+    "step4": "El saldo de su vale se deducirá en la tienda"
+  },
+  "categories": {
+    "bakery": "Panadería",
+    "fruits": "Frutas",
+    "vegetables": "Verduras",
+    "dairy": "Lácteos",
+    "meat": "Carne",
+    "cannedGoods": "Enlatados",
+    "freshProduce": "Productos frescos",
+    "other": "Otro"
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "Inglés",
+    "ar": "Árabe",
+    "fr": "Francés",
+    "es": "Español",
+    "pl": "Polaco"
+  }
+}

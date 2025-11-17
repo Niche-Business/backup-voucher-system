@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "System Bonów Elektronicznych BAK UP",
+    "tagline": "Łączenie nadwyżek żywności z tymi, którzy najbardziej jej potrzebują"
+  },
+  "common": {
+    "email": "E-mail",
+    "password": "Hasło",
+    "signIn": "Zaloguj się",
+    "signOut": "Wyloguj się",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "add": "Dodaj",
+    "remove": "Usuń",
+    "close": "Zamknij",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces",
+    "confirm": "Potwierdź",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "submit": "Wyślij"
+  },
+  "auth": {
+    "selectRole": "Wybierz swoją rolę",
+    "vendor": "Sprzedawca żywności / Sklep",
+    "vcse": "Organizacja VCSE",
+    "recipient": "Odbiorca bonów",
+    "vendorDesc": "Przekaż nadwyżki żywności i akceptuj bony",
+    "vcseDesc": "Zarządzaj bonami dla rodzin w trudnej sytuacji",
+    "recipientDesc": "Przeglądaj i realizuj bony żywnościowe",
+    "loginTitle": "Logowanie",
+    "noAccount": "Nie masz konta?",
+    "registerHere": "Zarejestruj się tutaj",
+    "forgotPassword": "Zapomniałeś hasła?"
+  },
+  "dashboard": {
+    "welcome": "Witaj",
+    "overview": "Przegląd",
+    "myVouchers": "Moje bony",
+    "browseToGo": "Przeglądaj na wynos",
+    "shoppingCart": "Koszyk",
+    "profile": "Profil",
+    "settings": "Ustawienia",
+    "activeBalance": "Aktywne saldo",
+    "activeVouchers": "Aktywne bony",
+    "redeemed": "Zrealizowane",
+    "emptyCart": "Twój koszyk jest pusty",
+    "noToGoItems": "Brak dostępnych produktów na wynos w tej chwili",
+    "redeemVouchers": "Zrealizuj bony",
+    "toGo": "Na wynos",
+    "issueVouchers": "Wydaj bony"
+  },
+  "voucher": {
+    "title": "Bony",
+    "balance": "Saldo",
+    "status": "Status",
+    "active": "Aktywny",
+    "used": "Użyty",
+    "expired": "Wygasły",
+    "validUntil": "Ważny do",
+    "qrCode": "Kod QR",
+    "showQR": "Pokaż kod QR",
+    "hideQR": "Ukryj kod QR"
+  },
+  "toGo": {
+    "title": "Przeglądaj dostępne artykuły na wynos",
+    "noItems": "Brak dostępnych artykułów na wynos w tym momencie",
+    "addToCart": "Dodaj do koszyka",
+    "quantity": "Ilość",
+    "available": "dostępne",
+    "category": "Kategoria",
+    "shop": "Sklep",
+    "description": "Opis",
+    "price": "Cena",
+    "per": "za"
+  },
+  "cart": {
+    "title": "Koszyk",
+    "empty": "Twój koszyk jest pusty",
+    "browseItems": "Przeglądaj artykuły na wynos",
+    "continueShopping": "Kontynuuj zakupy",
+    "viewVouchers": "Zobacz moje bony",
+    "nextSteps": "Następne kroki",
+    "step1": "Przejrzyj artykuły w koszyku powyżej",
+    "step2": "Odwiedź lokalizacje sklepów, aby odebrać swoje artykuły",
+    "step3": "Pokaż kod QR bonu w sklepie, aby sfinalizować zakup",
+    "step4": "Saldo Twojego bonu zostanie odliczone w sklepie"
+  },
+  "categories": {
+    "bakery": "Piekarnia",
+    "fruits": "Owoce",
+    "vegetables": "Warzywa",
+    "dairy": "Nabiał",
+    "meat": "Mięso",
+    "cannedGoods": "Konserwy",
+    "freshProduce": "Świeże produkty",
+    "other": "Inne"
+  },
+  "language": {
+    "select": "Wybierz język",
+    "en": "Angielski",
+    "ar": "Arabski",
+    "fr": "Francuski",
+    "es": "Hiszpański",
+    "pl": "Polski"
+  }
+}

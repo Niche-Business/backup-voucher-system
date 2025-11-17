@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import './i18n'
 import LandingPage from './LandingPage'
+import LanguageSelector from './components/LanguageSelector'
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -21,9 +24,17 @@ const apiCall = async (endpoint, options = {}) => {
 }
 
 function App() {
+  const { t, i18n } = useTranslation()
   const [currentView, setCurrentView] = useState('home')
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  // RTL support for Arabic
+  useEffect(() => {
+    const isRTL = i18n.language === 'ar'
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr'
+    document.documentElement.lang = i18n.language
+  }, [i18n.language])
 
   useEffect(() => {
     checkAuth()
@@ -582,6 +593,7 @@ function Dashboard({ user, onLogout }) {
 
 // ADMIN DASHBOARD
 function AdminDashboard({ user, onLogout }) {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
   const [vcseOrgs, setVcseOrgs] = useState([])
   const [schools, setSchools] = useState([])
@@ -736,9 +748,12 @@ function AdminDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1>Admin Portal</h1>
-        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+        <h1>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <LanguageSelector />
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+        </div>
       </div>
       
       <div style={{padding: '20px'}}>
@@ -1193,6 +1208,7 @@ function AdminDashboard({ user, onLogout }) {
 
 // VCSE DASHBOARD
 function VCSEDashboard({ user, onLogout }) {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
   const [allocatedBalance, setAllocatedBalance] = useState(0)
   const [voucherForm, setVoucherForm] = useState({
@@ -1267,16 +1283,19 @@ function VCSEDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1>VCSE Portal</h1>
-        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+        <h1>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <LanguageSelector />
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+        </div>
       </div>
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
-          <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>Issue Vouchers</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>To Go</button>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
+          <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
+          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
         
         {activeTab === 'overview' && (
@@ -1433,6 +1452,7 @@ function VCSEDashboard({ user, onLogout }) {
 
 // VENDOR DASHBOARD - WITH FIXED SURPLUS COUNTER
 function VendorDashboard({ user, onLogout }) {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
   const [shops, setShops] = useState([])
   const [toGoItems, setToGoItems] = useState([])
@@ -1549,16 +1569,19 @@ function VendorDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1>Local Shops Portal</h1>
-        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+        <h1>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <LanguageSelector />
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+        </div>
       </div>
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>Redeem Vouchers</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>To Go</button>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
+          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.redeemVouchers')}</button>
+          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
         
         {activeTab === 'overview' && (
@@ -1920,6 +1943,7 @@ function VendorDashboard({ user, onLogout }) {
 
 // RECIPIENT DASHBOARD
 function RecipientDashboard({ user, onLogout }) {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('vouchers')
   const [vouchers, setVouchers] = useState([])
   const [voucherSummary, setVoucherSummary] = useState(null)
@@ -2042,18 +2066,21 @@ function RecipientDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1>Recipient Portal</h1>
-        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+        <h1>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <LanguageSelector />
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+        </div>
       </div>
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>Your Vouchers</button>
+          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.myVouchers')}</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Participating Shops</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>Browse To Go</button>
+          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.browseToGo')}</button>
           <button onClick={() => setActiveTab('cart')} style={{...(activeTab === 'cart' ? styles.activeTab : styles.tab), position: 'relative'}}>
-            🛒 Shopping Cart
+            🛒 {t('dashboard.shoppingCart')}
             {cartCount > 0 && (
               <span style={{
                 position: 'absolute',
@@ -2076,21 +2103,21 @@ function RecipientDashboard({ user, onLogout }) {
         
         {activeTab === 'vouchers' && (
           <div>
-            <h2>💳 Your Vouchers</h2>
+            <h2>💳 {t('dashboard.myVouchers')}</h2>
             
             {voucherSummary && (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
                 <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                   <div style={{fontSize: '32px', fontWeight: 'bold'}}>£{voucherSummary.total_active_value.toFixed(2)}</div>
-                  <div>Active Balance</div>
+                  <div>{t('dashboard.activeBalance')}</div>
                 </div>
                 <div style={{backgroundColor: '#2196F3', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                   <div style={{fontSize: '32px', fontWeight: 'bold'}}>{voucherSummary.active_count}</div>
-                  <div>Active Vouchers</div>
+                  <div>{t('dashboard.activeVouchers')}</div>
                 </div>
                 <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                   <div style={{fontSize: '32px', fontWeight: 'bold'}}>{voucherSummary.redeemed_count}</div>
-                  <div>Redeemed</div>
+                  <div>{t('dashboard.redeemed')}</div>
                 </div>
               </div>
             )}
@@ -2264,10 +2291,10 @@ function RecipientDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🍎 Browse Available To Go ({toGoItems.length})</h2>
+            <h2>🍎 {t('dashboard.browseToGo')} ({toGoItems.length})</h2>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
-                <p>No to go items available at the moment</p>
+                <p>{t('dashboard.noToGoItems')}</p>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '15px'}}>
                   {toGoItems.map(item => (
@@ -2324,16 +2351,16 @@ function RecipientDashboard({ user, onLogout }) {
         
         {activeTab === 'cart' && (
           <div>
-            <h2>🛒 Shopping Cart ({cartCount})</h2>
+            <h2>🛒 {t('dashboard.shoppingCart')} ({cartCount})</h2>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {cart.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px'}}>
-                  <p style={{fontSize: '18px', color: '#666'}}>Your cart is empty</p>
+                  <p style={{fontSize: '18px', color: '#666'}}>{t('dashboard.emptyCart')}</p>
                   <button 
                     onClick={() => setActiveTab('togo')}
                     style={{...styles.primaryButton, marginTop: '20px'}}
                   >
-                    Browse To Go Items
+                    {t('dashboard.browseToGo')}
                   </button>
                 </div>
               ) : (

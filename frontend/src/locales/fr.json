@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "Système de Bons Électroniques BAK UP",
+    "tagline": "Connecter les surplus alimentaires avec ceux qui en ont le plus besoin"
+  },
+  "common": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "close": "Fermer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre"
+  },
+  "auth": {
+    "selectRole": "Sélectionnez votre rôle",
+    "vendor": "Vendeur de nourriture / Magasin",
+    "vcse": "Organisation VCSE",
+    "recipient": "Bénéficiaire de bons",
+    "vendorDesc": "Faire don de surplus alimentaires et accepter les bons",
+    "vcseDesc": "Gérer les bons pour les familles vulnérables",
+    "recipientDesc": "Parcourir et échanger des bons alimentaires",
+    "loginTitle": "Connexion",
+    "noAccount": "Vous n'avez pas de compte?",
+    "registerHere": "Inscrivez-vous ici",
+    "forgotPassword": "Mot de passe oublié?"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue",
+    "overview": "Aperçu",
+    "myVouchers": "Mes bons",
+    "browseToGo": "Parcourir à emporter",
+    "shoppingCart": "Panier",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "activeBalance": "Solde actif",
+    "activeVouchers": "Bons actifs",
+    "redeemed": "Échangés",
+    "emptyCart": "Votre panier est vide",
+    "noToGoItems": "Aucun article à emporter disponible pour le moment",
+    "redeemVouchers": "Échanger des bons",
+    "toGo": "À emporter",
+    "issueVouchers": "Émettre des bons"
+  },
+  "voucher": {
+    "title": "Bons",
+    "balance": "Solde",
+    "status": "Statut",
+    "active": "Actif",
+    "used": "Utilisé",
+    "expired": "Expiré",
+    "validUntil": "Valable jusqu'au",
+    "qrCode": "Code QR",
+    "showQR": "Afficher le code QR",
+    "hideQR": "Masquer le code QR"
+  },
+  "toGo": {
+    "title": "Parcourir les articles à emporter disponibles",
+    "noItems": "Aucun article à emporter disponible pour le moment",
+    "addToCart": "Ajouter au panier",
+    "quantity": "Quantité",
+    "available": "disponible",
+    "category": "Catégorie",
+    "shop": "Magasin",
+    "description": "Description",
+    "price": "Prix",
+    "per": "par"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "browseItems": "Parcourir les articles à emporter",
+    "continueShopping": "Continuer les achats",
+    "viewVouchers": "Voir mes bons",
+    "nextSteps": "Prochaines étapes",
+    "step1": "Vérifiez les articles de votre panier ci-dessus",
+    "step2": "Visitez les emplacements des magasins pour récupérer vos articles",
+    "step3": "Montrez votre code QR de bon au magasin pour finaliser l'achat",
+    "step4": "Le solde de votre bon sera déduit au magasin"
+  },
+  "categories": {
+    "bakery": "Boulangerie",
+    "fruits": "Fruits",
+    "vegetables": "Légumes",
+    "dairy": "Produits laitiers",
+    "meat": "Viande",
+    "cannedGoods": "Conserves",
+    "freshProduce": "Produits frais",
+    "other": "Autre"
+  },
+  "language": {
+    "select": "Sélectionner la langue",
+    "en": "Anglais",
+    "ar": "Arabe",
+    "fr": "Français",
+    "es": "Espagnol",
+    "pl": "Polonais"
+  }
+}

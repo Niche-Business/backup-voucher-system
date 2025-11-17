@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "BAK UP E-Voucher System",
+    "tagline": "Connecting surplus food with those who need it most"
+  },
+  "common": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "auth": {
+    "selectRole": "Select Your Role",
+    "vendor": "Food Vendor / Shop",
+    "vcse": "VCSE Organization",
+    "recipient": "Voucher Recipient",
+    "vendorDesc": "Donate surplus food and accept vouchers",
+    "vcseDesc": "Manage vouchers for vulnerable families",
+    "recipientDesc": "Browse and redeem food vouchers",
+    "loginTitle": "Login",
+    "noAccount": "Don't have an account?",
+    "registerHere": "Register here",
+    "forgotPassword": "Forgot Password?"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "myVouchers": "My Vouchers",
+    "browseToGo": "Browse To Go",
+    "shoppingCart": "Shopping Cart",
+    "profile": "Profile",
+    "settings": "Settings",
+    "activeBalance": "Active Balance",
+    "activeVouchers": "Active Vouchers",
+    "redeemed": "Redeemed",
+    "emptyCart": "Your cart is empty",
+    "noToGoItems": "No to go items available at the moment",
+    "redeemVouchers": "Redeem Vouchers",
+    "toGo": "To Go",
+    "issueVouchers": "Issue Vouchers"
+  },
+  "voucher": {
+    "title": "Vouchers",
+    "balance": "Balance",
+    "status": "Status",
+    "active": "Active",
+    "used": "Used",
+    "expired": "Expired",
+    "validUntil": "Valid Until",
+    "qrCode": "QR Code",
+    "showQR": "Show QR Code",
+    "hideQR": "Hide QR Code"
+  },
+  "toGo": {
+    "title": "Browse Available To Go",
+    "noItems": "No to go items available at the moment",
+    "addToCart": "Add to Cart",
+    "quantity": "Quantity",
+    "available": "available",
+    "category": "Category",
+    "shop": "Shop",
+    "description": "Description",
+    "price": "Price",
+    "per": "per"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "browseItems": "Browse To Go Items",
+    "continueShopping": "Continue Shopping",
+    "viewVouchers": "View My Vouchers",
+    "nextSteps": "Next Steps",
+    "step1": "Review your cart items above",
+    "step2": "Visit the shop locations to collect your items",
+    "step3": "Show your voucher QR code at the shop to complete purchase",
+    "step4": "Your voucher balance will be deducted at the shop"
+  },
+  "categories": {
+    "bakery": "Bakery",
+    "fruits": "Fruits",
+    "vegetables": "Vegetables",
+    "dairy": "Dairy",
+    "meat": "Meat",
+    "cannedGoods": "Canned Goods",
+    "freshProduce": "Fresh Produce",
+    "other": "Other"
+  },
+  "language": {
+    "select": "Select Language",
+    "en": "English",
+    "ar": "Arabic",
+    "fr": "French",
+    "es": "Spanish",
+    "pl": "Polish"
+  }
+}
