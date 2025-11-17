@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import os
 import secrets
 import sqlite3
+from email_service import email_service
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vcse-charity-platform-secret-key-2024'
@@ -388,9 +389,13 @@ def register():
         db.session.add(user)
         db.session.commit()
         
-        # Send welcome email
+        # Send welcome email using SendGrid
         try:
-            send_welcome_email(user)
+            email_service.send_welcome_email(
+                user_email=user.email,
+                user_name=f"{user.first_name} {user.last_name}",
+                user_type=user.user_type
+            )
         except Exception as email_error:
             print(f"Warning: Could not send welcome email: {email_error}")
         
@@ -492,18 +497,23 @@ def forgot_password():
         
         # Store token in database
         db.session.execute(
-            "INSERT INTO password_reset_token (user_id, token, expires_at) VALUES (?, ?, ?)",
-            (user.id, token, expires_at)
+            text("INSERT INTO password_reset_token (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)"),
+            {'user_id': user.id, 'token': token, 'expires_at': expires_at}
         )
         db.session.commit()
         
-        # In production, send email with reset link
-        # For now, just return success
-        # Reset link would be: https://yourdomain.com/reset-password?token={token}
+        # Send password reset email using SendGrid
+        try:
+            email_service.send_password_reset_email(
+                user_email=user.email,
+                user_name=f"{user.first_name} {user.last_name}",
+                reset_token=token
+            )
+        except Exception as email_error:
+            print(f"Warning: Could not send password reset email: {email_error}")
         
         return jsonify({
-            'message': 'If the email exists, a password reset link has been sent',
-            'token': token  # Remove this in production
+            'message': 'If the email exists, a password reset link has been sent'
         }), 200
         
     except Exception as e:
