@@ -1,0 +1,30 @@
+services:
+  # Web Service (Backend + Frontend)
+  - type: web
+    name: bakup-evoucher
+    env: python
+    region: oregon
+    plan: free
+    branch: master
+    buildCommand: |
+      pip install -r backend/requirements.txt
+      cd frontend && npm install && npm run build
+    startCommand: python3 unified_server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bakup-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+    healthCheckPath: /
+
+databases:
+  - name: bakup-db
+    databaseName: bakup_evoucher
+    user: bakup_user
+    plan: free

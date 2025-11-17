@@ -26,13 +26,14 @@ def serve_frontend(path):
     return send_from_directory(str(frontend_build), 'index.html')
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 8080))
     print("=" * 60)
     print("BAK UP E-Voucher System - Unified Server")
     print("=" * 60)
     print(f"Backend: Flask API on /api/*")
     print(f"Frontend: React app from {frontend_build}")
-    print(f"Server: http://0.0.0.0:8080")
+    print(f"Server: http://0.0.0.0:{port}")
     print("=" * 60)
     
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
 
