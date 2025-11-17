@@ -12,7 +12,8 @@ backend_path = Path(__file__).parent / 'backend' / 'src'
 sys.path.insert(0, str(backend_path))
 
 from flask import send_from_directory
-from main import app, db, Category
+from main import app, db, Category, User
+from werkzeug.security import generate_password_hash
 
 # Configure frontend serving
 frontend_build = Path(__file__).parent / 'frontend' / 'dist'
@@ -46,6 +47,27 @@ if __name__ == '__main__':
             print("Database initialized with default categories")
         else:
             print("Database already initialized")
+        
+        # Create default admin account if it doesn't exist
+        admin_email = 'admin@bakup.com'
+        if not User.query.filter_by(email=admin_email).first():
+            admin_user = User(
+                email=admin_email,
+                password_hash=generate_password_hash('Admin@2024'),
+                first_name='System',
+                last_name='Administrator',
+                phone='',
+                user_type='admin',
+                organization_name='BAK UP System',
+                is_verified=True
+            )
+            db.session.add(admin_user)
+            db.session.commit()
+            print("✓ Default admin account created")
+            print(f"  Email: {admin_email}")
+            print("  Password: Admin@2024")
+        else:
+            print("✓ Admin account already exists")
     
     port = int(os.environ.get('PORT', 8080))
     print("=" * 60)

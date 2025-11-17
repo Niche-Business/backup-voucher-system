@@ -254,6 +254,29 @@ const LandingPage = ({ onNavigate }) => {
           Create Account
         </button>
       </div>
+      
+      {/* Admin Access Link - Subtle footer link */}
+      <div style={{
+        textAlign: 'center',
+        padding: '20px',
+        backgroundColor: '#f5f5f5',
+        borderTop: '1px solid #ddd'
+      }}>
+        <button
+          onClick={() => onNavigate('admin-login')}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#999',
+            fontSize: '0.85em',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            padding: '5px 10px'
+          }}
+        >
+          Administrator Access
+        </button>
+      </div>
     </div>
   );
 };

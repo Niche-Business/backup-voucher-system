@@ -128,6 +128,7 @@ function App() {
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       {currentView === 'home' && <LandingPage onNavigate={setCurrentView} />}
       {currentView === 'login' && <LoginPage onLogin={handleLogin} onNavigate={setCurrentView} />}
+      {currentView === 'admin-login' && <AdminLoginPage onLogin={handleLogin} onNavigate={setCurrentView} />}
       {currentView === 'register' && <RegisterPage onRegister={handleRegister} onNavigate={setCurrentView} />}
       {currentView === 'forgot-password' && <ForgotPasswordPage onNavigate={setCurrentView} />}
       {currentView === 'reset-password' && <ResetPasswordPage token={new URLSearchParams(window.location.search).get('token')} onNavigate={setCurrentView} />}
@@ -236,6 +237,80 @@ function LoginPage({ onLogin, onNavigate }) {
           <p>Don't have an account? <button onClick={() => onNavigate('register')} style={styles.linkButton}>Register here</button></p>
           <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>Forgot Password?</button></p>
           <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Admin Login Page Component
+function AdminLoginPage({ onLogin, onNavigate }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    
+    try {
+      const result = await onLogin(email, password)
+      
+      if (!result.success) {
+        setError(result.error || 'Login failed')
+        setLoading(false)
+      }
+    } catch (error) {
+      setError('Login failed. Please try again.')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#1976d2'}}>
+      <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+        <div style={{textAlign: 'center', marginBottom: '30px'}}>
+          <div style={{fontSize: '48px', marginBottom: '10px'}}>🔐</div>
+          <h2>Administrator Access</h2>
+          <p style={{color: '#666', fontSize: '0.9em'}}>Authorized personnel only</p>
+        </div>
+        
+        {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
+        
+        <form onSubmit={handleSubmit}>
+          <div style={{marginBottom: '20px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Admin Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@bakup.com"
+              required
+              style={styles.input}
+            />
+          </div>
+          
+          <div style={{marginBottom: '20px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter admin password"
+              required
+              style={styles.input}
+            />
+          </div>
+          
+          <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px', backgroundColor: '#1976d2'}}>
+            {loading ? 'Signing in...' : 'Sign In as Admin'}
+          </button>
+        </form>
+        
+        <div style={{textAlign: 'center'}}>
+          <button onClick={() => onNavigate('home')} style={styles.linkButton}>← Back to Home</button>
         </div>
       </div>
     </div>
