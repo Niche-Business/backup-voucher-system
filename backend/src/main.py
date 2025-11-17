@@ -1,0 +1,2964 @@
+from flask import Flask, request, jsonify, session
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
+from flask_cors import CORS
+from flask_mail import Mail, Message
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
+import os
+import secrets
+import sqlite3
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'vcse-charity-platform-secret-key-2024'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vcse_charity.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Email configuration (using environment variables with fallback to demo mode)
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'noreply@bakup.org')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'BAK UP E-Voucher <noreply@bakup.org>')
+app.config['MAIL_SUPPRESS_SEND'] = os.environ.get('MAIL_SUPPRESS_SEND', 'True') == 'True'  # Set to True to disable emails in dev (default: True)
+
+db = SQLAlchemy(app)
+CORS(app, supports_credentials=True)
+mail = Mail(app)
+
+# Enhanced Database Models
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    phone = db.Column(db.String(20))
+    user_type = db.Column(db.String(20), nullable=False)  # recipient, vendor, vcse, admin
+    organization_name = db.Column(db.String(100))
+    shop_name = db.Column(db.String(100))
+    address = db.Column(db.Text)
+    postcode = db.Column(db.String(10))
+    city = db.Column(db.String(50))
+    charity_commission_number = db.Column(db.String(50))
+    shop_category = db.Column(db.String(50))  # African, Caribbean, Mixed African & Caribbean, Indian/South Asian, Eastern European, Middle Eastern
+    is_verified = db.Column(db.Boolean, default=False)
+    verification_token = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+    login_count = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+    balance = db.Column(db.Float, default=0.0)  # For VCSE organizations to load money
+    allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCSE
+
+class VendorShop(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    shop_name = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.Text, nullable=False)
+    postcode = db.Column(db.String(10))
+    city = db.Column(db.String(50))
+    phone = db.Column(db.String(20))
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    vendor = db.relationship('User', backref='shops')
+
+class Voucher(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(20), unique=True, nullable=False)
+    value = db.Column(db.Float, nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    issued_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Admin or VCSE
+    vendor_restrictions = db.Column(db.Text)  # JSON list of allowed vendor IDs
+    expiry_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(20), default='active')  # active, redeemed, expired, reassigned
+    redeemed_at = db.Column(db.DateTime)
+    redeemed_by_vendor = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    recipient = db.relationship('User', foreign_keys=[recipient_id], backref='received_vouchers')
+    issuer = db.relationship('User', foreign_keys=[issued_by], backref='issued_vouchers')
+    redeemer = db.relationship('User', foreign_keys=[redeemed_by_vendor], backref='redeemed_vouchers')
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    type = db.Column(db.String(20), nullable=False)  # edible, non-edible
+    icon = db.Column(db.String(10), default='📦')
+    description = db.Column(db.Text)
+
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    quantity = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(20), nullable=False)
+    expiry_date = db.Column(db.Date)
+    pickup_location = db.Column(db.String(200))
+    pickup_instructions = db.Column(db.Text)
+    collection_time_limit = db.Column(db.DateTime)  # Time limit for collection
+    status = db.Column(db.String(20), default='available')  # available, claimed, collected, expired
+    claimed_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    claimed_at = db.Column(db.DateTime)
+    collected_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    category = db.relationship('Category', backref='items')
+    vendor = db.relationship('User', foreign_keys=[vendor_id], backref='listed_items')
+    claimer = db.relationship('User', foreign_keys=[claimed_by], backref='claimed_items')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(20), default='info')  # info, success, warning, error
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='notifications')
+
+class LoginSession(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    login_time = db.Column(db.DateTime, default=datetime.utcnow)
+    logout_time = db.Column(db.DateTime)
+    session_duration = db.Column(db.Integer)  # in minutes
+    ip_address = db.Column(db.String(45))
+    user_agent = db.Column(db.Text)
+    
+    user = db.relationship('User', backref='login_sessions')
+
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    generated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    report_type = db.Column(db.String(50), nullable=False)  # admin_full, vcse_specific
+    date_from = db.Column(db.Date, nullable=False)
+    date_to = db.Column(db.Date, nullable=False)
+    data = db.Column(db.Text)  # JSON data
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    generator = db.relationship('User', backref='generated_reports')
+
+class SurplusItem(db.Model):
+    __tablename__ = 'surplus_item'
+    id = db.Column(db.Integer, primary_key=True)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'), nullable=False)
+    item_name = db.Column(db.String(200), nullable=False)
+    quantity = db.Column(db.String(100), nullable=False)
+    unit = db.Column(db.String(50))  # kg, liters, pieces, etc.
+    category = db.Column(db.String(50), nullable=False)  # edible, non-edible
+    item_type = db.Column(db.String(20), default='free')  # 'discount' or 'free'
+    price = db.Column(db.Numeric(10, 2))  # Price for discount items, NULL for free items
+    original_price = db.Column(db.Numeric(10, 2))  # Original price before discount
+    description = db.Column(db.Text)
+    status = db.Column(db.String(20), default='available')  # available, claimed, collected
+    posted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    claimed_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    claimed_at = db.Column(db.DateTime)
+    collected_at = db.Column(db.DateTime)
+    
+    vendor = db.relationship('User', foreign_keys=[vendor_id], backref='surplus_posted_items')
+    shop = db.relationship('VendorShop', backref='shop_surplus_items')
+    claimer = db.relationship('User', foreign_keys=[claimed_by], backref='surplus_claimed_items')
+
+# Helper Functions
+def send_verification_email(user):
+    try:
+        msg = Message(
+            'Verify Your BAK UP Account',
+            sender=app.config['MAIL_DEFAULT_SENDER'],
+            recipients=[user.email]
+        )
+        msg.body = f'''
+Hello {user.first_name},
+
+Welcome to BAK UP E-Voucher System! Please verify your account by clicking the link below:
+
+http://localhost:5000/api/verify/{user.verification_token}
+
+Thank you for joining our mission to reduce waste and support communities!
+
+Best regards,
+BAK UP Team
+        '''
+        if not app.config['MAIL_SUPPRESS_SEND']:
+            mail.send(msg)
+        return True
+    except Exception as e:
+        print(f"Email sending failed: {e}")
+        return False
+
+def send_welcome_email(user):
+    """Send welcome email to new users"""
+    try:
+        user_type_names = {
+            'recipient': 'Voucher Recipient',
+            'vendor': 'Shop Vendor',
+            'vcse': 'VCSE Organization',
+            'admin': 'System Administrator'
+        }
+        
+        msg = Message(
+            'Welcome to BAK UP E-Voucher System!',
+            sender=app.config['MAIL_DEFAULT_SENDER'],
+            recipients=[user.email]
+        )
+        
+        msg.html = f'''
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+        .header {{ background: linear-gradient(135deg, #4CAF50 0%, #2d5a27 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+        .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }}
+        .button {{ background: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; }}
+        .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
+        h1 {{ margin: 0; font-size: 28px; }}
+        h2 {{ color: #2d5a27; }}
+        .feature {{ background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4CAF50; border-radius: 5px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎫 Welcome to BAK UP!</h1>
+            <p>Reducing waste, supporting communities, strengthening local economies</p>
+        </div>
+        <div class="content">
+            <h2>Hello {user.first_name}!</h2>
+            <p>Thank you for joining the BAK UP E-Voucher System as a <strong>{user_type_names.get(user.user_type, user.user_type)}</strong>.</p>
+            
+            <p>Your account has been successfully created and is ready to use!</p>
+            
+            <div class="feature">
+                <strong>📧 Your Email:</strong> {user.email}
+            </div>
+            
+            <h2>What's Next?</h2>
+            <p>You can now log in to your account and start using the platform:</p>
+            
+            <a href="https://8080-ifslfm1mlvuoydk0g6mnh-090f122e.manusvm.computer" class="button">Access Your Dashboard</a>
+            
+            <h2>Need Help?</h2>
+            <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+            
+            <p>Together, we can make a difference in reducing food waste and supporting our community!</p>
+            
+            <p>Best regards,<br>
+            <strong>The BAK UP Team</strong></p>
+        </div>
+        <div class="footer">
+            <p>BAK UP CIC - Northamptonshire Community E-Voucher Scheme</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+        '''
+        
+        msg.body = f'''
+Hello {user.first_name}!
+
+Thank you for joining the BAK UP E-Voucher System as a {user_type_names.get(user.user_type, user.user_type)}.
+
+Your account has been successfully created and is ready to use!
+
+Email: {user.email}
+
+You can now log in to your account and start using the platform.
+
+If you have any questions or need assistance, please don't hesitate to contact our support team.
+
+Together, we can make a difference in reducing food waste and supporting our community!
+
+Best regards,
+The BAK UP Team
+
+BAK UP CIC - Northamptonshire Community E-Voucher Scheme
+        '''
+        
+        if not app.config['MAIL_SUPPRESS_SEND']:
+            mail.send(msg)
+            print(f"Welcome email sent to {user.email}")
+        else:
+            print(f"Email suppressed (dev mode): Would send welcome email to {user.email}")
+        return True
+    except Exception as e:
+        print(f"Welcome email sending failed: {e}")
+        return False
+
+def create_notification(user_id, title, message, notification_type='info'):
+    notification = Notification(
+        user_id=user_id,
+        title=title,
+        message=message,
+        type=notification_type
+    )
+    db.session.add(notification)
+    db.session.commit()
+
+def generate_voucher_code():
+    return f"BAK{secrets.token_hex(4).upper()}"
+
+def track_login(user_id, ip_address=None, user_agent=None):
+    user = User.query.get(user_id)
+    if user:
+        user.last_login = datetime.utcnow()
+        user.login_count += 1
+        
+        login_session = LoginSession(
+            user_id=user_id,
+            ip_address=ip_address,
+            user_agent=user_agent
+        )
+        db.session.add(login_session)
+        db.session.commit()
+
+# API Routes
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'message': 'BAK UP E-Voucher System API is running',
+        'features': [
+            'User Registration with Password Security',
+            'Multi-Shop Vendor Support',
+            'VCSE Money Loading & Voucher Issuing',
+            'Login Frequency Tracking',
+            'Voucher Reassignment',
+            'Comprehensive Reporting System',
+            'Real-time Surplus Food Notifications',
+            'Mobile PWA Support'
+        ],
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['email', 'password', 'first_name', 'last_name', 'user_type']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'error': f'{field} is required'}), 400
+        
+        # Check if user already exists
+        if User.query.filter_by(email=data['email']).first():
+            return jsonify({'error': 'Email already registered'}), 400
+        
+        # Validate user type
+        if data['user_type'] not in ['recipient', 'vendor', 'vcse', 'school', 'admin']:
+            return jsonify({'error': 'Invalid user type'}), 400
+        
+        # Validate password length
+        if len(data['password']) < 6:
+            return jsonify({'error': 'Password must be at least 6 characters long'}), 400
+        
+        # Create verification token
+        verification_token = secrets.token_urlsafe(32)
+        
+        # Create new user
+        user = User(
+            email=data['email'],
+            password_hash=generate_password_hash(data['password']),
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            phone=data.get('phone', ''),
+            user_type=data['user_type'],
+            organization_name=data.get('organization_name', ''),
+            shop_name=data.get('shop_name', ''),
+            address=data.get('address', ''),
+            postcode=data.get('postcode', ''),
+            city=data.get('city', ''),
+            charity_commission_number=data.get('charity_commission_number', ''),
+            shop_category=data.get('shop_category', ''),
+            verification_token=verification_token
+        )
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        # Send welcome email
+        try:
+            send_welcome_email(user)
+        except Exception as email_error:
+            print(f"Warning: Could not send welcome email: {email_error}")
+        
+        # For demo purposes, auto-verify
+        user.is_verified = True
+        db.session.commit()
+        
+        # Create welcome notification
+        user_type_names = {
+            'recipient': 'Voucher Recipient',
+            'vendor': 'Food Vendor',
+            'vcse': 'VCSE Organization',
+            'admin': 'System Administrator'
+        }
+        user_type_name = user_type_names.get(user.user_type, 'User')
+        
+        welcome_message = f"Welcome to BAK UP E-Voucher Platform, {user.first_name}! Your account as a {user_type_name} has been successfully created. You can now access all features available to your account type. If you need any assistance, please contact our support team."
+        
+        create_notification(
+            user.id,
+            '🎉 Welcome to BAK UP!',
+            welcome_message,
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Registration successful! Welcome email sent to ' + user.email,
+            'user_id': user.id
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Registration failed: {str(e)}'}), 500
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        
+        if not data.get('email') or not data.get('password'):
+            return jsonify({'error': 'Email and password are required'}), 400
+        
+        user = User.query.filter_by(email=data['email']).first()
+        
+        if not user or not check_password_hash(user.password_hash, data['password']):
+            return jsonify({'error': 'Invalid email or password'}), 401
+        
+        if not user.is_verified:
+            return jsonify({'error': 'Please verify your email before logging in'}), 401
+        
+        if not user.is_active:
+            return jsonify({'error': 'Account is deactivated'}), 401
+        
+        # Track login
+        track_login(user.id, request.remote_addr, request.headers.get('User-Agent'))
+        
+        # Create session
+        session['user_id'] = user.id
+        session['user_type'] = user.user_type
+        
+        return jsonify({
+            'message': 'Login successful',
+            'user': {
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'user_type': user.user_type,
+                'organization_name': user.organization_name,
+                'shop_name': user.shop_name,
+                'balance': user.balance
+            }
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Login failed: {str(e)}'}), 500
+
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    """Request password reset link"""
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        if not email:
+            return jsonify({'error': 'Email is required'}), 400
+        
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            # Don't reveal if email exists for security
+            return jsonify({'message': 'If the email exists, a password reset link has been sent'}), 200
+        
+        # Generate reset token
+        import secrets
+        from datetime import datetime, timedelta
+        token = secrets.token_urlsafe(32)
+        expires_at = datetime.utcnow() + timedelta(hours=1)
+        
+        # Store token in database
+        db.session.execute(
+            "INSERT INTO password_reset_token (user_id, token, expires_at) VALUES (?, ?, ?)",
+            (user.id, token, expires_at)
+        )
+        db.session.commit()
+        
+        # In production, send email with reset link
+        # For now, just return success
+        # Reset link would be: https://yourdomain.com/reset-password?token={token}
+        
+        return jsonify({
+            'message': 'If the email exists, a password reset link has been sent',
+            'token': token  # Remove this in production
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to process request: {str(e)}'}), 500
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    """Reset password using token"""
+    try:
+        data = request.get_json()
+        token = data.get('token')
+        new_password = data.get('password')
+        
+        if not token or not new_password:
+            return jsonify({'error': 'Token and new password are required'}), 400
+        
+        # Find valid token
+        from datetime import datetime
+        result = db.session.execute(
+            "SELECT user_id, expires_at, used FROM password_reset_token WHERE token = ?",
+            (token,)
+        ).fetchone()
+        
+        if not result:
+            return jsonify({'error': 'Invalid or expired reset link'}), 400
+        
+        user_id, expires_at, used = result
+        
+        if used:
+            return jsonify({'error': 'This reset link has already been used'}), 400
+        
+        if datetime.fromisoformat(expires_at) < datetime.utcnow():
+            return jsonify({'error': 'This reset link has expired'}), 400
+        
+        # Update password
+        user = User.query.get(user_id)
+        user.password_hash = generate_password_hash(new_password)
+        
+        # Mark token as used
+        db.session.execute(
+            "UPDATE password_reset_token SET used = 1 WHERE token = ?",
+            (token,)
+        )
+        
+        db.session.commit()
+        
+        return jsonify({'message': 'Password reset successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to reset password: {str(e)}'}), 500
+
+# Initialize database and categories
+def init_db():
+    with app.app_context():
+        db.create_all()
+        
+        # Create default categories if they don't exist
+        if Category.query.count() == 0:
+            categories = [
+                Category(name='Fruits', type='edible', icon='🍎', description='Fresh and dried fruits'),
+                Category(name='Vegetables', type='edible', icon='🥕', description='Fresh vegetables and salads'),
+                Category(name='Canned Foods', type='edible', icon='🥫', description='Canned and preserved foods'),
+                Category(name='Dairy', type='edible', icon='🥛', description='Milk, cheese, yogurt and dairy products'),
+                Category(name='Bakery', type='edible', icon='🍞', description='Bread, pastries and baked goods'),
+                Category(name='Clothing', type='non-edible', icon='👕', description='Clothing and accessories'),
+                Category(name='Household Items', type='non-edible', icon='🏠', description='Home and kitchen items'),
+                Category(name='Books', type='non-edible', icon='📚', description='Books and educational materials'),
+                Category(name='Toys', type='non-edible', icon='🧸', description='Toys and games'),
+                Category(name='Other Goods', type='non-edible', icon='📦', description='Other miscellaneous items')
+            ]
+            
+            for category in categories:
+                db.session.add(category)
+            
+            db.session.commit()
+            print("Database initialized with default categories")
+
+# ============================================
+# VCSE Money Loading and Voucher Issuing Routes
+# ============================================
+
+@app.route('/api/vcse/load-money', methods=['POST'])
+def vcse_load_money():
+    """VCSE organizations can load money onto their account"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can load money'}), 403
+        
+        amount = data.get('amount')
+        if not amount or amount <= 0:
+            return jsonify({'error': 'Invalid amount'}), 400
+        
+        # Update balance
+        user.balance += amount
+        db.session.commit()
+        
+        # Create notification
+        create_notification(
+            user_id,
+            'Money Loaded Successfully',
+            f'£{amount:.2f} has been added to your account. New balance: £{user.balance:.2f}',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Money loaded successfully',
+            'new_balance': user.balance
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to load money: {str(e)}'}), 500
+
+@app.route('/api/vcse/issue-voucher', methods=['POST'])
+def vcse_issue_voucher():
+    """VCSE organizations can issue vouchers to recipients"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can issue vouchers'}), 403
+        
+        # Validate required fields
+        recipient_first_name = data.get('recipient_first_name')
+        recipient_last_name = data.get('recipient_last_name')
+        recipient_email = data.get('recipient_email')
+        recipient_date_of_birth = data.get('recipient_date_of_birth')
+        recipient_phone = data.get('recipient_phone')
+        recipient_address = data.get('recipient_address')
+        value = data.get('value')
+        expiry_days = data.get('expiry_days', 30)
+        
+        if not all([recipient_first_name, recipient_last_name, recipient_email, recipient_phone, value]):
+            return jsonify({'error': 'All recipient details and value are required'}), 400
+        
+        if value <= 0:
+            return jsonify({'error': 'Voucher value must be positive'}), 400
+        
+        # Check if VCSE has sufficient allocated balance from admin
+        if user.allocated_balance < value:
+            return jsonify({'error': f'Insufficient allocated funds. Current allocated balance: £{user.allocated_balance:.2f}'}), 400
+        
+        # Find or create recipient
+        recipient = User.query.filter_by(email=recipient_email).first()
+        if not recipient:
+            # Auto-create recipient account with provided details
+            import secrets
+            temp_password = secrets.token_urlsafe(12)
+            recipient = User(
+                email=recipient_email,
+                password_hash=generate_password_hash(temp_password),
+                first_name=recipient_first_name,
+                last_name=recipient_last_name,
+                phone=recipient_phone,
+                address=recipient_address,
+                user_type='recipient',
+                is_verified=True,
+                is_active=True
+            )
+            db.session.add(recipient)
+            db.session.flush()  # Get recipient ID without committing
+        
+        if recipient.user_type != 'recipient':
+            return jsonify({'error': 'Can only issue vouchers to recipients'}), 400
+        
+        # Generate voucher code
+        voucher_code = generate_voucher_code()
+        
+        # Calculate expiry date
+        expiry_date = datetime.utcnow().date() + timedelta(days=expiry_days)
+        
+        # Create voucher
+        voucher = Voucher(
+            code=voucher_code,
+            value=value,
+            recipient_id=recipient.id,
+            issued_by=user_id,
+            expiry_date=expiry_date,
+            status='active'
+        )
+        
+        # Deduct from VCSE allocated balance
+        user.allocated_balance -= value
+        
+        db.session.add(voucher)
+        db.session.commit()
+        
+        # Create notifications
+        create_notification(
+            recipient.id,
+            'New Voucher Received',
+            f'You have received a £{value:.2f} voucher from {user.organization_name}. Code: {voucher_code}',
+            'success'
+        )
+        
+        create_notification(
+            user_id,
+            'Voucher Issued',
+            f'Voucher {voucher_code} for £{value:.2f} issued to {recipient.first_name} {recipient.last_name}',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Voucher issued successfully',
+            'voucher_code': voucher_code,
+            'new_balance': user.balance
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to issue voucher: {str(e)}'}), 500
+
+@app.route('/api/vcse/balance', methods=['GET'])
+def vcse_get_balance():
+    """Get current VCSE balance"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can view balance'}), 403
+        
+        return jsonify({
+            'balance': user.balance,
+            'allocated_balance': user.allocated_balance,
+            'organization_name': user.organization_name
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get balance: {str(e)}'}), 500
+
+# ============================================
+# Vendor Multi-Shop Management Routes
+# ============================================
+
+@app.route('/api/vendor/shops', methods=['GET'])
+def vendor_get_shops():
+    """Get all shops for a vendor"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Only vendors can view shops'}), 403
+        
+        shops = VendorShop.query.filter_by(vendor_id=user_id, is_active=True).all()
+        
+        return jsonify({
+            'shops': [{
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'postcode': shop.postcode,
+                'city': shop.city,
+                'phone': shop.phone,
+                'created_at': shop.created_at.isoformat()
+            } for shop in shops]
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get shops: {str(e)}'}), 500
+
+@app.route('/api/vendor/shops', methods=['POST'])
+def vendor_add_shop():
+    """Add a new shop location for a vendor"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Only vendors can add shops'}), 403
+        
+        # Validate required fields
+        required_fields = ['shop_name', 'address']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'error': f'{field} is required'}), 400
+        
+        # Create new shop
+        shop = VendorShop(
+            vendor_id=user_id,
+            shop_name=data['shop_name'],
+            address=data['address'],
+            postcode=data.get('postcode', ''),
+            city=data.get('city', ''),
+            phone=data.get('phone', '')
+        )
+        
+        db.session.add(shop)
+        db.session.commit()
+        
+        create_notification(
+            user_id,
+            'Shop Added',
+            f'New shop location "{shop.shop_name}" has been added successfully',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Shop added successfully',
+            'shop_id': shop.id
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to add shop: {str(e)}'}), 500
+
+@app.route('/api/vendor/shops/<int:shop_id>', methods=['DELETE'])
+def vendor_delete_shop(shop_id):
+    """Delete (deactivate) a shop location"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Only vendors can delete shops'}), 403
+        
+        shop = VendorShop.query.filter_by(id=shop_id, vendor_id=user_id).first()
+        if not shop:
+            return jsonify({'error': 'Shop not found'}), 404
+        
+        shop.is_active = False
+        db.session.commit()
+        
+        return jsonify({'message': 'Shop deactivated successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete shop: {str(e)}'}), 500
+
+# ============================================
+# Voucher Shop Selection Routes
+# ============================================
+
+@app.route('/api/vouchers/<string:voucher_code>/available-shops', methods=['GET'])
+def get_available_shops_for_voucher(voucher_code):
+    """Get all shop locations where a voucher can be redeemed"""
+    try:
+        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        if voucher.status != 'active':
+            return jsonify({'error': 'Voucher is not active'}), 400
+        
+        # Get all vendors (for now, vouchers can be redeemed at any vendor)
+        # In future, can implement vendor restrictions
+        vendors = User.query.filter_by(user_type='vendor', is_active=True).all()
+        
+        shops_list = []
+        for vendor in vendors:
+            # Get all shops for this vendor
+            shops = VendorShop.query.filter_by(vendor_id=vendor.id, is_active=True).all()
+            for shop in shops:
+                shops_list.append({
+                    'id': shop.id,
+                    'vendor_id': vendor.id,
+                    'vendor_name': vendor.shop_name or vendor.organization_name,
+                    'shop_name': shop.shop_name,
+                    'address': shop.address,
+                    'postcode': shop.postcode,
+                    'city': shop.city,
+                    'phone': shop.phone
+                })
+        
+        return jsonify({
+            'voucher_code': voucher_code,
+            'voucher_value': voucher.value,
+            'expiry_date': voucher.expiry_date.isoformat(),
+            'available_shops': shops_list
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get shops: {str(e)}'}), 500
+
+# ============================================
+# Admin Login Tracking Routes
+# ============================================
+
+@app.route('/api/admin/login-stats', methods=['GET'])
+def admin_get_login_stats():
+    """Get login frequency statistics for vendors and VCSE organizations"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can view login statistics'}), 403
+        
+        # Get all vendors
+        vendors = User.query.filter_by(user_type='vendor', is_active=True).all()
+        vendor_stats = []
+        for vendor in vendors:
+            vendor_stats.append({
+                'id': vendor.id,
+                'name': vendor.shop_name or f'{vendor.first_name} {vendor.last_name}',
+                'email': vendor.email,
+                'login_count': vendor.login_count,
+                'last_login': vendor.last_login.isoformat() if vendor.last_login else None,
+                'created_at': vendor.created_at.isoformat()
+            })
+        
+        # Get all VCSE organizations
+        vcse_orgs = User.query.filter_by(user_type='vcse', is_active=True).all()
+        vcse_stats = []
+        for vcse in vcse_orgs:
+            vcse_stats.append({
+                'id': vcse.id,
+                'organization_name': vcse.organization_name,
+                'email': vcse.email,
+                'login_count': vcse.login_count,
+                'last_login': vcse.last_login.isoformat() if vcse.last_login else None,
+                'balance': vcse.balance,
+                'created_at': vcse.created_at.isoformat()
+            })
+        
+        return jsonify({
+            'vendors': vendor_stats,
+            'vcse_organizations': vcse_stats,
+            'total_vendors': len(vendor_stats),
+            'total_vcse': len(vcse_stats)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get login stats: {str(e)}'}), 500
+
+# ============================================
+# Admin Voucher Reassignment Routes
+# ============================================
+
+@app.route('/api/admin/vouchers/unredeemed', methods=['GET'])
+def admin_get_unredeemed_vouchers():
+    """Get all unredeemed vouchers for reassignment"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can view unredeemed vouchers'}), 403
+        
+        vouchers = Voucher.query.filter_by(status='active').all()
+        unredeemed = []
+        
+        for voucher in vouchers:
+            recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
+            issuer = User.query.get(voucher.issued_by)
+            
+            unredeemed.append({
+                'id': voucher.id,
+                'code': voucher.code,
+                'value': voucher.value,
+                'recipient_name': f'{recipient.first_name} {recipient.last_name}' if recipient else 'Unassigned',
+                'recipient_email': recipient.email if recipient else None,
+                'recipient_phone': recipient.phone if recipient else None,
+                'recipient_address': recipient.address if recipient else None,
+                'recipient_city': recipient.city if recipient else None,
+                'recipient_postcode': recipient.postcode if recipient else None,
+                'issued_by': issuer.organization_name if issuer.user_type == 'vcse' else 'Admin',
+                'expiry_date': voucher.expiry_date.isoformat(),
+                'created_at': voucher.created_at.isoformat()
+            })
+        
+        return jsonify({'unredeemed_vouchers': unredeemed}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get unredeemed vouchers: {str(e)}'}), 500
+
+@app.route('/api/admin/vouchers/<int:voucher_id>/reassign', methods=['POST'])
+def admin_reassign_voucher(voucher_id):
+    """Reassign a voucher to a new recipient"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can reassign vouchers'}), 403
+        
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        if voucher.status != 'active':
+            return jsonify({'error': 'Can only reassign active vouchers'}), 400
+        
+        new_recipient_email = data.get('new_recipient_email')
+        if not new_recipient_email:
+            return jsonify({'error': 'New recipient email is required'}), 400
+        
+        new_recipient = User.query.filter_by(email=new_recipient_email, user_type='recipient').first()
+        if not new_recipient:
+            return jsonify({'error': 'Recipient not found'}), 404
+        
+        # Store old recipient for notification
+        old_recipient_id = voucher.recipient_id
+        
+        # Reassign voucher
+        voucher.recipient_id = new_recipient.id
+        voucher.status = 'reassigned'
+        db.session.commit()
+        
+        # Create new active voucher for new recipient
+        new_voucher = Voucher(
+            code=voucher.code,
+            value=voucher.value,
+            recipient_id=new_recipient.id,
+            issued_by=voucher.issued_by,
+            expiry_date=voucher.expiry_date,
+            status='active'
+        )
+        db.session.add(new_voucher)
+        db.session.commit()
+        
+        # Notify new recipient
+        create_notification(
+            new_recipient.id,
+            'Voucher Assigned',
+            f'You have been assigned voucher {voucher.code} for £{voucher.value:.2f}',
+            'success'
+        )
+        
+        # Notify old recipient if exists
+        if old_recipient_id:
+            create_notification(
+                old_recipient_id,
+                'Voucher Reassigned',
+                f'Voucher {voucher.code} has been reassigned',
+                'info'
+            )
+        
+        return jsonify({
+            'message': 'Voucher reassigned successfully',
+            'new_voucher_id': new_voucher.id
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to reassign voucher: {str(e)}'}), 500
+
+# ============================================
+# Surplus Food Enhanced Routes
+# ============================================
+
+@app.route('/api/items/claim', methods=['POST'])
+def claim_surplus_item():
+    """VCSE organization claims a surplus food item"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can claim items'}), 403
+        
+        item_id = data.get('item_id')
+        if not item_id:
+            return jsonify({'error': 'Item ID is required'}), 400
+        
+        item = Item.query.get(item_id)
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        if item.status != 'available':
+            return jsonify({'error': 'Item is not available'}), 400
+        
+        # Claim the item
+        item.status = 'claimed'
+        item.claimed_by = user_id
+        item.claimed_at = datetime.utcnow()
+        
+        # Set collection time limit (e.g., 2 hours from now)
+        item.collection_time_limit = datetime.utcnow() + timedelta(hours=2)
+        
+        db.session.commit()
+        
+        # Notify vendor
+        create_notification(
+            item.vendor_id,
+            'Surplus Item Claimed',
+            f'{user.organization_name} has claimed your surplus item: {item.title}. Collection by: {item.collection_time_limit.strftime("%H:%M")}',
+            'success'
+        )
+        
+        # Notify VCSE
+        create_notification(
+            user_id,
+            'Item Claimed Successfully',
+            f'You have claimed {item.title}. Please collect by {item.collection_time_limit.strftime("%H:%M")}',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Item claimed successfully',
+            'collection_deadline': item.collection_time_limit.isoformat()
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to claim item: {str(e)}'}), 500
+
+@app.route('/api/items/<int:item_id>/collect', methods=['POST'])
+def mark_item_collected(item_id):
+    """Mark a surplus item as collected"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        item = Item.query.get(item_id)
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        user = User.query.get(user_id)
+        
+        # Either vendor or VCSE can mark as collected
+        if user.user_type not in ['vendor', 'vcse']:
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        if user.user_type == 'vendor' and item.vendor_id != user_id:
+            return jsonify({'error': 'Not your item'}), 403
+        
+        if user.user_type == 'vcse' and item.claimed_by != user_id:
+            return jsonify({'error': 'Not your claimed item'}), 403
+        
+        if item.status != 'claimed':
+            return jsonify({'error': 'Item is not in claimed status'}), 400
+        
+        # Mark as collected
+        item.status = 'collected'
+        item.collected_at = datetime.utcnow()
+        db.session.commit()
+        
+        # Notify both parties
+        create_notification(
+            item.vendor_id,
+            'Item Collected',
+            f'Surplus item "{item.title}" has been collected',
+            'success'
+        )
+        
+        if item.claimed_by:
+            create_notification(
+                item.claimed_by,
+                'Collection Confirmed',
+                f'Collection of "{item.title}" has been confirmed',
+                'success'
+            )
+        
+        return jsonify({'message': 'Item marked as collected'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to mark item as collected: {str(e)}'}), 500
+
+@app.route('/api/items/available', methods=['GET'])
+def get_available_surplus_items():
+    """Get all available surplus food items"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        items = Item.query.filter_by(status='available').order_by(Item.created_at.desc()).all()
+        
+        items_list = []
+        for item in items:
+            vendor = User.query.get(item.vendor_id)
+            category = Category.query.get(item.category_id)
+            
+            items_list.append({
+                'id': item.id,
+                'title': item.title,
+                'description': item.description,
+                'category': category.name if category else 'Unknown',
+                'category_icon': category.icon if category else '📦',
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
+                'pickup_location': item.pickup_location,
+                'pickup_instructions': item.pickup_instructions,
+                'vendor_name': vendor.shop_name or vendor.organization_name,
+                'vendor_phone': vendor.phone,
+                'created_at': item.created_at.isoformat()
+            })
+        
+        return jsonify({'items': items_list}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get items: {str(e)}'}), 500
+
+# ============================================
+# Reporting Routes
+# ============================================
+
+@app.route('/api/admin/reports/generate', methods=['POST'])
+def admin_generate_report():
+    """Generate comprehensive admin report"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can generate reports'}), 403
+        
+        # Get date range
+        date_from = datetime.strptime(data.get('date_from', '2024-01-01'), '%Y-%m-%d').date()
+        date_to = datetime.strptime(data.get('date_to', datetime.utcnow().strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        
+        # Calculate statistics
+        total_vouchers = Voucher.query.filter(
+            Voucher.created_at >= datetime.combine(date_from, datetime.min.time()),
+            Voucher.created_at <= datetime.combine(date_to, datetime.max.time())
+        ).count()
+        
+        redeemed_vouchers = Voucher.query.filter(
+            Voucher.status == 'redeemed',
+            Voucher.redeemed_at >= datetime.combine(date_from, datetime.min.time()),
+            Voucher.redeemed_at <= datetime.combine(date_to, datetime.max.time())
+        ).count()
+        
+        total_value = db.session.query(db.func.sum(Voucher.value)).filter(
+            Voucher.created_at >= datetime.combine(date_from, datetime.min.time()),
+            Voucher.created_at <= datetime.combine(date_to, datetime.max.time())
+        ).scalar() or 0
+        
+        redeemed_value = db.session.query(db.func.sum(Voucher.value)).filter(
+            Voucher.status == 'redeemed',
+            Voucher.redeemed_at >= datetime.combine(date_from, datetime.min.time()),
+            Voucher.redeemed_at <= datetime.combine(date_to, datetime.max.time())
+        ).scalar() or 0
+        
+        total_vendors = User.query.filter_by(user_type='vendor', is_active=True).count()
+        total_vcse = User.query.filter_by(user_type='vcse', is_active=True).count()
+        total_recipients = User.query.filter_by(user_type='recipient', is_active=True).count()
+        
+        surplus_items_collected = Item.query.filter(
+            Item.status == 'collected',
+            Item.collected_at >= datetime.combine(date_from, datetime.min.time()),
+            Item.collected_at <= datetime.combine(date_to, datetime.max.time())
+        ).count()
+        
+        report_data = {
+            'date_from': date_from.isoformat(),
+            'date_to': date_to.isoformat(),
+            'voucher_statistics': {
+                'total_issued': total_vouchers,
+                'total_redeemed': redeemed_vouchers,
+                'redemption_rate': (redeemed_vouchers / total_vouchers * 100) if total_vouchers > 0 else 0,
+                'total_value': total_value,
+                'redeemed_value': redeemed_value
+            },
+            'user_statistics': {
+                'total_vendors': total_vendors,
+                'total_vcse': total_vcse,
+                'total_recipients': total_recipients
+            },
+            'surplus_food': {
+                'items_collected': surplus_items_collected
+            }
+        }
+        
+        return jsonify({
+            'report': report_data,
+            'generated_at': datetime.utcnow().isoformat()
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate report: {str(e)}'}), 500
+
+@app.route('/api/vcse/reports/generate', methods=['POST'])
+def vcse_generate_report():
+    """Generate VCSE-specific report for funders"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can generate reports'}), 403
+        
+        # Get date range
+        date_from = datetime.strptime(data.get('date_from', '2024-01-01'), '%Y-%m-%d').date()
+        date_to = datetime.strptime(data.get('date_to', datetime.utcnow().strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        
+        # Calculate VCSE-specific statistics
+        vouchers_issued = Voucher.query.filter(
+            Voucher.issued_by == user_id,
+            Voucher.created_at >= datetime.combine(date_from, datetime.min.time()),
+            Voucher.created_at <= datetime.combine(date_to, datetime.max.time())
+        ).all()
+        
+        total_issued = len(vouchers_issued)
+        total_value_issued = sum(v.value for v in vouchers_issued)
+        
+        redeemed_vouchers = [v for v in vouchers_issued if v.status == 'redeemed']
+        total_redeemed = len(redeemed_vouchers)
+        total_value_redeemed = sum(v.value for v in redeemed_vouchers)
+        
+        # Get unique recipients served
+        recipients_served = len(set(v.recipient_id for v in vouchers_issued if v.recipient_id))
+        
+        # Get surplus items claimed
+        items_claimed = Item.query.filter(
+            Item.claimed_by == user_id,
+            Item.claimed_at >= datetime.combine(date_from, datetime.min.time()),
+            Item.claimed_at <= datetime.combine(date_to, datetime.max.time())
+        ).count()
+        
+        items_collected = Item.query.filter(
+            Item.claimed_by == user_id,
+            Item.status == 'collected',
+            Item.collected_at >= datetime.combine(date_from, datetime.min.time()),
+            Item.collected_at <= datetime.combine(date_to, datetime.max.time())
+        ).count()
+        
+        report_data = {
+            'organization_name': user.organization_name,
+            'date_from': date_from.isoformat(),
+            'date_to': date_to.isoformat(),
+            'voucher_activity': {
+                'vouchers_issued': total_issued,
+                'vouchers_redeemed': total_redeemed,
+                'redemption_rate': (total_redeemed / total_issued * 100) if total_issued > 0 else 0,
+                'total_value_issued': total_value_issued,
+                'total_value_redeemed': total_value_redeemed,
+                'recipients_served': recipients_served
+            },
+            'surplus_food_activity': {
+                'items_claimed': items_claimed,
+                'items_collected': items_collected
+            },
+            'financial_summary': {
+                'current_balance': user.balance,
+                'total_spent': total_value_issued
+            }
+        }
+        
+        return jsonify({
+            'report': report_data,
+            'generated_at': datetime.utcnow().isoformat()
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate report: {str(e)}'}), 500
+
+
+
+# General Routes (accessible to all authenticated users)
+
+@app.route('/api/shops', methods=['GET'])
+def get_all_shops():
+    """Get all shops for recipients to view where they can redeem vouchers"""
+    try:
+        shops = VendorShop.query.filter_by(is_active=True).all()
+        
+        shops_data = []
+        for shop in shops:
+            vendor = User.query.get(shop.vendor_id)
+            shops_data.append({
+                'id': shop.id,
+                'name': shop.shop_name,
+                'address': shop.address,
+                'city': shop.city,
+                'postcode': shop.postcode,
+                'phone': shop.phone,
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else "Unknown",
+                'accepts_vouchers': True
+            })
+        
+        return jsonify({'shops': shops_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to load shops: {str(e)}'}), 500
+
+@app.route('/api/user/vouchers', methods=['GET'])
+def get_user_vouchers():
+    """Get vouchers for the current user"""
+    try:
+        # In a real app, you'd get user_id from session/token
+        # For now, we'll accept it as a query parameter
+        user_id = request.args.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        vouchers = Voucher.query.filter_by(recipient_id=user_id).all()
+        
+        vouchers_data = []
+        for voucher in vouchers:
+            vouchers_data.append({
+                'id': voucher.id,
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'status': voucher.status,
+                'issued_date': voucher.issued_date.isoformat() if voucher.issued_date else None,
+                'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None,
+                'redeemed_date': voucher.redeemed_date.isoformat() if voucher.redeemed_date else None
+            })
+        
+        return jsonify({'vouchers': vouchers_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to load vouchers: {str(e)}'}), 500
+
+@app.route('/api/user/profile', methods=['GET'])
+def get_user_profile():
+    """Get user profile information"""
+    try:
+        user_id = request.args.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        profile_data = {
+            'id': user.id,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'phone': user.phone,
+            'user_type': user.user_type,
+            'organization_name': user.organization_name,
+            'shop_name': user.shop_name,
+            'address': user.address,
+            'postcode': user.postcode,
+            'city': user.city,
+            'balance': float(user.balance) if user.user_type == 'vcse' else None,
+            'created_at': user.created_at.isoformat() if user.created_at else None
+        }
+        
+        return jsonify({'profile': profile_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to load profile: {str(e)}'}), 500
+
+@app.route('/api/vouchers/redeem', methods=['POST'])
+def redeem_voucher():
+    """Redeem a voucher at a shop"""
+    try:
+        data = request.get_json()
+        
+        voucher_code = data.get('code') or data.get('voucher_code')  # Accept both 'code' and 'voucher_code'
+        shop_id = data.get('shop_id')
+        vendor_id = data.get('vendor_id')
+        
+        if not voucher_code or not shop_id:
+            return jsonify({'error': 'Voucher code and shop ID required'}), 400
+        
+        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        if voucher.status != 'active':
+            return jsonify({'error': f'Voucher is {voucher.status}'}), 400
+        
+        if voucher.expiry_date and voucher.expiry_date < datetime.utcnow():
+            voucher.status = 'expired'
+            db.session.commit()
+            return jsonify({'error': 'Voucher has expired'}), 400
+        
+        # Redeem the voucher
+        voucher.status = 'redeemed'
+        voucher.redeemed_date = datetime.utcnow()
+        voucher.redeemed_at_shop_id = shop_id
+        
+        db.session.commit()
+        
+        # Create notification for recipient
+        create_notification(
+            voucher.recipient_id,
+            'Voucher Redeemed',
+            f'Your voucher {voucher_code} worth £{voucher.value} has been redeemed.',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Voucher redeemed successfully',
+            'value': float(voucher.value),
+            'code': voucher.code,
+            'redeemed_date': voucher.redeemed_date.isoformat()
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to redeem voucher: {str(e)}'}), 500
+
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    """Get notifications for a user"""
+    try:
+        user_id = request.args.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        notifications = Notification.query.filter_by(user_id=user_id).order_by(Notification.created_at.desc()).limit(50).all()
+        
+        notifications_data = []
+        for notif in notifications:
+            notifications_data.append({
+                'id': notif.id,
+                'title': notif.title,
+                'message': notif.message,
+                'type': notif.type,
+                'is_read': notif.is_read,
+                'created_at': notif.created_at.isoformat() if notif.created_at else None
+            })
+        
+        return jsonify({'notifications': notifications_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to load notifications: {str(e)}'}), 500
+
+@app.route('/api/notifications/<int:notification_id>/read', methods=['POST'])
+def mark_notification_read(notification_id):
+    """Mark a notification as read"""
+    try:
+        notification = Notification.query.get(notification_id)
+        
+        if not notification:
+            return jsonify({'error': 'Notification not found'}), 404
+        
+        notification.is_read = True
+        db.session.commit()
+        
+        return jsonify({'message': 'Notification marked as read'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to mark notification as read: {str(e)}'}), 500
+
+# Vendor Routes - Post Surplus Food
+@app.route('/api/items/post', methods=['POST'])
+def post_surplus_item():
+    """Vendor posts a surplus food item"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        # Validate required fields
+        required_fields = ['item_name', 'quantity', 'category', 'shop_name', 'shop_address']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Find or create shop for this vendor
+        shop = VendorShop.query.filter_by(
+            vendor_id=user_id,
+            shop_name=data['shop_name']
+        ).first()
+        
+        if not shop:
+            # Create new shop
+            shop = VendorShop(
+                vendor_id=user_id,
+                shop_name=data['shop_name'],
+                address=data['shop_address'],
+                postcode='',
+                city='',
+                phone='',
+                is_active=True
+            )
+            db.session.add(shop)
+            db.session.flush()  # Get the shop ID
+        
+        # Create surplus item
+        new_item = SurplusItem(
+            vendor_id=user_id,
+            shop_id=shop.id,
+            item_name=data['item_name'],
+            quantity=data['quantity'],
+            category=data['category'],
+            description=data.get('description', ''),
+            status='available',
+            posted_at=datetime.now()
+        )
+        
+        db.session.add(new_item)
+        db.session.commit()
+        
+        # In a real app, this would trigger notifications to VCSE organizations
+        print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
+        
+        return jsonify({
+            'message': 'To Go item posted successfully',
+            'item_id': new_item.id,
+            'item_name': new_item.item_name,
+            'shop': shop.shop_name
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to post surplus item: {str(e)}'}), 500
+
+# ============================================
+# VENDOR SURPLUS ITEMS ENDPOINTS
+# ============================================
+
+@app.route('/api/vendor/surplus-items', methods=['GET'])
+def get_vendor_surplus_items():
+    """Get all surplus items posted by the logged-in vendor"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Vendor access required'}), 403
+        
+        # Get all surplus items posted by this vendor
+        surplus_items = SurplusItem.query.filter_by(vendor_id=user_id).order_by(SurplusItem.posted_at.desc()).all()
+        
+        items_list = []
+        for item in surplus_items:
+            shop = VendorShop.query.get(item.shop_id)
+            items_list.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'category': item.category,
+                'description': item.description,
+                'status': item.status,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'posted_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({
+            'surplus_items': items_list,
+            'total_count': len(items_list)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get surplus items: {str(e)}'}), 500
+
+# Run the application
+# ============================================
+# FUND ALLOCATION ENDPOINTS
+# ============================================
+
+@app.route('/api/admin/vcse-organizations', methods=['GET'])
+def get_vcse_organizations():
+    """Get all VCSE organizations with their balances"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get all VCSE organizations
+        vcse_orgs = User.query.filter_by(user_type='vcse').all()
+        
+        result = []
+        for org in vcse_orgs:
+            result.append({
+                'id': org.id,
+                'name': f"{org.first_name} {org.last_name}",
+                'organization_name': org.organization_name,
+                'email': org.email,
+                'charity_commission_number': org.charity_commission_number if hasattr(org, 'charity_commission_number') else '',
+                'allocated_balance': float(org.allocated_balance) if org.allocated_balance else 0.0,
+                'created_at': org.created_at.isoformat() if org.created_at else None
+            })
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get VCSE organizations: {str(e)}'}), 500
+
+
+@app.route('/api/admin/schools', methods=['GET'])
+def get_schools():
+    """Get all School/Care Organizations with their balances"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get all School/Care Organizations
+        schools = User.query.filter_by(user_type='school').all()
+        
+        result = []
+        for school in schools:
+            result.append({
+                'id': school.id,
+                'name': f"{school.first_name} {school.last_name}",
+                'organization_name': school.organization_name,
+                'email': school.email,
+                'allocated_balance': float(school.allocated_balance) if school.allocated_balance else 0.0,
+                'created_at': school.created_at.isoformat() if school.created_at else None
+            })
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get schools: {str(e)}'}), 500
+
+
+@app.route('/api/admin/allocate-funds', methods=['POST'])
+def allocate_funds():
+    """Admin allocates funds to a VCSE organization or School"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        data = request.get_json()
+        recipient_id = data.get('vcse_id') or data.get('school_id')  # Support both
+        amount = data.get('amount')
+        notes = data.get('notes', '')
+        
+        if not recipient_id or not amount:
+            return jsonify({'error': 'Recipient ID and amount are required'}), 400
+        
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                return jsonify({'error': 'Amount must be positive'}), 400
+        except ValueError:
+            return jsonify({'error': 'Invalid amount'}), 400
+        
+        # Get recipient organization (VCSE or School)
+        recipient = User.query.get(recipient_id)
+        if not recipient or recipient.user_type not in ['vcse', 'school']:
+            return jsonify({'error': 'Organization not found'}), 404
+        
+        # Update allocated balance (funds from admin)
+        current_allocated = float(recipient.allocated_balance) if recipient.allocated_balance else 0.0
+        recipient.allocated_balance = current_allocated + amount
+        
+        # Create allocation record (TODO: Create FundAllocation model)
+        # allocation = FundAllocation(
+        #     admin_id=user_id,
+        #     vcse_id=recipient_id if recipient.user_type == 'vcse' else None,
+        #     amount=amount,
+        #     notes=notes
+        # )
+        # db.session.add(allocation)
+        db.session.commit()
+        
+        # Send email notification (TODO: Implement send_fund_allocation_email function)
+        # send_fund_allocation_email(recipient.email, recipient.first_name, amount, current_allocated + amount)
+        
+        org_name = recipient.organization_name if recipient.organization_name else f"{recipient.first_name} {recipient.last_name}"
+        
+        return jsonify({
+            'message': 'Funds allocated successfully',
+            'organization_name': org_name,
+            'organization_type': recipient.user_type,
+            'amount': amount,
+            'new_allocated_balance': float(recipient.allocated_balance)
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to allocate funds: {str(e)}'}), 500
+
+
+@app.route('/api/admin/fund-allocations', methods=['GET'])
+def get_fund_allocations():
+    """Get all fund allocation history"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        allocations = FundAllocation.query.order_by(FundAllocation.allocated_at.desc()).all()
+        
+        result = []
+        for allocation in allocations:
+            admin = User.query.get(allocation.admin_id)
+            vcse = User.query.get(allocation.vcse_id)
+            
+            result.append({
+                'id': allocation.id,
+                'admin_name': f"{admin.first_name} {admin.last_name}" if admin else "Unknown",
+                'vcse_name': f"{vcse.first_name} {vcse.last_name}" if vcse else "Unknown",
+                'vcse_email': vcse.email if vcse else "",
+                'amount': float(allocation.amount),
+                'allocated_at': allocation.allocated_at.isoformat() if allocation.allocated_at else None,
+                'notes': allocation.notes
+            })
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get fund allocations: {str(e)}'}), 500
+
+
+@app.route('/api/vcse/balance', methods=['GET'])
+def get_vcse_balance():
+    """Get current VCSE organization balance"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCSE access required'}), 403
+        
+        balance = float(user.balance) if user.balance else 0.0
+        allocated_balance = float(user.allocated_balance) if user.allocated_balance else 0.0
+        
+        return jsonify({
+            'balance': balance,
+            'allocated_balance': allocated_balance,
+            'organization_name': f"{user.first_name} {user.last_name}"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get balance: {str(e)}'}), 500
+
+
+@app.route('/api/admin/vouchers', methods=['GET'])
+def get_all_vouchers():
+    """Get all vouchers for admin dashboard"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        vouchers = Voucher.query.order_by(Voucher.created_at.desc()).all()
+        
+        vouchers_data = []
+        for v in vouchers:
+            recipient = User.query.get(v.recipient_id) if v.recipient_id else None
+            issuer = User.query.get(v.issued_by) if v.issued_by else None
+            
+            vouchers_data.append({
+                'id': v.id,
+                'code': v.code,
+                'value': float(v.value),
+                'status': v.status,
+                'created_at': v.created_at.isoformat() if v.created_at else None,
+                'expiry_date': v.expiry_date.isoformat() if v.expiry_date else None,
+                'recipient': {
+                    'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'N/A',
+                    'email': recipient.email if recipient else 'N/A',
+                    'phone': recipient.phone if recipient else 'N/A',
+                    'address': recipient.address if recipient else 'N/A'
+                } if recipient else None,
+                'issued_by': {
+                    'name': f"{issuer.first_name} {issuer.last_name}" if issuer else 'N/A',
+                    'organization': issuer.organization_name if issuer else 'N/A'
+                } if issuer else None
+            })
+        
+        return jsonify({
+            'vouchers': vouchers_data,
+            'total_count': len(vouchers_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
+
+
+@app.route('/api/admin/shops', methods=['GET'])
+def admin_get_all_shops():
+    """Admin endpoint to view all shops with surplus foods"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get all vendor shops
+        shops = VendorShop.query.all()
+        
+        shops_data = []
+        for shop in shops:
+            vendor = User.query.get(shop.vendor_id)
+            
+            # Count surplus items for this shop
+            surplus_count = SurplusItem.query.filter_by(shop_id=shop.id).count()
+            
+            shops_data.append({
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'city': shop.city,
+                'postcode': shop.postcode,
+                'phone': shop.phone,
+                'surplus_items_count': surplus_count,
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'vendor_email': vendor.email if vendor else 'N/A',
+                'created_at': shop.created_at.isoformat() if shop.created_at else None
+            })
+        
+        return jsonify({
+            'shops': shops_data,
+            'total_count': len(shops_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get shops: {str(e)}'}), 500
+
+
+@app.route('/api/admin/surplus-items', methods=['GET'])
+def admin_get_all_surplus_items():
+    """Admin endpoint to view all surplus items across all vendors"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get all surplus items
+        items = SurplusItem.query.order_by(SurplusItem.posted_at.desc()).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            vendor = User.query.get(shop.vendor_id) if shop else None
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'price': float(item.price) if item.price else 0.0,
+                'description': item.description,
+                'status': item.status,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'created_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get surplus items: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/shops', methods=['GET'])
+def get_shops_for_recipient():
+    """Recipient endpoint to view all participating shops"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get all vendor shops
+        shops = VendorShop.query.all()
+        
+        shops_data = []
+        for shop in shops:
+            # Count available surplus items for this shop
+            surplus_count = SurplusItem.query.filter_by(
+                shop_id=shop.id,
+                status='available'
+            ).count()
+            
+            shops_data.append({
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'city': shop.city,
+                'postcode': shop.postcode,
+                'phone': shop.phone,
+                'surplus_items_count': surplus_count
+            })
+        
+        return jsonify({
+            'shops': shops_data,
+            'total_count': len(shops_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get shops: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/surplus-items', methods=['GET'])
+def get_surplus_items_for_recipient():
+    """Recipient endpoint to view all available surplus items"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get all available surplus items
+        items = SurplusItem.query.filter_by(status='available').order_by(
+            SurplusItem.posted_at.desc()
+        ).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'price': float(item.price) if item.price else 0.0,
+                'description': item.description,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'shop_phone': shop.phone if shop else 'N/A',
+                'created_at': item.created_at.isoformat() if item.created_at else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get surplus items: {str(e)}'}), 500
+
+
+# School/Care Organization Routes
+@app.route('/api/school/balance', methods=['GET'])
+def get_school_balance():
+    """Get current school/care organization balance"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'School/Care Organization access required'}), 403
+        
+        allocated_balance = float(user.allocated_balance) if user.allocated_balance else 0.0
+        
+        return jsonify({
+            'allocated_balance': allocated_balance,
+            'organization_name': user.organization_name
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get balance: {str(e)}'}), 500
+
+@app.route('/api/school/issue-voucher', methods=['POST'])
+def school_issue_voucher():
+    """School/Care Organization issues a voucher to a family"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'School/Care Organization access required'}), 403
+        
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['recipient_email', 'amount', 'recipient_first_name', 'recipient_last_name', 'recipient_phone', 'recipient_address']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        amount = float(data['amount'])
+        
+        # Check if school has sufficient balance
+        if user.allocated_balance < amount:
+            return jsonify({'error': 'Insufficient balance'}), 400
+        
+        # Find or create recipient
+        recipient = User.query.filter_by(email=data['recipient_email']).first()
+        
+        if not recipient:
+            # Create new recipient account
+            from werkzeug.security import generate_password_hash
+            import secrets
+            
+            temp_password = secrets.token_urlsafe(12)
+            recipient = User(
+                email=data['recipient_email'],
+                password_hash=generate_password_hash(temp_password),
+                first_name=data['recipient_first_name'],
+                last_name=data['recipient_last_name'],
+                phone=data['recipient_phone'],
+                address=data['recipient_address'],
+                user_type='recipient',
+                is_verified=True,
+                is_active=True
+            )
+            db.session.add(recipient)
+            db.session.flush()
+        
+        # Generate unique voucher code
+        import random
+        import string
+        voucher_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        
+        # Create voucher
+        from datetime import datetime, timedelta
+        voucher = Voucher(
+            code=voucher_code,
+            value=amount,
+            issued_by_id=user_id,
+            recipient_id=recipient.id,
+            status='active',
+            expiry_date=datetime.utcnow() + timedelta(days=90)
+        )
+        
+        # Deduct from school balance
+        user.allocated_balance -= amount
+        
+        db.session.add(voucher)
+        db.session.commit()
+        
+        # Create notification for recipient
+        create_notification(
+            recipient.id,
+            'New Voucher Received',
+            f'You have received a £{amount} voucher from {user.organization_name}. Code: {voucher_code}',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Voucher issued successfully',
+            'voucher_code': voucher_code,
+            'amount': amount,
+            'recipient_email': recipient.email,
+            'remaining_balance': float(user.allocated_balance)
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to issue voucher: {str(e)}'}), 500
+
+@app.route('/api/school/vouchers', methods=['GET'])
+def get_school_vouchers():
+    """Get all vouchers issued by this school"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'School/Care Organization access required'}), 403
+        
+        vouchers = Voucher.query.filter_by(issued_by_id=user_id).order_by(Voucher.created_at.desc()).all()
+        
+        vouchers_data = []
+        for voucher in vouchers:
+            recipient = User.query.get(voucher.recipient_id)
+            vouchers_data.append({
+                'id': voucher.id,
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'status': voucher.status,
+                'recipient_name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'Unknown',
+                'recipient_email': recipient.email if recipient else 'Unknown',
+                'recipient_phone': recipient.phone if recipient else 'N/A',
+                'recipient_address': recipient.address if recipient else 'N/A',
+                'created_at': voucher.created_at.isoformat() if voucher.created_at else None,
+                'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None
+            })
+        
+        return jsonify({'vouchers': vouchers_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
+
+
+# ============================================
+# Vendor Voucher Redemption Routes
+# ============================================
+
+@app.route('/api/vendor/redeem-voucher', methods=['POST'])
+def vendor_redeem_voucher():
+    """Vendor endpoint to redeem a voucher by code"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Vendor access required'}), 403
+        
+        data = request.get_json()
+        voucher_code = data.get('code', '').strip().upper()
+        
+        if not voucher_code:
+            return jsonify({'error': 'Voucher code is required'}), 400
+        
+        # Find voucher by code
+        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        
+        if not voucher:
+            return jsonify({'error': 'Invalid voucher code'}), 404
+        
+        # Check if voucher is already redeemed
+        if voucher.status == 'redeemed':
+            return jsonify({'error': 'Voucher has already been redeemed'}), 400
+        
+        # Check if voucher is expired
+        if voucher.status == 'expired':
+            return jsonify({'error': 'Voucher has expired'}), 400
+        
+        # Check expiry date
+        from datetime import datetime
+        if voucher.expiry_date and datetime.now().date() > voucher.expiry_date:
+            voucher.status = 'expired'
+            db.session.commit()
+            return jsonify({'error': 'Voucher has expired'}), 400
+        
+        # Get recipient details
+        recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
+        
+        # Redeem voucher
+        voucher.status = 'redeemed'
+        voucher.redeemed_at = datetime.now()
+        voucher.redeemed_by_vendor = user_id
+        
+        # Update vendor balance
+        current_balance = float(user.balance) if user.balance else 0.0
+        user.balance = current_balance + float(voucher.value)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Voucher redeemed successfully',
+            'voucher': {
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'recipient': {
+                    'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'N/A',
+                    'phone': recipient.phone if recipient else 'N/A'
+                } if recipient else None
+            },
+            'new_balance': float(user.balance)
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to redeem voucher: {str(e)}'}), 500
+
+
+@app.route('/api/vendor/validate-voucher', methods=['POST'])
+def validate_voucher():
+    """Vendor endpoint to validate a voucher code without redeeming it"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Vendor access required'}), 403
+        
+        data = request.get_json()
+        voucher_code = data.get('code', '').strip().upper()
+        
+        if not voucher_code:
+            return jsonify({'error': 'Voucher code is required'}), 400
+        
+        # Find voucher by code
+        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        
+        if not voucher:
+            return jsonify({'valid': False, 'error': 'Invalid voucher code'}), 200
+        
+        # Check status
+        if voucher.status != 'active':
+            return jsonify({'valid': False, 'error': f'Voucher is {voucher.status}'}), 200
+        
+        # Check expiry
+        from datetime import datetime
+        if voucher.expiry_date and datetime.now().date() > voucher.expiry_date:
+            return jsonify({'valid': False, 'error': 'Voucher has expired'}), 200
+        
+        # Get recipient details
+        recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
+        
+        return jsonify({
+            'valid': True,
+            'voucher': {
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None,
+                'recipient': {
+                    'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'N/A',
+                    'phone': recipient.phone if recipient else 'N/A'
+                } if recipient else None
+            }
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to validate voucher: {str(e)}'}), 500
+
+
+# ============================================
+# Recipient Voucher Management Routes
+# ============================================
+
+@app.route('/api/recipient/vouchers', methods=['GET'])
+def get_recipient_vouchers():
+    """Get all vouchers assigned to the logged-in recipient"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get all vouchers for this recipient
+        vouchers = Voucher.query.filter_by(recipient_id=user_id).order_by(
+            Voucher.created_at.desc()
+        ).all()
+        
+        vouchers_data = []
+        for voucher in vouchers:
+            issued_by_user = User.query.get(voucher.issued_by)
+            redeemed_vendor = User.query.get(voucher.redeemed_by_vendor) if voucher.redeemed_by_vendor else None
+            
+            vouchers_data.append({
+                'id': voucher.id,
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'status': voucher.status,
+                'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None,
+                'created_at': voucher.created_at.isoformat() if voucher.created_at else None,
+                'redeemed_at': voucher.redeemed_at.isoformat() if voucher.redeemed_at else None,
+                'issued_by': {
+                    'name': issued_by_user.organization_name or f"{issued_by_user.first_name} {issued_by_user.last_name}",
+                    'type': issued_by_user.user_type
+                } if issued_by_user else None,
+                'redeemed_by': {
+                    'name': redeemed_vendor.shop_name or f"{redeemed_vendor.first_name} {redeemed_vendor.last_name}"
+                } if redeemed_vendor else None,
+                'vendor_restrictions': voucher.vendor_restrictions
+            })
+        
+        # Calculate summary statistics
+        active_vouchers = [v for v in vouchers if v.status == 'active']
+        redeemed_vouchers = [v for v in vouchers if v.status == 'redeemed']
+        expired_vouchers = [v for v in vouchers if v.status == 'expired']
+        
+        total_value = sum(float(v.value) for v in active_vouchers)
+        total_redeemed = sum(float(v.value) for v in redeemed_vouchers)
+        
+        return jsonify({
+            'vouchers': vouchers_data,
+            'summary': {
+                'total_vouchers': len(vouchers),
+                'active_count': len(active_vouchers),
+                'redeemed_count': len(redeemed_vouchers),
+                'expired_count': len(expired_vouchers),
+                'total_active_value': total_value,
+                'total_redeemed_value': total_redeemed
+            }
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/shops', methods=['GET'])
+def get_recipient_shops():
+    """Get all participating shops with their to-go items count"""
+    try:
+        shops = VendorShop.query.all()
+        shops_data = []
+        
+        for shop in shops:
+            # Count available to-go items for this shop
+            to_go_count = SurplusItem.query.filter_by(
+                shop_id=shop.id,
+                status='available'
+            ).count()
+            
+            shops_data.append({
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address or '',
+                'city': shop.city or '',
+                'postcode': shop.postcode or '',
+                'phone': shop.phone or '',
+                'to_go_items_count': to_go_count
+            })
+        
+        return jsonify({'shops': shops_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get shops: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/to-go-items', methods=['GET'])
+def get_recipient_to_go_items():
+    """Get all available to-go items from all shops"""
+    try:
+        items = SurplusItem.query.filter_by(status='available').all()
+        items_data = []
+        
+        for item in items:
+            # Get shop information
+            shop = VendorShop.query.get(item.shop_id)
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'category': item.category,
+                'description': item.description or '',
+                'item_type': item.item_type or 'free',
+                'price': float(item.price) if item.price else 0.0,
+                'original_price': float(item.original_price) if item.original_price else 0.0,
+                'quantity_available': item.quantity or '0',
+                'shop_name': shop.shop_name if shop else 'Unknown Shop',
+                'shop_address': shop.address if shop else '',
+                'shop_city': shop.city if shop else '',
+                'shop_postcode': shop.postcode if shop else '',
+                'posted_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({'items': items_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get to-go items: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/vouchers/<int:voucher_id>/qr', methods=['GET'])
+def get_voucher_qr_code(voucher_id):
+    """Generate QR code for a voucher"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher or voucher.recipient_id != user_id:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Generate QR code data (voucher code + validation token)
+        import hashlib
+        import time
+        timestamp = int(time.time())
+        validation_token = hashlib.sha256(f"{voucher.code}{timestamp}{voucher.id}".encode()).hexdigest()[:16]
+        
+        qr_data = {
+            'voucher_code': voucher.code,
+            'voucher_id': voucher.id,
+            'value': float(voucher.value),
+            'token': validation_token,
+            'timestamp': timestamp
+        }
+        
+        return jsonify({
+            'qr_data': qr_data,
+            'qr_string': f"BAKUP-{voucher.code}-{validation_token}"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate QR code: {str(e)}'}), 500
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        
+        # Create default categories if they don't exist
+        if not Category.query.first():
+            categories = [
+                Category(name='Fresh Produce', type='edible', description='Fruits, vegetables, and fresh items'),
+                Category(name='Bakery', type='edible', description='Bread, pastries, and baked goods'),
+                Category(name='Dairy', type='edible', description='Milk, cheese, yogurt, and dairy products'),
+                Category(name='Meat & Fish', type='edible', description='Fresh and frozen meat and fish'),
+                Category(name='Packaged Foods', type='edible', description='Canned, boxed, and packaged items'),
+                Category(name='Non-Food Items', type='non-edible', description='Toiletries, household items, and other essentials')
+            ]
+            db.session.add_all(categories)
+            db.session.commit()
+            print("Database initialized with default categories")
+
+# ============================================
+# Shopping Cart Routes
+# ============================================
+
+@app.route('/api/cart/add', methods=['POST'])
+def add_to_cart():
+    """Add item to shopping cart"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        data = request.get_json()
+        item_id = data.get('item_id')
+        quantity = data.get('quantity', 1)
+        
+        if not item_id:
+            return jsonify({'error': 'Item ID is required'}), 400
+        
+        # Check if item exists and is available
+        item = SurplusItem.query.get(item_id)
+        if not item or item.status != 'available':
+            return jsonify({'error': 'Item not available'}), 400
+        
+        # Add to cart or update quantity
+        result = db.session.execute(
+            text("SELECT id, quantity FROM shopping_cart WHERE recipient_id = :user_id AND surplus_item_id = :item_id"),
+            {"user_id": user_id, "item_id": item_id}
+        ).fetchone()
+        
+        if result:
+            # Update existing cart item
+            cart_id, current_qty = result
+            new_qty = current_qty + quantity
+            db.session.execute(
+                text("UPDATE shopping_cart SET quantity = :qty WHERE id = :cart_id"),
+                {"qty": new_qty, "cart_id": cart_id}
+            )
+        else:
+            # Add new cart item
+            db.session.execute(
+                text("INSERT INTO shopping_cart (recipient_id, surplus_item_id, quantity) VALUES (:user_id, :item_id, :qty)"),
+                {"user_id": user_id, "item_id": item_id, "qty": quantity}
+            )
+        
+        # Notify vendor that someone added item to cart
+        shop = VendorShop.query.get(item.shop_id)
+        if shop:
+            db.session.execute(
+                text("INSERT INTO cart_notification (user_id, message, type, surplus_item_id) VALUES (:vendor_id, :message, :type, :item_id)"),
+                {"vendor_id": shop.vendor_id, "message": f"{user.first_name} added {item.item_name} to their cart", "type": 'item_added_to_cart', "item_id": item_id}
+            )
+        
+        db.session.commit()
+        
+        return jsonify({'message': 'Item added to cart successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to add to cart: {str(e)}'}), 500
+
+@app.route('/api/cart', methods=['GET'])
+def get_cart():
+    """Get user's shopping cart"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get cart items
+        cart_items = db.session.execute(text("""
+            SELECT c.id, c.quantity, c.added_at, s.id as item_id, s.item_name, s.quantity as item_quantity,
+                   s.unit, s.category, s.price, s.description, s.status,
+                   v.shop_name, v.address
+            FROM shopping_cart c
+            JOIN surplus_item s ON c.surplus_item_id = s.id
+            JOIN vendor_shop v ON s.shop_id = v.id
+            WHERE c.recipient_id = :user_id
+            ORDER BY c.added_at DESC
+        """), {"user_id": user_id}).fetchall()
+        
+        cart_data = []
+        for item in cart_items:
+            cart_data.append({
+                'cart_id': item[0],
+                'quantity': item[1],
+                'added_at': item[2],
+                'item': {
+                    'id': item[3],
+                    'name': item[4],
+                    'available_quantity': item[5],
+                    'unit': item[6],
+                    'category': item[7],
+                    'price': float(item[8]) if item[8] else 0.0,
+                    'description': item[9],
+                    'status': item[10]
+                },
+                'shop': {
+                    'name': item[11],
+                    'address': item[12]
+                }
+            })
+        
+        return jsonify({'cart': cart_data, 'count': len(cart_data)}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get cart: {str(e)}'}), 500
+
+@app.route('/api/cart/remove/<int:cart_id>', methods=['DELETE'])
+def remove_from_cart(cart_id):
+    """Remove item from cart"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        # Verify cart item belongs to user
+        result = db.session.execute(
+            text("SELECT recipient_id FROM shopping_cart WHERE id = :cart_id"),
+            {"cart_id": cart_id}
+        ).fetchone()
+        
+        if not result or result[0] != user_id:
+            return jsonify({'error': 'Cart item not found'}), 404
+        
+        db.session.execute(text("DELETE FROM shopping_cart WHERE id = :cart_id"), {"cart_id": cart_id})
+        db.session.commit()
+        
+        return jsonify({'message': 'Item removed from cart'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to remove from cart: {str(e)}'}), 500
+
+@app.route('/api/cart/notifications', methods=['GET'])
+def get_cart_notifications():
+    """Get cart-related notifications"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        notifications = db.session.execute(text("""
+            SELECT id, message, type, is_read, created_at
+            FROM cart_notification
+            WHERE user_id = :user_id
+            ORDER BY created_at DESC
+            LIMIT 50
+        """), {"user_id": user_id}).fetchall()
+        
+        notif_data = []
+        for n in notifications:
+            notif_data.append({
+                'id': n[0],
+                'message': n[1],
+                'type': n[2],
+                'is_read': bool(n[3]),
+                'created_at': n[4]
+            })
+        
+        return jsonify({'notifications': notif_data}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get notifications: {str(e)}'}), 500
+
+
+# ============================================
+# Admin Edit and Delete Routes for Schools and VCSE
+# ============================================
+
+@app.route('/api/admin/schools/<int:school_id>', methods=['PUT'])
+def edit_school(school_id):
+    """Admin edits a school/care organization"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the school
+        school = User.query.get(school_id)
+        if not school or school.user_type != 'school':
+            return jsonify({'error': 'School not found'}), 404
+        
+        # Get update data
+        data = request.get_json()
+        
+        # Update fields if provided
+        if 'organization_name' in data:
+            school.organization_name = data['organization_name']
+        if 'first_name' in data:
+            school.first_name = data['first_name']
+        if 'last_name' in data:
+            school.last_name = data['last_name']
+        if 'email' in data:
+            # Check if email is already taken by another user
+            existing_user = User.query.filter_by(email=data['email']).first()
+            if existing_user and existing_user.id != school_id:
+                return jsonify({'error': 'Email already in use'}), 400
+            school.email = data['email']
+        if 'phone' in data:
+            school.phone = data['phone']
+        if 'address' in data:
+            school.address = data['address']
+        if 'city' in data:
+            school.city = data['city']
+        if 'postcode' in data:
+            school.postcode = data['postcode']
+        if 'allocated_balance' in data:
+            school.allocated_balance = float(data['allocated_balance'])
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'School updated successfully',
+            'school': {
+                'id': school.id,
+                'organization_name': school.organization_name,
+                'first_name': school.first_name,
+                'last_name': school.last_name,
+                'email': school.email,
+                'phone': school.phone,
+                'address': school.address,
+                'city': school.city,
+                'postcode': school.postcode,
+                'allocated_balance': float(school.allocated_balance) if school.allocated_balance else 0.0
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update school: {str(e)}'}), 500
+
+
+@app.route('/api/admin/schools/<int:school_id>', methods=['DELETE'])
+def delete_school(school_id):
+    """Admin deletes a school/care organization"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the school
+        school = User.query.get(school_id)
+        if not school or school.user_type != 'school':
+            return jsonify({'error': 'School not found'}), 404
+        
+        # Check if school has issued any vouchers
+        vouchers_count = Voucher.query.filter_by(issued_by=school_id).count()
+        if vouchers_count > 0:
+            return jsonify({
+                'error': f'Cannot delete school. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
+            }), 400
+        
+        # Delete associated records first to avoid foreign key constraints
+        # Delete login sessions
+        LoginSession.query.filter_by(user_id=school_id).delete()
+        
+        # Delete notifications
+        Notification.query.filter_by(user_id=school_id).delete()
+        
+        # Delete the school
+        db.session.delete(school)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'School deleted successfully',
+            'school_name': school.organization_name
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete school: {str(e)}'}), 500
+
+
+@app.route('/api/admin/vcse/<int:vcse_id>', methods=['PUT'])
+def edit_vcse(vcse_id):
+    """Admin edits a VCSE organization"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the VCSE organization
+        vcse = User.query.get(vcse_id)
+        if not vcse or vcse.user_type != 'vcse':
+            return jsonify({'error': 'VCSE organization not found'}), 404
+        
+        # Get update data
+        data = request.get_json()
+        
+        # Update fields if provided
+        if 'name' in data:
+            vcse.organization_name = data['name']
+        if 'email' in data:
+            # Check if email is already taken by another user
+            existing_user = User.query.filter_by(email=data['email']).first()
+            if existing_user and existing_user.id != vcse_id:
+                return jsonify({'error': 'Email already in use'}), 400
+            vcse.email = data['email']
+        if 'charity_commission_number' in data:
+            vcse.charity_commission_number = data['charity_commission_number']
+        if 'allocated_balance' in data:
+            vcse.allocated_balance = float(data['allocated_balance'])
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'VCSE organization updated successfully',
+            'vcse': {
+                'id': vcse.id,
+                'name': vcse.organization_name,
+                'email': vcse.email,
+                'charity_commission_number': vcse.charity_commission_number,
+                'allocated_balance': float(vcse.allocated_balance) if vcse.allocated_balance else 0.0
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update VCSE organization: {str(e)}'}), 500
+
+
+@app.route('/api/admin/vcse/<int:vcse_id>', methods=['DELETE'])
+def delete_vcse(vcse_id):
+    """Admin deletes a VCSE organization"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the VCSE organization
+        vcse = User.query.get(vcse_id)
+        if not vcse or vcse.user_type != 'vcse':
+            return jsonify({'error': 'VCSE organization not found'}), 404
+        
+        # Check if VCSE has issued any vouchers
+        vouchers_count = Voucher.query.filter_by(issued_by=vcse_id).count()
+        if vouchers_count > 0:
+            return jsonify({
+                'error': f'Cannot delete VCSE organization. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
+            }), 400
+        
+        # Delete associated records first to avoid foreign key constraints
+        # Delete login sessions
+        LoginSession.query.filter_by(user_id=vcse_id).delete()
+        
+        # Delete notifications
+        Notification.query.filter_by(user_id=vcse_id).delete()
+        
+        # Delete the VCSE organization
+        db.session.delete(vcse)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'VCSE organization deleted successfully',
+            'organization_name': vcse.organization_name or vcse.first_name
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete VCSE organization: {str(e)}'}), 500
+    
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
