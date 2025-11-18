@@ -191,6 +191,21 @@ class ShoppingCart(db.Model):
     recipient = db.relationship('User', backref='cart_items')
     surplus_item = db.relationship('SurplusItem', backref='in_carts')
 
+class Order(db.Model):
+    __tablename__ = 'order'
+    id = db.Column(db.Integer, primary_key=True)
+    vcse_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # VCSE organization placing order
+    surplus_item_id = db.Column(db.Integer, db.ForeignKey('surplus_item.id'), nullable=False)
+    client_name = db.Column(db.String(200), nullable=False)  # Client receiving the order
+    client_mobile = db.Column(db.String(20), nullable=False)
+    client_email = db.Column(db.String(120), nullable=False)
+    quantity = db.Column(db.Integer, default=1, nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, confirmed, collected, cancelled
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    vcse = db.relationship('User', backref='placed_orders')
+    surplus_item = db.relationship('SurplusItem', backref='orders')
+
 # Helper Functions
 def send_verification_email(user):
     try:
@@ -666,6 +681,212 @@ def vcse_load_money():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to load money: {str(e)}'}), 500
+
+@app.route('/api/vcse/vouchers', methods=['GET'])
+def vcse_get_vouchers():
+    """Get all vouchers issued by this VCSE organization"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can access this'}), 403
+        
+        # Get query parameters for filtering
+        status_filter = request.args.get('status', 'all')  # all, active, redeemed, expired
+        search_query = request.args.get('search', '').lower()
+        
+        # Query vouchers issued by this VCSE
+        query = Voucher.query.filter_by(issued_by=user_id)
+        
+        # Apply status filter
+        if status_filter != 'all':
+            query = query.filter_by(status=status_filter)
+        
+        vouchers = query.order_by(Voucher.created_at.desc()).all()
+        
+        # Build response with recipient details
+        vouchers_data = []
+        for voucher in vouchers:
+            recipient = User.query.get(voucher.recipient_id)
+            
+            voucher_info = {
+                'id': voucher.id,
+                'code': voucher.code,
+                'value': float(voucher.value),
+                'status': voucher.status,
+                'created_at': voucher.created_at.isoformat() if voucher.created_at else None,
+                'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None,
+                'redeemed_date': voucher.redeemed_date.isoformat() if voucher.redeemed_date else None,
+                'recipient': {
+                    'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'Unknown',
+                    'email': recipient.email if recipient else '',
+                    'phone': recipient.phone if recipient else ''
+                }
+            }
+            
+            # Apply search filter
+            if search_query:
+                searchable_text = f"{voucher.code} {voucher_info['recipient']['name']} {voucher_info['recipient']['email']}".lower()
+                if search_query not in searchable_text:
+                    continue
+            
+            vouchers_data.append(voucher_info)
+        
+        return jsonify({
+            'vouchers': vouchers_data,
+            'total_count': len(vouchers_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
+
+@app.route('/api/vcse/export-vouchers', methods=['GET'])
+def vcse_export_vouchers():
+    """Export all vouchers issued by VCSE to Excel"""
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment
+        from io import BytesIO
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can export vouchers'}), 403
+        
+        # Get all vouchers issued by this VCSE
+        vouchers = Voucher.query.filter_by(issued_by=user_id).order_by(Voucher.created_at.desc()).all()
+        
+        # Create Excel workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Voucher Orders"
+        
+        # Header styling
+        header_fill = PatternFill(start_color="4CAF50", end_color="4CAF50", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+        
+        # Headers
+        headers = ['Voucher Code', 'Recipient Name', 'Email', 'Phone', 'Value (£)', 'Status', 'Issue Date', 'Expiry Date', 'Redeemed Date']
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+        
+        # Data rows
+        for row_idx, voucher in enumerate(vouchers, 2):
+            recipient = User.query.get(voucher.recipient_id)
+            
+            ws.cell(row=row_idx, column=1, value=voucher.code)
+            ws.cell(row=row_idx, column=2, value=f"{recipient.first_name} {recipient.last_name}" if recipient else 'Unknown')
+            ws.cell(row=row_idx, column=3, value=recipient.email if recipient else '')
+            ws.cell(row=row_idx, column=4, value=recipient.phone if recipient else '')
+            ws.cell(row=row_idx, column=5, value=float(voucher.value))
+            ws.cell(row=row_idx, column=6, value=voucher.status.upper())
+            ws.cell(row=row_idx, column=7, value=voucher.created_at.strftime('%Y-%m-%d %H:%M') if voucher.created_at else '')
+            ws.cell(row=row_idx, column=8, value=voucher.expiry_date.strftime('%Y-%m-%d') if voucher.expiry_date else '')
+            ws.cell(row=row_idx, column=9, value=voucher.redeemed_date.strftime('%Y-%m-%d %H:%M') if voucher.redeemed_date else '-')
+        
+        # Auto-adjust column widths
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        # Save to BytesIO
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        
+        # Send file
+        from flask import send_file
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=f'voucher_orders_{datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.xlsx'
+        )
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export vouchers: {str(e)}'}), 500
+
+@app.route('/api/vcse/place-order', methods=['POST'])
+def vcse_place_order():
+    """VCSE organizations can place orders for To Go items on behalf of clients"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can place orders'}), 403
+        
+        # Validate required fields
+        surplus_item_id = data.get('surplus_item_id')
+        client_name = data.get('client_name')
+        client_mobile = data.get('client_mobile')
+        client_email = data.get('client_email')
+        quantity = data.get('quantity', 1)
+        
+        if not all([surplus_item_id, client_name, client_mobile, client_email]):
+            return jsonify({'error': 'All fields are required'}), 400
+        
+        # Check if item exists and is available
+        item = SurplusItem.query.get(surplus_item_id)
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        if item.status != 'available':
+            return jsonify({'error': 'Item is no longer available'}), 400
+        
+        # Create order
+        order = Order(
+            vcse_id=user_id,
+            surplus_item_id=surplus_item_id,
+            client_name=client_name,
+            client_mobile=client_mobile,
+            client_email=client_email,
+            quantity=quantity,
+            status='pending'
+        )
+        
+        db.session.add(order)
+        db.session.commit()
+        
+        # Notify vendor
+        create_notification(
+            item.vendor_id,
+            'New Order Received',
+            f'VCSE organization has ordered {quantity}x {item.item_name} for client {client_name}',
+            'info'
+        )
+        
+        return jsonify({
+            'message': 'Order placed successfully',
+            'order_id': order.id
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to place order: {str(e)}'}), 500
 
 @app.route('/api/vcse/issue-voucher', methods=['POST'])
 def vcse_issue_voucher():

@@ -28,6 +28,7 @@ def init_tables():
             print("  - voucher")
             print("  - surplus_item")
             print("  - shopping_cart")
+            print("  - order")
             print("  - notification")
             print("  - login_history")
             print("  - report")
