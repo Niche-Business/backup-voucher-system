@@ -7,7 +7,7 @@ const LanguageSelector = () => {
   const languages = [
     { code: 'en', name: t('language.en'), flag: '🇬🇧' },
     { code: 'ar', name: t('language.ar'), flag: '🇸🇦' },
-    { code: 'fr', name: t('language.fr'), flag: '🇫🇷' },
+    { code: 'ro', name: t('language.ro'), flag: '🇷🇴' },
     { code: 'es', name: t('language.es'), flag: '🇪🇸' },
     { code: 'pl', name: t('language.pl'), flag: '🇵🇱' }
   ];

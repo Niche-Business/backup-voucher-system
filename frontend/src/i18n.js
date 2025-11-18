@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from './locales/en.json';
 import ar from './locales/ar.json';
-import fr from './locales/fr.json';
+import ro from './locales/ro.json';
 import es from './locales/es.json';
 import pl from './locales/pl.json';
 
@@ -15,7 +15,7 @@ i18n
     resources: {
       en: { translation: en },
       ar: { translation: ar },
-      fr: { translation: fr },
+      ro: { translation: ro },
       es: { translation: es },
       pl: { translation: pl }
     },
