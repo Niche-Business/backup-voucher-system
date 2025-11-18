@@ -1439,6 +1439,7 @@ function VCSEDashboard({ user, onLogout }) {
   const [message, setMessage] = useState('')
   const [toGoItems, setToGoItems] = useState([])
   const [vouchers, setVouchers] = useState([])
+  const [analytics, setAnalytics] = useState(null)
   const [statusFilter, setStatusFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -1446,6 +1447,7 @@ function VCSEDashboard({ user, onLogout }) {
     loadBalance()
     loadToGoItems()
     loadVouchers()
+    loadAnalytics()
   }, [])
 
   useEffect(() => {
@@ -1480,6 +1482,15 @@ function VCSEDashboard({ user, onLogout }) {
       setVouchers(data.vouchers || [])
     } catch (error) {
       console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const loadAnalytics = async () => {
+    try {
+      const data = await apiCall('/vcse/analytics')
+      setAnalytics(data)
+    } catch (error) {
+      console.error('Failed to load analytics:', error)
     }
   }
 
@@ -1532,6 +1543,7 @@ function VCSEDashboard({ user, onLogout }) {
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
           <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 Voucher Orders</button>
+          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 Reports</button>
           <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
@@ -1655,6 +1667,140 @@ function VCSEDashboard({ user, onLogout }) {
                 </div>
               )}
             </div>
+          </div>
+        )}
+        
+        {activeTab === 'reports' && (
+          <div>
+            <h2>📈 Reports & Analytics</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Visual insights into your voucher distribution and impact</p>
+            
+            {!analytics ? (
+              <div style={{textAlign: 'center', padding: '40px'}}>
+                <p>Loading analytics...</p>
+              </div>
+            ) : (
+              <div>
+                {/* Key Metrics Cards */}
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Total Vouchers Issued</div>
+                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>{analytics.total_vouchers}</div>
+                  </div>
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Total Value Distributed</div>
+                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>£{analytics.total_value.toFixed(2)}</div>
+                  </div>
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Active Vouchers</div>
+                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2e7d32'}}>{analytics.active_vouchers}</div>
+                  </div>
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Redeemed Vouchers</div>
+                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1565c0'}}>{analytics.redeemed_vouchers}</div>
+                  </div>
+                </div>
+                
+                {/* Status Breakdown */}
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <h3 style={{marginTop: 0}}>Voucher Status Breakdown</h3>
+                    <div style={{padding: '20px 0'}}>
+                      <div style={{marginBottom: '15px'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                          <span>🟢 Active</span>
+                          <strong>{analytics.status_breakdown.active} ({analytics.total_vouchers > 0 ? ((analytics.status_breakdown.active / analytics.total_vouchers) * 100).toFixed(1) : 0}%)</strong>
+                        </div>
+                        <div style={{backgroundColor: '#e0e0e0', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                          <div style={{backgroundColor: '#4CAF50', height: '100%', width: `${analytics.total_vouchers > 0 ? (analytics.status_breakdown.active / analytics.total_vouchers) * 100 : 0}%`}}></div>
+                        </div>
+                      </div>
+                      <div style={{marginBottom: '15px'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                          <span>🔵 Redeemed</span>
+                          <strong>{analytics.status_breakdown.redeemed} ({analytics.total_vouchers > 0 ? ((analytics.status_breakdown.redeemed / analytics.total_vouchers) * 100).toFixed(1) : 0}%)</strong>
+                        </div>
+                        <div style={{backgroundColor: '#e0e0e0', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                          <div style={{backgroundColor: '#2196F3', height: '100%', width: `${analytics.total_vouchers > 0 ? (analytics.status_breakdown.redeemed / analytics.total_vouchers) * 100 : 0}%`}}></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                          <span>🔴 Expired</span>
+                          <strong>{analytics.status_breakdown.expired} ({analytics.total_vouchers > 0 ? ((analytics.status_breakdown.expired / analytics.total_vouchers) * 100).toFixed(1) : 0}%)</strong>
+                        </div>
+                        <div style={{backgroundColor: '#e0e0e0', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                          <div style={{backgroundColor: '#f44336', height: '100%', width: `${analytics.total_vouchers > 0 ? (analytics.status_breakdown.expired / analytics.total_vouchers) * 100 : 0}%`}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                    <h3 style={{marginTop: 0}}>Value by Status</h3>
+                    <div style={{padding: '20px 0'}}>
+                      <div style={{marginBottom: '20px'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <span>🟢 Active Value</span>
+                          <strong style={{fontSize: '20px', color: '#4CAF50'}}>£{analytics.value_by_status.active.toFixed(2)}</strong>
+                        </div>
+                      </div>
+                      <div style={{marginBottom: '20px'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <span>🔵 Redeemed Value</span>
+                          <strong style={{fontSize: '20px', color: '#2196F3'}}>£{analytics.value_by_status.redeemed.toFixed(2)}</strong>
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <span>🔴 Expired Value</span>
+                          <strong style={{fontSize: '20px', color: '#f44336'}}>£{analytics.value_by_status.expired.toFixed(2)}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Issuance Trend */}
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                  <h3 style={{marginTop: 0}}>Voucher Issuance Trend (Last 30 Days)</h3>
+                  <div style={{overflowX: 'auto'}}>
+                    <div style={{display: 'flex', alignItems: 'flex-end', height: '200px', gap: '4px', minWidth: '600px'}}>
+                      {analytics.issuance_trend.map((day, idx) => {
+                        const maxCount = Math.max(...analytics.issuance_trend.map(d => d.count), 1)
+                        const height = (day.count / maxCount) * 180
+                        return (
+                          <div key={idx} style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <div 
+                              style={{
+                                backgroundColor: '#4CAF50',
+                                width: '100%',
+                                height: `${height}px`,
+                                borderRadius: '4px 4px 0 0',
+                                position: 'relative',
+                                minHeight: day.count > 0 ? '2px' : '0'
+                              }}
+                              title={`${day.date}: ${day.count} vouchers`}
+                            >
+                              {day.count > 0 && (
+                                <div style={{position: 'absolute', top: '-20px', left: '50%', transform: 'translateX(-50%)', fontSize: '10px', fontWeight: 'bold'}}>
+                                  {day.count}
+                                </div>
+                              )}
+                            </div>
+                            {idx % 5 === 0 && (
+                              <div style={{fontSize: '9px', marginTop: '5px', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap'}}>
+                                {new Date(day.date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
         

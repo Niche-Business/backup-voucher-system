@@ -682,6 +682,79 @@ def vcse_load_money():
         db.session.rollback()
         return jsonify({'error': f'Failed to load money: {str(e)}'}), 500
 
+@app.route('/api/vcse/analytics', methods=['GET'])
+def vcse_analytics():
+    """Get analytics data for VCSE dashboard"""
+    try:
+        from sqlalchemy import func
+        from datetime import datetime, timedelta
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can view analytics'}), 403
+        
+        # Get all vouchers for this VCSE
+        vouchers = Voucher.query.filter_by(issued_by=user_id).all()
+        
+        # Total metrics
+        total_vouchers = len(vouchers)
+        total_value = sum(float(v.value) for v in vouchers)
+        active_vouchers = len([v for v in vouchers if v.status == 'active'])
+        redeemed_vouchers = len([v for v in vouchers if v.status == 'redeemed'])
+        expired_vouchers = len([v for v in vouchers if v.status == 'expired'])
+        
+        # Status breakdown
+        status_breakdown = {
+            'active': active_vouchers,
+            'redeemed': redeemed_vouchers,
+            'expired': expired_vouchers
+        }
+        
+        # Issuance trend (last 30 days)
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        recent_vouchers = [v for v in vouchers if v.created_at and v.created_at >= thirty_days_ago]
+        
+        # Group by date
+        issuance_by_date = {}
+        for v in recent_vouchers:
+            date_key = v.created_at.strftime('%Y-%m-%d')
+            issuance_by_date[date_key] = issuance_by_date.get(date_key, 0) + 1
+        
+        # Fill in missing dates with 0
+        trend_data = []
+        for i in range(30):
+            date = (datetime.utcnow() - timedelta(days=29-i)).strftime('%Y-%m-%d')
+            trend_data.append({
+                'date': date,
+                'count': issuance_by_date.get(date, 0)
+            })
+        
+        # Value distributed by status
+        value_by_status = {
+            'active': sum(float(v.value) for v in vouchers if v.status == 'active'),
+            'redeemed': sum(float(v.value) for v in vouchers if v.status == 'redeemed'),
+            'expired': sum(float(v.value) for v in vouchers if v.status == 'expired')
+        }
+        
+        return jsonify({
+            'total_vouchers': total_vouchers,
+            'total_value': total_value,
+            'active_vouchers': active_vouchers,
+            'redeemed_vouchers': redeemed_vouchers,
+            'expired_vouchers': expired_vouchers,
+            'status_breakdown': status_breakdown,
+            'issuance_trend': trend_data,
+            'value_by_status': value_by_status
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get analytics: {str(e)}'}), 500
+
 @app.route('/api/vcse/vouchers', methods=['GET'])
 def vcse_get_vouchers():
     """Get all vouchers issued by this VCSE organization"""
