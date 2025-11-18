@@ -169,6 +169,7 @@ class SurplusItem(db.Model):
     price = db.Column(db.Numeric(10, 2))  # Price for discount items, NULL for free items
     original_price = db.Column(db.Numeric(10, 2))  # Original price before discount
     description = db.Column(db.Text)
+    expiry_date = db.Column(db.Date)  # Product expiry/best before date
     status = db.Column(db.String(20), default='available')  # available, claimed, collected
     posted_at = db.Column(db.DateTime, default=datetime.utcnow)
     claimed_by = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -178,6 +179,17 @@ class SurplusItem(db.Model):
     vendor = db.relationship('User', foreign_keys=[vendor_id], backref='surplus_posted_items')
     shop = db.relationship('VendorShop', backref='shop_surplus_items')
     claimer = db.relationship('User', foreign_keys=[claimed_by], backref='surplus_claimed_items')
+
+class ShoppingCart(db.Model):
+    __tablename__ = 'shopping_cart'
+    id = db.Column(db.Integer, primary_key=True)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    surplus_item_id = db.Column(db.Integer, db.ForeignKey('surplus_item.id'), nullable=False)
+    quantity = db.Column(db.Integer, default=1, nullable=False)
+    added_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    recipient = db.relationship('User', backref='cart_items')
+    surplus_item = db.relationship('SurplusItem', backref='in_carts')
 
 # Helper Functions
 def send_verification_email(user):
@@ -863,6 +875,61 @@ def vendor_add_shop():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to add shop: {str(e)}'}), 500
+
+@app.route('/api/vendor/shops/<int:shop_id>', methods=['PUT'])
+def vendor_update_shop(shop_id):
+    """Update shop details"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Only vendors can update shops'}), 403
+        
+        shop = VendorShop.query.filter_by(id=shop_id, vendor_id=user_id).first()
+        if not shop:
+            return jsonify({'error': 'Shop not found'}), 404
+        
+        # Update shop fields
+        if 'shop_name' in data:
+            shop.shop_name = data['shop_name']
+        if 'address' in data:
+            shop.address = data['address']
+        if 'postcode' in data:
+            shop.postcode = data['postcode']
+        if 'city' in data:
+            shop.city = data['city']
+        if 'phone' in data:
+            shop.phone = data['phone']
+        
+        db.session.commit()
+        
+        create_notification(
+            user_id,
+            'Shop Updated',
+            f'Shop "{shop.shop_name}" has been updated successfully',
+            'success'
+        )
+        
+        return jsonify({
+            'message': 'Shop updated successfully',
+            'shop': {
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'postcode': shop.postcode,
+                'city': shop.city,
+                'phone': shop.phone
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update shop: {str(e)}'}), 500
 
 @app.route('/api/vendor/shops/<int:shop_id>', methods=['DELETE'])
 def vendor_delete_shop(shop_id):
@@ -1655,6 +1722,15 @@ def post_surplus_item():
             db.session.add(shop)
             db.session.flush()  # Get the shop ID
         
+        # Parse expiry date if provided
+        expiry_date = None
+        if data.get('expiry_date'):
+            try:
+                from datetime import datetime as dt
+                expiry_date = dt.strptime(data['expiry_date'], '%Y-%m-%d').date()
+            except ValueError:
+                pass
+        
         # Create surplus item
         new_item = SurplusItem(
             vendor_id=user_id,
@@ -1663,6 +1739,7 @@ def post_surplus_item():
             quantity=data['quantity'],
             category=data['category'],
             description=data.get('description', ''),
+            expiry_date=expiry_date,
             status='available',
             posted_at=datetime.now()
         )
@@ -1724,6 +1801,90 @@ def get_vendor_surplus_items():
         
     except Exception as e:
         return jsonify({'error': f'Failed to get surplus items: {str(e)}'}), 500
+
+@app.route('/api/vendor/to-go-items', methods=['GET'])
+def get_vendor_to_go_items():
+    """Alias for get_vendor_surplus_items - Get all to-go items posted by the logged-in vendor"""
+    return get_vendor_surplus_items()
+
+@app.route('/api/vendor/surplus-items/<int:item_id>', methods=['PUT'])
+def update_surplus_item(item_id):
+    """Update a surplus item"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Vendor access required'}), 403
+        
+        item = SurplusItem.query.filter_by(id=item_id, vendor_id=user_id).first()
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        # Update item fields
+        if 'item_name' in data:
+            item.item_name = data['item_name']
+        if 'quantity' in data:
+            item.quantity = data['quantity']
+        if 'category' in data:
+            item.category = data['category']
+        if 'description' in data:
+            item.description = data['description']
+        if 'expiry_date' in data:
+            try:
+                from datetime import datetime as dt
+                item.expiry_date = dt.strptime(data['expiry_date'], '%Y-%m-%d').date() if data['expiry_date'] else None
+            except ValueError:
+                pass
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Item updated successfully',
+            'item': {
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'category': item.category,
+                'description': item.description,
+                'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update item: {str(e)}'}), 500
+
+@app.route('/api/vendor/surplus-items/<int:item_id>', methods=['DELETE'])
+def delete_surplus_item(item_id):
+    """Delete a surplus item"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Vendor access required'}), 403
+        
+        item = SurplusItem.query.filter_by(id=item_id, vendor_id=user_id).first()
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        # Mark as unavailable instead of deleting
+        item.status = 'removed'
+        db.session.commit()
+        
+        return jsonify({'message': 'Item deleted successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete item: {str(e)}'}), 500
 
 # Run the application
 # ============================================

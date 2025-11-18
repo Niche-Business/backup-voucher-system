@@ -1549,12 +1549,21 @@ function VendorDashboard({ user, onLogout }) {
     itemName: '',
     quantity: '',
     category: 'Fresh Produce',
-    description: ''
+    description: '',
+    expiry_date: ''
   })
   const [message, setMessage] = useState('')
   const [voucherCode, setVoucherCode] = useState('')
   const [voucherValidation, setVoucherValidation] = useState(null)
   const [redemptionMessage, setRedemptionMessage] = useState('')
+  const [editingShop, setEditingShop] = useState(null)
+  const [shopEditForm, setShopEditForm] = useState({
+    shop_name: '',
+    address: '',
+    postcode: '',
+    city: '',
+    phone: ''
+  })
 
   useEffect(() => {
     loadShops()
@@ -1583,7 +1592,8 @@ function VendorDashboard({ user, onLogout }) {
   const loadToGoItems = async () => {
     try {
       const data = await apiCall('/vendor/to-go-items')
-      setToGoItems(data.to_go_items || [])
+      // Backend returns 'surplus_items', map to toGoItems
+      setToGoItems(data.surplus_items || data.to_go_items || [])
       setToGoCount(data.total_count || 0)
     } catch (error) {
       console.error('Failed to load to go items:', error)
@@ -1601,11 +1611,68 @@ function VendorDashboard({ user, onLogout }) {
           item_name: toGoForm.itemName,
           quantity: toGoForm.quantity,
           category: toGoForm.category,
-          description: toGoForm.description
+          description: toGoForm.description,
+          expiry_date: toGoForm.expiry_date
         })
       })
       setMessage('To Go item posted successfully!')
-      setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '' })
+      setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '' })
+      loadToGoItems()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleEditShop = (shop) => {
+    setEditingShop(shop.id)
+    setShopEditForm({
+      shop_name: shop.shop_name,
+      address: shop.address,
+      postcode: shop.postcode || '',
+      city: shop.city || '',
+      phone: shop.phone || ''
+    })
+  }
+
+  const handleSaveShop = async () => {
+    try {
+      await apiCall(`/vendor/shops/${editingShop}`, {
+        method: 'PUT',
+        body: JSON.stringify(shopEditForm)
+      })
+      setMessage('Shop updated successfully!')
+      setEditingShop(null)
+      loadShops()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleDeleteShop = async (shopId) => {
+    if (!confirm('Are you sure you want to delete this shop?')) return
+    
+    try {
+      await apiCall(`/vendor/shops/${shopId}`, {
+        method: 'DELETE'
+      })
+      setMessage('Shop deleted successfully!')
+      loadShops()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleDeleteItem = async (itemId) => {
+    if (!confirm('Are you sure you want to delete this item?')) return
+    
+    try {
+      await apiCall(`/vendor/surplus-items/${itemId}`, {
+        method: 'DELETE'
+      })
+      setMessage('Item deleted successfully!')
       loadToGoItems()
       setTimeout(() => setMessage(''), 3000)
     } catch (error) {
@@ -1704,10 +1771,79 @@ function VendorDashboard({ user, onLogout }) {
                 </div>
               ) : (
                 shops.map(shop => (
-                  <div key={shop.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
-                    <strong>{shop.shop_name}</strong><br />
-                    {shop.address}, {shop.city} {shop.postcode}<br />
-                    Phone: {shop.phone}
+                  <div key={shop.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    {editingShop === shop.id ? (
+                      <div style={{flex: 1}}>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                          <div>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                            <input
+                              type="text"
+                              value={shopEditForm.shop_name}
+                              onChange={(e) => setShopEditForm({...shopEditForm, shop_name: e.target.value})}
+                              style={styles.input}
+                            />
+                          </div>
+                          <div>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Phone</label>
+                            <input
+                              type="text"
+                              value={shopEditForm.phone}
+                              onChange={(e) => setShopEditForm({...shopEditForm, phone: e.target.value})}
+                              style={styles.input}
+                            />
+                          </div>
+                        </div>
+                        <div style={{marginBottom: '15px'}}>
+                          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+                          <input
+                            type="text"
+                            value={shopEditForm.address}
+                            onChange={(e) => setShopEditForm({...shopEditForm, address: e.target.value})}
+                            style={styles.input}
+                          />
+                        </div>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                          <div>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City/County</label>
+                            <input
+                              type="text"
+                              value={shopEditForm.city}
+                              onChange={(e) => setShopEditForm({...shopEditForm, city: e.target.value})}
+                              style={styles.input}
+                              placeholder="e.g., London, Essex"
+                            />
+                          </div>
+                          <div>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+                            <input
+                              type="text"
+                              value={shopEditForm.postcode}
+                              onChange={(e) => setShopEditForm({...shopEditForm, postcode: e.target.value})}
+                              style={styles.input}
+                              placeholder="e.g., SW1A 1AA"
+                            />
+                          </div>
+                        </div>
+                        <div style={{display: 'flex', gap: '10px'}}>
+                          <button onClick={handleSaveShop} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>💾 Save</button>
+                          <button onClick={() => setEditingShop(null)} style={{...styles.primaryButton, backgroundColor: '#757575'}}>Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{flex: 1}}>
+                          <strong style={{fontSize: '18px', color: '#FF9800'}}>{shop.shop_name}</strong><br />
+                          <span style={{color: '#666'}}>📍 {shop.address}</span><br />
+                          <span style={{color: '#666'}}>🏙️ {shop.city} {shop.postcode}</span><br />
+                          <span style={{color: '#666'}}>📞 {shop.phone}</span>
+                        </div>
+                        <div style={{display: 'flex', gap: '10px'}}>
+                          <button onClick={() => handleEditShop(shop)} style={{...styles.primaryButton, backgroundColor: '#2196F3', padding: '8px 16px'}}>✏️ Edit</button>
+                          <button onClick={() => handleDeleteShop(shop.id)} style={{...styles.primaryButton, backgroundColor: '#f44336', padding: '8px 16px'}}>🗑️ Delete</button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))
               )}
@@ -1889,6 +2025,18 @@ function VendorDashboard({ user, onLogout }) {
               </div>
               
               <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Expiry/Best Before Date</label>
+                <input
+                  type="date"
+                  value={toGoForm.expiry_date}
+                  onChange={(e) => setToGoForm({...toGoForm, expiry_date: e.target.value})}
+                  style={styles.input}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+                <small style={{color: '#666', fontSize: '12px'}}>Optional - When does this product expire?</small>
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Description</label>
                 <textarea
                   value={toGoForm.description}
@@ -1907,13 +2055,22 @@ function VendorDashboard({ user, onLogout }) {
                 <p>No to go items posted yet</p>
               ) : (
                 toGoItems.map(item => (
-                  <div key={item.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
-                    <strong>{item.item_name}</strong><br />
-                    Quantity: {item.quantity}<br />
-                    Category: {item.category}<br />
-                    Shop: {item.shop_name}<br />
-                    Status: {item.status}<br />
-                    {item.description && <p>{item.description}</p>}
+                  <div key={item.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                    <div style={{flex: 1}}>
+                      <strong style={{fontSize: '18px', color: '#FF9800'}}>{item.item_name}</strong><br />
+                      <span style={{color: '#666'}}>📦 Quantity: {item.quantity}</span><br />
+                      <span style={{color: '#666'}}>🏷️ Category: {item.category}</span><br />
+                      <span style={{color: '#666'}}>🏪 Shop: {item.shop_name}</span><br />
+                      {item.expiry_date && <span style={{color: '#f44336'}}>⏰ Expires: {new Date(item.expiry_date).toLocaleDateString()}</span>}<br />
+                      <span style={{color: item.status === 'available' ? '#4CAF50' : '#757575', fontWeight: 'bold'}}>Status: {item.status}</span><br />
+                      {item.description && <p style={{color: '#666', marginTop: '10px'}}>{item.description}</p>}
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteItem(item.id)} 
+                      style={{...styles.primaryButton, backgroundColor: '#f44336', padding: '8px 16px'}}
+                    >
+                      🗑️ Delete
+                    </button>
                   </div>
                 ))
               )}
