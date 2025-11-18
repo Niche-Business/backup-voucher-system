@@ -104,7 +104,7 @@ class EmailService:
     
     def send_password_reset_email(self, user_email, user_name, reset_token):
         """Send password reset email with secure link"""
-        reset_link = f"{self.app_url}/#/reset-password?token={reset_token}"
+        reset_link = f"{self.app_url}/reset-password?token={reset_token}"
         
         html_content = f"""
         <!DOCTYPE html>

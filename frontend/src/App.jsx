@@ -37,6 +37,17 @@ function App() {
   }, [i18n.language])
 
   useEffect(() => {
+    // Check for password reset token in URL
+    const urlParams = new URLSearchParams(window.location.search)
+    const resetToken = urlParams.get('token')
+    const pathname = window.location.pathname
+    
+    if (resetToken && pathname.includes('reset-password')) {
+      setCurrentView('reset-password')
+      setLoading(false)
+      return
+    }
+    
     checkAuth()
   }, [])
 
