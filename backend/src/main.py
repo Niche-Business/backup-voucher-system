@@ -134,6 +134,17 @@ class LoginSession(db.Model):
     
     user = db.relationship('User', backref='login_sessions')
 
+class PasswordResetToken(db.Model):
+    __tablename__ = 'password_reset_token'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    token = db.Column(db.String(255), unique=True, nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    used = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='password_reset_tokens')
+
 class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     generated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -495,11 +506,13 @@ def forgot_password():
         token = secrets.token_urlsafe(32)
         expires_at = datetime.utcnow() + timedelta(hours=1)
         
-        # Store token in database
-        db.session.execute(
-            text("INSERT INTO password_reset_token (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)"),
-            {'user_id': user.id, 'token': token, 'expires_at': expires_at}
+        # Store token in database using ORM
+        reset_token = PasswordResetToken(
+            user_id=user.id,
+            token=token,
+            expires_at=expires_at
         )
+        db.session.add(reset_token)
         db.session.commit()
         
         # Send password reset email using SendGrid
@@ -531,33 +544,25 @@ def reset_password():
         if not token or not new_password:
             return jsonify({'error': 'Token and new password are required'}), 400
         
-        # Find valid token
+        # Find valid token using ORM
         from datetime import datetime
-        result = db.session.execute(
-            "SELECT user_id, expires_at, used FROM password_reset_token WHERE token = ?",
-            (token,)
-        ).fetchone()
+        reset_token = PasswordResetToken.query.filter_by(token=token).first()
         
-        if not result:
+        if not reset_token:
             return jsonify({'error': 'Invalid or expired reset link'}), 400
         
-        user_id, expires_at, used = result
-        
-        if used:
+        if reset_token.used:
             return jsonify({'error': 'This reset link has already been used'}), 400
         
-        if datetime.fromisoformat(expires_at) < datetime.utcnow():
+        if reset_token.expires_at < datetime.utcnow():
             return jsonify({'error': 'This reset link has expired'}), 400
         
         # Update password
-        user = User.query.get(user_id)
+        user = User.query.get(reset_token.user_id)
         user.password_hash = generate_password_hash(new_password)
         
         # Mark token as used
-        db.session.execute(
-            "UPDATE password_reset_token SET used = 1 WHERE token = ?",
-            (token,)
-        )
+        reset_token.used = True
         
         db.session.commit()
         
