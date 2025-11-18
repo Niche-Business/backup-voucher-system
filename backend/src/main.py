@@ -744,6 +744,131 @@ def vcse_get_vouchers():
     except Exception as e:
         return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
 
+@app.route('/api/vcse/voucher-pdf/<int:voucher_id>', methods=['GET'])
+def vcse_voucher_pdf(voucher_id):
+    """Generate PDF for a specific voucher with QR code"""
+    try:
+        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.lib.units import inch
+        from reportlab.pdfgen import canvas
+        from reportlab.lib import colors
+        from io import BytesIO
+        import qrcode
+        from PIL import Image
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can download vouchers'}), 403
+        
+        # Get voucher
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher or voucher.issued_by != user_id:
+            return jsonify({'error': 'Voucher not found or access denied'}), 404
+        
+        recipient = User.query.get(voucher.recipient_id)
+        
+        # Create PDF
+        buffer = BytesIO()
+        c = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+        
+        # Header - BAK UP branding
+        c.setFillColor(colors.HexColor('#4CAF50'))
+        c.rect(0, height - 2*inch, width, 2*inch, fill=True, stroke=False)
+        c.setFillColor(colors.white)
+        c.setFont('Helvetica-Bold', 32)
+        c.drawCentredString(width/2, height - 1.2*inch, 'BAK UP E-Voucher')
+        c.setFont('Helvetica', 14)
+        c.drawCentredString(width/2, height - 1.6*inch, 'Supporting Families Through Education & Care')
+        
+        # Voucher Code - Large and prominent
+        c.setFillColor(colors.black)
+        c.setFont('Helvetica-Bold', 48)
+        c.drawCentredString(width/2, height - 3*inch, voucher.code)
+        c.setFont('Helvetica', 12)
+        c.setFillColor(colors.grey)
+        c.drawCentredString(width/2, height - 3.3*inch, 'Voucher Code')
+        
+        # Generate QR Code
+        qr = qrcode.QRCode(version=1, box_size=10, border=2)
+        qr.add_data(voucher.code)
+        qr.make(fit=True)
+        qr_img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Save QR code to BytesIO
+        qr_buffer = BytesIO()
+        qr_img.save(qr_buffer, format='PNG')
+        qr_buffer.seek(0)
+        
+        # Draw QR code on PDF
+        c.drawImage(qr_buffer, width/2 - 1.5*inch, height - 6*inch, width=3*inch, height=3*inch)
+        
+        # Voucher Details Box
+        y_position = height - 7*inch
+        c.setFillColor(colors.HexColor('#f5f5f5'))
+        c.rect(1*inch, y_position - 2.5*inch, width - 2*inch, 2.5*inch, fill=True, stroke=True)
+        
+        c.setFillColor(colors.black)
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(1.2*inch, y_position - 0.4*inch, 'Voucher Details')
+        
+        c.setFont('Helvetica', 11)
+        c.drawString(1.2*inch, y_position - 0.8*inch, f'Recipient: {recipient.first_name} {recipient.last_name}' if recipient else 'Recipient: Unknown')
+        c.drawString(1.2*inch, y_position - 1.1*inch, f'Email: {recipient.email}' if recipient else '')
+        c.drawString(1.2*inch, y_position - 1.4*inch, f'Phone: {recipient.phone}' if recipient else '')
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.setFillColor(colors.HexColor('#4CAF50'))
+        c.drawString(1.2*inch, y_position - 1.9*inch, f'Value: £{float(voucher.value):.2f}')
+        
+        c.setFillColor(colors.black)
+        c.setFont('Helvetica', 11)
+        c.drawString(1.2*inch, y_position - 2.2*inch, f'Issue Date: {voucher.created_at.strftime("%d %B %Y") if voucher.created_at else ""}')
+        c.drawString(1.2*inch, y_position - 2.5*inch, f'Expiry Date: {voucher.expiry_date.strftime("%d %B %Y") if voucher.expiry_date else ""}')
+        
+        # Terms and Conditions
+        y_position = height - 10*inch
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(1*inch, y_position, 'Terms & Conditions:')
+        c.setFont('Helvetica', 8)
+        terms = [
+            '1. This voucher can be redeemed at participating local shops for food and essential items.',
+            '2. The voucher must be presented at the time of purchase.',
+            '3. The voucher cannot be exchanged for cash.',
+            '4. The voucher is valid until the expiry date shown above.',
+            '5. Any unused balance will be forfeited after expiry.',
+            '6. For assistance, contact your VCSE organization or visit backup-voucher-system.onrender.com'
+        ]
+        y_pos = y_position - 0.2*inch
+        for term in terms:
+            c.drawString(1*inch, y_pos, term)
+            y_pos -= 0.15*inch
+        
+        # Footer
+        c.setFont('Helvetica-Oblique', 8)
+        c.setFillColor(colors.grey)
+        c.drawCentredString(width/2, 0.5*inch, f'Generated on {datetime.utcnow().strftime("%d %B %Y at %H:%M UTC")} | BAK UP E-Voucher System')
+        
+        c.save()
+        buffer.seek(0)
+        
+        # Send PDF
+        from flask import send_file
+        return send_file(
+            buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'voucher_{voucher.code}.pdf'
+        )
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate PDF: {str(e)}'}), 500
+
 @app.route('/api/vcse/export-vouchers', methods=['GET'])
 def vcse_export_vouchers():
     """Export all vouchers issued by VCSE to Excel"""
@@ -824,6 +949,40 @@ def vcse_export_vouchers():
         
     except Exception as e:
         return jsonify({'error': f'Failed to export vouchers: {str(e)}'}), 500
+
+@app.route('/api/school/place-order', methods=['POST'])
+def school_place_order():
+    """School/Care organizations can place orders for To Go items on behalf of families"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'Only schools can place orders'}), 403
+        
+        # Create order
+        order = Order(
+            vcse_id=user_id,  # Using same field for schools
+            surplus_item_id=data['surplus_item_id'],
+            client_name=data['client_name'],
+            client_mobile=data['client_mobile'],
+            client_email=data['client_email'],
+            quantity=data.get('quantity', 1),
+            status='pending'
+        )
+        
+        db.session.add(order)
+        db.session.commit()
+        
+        return jsonify({'message': 'Order placed successfully', 'order_id': order.id}), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to place order: {str(e)}'}), 500
 
 @app.route('/api/vcse/place-order', methods=['POST'])
 def vcse_place_order():

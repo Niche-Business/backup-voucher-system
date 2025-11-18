@@ -1612,6 +1612,7 @@ function VCSEDashboard({ user, onLogout }) {
                         <th style={{padding: '12px', textAlign: 'left'}}>Issued</th>
                         <th style={{padding: '12px', textAlign: 'left'}}>Expiry</th>
                         <th style={{padding: '12px', textAlign: 'left'}}>Redeemed</th>
+                        <th style={{padding: '12px', textAlign: 'center'}}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1637,6 +1638,16 @@ function VCSEDashboard({ user, onLogout }) {
                           <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
                           <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
                           <td style={{padding: '12px', fontSize: '14px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
+                          <td style={{padding: '12px', textAlign: 'center'}}>
+                            <a 
+                              href={`/api/vcse/voucher-pdf/${voucher.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
+                            >
+                              📝 PDF
+                            </a>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -2959,6 +2970,7 @@ function SchoolDashboard({ user, onLogout }) {
   const [balance, setBalance] = useState(0)
   const [vouchers, setVouchers] = useState([])
   const [organizationName, setOrganizationName] = useState('')
+  const [toGoItems, setToGoItems] = useState([])
   
   // Issue voucher form state
   const [recipientEmail, setRecipientEmail] = useState('')
@@ -2972,6 +2984,7 @@ function SchoolDashboard({ user, onLogout }) {
   useEffect(() => {
     loadBalance()
     loadVouchers()
+    loadToGoItems()
   }, [])
 
   const loadBalance = async () => {
@@ -2990,6 +3003,15 @@ function SchoolDashboard({ user, onLogout }) {
       setVouchers(data.vouchers || [])
     } catch (error) {
       console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const loadToGoItems = async () => {
+    try {
+      const data = await apiCall('/items/available')
+      setToGoItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load to go items:', error)
     }
   }
 
@@ -3058,6 +3080,12 @@ function SchoolDashboard({ user, onLogout }) {
             style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}
           >
             Voucher History
+          </button>
+          <button 
+            onClick={() => setActiveTab('togo')} 
+            style={activeTab === 'togo' ? styles.activeTab : styles.tab}
+          >
+            🛍️ To Go Items
           </button>
         </div>
 
@@ -3262,7 +3290,159 @@ function SchoolDashboard({ user, onLogout }) {
             )}
           </div>
         )}
+
+        {/* To Go Items Tab */}
+        {activeTab === 'togo' && (
+          <div>
+            <h2 style={{marginBottom: '10px', color: '#9C27B0'}}>🛍️ Available To Go Items</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Browse surplus food items from local shops and order them for families in your community.</p>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {toGoItems.length === 0 ? (
+                <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                  <p>No To Go items available at the moment</p>
+                  <p style={{fontSize: '14px'}}>Check back later for surplus food items from local vendors</p>
+                </div>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                  {toGoItems.map(item => (
+                    <SchoolToGoOrderCard key={item.id} item={item} onOrderPlaced={loadToGoItems} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+    </div>
+  )
+}
+
+// SCHOOL TO GO ORDER CARD COMPONENT
+function SchoolToGoOrderCard({ item, onOrderPlaced }) {
+  const [showOrderForm, setShowOrderForm] = useState(false)
+  const [orderForm, setOrderForm] = useState({
+    client_name: '',
+    client_mobile: '',
+    client_email: '',
+    quantity: 1
+  })
+  const [message, setMessage] = useState('')
+
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault()
+    try {
+      await apiCall('/school/place-order', {
+        method: 'POST',
+        body: JSON.stringify({
+          surplus_item_id: item.id,
+          client_name: orderForm.client_name,
+          client_mobile: orderForm.client_mobile,
+          client_email: orderForm.client_email,
+          quantity: orderForm.quantity
+        })
+      })
+      setMessage('Order placed successfully!')
+      setOrderForm({ client_name: '', client_mobile: '', client_email: '', quantity: 1 })
+      setShowOrderForm(false)
+      setTimeout(() => setMessage(''), 3000)
+      if (onOrderPlaced) onOrderPlaced()
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  return (
+    <div style={{border: '1px solid #ddd', borderRadius: '10px', padding: '15px', backgroundColor: '#fafafa'}}>
+      {message && (
+        <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '8px', borderRadius: '5px', marginBottom: '10px', fontSize: '14px'}}>
+          {message}
+        </div>
+      )}
+      
+      <div style={{marginBottom: '10px'}}>
+        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>{item.item_name || item.title}</h3>
+        <div style={{fontSize: '14px', color: '#666'}}>
+          <div><strong>Shop:</strong> {item.shop_name}</div>
+          <div><strong>Category:</strong> {item.category}</div>
+          <div><strong>Available:</strong> {item.quantity}</div>
+          {item.expiry_date && <div><strong>Expiry:</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
+          {item.description && <div style={{marginTop: '8px'}}>{item.description}</div>}
+        </div>
+      </div>
+      
+      {!showOrderForm ? (
+        <button 
+          onClick={() => setShowOrderForm(true)} 
+          style={{...styles.primaryButton, width: '100%', backgroundColor: '#9C27B0'}}
+        >
+          📝 Order for Family
+        </button>
+      ) : (
+        <form onSubmit={handlePlaceOrder} style={{marginTop: '15px'}}>
+          <div style={{marginBottom: '10px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Client Full Name *</label>
+            <input
+              type="text"
+              value={orderForm.client_name}
+              onChange={(e) => setOrderForm({...orderForm, client_name: e.target.value})}
+              placeholder="e.g., John Smith"
+              style={{...styles.input, fontSize: '14px'}}
+              required
+            />
+          </div>
+          
+          <div style={{marginBottom: '10px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Mobile Number *</label>
+            <input
+              type="tel"
+              value={orderForm.client_mobile}
+              onChange={(e) => setOrderForm({...orderForm, client_mobile: e.target.value})}
+              placeholder="e.g., 07700900000"
+              style={{...styles.input, fontSize: '14px'}}
+              required
+            />
+          </div>
+          
+          <div style={{marginBottom: '10px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Email Address *</label>
+            <input
+              type="email"
+              value={orderForm.client_email}
+              onChange={(e) => setOrderForm({...orderForm, client_email: e.target.value})}
+              placeholder="e.g., client@example.com"
+              style={{...styles.input, fontSize: '14px'}}
+              required
+            />
+          </div>
+          
+          <div style={{marginBottom: '15px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Quantity</label>
+            <select
+              value={orderForm.quantity}
+              onChange={(e) => setOrderForm({...orderForm, quantity: parseInt(e.target.value)})}
+              style={{...styles.input, fontSize: '14px'}}
+            >
+              {[...Array(Math.min(10, item.quantity))].map((_, i) => (
+                <option key={i+1} value={i+1}>{i+1}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div style={{display: 'flex', gap: '10px'}}>
+            <button type="submit" style={{...styles.primaryButton, flex: 1, fontSize: '14px', backgroundColor: '#9C27B0'}}>
+              ✅ Place Order
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setShowOrderForm(false)} 
+              style={{...styles.secondaryButton, flex: 1, fontSize: '14px'}}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   )
 }
