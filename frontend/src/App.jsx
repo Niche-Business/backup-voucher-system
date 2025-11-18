@@ -1565,8 +1565,15 @@ function VendorDashboard({ user, onLogout }) {
     try {
       const data = await apiCall('/vendor/shops')
       setShops(data.shops || [])
+      // Auto-populate shop details from first shop
       if (data.shops && data.shops.length > 0) {
-        setToGoForm(prev => ({ ...prev, shopId: data.shops[0].id.toString() }))
+        const firstShop = data.shops[0]
+        setToGoForm(prev => ({
+          ...prev,
+          shopId: firstShop.id.toString(),
+          shopName: firstShop.shop_name,
+          shopAddress: firstShop.address
+        }))
       }
     } catch (error) {
       console.error('Failed to load shops:', error)
@@ -1824,25 +1831,23 @@ function VendorDashboard({ user, onLogout }) {
             
             <form onSubmit={handlePostToGo} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name <span style={{color: '#4CAF50', fontSize: '12px'}}>(Auto-filled from your profile)</span></label>
                 <input
                   type="text"
                   value={toGoForm.shopName}
-                  onChange={(e) => setToGoForm({...toGoForm, shopName: e.target.value})}
-                  placeholder="e.g., Corner Shop"
-                  style={styles.input}
+                  readOnly
+                  style={{...styles.input, backgroundColor: '#f5f5f5', cursor: 'not-allowed'}}
                   required
                 />
               </div>
               
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Address</label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Address <span style={{color: '#4CAF50', fontSize: '12px'}}>(Auto-filled from your profile)</span></label>
                 <input
                   type="text"
                   value={toGoForm.shopAddress}
-                  onChange={(e) => setToGoForm({...toGoForm, shopAddress: e.target.value})}
-                  placeholder="e.g., 123 Main Street, London"
-                  style={styles.input}
+                  readOnly
+                  style={{...styles.input, backgroundColor: '#f5f5f5', cursor: 'not-allowed'}}
                   required
                 />
               </div>

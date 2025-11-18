@@ -400,6 +400,20 @@ def register():
         db.session.add(user)
         db.session.commit()
         
+        # Auto-create shop for vendors
+        if user.user_type == 'vendor' and user.shop_name:
+            vendor_shop = VendorShop(
+                vendor_id=user.id,
+                shop_name=user.shop_name,
+                address=user.address or '',
+                postcode=user.postcode or '',
+                city=user.city or '',
+                phone=user.phone or '',
+                is_active=True
+            )
+            db.session.add(vendor_shop)
+            db.session.commit()
+        
         # Send welcome email using SendGrid
         try:
             email_service.send_welcome_email(
@@ -2476,7 +2490,8 @@ def get_recipient_vouchers():
 def get_recipient_shops():
     """Get all participating shops with their to-go items count"""
     try:
-        shops = VendorShop.query.all()
+        # Only show active shops
+        shops = VendorShop.query.filter_by(is_active=True).all()
         shops_data = []
         
         for shop in shops:
