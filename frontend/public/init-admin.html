@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Admin - BAK UP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+        
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+        
+        .credentials {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+            text-align: left;
+            display: none;
+        }
+        
+        .credentials.show {
+            display: block;
+        }
+        
+        .credentials h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .credentials p {
+            margin: 8px 0;
+            font-family: monospace;
+            color: #333;
+        }
+        
+        .credentials strong {
+            color: #667eea;
+        }
+        
+        .login-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 24px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .login-link:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Initialize Admin Account</h1>
+        <p>Click the button below to create the administrator account for BAK UP system. This only needs to be done once.</p>
+        
+        <button id="initBtn" onclick="initializeAdmin()">Create Admin Account</button>
+        
+        <div id="message" class="message"></div>
+        
+        <div id="credentials" class="credentials">
+            <h3>✅ Admin Account Created!</h3>
+            <p><strong>Email:</strong> prince.caesar@bakup.org</p>
+            <p><strong>Password:</strong> Prince@2024</p>
+            <a href="/admin" class="login-link">Go to Admin Login →</a>
+        </div>
+    </div>
+    
+    <script>
+        async function initializeAdmin() {
+            const btn = document.getElementById('initBtn');
+            const message = document.getElementById('message');
+            const credentials = document.getElementById('credentials');
+            
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+            message.style.display = 'none';
+            credentials.classList.remove('show');
+            
+            try {
+                const response = await fetch('/api/initialize-admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    if (data.message.includes('already exists')) {
+                        message.className = 'message info';
+                        message.textContent = '✓ Admin account already exists. You can log in now.';
+                        credentials.classList.add('show');
+                    } else {
+                        message.className = 'message success';
+                        message.textContent = '✓ ' + data.message;
+                        credentials.classList.add('show');
+                    }
+                } else {
+                    message.className = 'message error';
+                    message.textContent = '✗ Error: ' + (data.error || 'Failed to create admin account');
+                }
+            } catch (error) {
+                message.className = 'message error';
+                message.textContent = '✗ Network error: ' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Admin Account';
+            }
+        }
+    </script>
+</body>
+</html>
