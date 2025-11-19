@@ -3636,6 +3636,176 @@ def initialize_admin():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to create admin: {str(e)}'}), 500
+
+
+@app.route('/api/change-password', methods=['POST'])
+def change_password():
+    """Allow any authenticated user to change their password"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        data = request.get_json()
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        
+        if not current_password or not new_password:
+            return jsonify({'error': 'Current password and new password are required'}), 400
+        
+        if len(new_password) < 8:
+            return jsonify({'error': 'New password must be at least 8 characters long'}), 400
+        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Verify current password
+        if not check_password_hash(user.password_hash, current_password):
+            return jsonify({'error': 'Current password is incorrect'}), 401
+        
+        # Update password
+        user.password_hash = generate_password_hash(new_password)
+        db.session.commit()
+        
+        return jsonify({'message': 'Password changed successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to change password: {str(e)}'}), 500
+
+
+@app.route('/api/admin/admins', methods=['GET'])
+def get_all_admins():
+    """Get list of all admin accounts (admin only)"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        admins = User.query.filter_by(user_type='admin', is_active=True).all()
+        
+        admin_list = []
+        for admin in admins:
+            admin_list.append({
+                'id': admin.id,
+                'email': admin.email,
+                'first_name': admin.first_name,
+                'last_name': admin.last_name,
+                'created_at': admin.created_at.strftime('%Y-%m-%d %H:%M:%S') if admin.created_at else None,
+                'last_login': admin.last_login.strftime('%Y-%m-%d %H:%M:%S') if admin.last_login else None,
+                'login_count': admin.login_count
+            })
+        
+        return jsonify({'admins': admin_list}), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch admins: {str(e)}'}), 500
+
+
+@app.route('/api/admin/admins', methods=['POST'])
+def create_admin_account():
+    """Create a new admin account (admin only)"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        
+        if not all([email, password, first_name, last_name]):
+            return jsonify({'error': 'All fields are required'}), 400
+        
+        if len(password) < 8:
+            return jsonify({'error': 'Password must be at least 8 characters long'}), 400
+        
+        # Check if email already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'error': 'Email already exists'}), 400
+        
+        # Create new admin
+        new_admin = User(
+            email=email,
+            password_hash=generate_password_hash(password),
+            first_name=first_name,
+            last_name=last_name,
+            user_type='admin',
+            is_verified=True,
+            is_active=True
+        )
+        
+        db.session.add(new_admin)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Admin account created successfully',
+            'admin': {
+                'id': new_admin.id,
+                'email': new_admin.email,
+                'first_name': new_admin.first_name,
+                'last_name': new_admin.last_name
+            }
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to create admin: {str(e)}'}), 500
+
+
+@app.route('/api/admin/admins/<int:admin_id>', methods=['DELETE'])
+def delete_admin_account(admin_id):
+    """Delete an admin account (admin only, cannot delete self)"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Prevent self-deletion
+        if user_id == admin_id:
+            return jsonify({'error': 'Cannot delete your own admin account'}), 400
+        
+        admin_to_delete = User.query.get(admin_id)
+        if not admin_to_delete or admin_to_delete.user_type != 'admin':
+            return jsonify({'error': 'Admin account not found'}), 404
+        
+        # Check if this is the last admin
+        admin_count = User.query.filter_by(user_type='admin', is_active=True).count()
+        if admin_count <= 1:
+            return jsonify({'error': 'Cannot delete the last admin account'}), 400
+        
+        # Delete associated records
+        LoginSession.query.filter_by(user_id=admin_id).delete()
+        Notification.query.filter_by(user_id=admin_id).delete()
+        
+        # Delete admin
+        db.session.delete(admin_to_delete)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Admin account deleted successfully',
+            'email': admin_to_delete.email
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete admin: {str(e)}'}), 500
     
     app.run(host='0.0.0.0', port=5000, debug=True)
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import './i18n'
 import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
+import PasswordChangeModal from './components/PasswordChangeModal'
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -849,6 +850,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>Schools/Care Orgs</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Local Shops</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>All To Go</button>
+          <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ Settings</button>
         </div>
         
         {activeTab === 'overview' && (
@@ -1287,7 +1289,311 @@ function AdminDashboard({ user, onLogout }) {
             </div>
           </div>
         )}
+        
+        {activeTab === 'settings' && (
+          <AdminSettingsTab user={user} />
+        )}
       </div>
+    </div>
+  )
+}
+
+// ADMIN SETTINGS TAB COMPONENT
+function AdminSettingsTab({ user }) {
+  const [settingsTab, setSettingsTab] = useState('password')
+  const [passwordForm, setPasswordForm] = useState({
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  })
+  const [passwordMessage, setPasswordMessage] = useState('')
+  const [admins, setAdmins] = useState([])
+  const [showCreateAdmin, setShowCreateAdmin] = useState(false)
+  const [newAdminForm, setNewAdminForm] = useState({
+    email: '',
+    password: '',
+    first_name: '',
+    last_name: ''
+  })
+  const [adminMessage, setAdminMessage] = useState('')
+
+  useEffect(() => {
+    if (settingsTab === 'admins') {
+      loadAdmins()
+    }
+  }, [settingsTab])
+
+  const loadAdmins = async () => {
+    try {
+      const data = await apiCall('/admin/admins')
+      setAdmins(data.admins || [])
+    } catch (error) {
+      setAdminMessage(`Error: ${error.message}`)
+    }
+  }
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault()
+    setPasswordMessage('')
+
+    if (passwordForm.new_password !== passwordForm.confirm_password) {
+      setPasswordMessage('Error: New passwords do not match')
+      return
+    }
+
+    if (passwordForm.new_password.length < 8) {
+      setPasswordMessage('Error: Password must be at least 8 characters long')
+      return
+    }
+
+    try {
+      const data = await apiCall('/change-password', {
+        method: 'POST',
+        body: JSON.stringify({
+          current_password: passwordForm.current_password,
+          new_password: passwordForm.new_password
+        })
+      })
+      setPasswordMessage('Success: ' + data.message)
+      setPasswordForm({ current_password: '', new_password: '', confirm_password: '' })
+    } catch (error) {
+      setPasswordMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleCreateAdmin = async (e) => {
+    e.preventDefault()
+    setAdminMessage('')
+
+    try {
+      const data = await apiCall('/admin/admins', {
+        method: 'POST',
+        body: JSON.stringify(newAdminForm)
+      })
+      setAdminMessage('Success: ' + data.message)
+      setNewAdminForm({ email: '', password: '', first_name: '', last_name: '' })
+      setShowCreateAdmin(false)
+      loadAdmins()
+    } catch (error) {
+      setAdminMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleDeleteAdmin = async (adminId, adminEmail) => {
+    if (!confirm(`Are you sure you want to delete admin account: ${adminEmail}?`)) {
+      return
+    }
+
+    try {
+      const data = await apiCall(`/admin/admins/${adminId}`, {
+        method: 'DELETE'
+      })
+      setAdminMessage('Success: ' + data.message)
+      loadAdmins()
+    } catch (error) {
+      setAdminMessage('Error: ' + error.message)
+    }
+  }
+
+  return (
+    <div>
+      <h2>⚙️ Settings</h2>
+      
+      <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+        <button 
+          onClick={() => setSettingsTab('password')} 
+          style={settingsTab === 'password' ? styles.activeTab : styles.tab}
+        >
+          🔒 Change Password
+        </button>
+        <button 
+          onClick={() => setSettingsTab('admins')} 
+          style={settingsTab === 'admins' ? styles.activeTab : styles.tab}
+        >
+          👥 Manage Admins
+        </button>
+      </div>
+
+      {settingsTab === 'password' && (
+        <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', maxWidth: '600px'}}>
+          <h3>Change Your Password</h3>
+          {passwordMessage && (
+            <div style={{
+              backgroundColor: passwordMessage.includes('Error') ? '#ffebee' : '#e8f5e9',
+              color: passwordMessage.includes('Error') ? '#c62828' : '#2e7d32',
+              padding: '15px',
+              borderRadius: '5px',
+              marginBottom: '20px'
+            }}>
+              {passwordMessage}
+            </div>
+          )}
+          
+          <form onSubmit={handlePasswordChange}>
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Current Password</label>
+              <input
+                type="password"
+                value={passwordForm.current_password}
+                onChange={(e) => setPasswordForm({...passwordForm, current_password: e.target.value})}
+                style={styles.input}
+                required
+              />
+            </div>
+            
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>New Password</label>
+              <input
+                type="password"
+                value={passwordForm.new_password}
+                onChange={(e) => setPasswordForm({...passwordForm, new_password: e.target.value})}
+                style={styles.input}
+                required
+                minLength="8"
+              />
+              <small style={{color: '#666'}}>Minimum 8 characters</small>
+            </div>
+            
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Confirm New Password</label>
+              <input
+                type="password"
+                value={passwordForm.confirm_password}
+                onChange={(e) => setPasswordForm({...passwordForm, confirm_password: e.target.value})}
+                style={styles.input}
+                required
+              />
+            </div>
+            
+            <button type="submit" style={styles.button}>Change Password</button>
+          </form>
+        </div>
+      )}
+
+      {settingsTab === 'admins' && (
+        <div>
+          {adminMessage && (
+            <div style={{
+              backgroundColor: adminMessage.includes('Error') ? '#ffebee' : '#e8f5e9',
+              color: adminMessage.includes('Error') ? '#c62828' : '#2e7d32',
+              padding: '15px',
+              borderRadius: '5px',
+              marginBottom: '20px'
+            }}>
+              {adminMessage}
+            </div>
+          )}
+          
+          <div style={{marginBottom: '20px'}}>
+            <button 
+              onClick={() => setShowCreateAdmin(!showCreateAdmin)} 
+              style={{...styles.button, backgroundColor: '#4CAF50'}}
+            >
+              {showCreateAdmin ? '✕ Cancel' : '+ Create New Admin'}
+            </button>
+          </div>
+
+          {showCreateAdmin && (
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px', maxWidth: '600px'}}>
+              <h3>Create New Admin Account</h3>
+              <form onSubmit={handleCreateAdmin}>
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>First Name</label>
+                  <input
+                    type="text"
+                    value={newAdminForm.first_name}
+                    onChange={(e) => setNewAdminForm({...newAdminForm, first_name: e.target.value})}
+                    style={styles.input}
+                    required
+                  />
+                </div>
+                
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Last Name</label>
+                  <input
+                    type="text"
+                    value={newAdminForm.last_name}
+                    onChange={(e) => setNewAdminForm({...newAdminForm, last_name: e.target.value})}
+                    style={styles.input}
+                    required
+                  />
+                </div>
+                
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email</label>
+                  <input
+                    type="email"
+                    value={newAdminForm.email}
+                    onChange={(e) => setNewAdminForm({...newAdminForm, email: e.target.value})}
+                    style={styles.input}
+                    required
+                  />
+                </div>
+                
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+                  <input
+                    type="password"
+                    value={newAdminForm.password}
+                    onChange={(e) => setNewAdminForm({...newAdminForm, password: e.target.value})}
+                    style={styles.input}
+                    required
+                    minLength="8"
+                  />
+                  <small style={{color: '#666'}}>Minimum 8 characters</small>
+                </div>
+                
+                <button type="submit" style={styles.button}>Create Admin</button>
+              </form>
+            </div>
+          )}
+
+          <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+            <h3>Admin Accounts ({admins.length})</h3>
+            {admins.length === 0 ? (
+              <p>No admin accounts found</p>
+            ) : (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{backgroundColor: '#f5f5f5'}}>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Name</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Email</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Created</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Last Login</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Logins</th>
+                      <th style={{padding: '12px', textAlign: 'center', borderBottom: '2px solid #ddd'}}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {admins.map(admin => (
+                      <tr key={admin.id} style={{borderBottom: '1px solid #eee'}}>
+                        <td style={{padding: '12px'}}>{admin.first_name} {admin.last_name}</td>
+                        <td style={{padding: '12px'}}>{admin.email}</td>
+                        <td style={{padding: '12px'}}>{admin.created_at || 'N/A'}</td>
+                        <td style={{padding: '12px'}}>{admin.last_login || 'Never'}</td>
+                        <td style={{padding: '12px'}}>{admin.login_count || 0}</td>
+                        <td style={{padding: '12px', textAlign: 'center'}}>
+                          {admin.id !== user.id ? (
+                            <button
+                              onClick={() => handleDeleteAdmin(admin.id, admin.email)}
+                              style={{...styles.button, backgroundColor: '#f44336', padding: '8px 16px', fontSize: '14px'}}
+                            >
+                              Delete
+                            </button>
+                          ) : (
+                            <span style={{color: '#999', fontSize: '14px'}}>Current User</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -1442,6 +1748,7 @@ function VCSEDashboard({ user, onLogout }) {
   const [analytics, setAnalytics] = useState(null)
   const [statusFilter, setStatusFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     loadBalance()
@@ -1535,9 +1842,11 @@ function VCSEDashboard({ user, onLogout }) {
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <LanguageSelector />
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#FF9800'}}>🔒 Password</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>
       </div>
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
@@ -1970,6 +2279,7 @@ function VendorDashboard({ user, onLogout }) {
     city: '',
     phone: ''
   })
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     loadShops()
@@ -2139,9 +2449,11 @@ function VendorDashboard({ user, onLogout }) {
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <LanguageSelector />
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 Password</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>
       </div>
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
@@ -2607,6 +2919,7 @@ function RecipientDashboard({ user, onLogout }) {
   const [showQR, setShowQR] = useState(false)
   const [cart, setCart] = useState([])
   const [cartCount, setCartCount] = useState(0)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     loadVouchers()
@@ -2724,9 +3037,11 @@ function RecipientDashboard({ user, onLogout }) {
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <LanguageSelector />
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 Password</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>
       </div>
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
@@ -3126,6 +3441,7 @@ function SchoolDashboard({ user, onLogout }) {
   const [recipientAddress, setRecipientAddress] = useState('')
   const [voucherAmount, setVoucherAmount] = useState('')
   const [message, setMessage] = useState('')
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     loadBalance()
@@ -3201,9 +3517,13 @@ function SchoolDashboard({ user, onLogout }) {
             <h1 style={{margin: '0 0 5px 0'}}>School/Care Organization Portal</h1>
             <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
           </div>
-          <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white'}}>Logout</button>
+          <div style={{display: 'flex', gap: '10px'}}>
+            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white'}}>🔒 Password</button>
+            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white'}}>Logout</button>
+          </div>
         </div>
       </div>
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
 
       {/* Main Content */}
       <div style={{maxWidth: '1200px', margin: '30px auto', padding: '0 20px'}}>
