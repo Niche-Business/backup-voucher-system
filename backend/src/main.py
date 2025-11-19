@@ -3603,6 +3603,39 @@ def delete_vcse(vcse_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to delete VCSE organization: {str(e)}'}), 500
+
+
+@app.route('/api/initialize-admin', methods=['POST'])
+def initialize_admin():
+    """One-time endpoint to create the admin account"""
+    try:
+        # Check if admin already exists
+        existing_admin = User.query.filter_by(email='prince.caesar@bakup.org').first()
+        if existing_admin:
+            return jsonify({'message': 'Admin account already exists'}), 200
+        
+        # Create admin user
+        admin = User(
+            email='prince.caesar@bakup.org',
+            password_hash=generate_password_hash('Prince@2024'),
+            first_name='Prince',
+            last_name='Caesar',
+            user_type='admin',
+            is_verified=True,
+            is_active=True
+        )
+        
+        db.session.add(admin)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Admin account created successfully',
+            'email': 'prince.caesar@bakup.org'
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to create admin: {str(e)}'}), 500
     
     app.run(host='0.0.0.0', port=5000, debug=True)
 
