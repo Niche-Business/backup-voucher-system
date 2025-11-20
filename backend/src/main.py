@@ -7,13 +7,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
 import secrets
-import sqlite3
 from email_service import email_service
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'vcse-charity-platform-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vcse_charity.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
+
+# Database configuration - PostgreSQL for production, SQLite for local development
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    # Render provides DATABASE_URL, but we need to replace postgres:// with postgresql://
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+else:
+    # Fallback to SQLite for local development
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vcse_charity.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+}
 
 # Email configuration (using environment variables with fallback to demo mode)
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
