@@ -4,8 +4,16 @@ Handles SMS notifications via Twilio
 """
 
 import os
-from twilio.rest import Client
-from twilio.base.exceptions import TwilioRestException
+
+# Try to import Twilio, but don't fail if it's not available
+try:
+    from twilio.rest import Client
+    from twilio.base.exceptions import TwilioRestException
+    TWILIO_AVAILABLE = True
+except ImportError:
+    TWILIO_AVAILABLE = False
+    Client = None
+    TwilioRestException = Exception
 
 class SMSService:
     """Service for sending SMS notifications via Twilio"""
@@ -15,6 +23,13 @@ class SMSService:
         self.account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
         self.auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
         self.from_number = os.environ.get('TWILIO_PHONE_NUMBER')
+        
+        # Check if Twilio library is available
+        if not TWILIO_AVAILABLE:
+            self.client = None
+            self.enabled = False
+            print("WARNING: Twilio library not installed. SMS service disabled.")
+            return
         
         # Initialize client only if credentials are available
         if self.account_sid and self.auth_token and self.from_number:
@@ -68,10 +83,11 @@ class SMSService:
             }
         
         except TwilioRestException as e:
-            print(f"Twilio error: {e.msg}")
+            error_msg = e.msg if hasattr(e, 'msg') else str(e)
+            print(f"Twilio error: {error_msg}")
             return {
                 'success': False,
-                'error': f'Failed to send SMS: {e.msg}'
+                'error': f'Failed to send SMS: {error_msg}'
             }
         
         except Exception as e:
