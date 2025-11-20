@@ -1254,6 +1254,18 @@ def vcse_issue_voucher():
             if not sms_result.get('success'):
                 print(f"Failed to send SMS: {sms_result.get('error')}")
         
+        # Send email notification to recipient with voucher details
+        if recipient.email:
+            email_result = email_service.send_voucher_issued_email(
+                recipient.email,
+                f"{recipient.first_name} {recipient.last_name}",
+                voucher_code,
+                value,
+                user.organization_name
+            )
+            if not email_result:
+                print(f"Failed to send email to {recipient.email}")
+        
         return jsonify({
             'message': 'Voucher issued successfully',
             'voucher_code': voucher_code,
@@ -1732,6 +1744,19 @@ def claim_surplus_item():
             )
             if not sms_result.get('success'):
                 print(f"Failed to send SMS to vendor: {sms_result.get('error')}")
+        
+        # Send email to vendor about collection
+        if vendor and vendor.email:
+            vcse_contact = user.phone or user.email
+            email_result = email_service.send_collection_confirmation_email(
+                vendor.email,
+                shop_name,
+                item.title,
+                user.organization_name or f"{user.first_name} {user.last_name}",
+                vcse_contact
+            )
+            if not email_result:
+                print(f"Failed to send email to vendor: {vendor.email}")
         
         # Notify VCSE
         create_notification(
@@ -2279,6 +2304,19 @@ def post_surplus_item():
                 )
                 if not sms_result.get('success'):
                     print(f"Failed to send SMS to {vcse.email}: {sms_result.get('error')}")
+            
+            # Send email notification
+            if vcse.email:
+                email_result = email_service.send_surplus_food_alert_email(
+                    vcse.email,
+                    vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
+                    data['item_name'],
+                    data['quantity'],
+                    shop.shop_name,
+                    data['shop_address']
+                )
+                if not email_result:
+                    print(f"Failed to send email to {vcse.email}")
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         
@@ -2946,6 +2984,18 @@ def school_issue_voucher():
             if not sms_result.get('success'):
                 print(f"Failed to send SMS: {sms_result.get('error')}")
         
+        # Send email notification to recipient with voucher details
+        if recipient.email:
+            email_result = email_service.send_voucher_issued_email(
+                recipient.email,
+                f"{recipient.first_name} {recipient.last_name}",
+                voucher_code,
+                amount,
+                user.organization_name
+            )
+            if not email_result:
+                print(f"Failed to send email to {recipient.email}")
+        
         return jsonify({
             'message': 'Voucher issued successfully',
             'voucher_code': voucher_code,
@@ -3063,6 +3113,19 @@ BAK UP Team"""
             sms_result = sms_service.send_sms(recipient.phone, redemption_message)
             if not sms_result.get('success'):
                 print(f"Failed to send redemption SMS to recipient: {sms_result.get('error')}")
+        
+        # Send email receipt to recipient
+        if recipient and recipient.email:
+            email_result = email_service.send_redemption_receipt_email(
+                recipient.email,
+                f"{recipient.first_name} {recipient.last_name}",
+                voucher_code,
+                float(voucher.value),
+                0.0,  # Remaining balance (0 for full redemption)
+                user.shop_name or 'Local Food Shop'
+            )
+            if not email_result:
+                print(f"Failed to send redemption email to {recipient.email}")
         
         return jsonify({
             'message': 'Voucher redeemed successfully',

@@ -165,5 +165,266 @@ class EmailService:
             html_content=html_content
         )
 
+    def send_voucher_issued_email(self, recipient_email, recipient_name, voucher_code, amount, issuer_name):
+        """Send email when a voucher is issued"""
+        subject = f"Your BAK UP Voucher Code: {voucher_code}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .voucher-code {{ 
+                    background-color: #fff; 
+                    border: 2px dashed #4CAF50; 
+                    padding: 20px; 
+                    text-align: center; 
+                    font-size: 32px; 
+                    font-weight: bold; 
+                    color: #4CAF50;
+                    margin: 20px 0;
+                }}
+                .amount {{ font-size: 24px; color: #FF9800; font-weight: bold; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+                .button {{
+                    display: inline-block;
+                    padding: 12px 24px;
+                    background-color: #4CAF50;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎉 Your BAK UP Voucher is Ready!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <p>You have received a food voucher from <strong>{issuer_name}</strong>.</p>
+                    
+                    <div class="voucher-code">{voucher_code}</div>
+                    
+                    <p style="text-align: center;">
+                        <span class="amount">£{amount:.2f}</span>
+                    </p>
+                    
+                    <h3>How to Use Your Voucher:</h3>
+                    <ol>
+                        <li>Visit any participating local food shop</li>
+                        <li>Select the items you need</li>
+                        <li>Show your voucher code at checkout</li>
+                        <li>The amount will be deducted from your voucher balance</li>
+                    </ol>
+                    
+                    <p style="text-align: center;">
+                        <a href="{self.app_url}" class="button">View Your Voucher</a>
+                    </p>
+                    
+                    <p><strong>Important:</strong> Keep this code safe and only share it with authorized vendors.</p>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BAK UP Voucher System</p>
+                    <p>© 2025 BAK UP. Supporting communities through digital food vouchers.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(recipient_email, subject, html_content)
+    
+    def send_surplus_food_alert_email(self, vcse_email, vcse_name, item_name, quantity, vendor_name, vendor_address):
+        """Send email alert when surplus food is posted"""
+        subject = f"🍎 New Surplus Food Available: {item_name}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #FF9800; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .item-box {{
+                    background-color: #fff;
+                    border-left: 4px solid #FF9800;
+                    padding: 15px;
+                    margin: 15px 0;
+                }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+                .button {{
+                    display: inline-block;
+                    padding: 12px 24px;
+                    background-color: #FF9800;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🍎 New Surplus Food Available!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {vcse_name},</p>
+                    
+                    <p>A local food shop has posted surplus food that you can collect for free!</p>
+                    
+                    <div class="item-box">
+                        <h3>{item_name}</h3>
+                        <p><strong>Quantity:</strong> {quantity}</p>
+                        <p><strong>Vendor:</strong> {vendor_name}</p>
+                        <p><strong>Location:</strong> {vendor_address}</p>
+                    </div>
+                    
+                    <p><strong>Act fast!</strong> Surplus food is available on a first-come, first-served basis.</p>
+                    
+                    <p style="text-align: center;">
+                        <a href="{self.app_url}/vcse" class="button">Claim This Item</a>
+                    </p>
+                    
+                    <p>Log in to your VCSE portal to claim this item and arrange collection.</p>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BAK UP Voucher System</p>
+                    <p>© 2025 BAK UP. Reducing food waste, supporting communities.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(vcse_email, subject, html_content)
+    
+    def send_collection_confirmation_email(self, vendor_email, vendor_name, item_name, vcse_name, vcse_contact):
+        """Send email to vendor when VCSE claims surplus item"""
+        subject = f"✅ Surplus Item Claimed: {item_name}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .info-box {{
+                    background-color: #fff;
+                    border-left: 4px solid #4CAF50;
+                    padding: 15px;
+                    margin: 15px 0;
+                }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✅ Your Surplus Item Has Been Claimed!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {vendor_name},</p>
+                    
+                    <p>Great news! Your surplus food item has been claimed by a VCSE organization.</p>
+                    
+                    <div class="info-box">
+                        <h3>{item_name}</h3>
+                        <p><strong>Claimed by:</strong> {vcse_name}</p>
+                        <p><strong>Contact:</strong> {vcse_contact}</p>
+                    </div>
+                    
+                    <p><strong>Next Steps:</strong></p>
+                    <ol>
+                        <li>Prepare the item for collection</li>
+                        <li>Wait for the VCSE representative to arrive</li>
+                        <li>Verify their identity and organization</li>
+                        <li>Hand over the surplus food</li>
+                    </ol>
+                    
+                    <p>Thank you for reducing food waste and supporting your local community! 🌍</p>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BAK UP Voucher System</p>
+                    <p>© 2025 BAK UP. Together, we're making a difference.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(vendor_email, subject, html_content)
+    
+    def send_redemption_receipt_email(self, recipient_email, recipient_name, voucher_code, amount_spent, remaining_balance, vendor_name):
+        """Send email receipt after voucher redemption"""
+        subject = f"Receipt: Voucher Used at {vendor_name}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #2196F3; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .receipt-box {{
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    padding: 20px;
+                    margin: 15px 0;
+                }}
+                .amount {{ font-size: 24px; font-weight: bold; }}
+                .spent {{ color: #F44336; }}
+                .remaining {{ color: #4CAF50; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🧾 Voucher Receipt</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <p>Your voucher has been successfully used at <strong>{vendor_name}</strong>.</p>
+                    
+                    <div class="receipt-box">
+                        <p><strong>Voucher Code:</strong> {voucher_code}</p>
+                        <p><strong>Vendor:</strong> {vendor_name}</p>
+                        <hr>
+                        <p class="amount spent">Amount Spent: £{amount_spent:.2f}</p>
+                        <p class="amount remaining">Remaining Balance: £{remaining_balance:.2f}</p>
+                    </div>
+                    
+                    <p>You can continue using your voucher until the balance reaches zero.</p>
+                    
+                    <p>Thank you for using BAK UP!</p>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BAK UP Voucher System</p>
+                    <p>© 2025 BAK UP. Supporting communities through digital food vouchers.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(recipient_email, subject, html_content)
+
 # Create a singleton instance
 email_service = EmailService()
