@@ -1276,6 +1276,515 @@ def vcse_issue_voucher():
         db.session.rollback()
         return jsonify({'error': f'Failed to issue voucher: {str(e)}'}), 500
 
+@app.route('/api/vcse/issue-vouchers-bulk', methods=['POST'])
+def vcse_issue_vouchers_bulk():
+    """VCSE organizations can issue vouchers in bulk via CSV upload"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can issue vouchers'}), 403
+        
+        # Check if file was uploaded
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file uploaded'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        if not file.filename.endswith('.csv'):
+            return jsonify({'error': 'Only CSV files are supported'}), 400
+        
+        # Parse CSV file
+        from bulk_voucher_handler import parse_csv_recipients, create_bulk_vouchers
+        parse_result = parse_csv_recipients(file)
+        
+        if not parse_result['success']:
+            return jsonify({'error': parse_result['error']}), 400
+        
+        if parse_result['total_count'] == 0:
+            return jsonify({'error': 'No valid recipients found in CSV'}), 400
+        
+        # Get optional parameters
+        expiry_days = int(request.form.get('expiry_days', 30))
+        selected_shops = request.form.get('selected_shops', 'all')
+        if selected_shops != 'all':
+            import json
+            try:
+                selected_shops = json.loads(selected_shops)
+            except:
+                selected_shops = 'all'
+        
+        # Create vouchers
+        result = create_bulk_vouchers(
+            db,
+            User,
+            Voucher,
+            parse_result['recipients'],
+            user_id,
+            expiry_days,
+            selected_shops
+        )
+        
+        if 'error' in result:
+            return jsonify({'error': result['error']}), 400
+        
+        # Send notifications to successful recipients
+        for success_item in result['successful']:
+            recipient = User.query.filter_by(email=success_item['email']).first()
+            if recipient:
+                # Create in-app notification
+                create_notification(
+                    recipient.id,
+                    'New Voucher Received',
+                    f'You have received a £{success_item["value"]:.2f} voucher from {user.organization_name}. Code: {success_item["voucher_code"]}',
+                    'success'
+                )
+                
+                # Send SMS if phone available
+                if recipient.phone:
+                    sms_service.send_voucher_code(
+                        recipient.phone,
+                        success_item['voucher_code'],
+                        success_item['name'],
+                        success_item['value']
+                    )
+                
+                # Send email if email available
+                if recipient.email:
+                    email_service.send_voucher_issued_email(
+                        recipient.email,
+                        success_item['name'],
+                        success_item['voucher_code'],
+                        success_item['value'],
+                        user.organization_name
+                    )
+        
+        return jsonify({
+            'message': 'Bulk voucher issuance completed',
+            'summary': {
+                'total_processed': result['success_count'] + result['failure_count'],
+                'successful': result['success_count'],
+                'failed': result['failure_count'],
+                'total_value': result['total_value'],
+                'remaining_balance': float(user.allocated_balance)
+            },
+            'successful_vouchers': result['successful'],
+            'failed_vouchers': result['failed'],
+            'csv_errors': parse_result['errors']
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to process bulk vouchers: {str(e)}'}), 500
+
+@app.route('/api/admin/check-expirations', methods=['POST'])
+def admin_check_expirations():
+    """Admin endpoint to manually trigger expiration check"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        from expiration_manager import check_and_expire_vouchers
+        result = check_and_expire_vouchers(db, Voucher)
+        
+        if not result['success']:
+            return jsonify({'error': result['error']}), 500
+        
+        return jsonify({
+            'message': 'Expiration check completed',
+            'expired_count': result['expired_count']
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to check expirations: {str(e)}'}), 500
+
+@app.route('/api/admin/expiring-soon', methods=['GET'])
+def admin_get_expiring_soon():
+    """Get vouchers expiring within specified days"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        days_ahead = int(request.args.get('days', 7))
+        
+        from expiration_manager import get_expiring_soon_vouchers
+        result = get_expiring_soon_vouchers(Voucher, User, days_ahead)
+        
+        if not result['success']:
+            return jsonify({'error': result['error']}), 500
+        
+        return jsonify({
+            'vouchers': result['vouchers'],
+            'count': result['count'],
+            'days_ahead': days_ahead
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get expiring vouchers: {str(e)}'}), 500
+
+@app.route('/api/admin/send-expiration-alerts', methods=['POST'])
+def admin_send_expiration_alerts():
+    """Send alerts for vouchers expiring soon"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        days_ahead = int(request.get_json().get('days', 7))
+        
+        from expiration_manager import get_expiring_soon_vouchers, send_expiration_alerts
+        
+        # Get expiring vouchers
+        vouchers_result = get_expiring_soon_vouchers(Voucher, User, days_ahead)
+        if not vouchers_result['success']:
+            return jsonify({'error': vouchers_result['error']}), 500
+        
+        # Send alerts
+        alert_result = send_expiration_alerts(
+            vouchers_result['vouchers'],
+            sms_service,
+            email_service
+        )
+        
+        return jsonify({
+            'message': 'Expiration alerts sent',
+            'total_vouchers': vouchers_result['count'],
+            'alerts_sent': alert_result['sent_count'],
+            'alerts_failed': alert_result['failed_count']
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to send alerts: {str(e)}'}), 500
+
+@app.route('/api/admin/expired-report', methods=['GET'])
+def admin_get_expired_report():
+    """Get report of expired vouchers"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get date range from query params
+        start_date_str = request.args.get('start_date')
+        end_date_str = request.args.get('end_date')
+        
+        start_date = None
+        end_date = None
+        
+        if start_date_str:
+            from datetime import datetime
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        if end_date_str:
+            from datetime import datetime
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        
+        from expiration_manager import get_expired_vouchers_report
+        result = get_expired_vouchers_report(Voucher, User, start_date, end_date)
+        
+        if not result['success']:
+            return jsonify({'error': result['error']}), 500
+        
+        return jsonify({
+            'vouchers': result['vouchers'],
+            'count': result['count'],
+            'total_value': result['total_value']
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate report: {str(e)}'}), 500
+
+@app.route('/api/admin/export/vouchers', methods=['GET'])
+def admin_export_vouchers():
+    """Export vouchers to CSV"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get filter parameters
+        status = request.args.get('status')  # active, redeemed, expired
+        start_date_str = request.args.get('start_date')
+        end_date_str = request.args.get('end_date')
+        
+        query = Voucher.query
+        
+        if status:
+            query = query.filter(Voucher.status == status)
+        
+        if start_date_str and hasattr(Voucher, 'created_at'):
+            from datetime import datetime
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+            query = query.filter(Voucher.created_at >= start_date)
+        
+        if end_date_str and hasattr(Voucher, 'created_at'):
+            from datetime import datetime
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+            query = query.filter(Voucher.created_at <= end_date)
+        
+        vouchers = query.all()
+        
+        from transaction_export import export_vouchers_csv
+        csv_data = export_vouchers_csv(vouchers, User)
+        
+        from flask import make_response
+        response = make_response(csv_data)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=vouchers_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export vouchers: {str(e)}'}), 500
+
+@app.route('/api/admin/export/surplus-items', methods=['GET'])
+def admin_export_surplus_items():
+    """Export surplus items to CSV"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        surplus_items = SurplusItem.query.all()
+        
+        from transaction_export import export_surplus_items_csv
+        csv_data = export_surplus_items_csv(surplus_items, User)
+        
+        from flask import make_response
+        from datetime import datetime
+        response = make_response(csv_data)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=surplus_items_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export surplus items: {str(e)}'}), 500
+
+@app.route('/api/admin/export/users', methods=['GET'])
+def admin_export_users():
+    """Export users to CSV"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get filter parameters
+        user_type = request.args.get('user_type')  # vcse, vendor, school, recipient
+        
+        query = User.query
+        if user_type:
+            query = query.filter(User.user_type == user_type)
+        
+        users = query.all()
+        
+        from transaction_export import export_users_csv
+        csv_data = export_users_csv(users)
+        
+        from flask import make_response
+        from datetime import datetime
+        response = make_response(csv_data)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=users_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export users: {str(e)}'}), 500
+
+@app.route('/api/admin/export/financial-report', methods=['GET'])
+def admin_export_financial_report():
+    """Export comprehensive financial report to CSV"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get date range
+        start_date_str = request.args.get('start_date')
+        end_date_str = request.args.get('end_date')
+        
+        start_date = None
+        end_date = None
+        
+        if start_date_str:
+            from datetime import datetime
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+        if end_date_str:
+            from datetime import datetime
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        
+        from transaction_export import generate_financial_report_csv
+        csv_data = generate_financial_report_csv(Voucher, User, start_date, end_date)
+        
+        from flask import make_response
+        from datetime import datetime
+        response = make_response(csv_data)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=financial_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export financial report: {str(e)}'}), 500
+
+@app.route('/api/admin/export/impact-report', methods=['GET'])
+def admin_export_impact_report():
+    """Export impact report to CSV"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        from transaction_export import export_impact_report_csv
+        csv_data = export_impact_report_csv(Voucher, SurplusItem, User)
+        
+        from flask import make_response
+        from datetime import datetime
+        response = make_response(csv_data)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=impact_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export impact report: {str(e)}'}), 500
+
+@app.route('/api/admin/check-low-balances', methods=['GET'])
+def admin_check_low_balances():
+    """Check for VCSE organizations with low balances"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        threshold = float(request.args.get('threshold', 50.0))
+        
+        from balance_alerts import check_low_balances
+        result = check_low_balances(User, threshold)
+        
+        if not result['success']:
+            return jsonify({'error': result['error']}), 500
+        
+        return jsonify({
+            'organizations': result['organizations'],
+            'count': result['count'],
+            'threshold': threshold
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to check balances: {str(e)}'}), 500
+
+@app.route('/api/admin/send-balance-alerts', methods=['POST'])
+def admin_send_balance_alerts():
+    """Send alerts to organizations with low balances"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        data = request.get_json()
+        threshold = float(data.get('threshold', 50.0))
+        
+        from balance_alerts import check_low_balances, send_low_balance_alerts
+        
+        # Get organizations with low balance
+        balance_result = check_low_balances(User, threshold)
+        if not balance_result['success']:
+            return jsonify({'error': balance_result['error']}), 500
+        
+        # Send alerts
+        alert_result = send_low_balance_alerts(
+            balance_result['organizations'],
+            sms_service,
+            email_service,
+            user.email  # Admin email
+        )
+        
+        return jsonify({
+            'message': 'Balance alerts sent',
+            'organizations_alerted': balance_result['count'],
+            'alerts_sent': alert_result['sent_count'],
+            'alerts_failed': alert_result['failed_count']
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to send alerts: {str(e)}'}), 500
+
+@app.route('/api/admin/balance-summary', methods=['GET'])
+def admin_get_balance_summary():
+    """Get balance summary for all VCSE organizations"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        from balance_alerts import get_balance_summary
+        result = get_balance_summary(User)
+        
+        if not result['success']:
+            return jsonify({'error': result['error']}), 500
+        
+        return jsonify(result['summary']), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get balance summary: {str(e)}'}), 500
+
 @app.route('/api/vcse/balance', methods=['GET'])
 def vcse_get_balance():
     """Get current VCSE balance"""
