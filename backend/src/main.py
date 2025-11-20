@@ -93,9 +93,14 @@ class Voucher(db.Model):
     redeemed_by_vendor = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    reassignment_count = db.Column(db.Integer, default=0)  # Track number of reassignments
+    reassignment_history = db.Column(db.Text)  # JSON array of reassignment records
+    original_recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Original recipient
+    
     recipient = db.relationship('User', foreign_keys=[recipient_id], backref='received_vouchers')
     issuer = db.relationship('User', foreign_keys=[issued_by], backref='issued_vouchers')
     redeemer = db.relationship('User', foreign_keys=[redeemed_by_vendor], backref='redeemed_vouchers')
+    original_recipient = db.relationship('User', foreign_keys=[original_recipient_id])
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -1157,6 +1162,7 @@ def vcse_issue_voucher():
         recipient_address = data.get('recipient_address')
         value = data.get('value')
         expiry_days = data.get('expiry_days', 30)
+        selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
         
         if not all([recipient_first_name, recipient_last_name, recipient_email, recipient_phone, value]):
             return jsonify({'error': 'All recipient details and value are required'}), 400
@@ -1197,14 +1203,22 @@ def vcse_issue_voucher():
         # Calculate expiry date
         expiry_date = datetime.utcnow().date() + timedelta(days=expiry_days)
         
-        # Create voucher
+        # Create voucher with vendor restrictions
+        import json
+        vendor_restrictions = None
+        if selected_shops and selected_shops != 'all':
+            vendor_restrictions = json.dumps(selected_shops)  # Store as JSON array
+        
         voucher = Voucher(
             code=voucher_code,
             value=value,
             recipient_id=recipient.id,
             issued_by=user_id,
             expiry_date=expiry_date,
-            status='active'
+            status='active',
+            vendor_restrictions=vendor_restrictions,
+            original_recipient_id=recipient.id,
+            reassignment_count=0
         )
         
         # Deduct from VCSE allocated balance
@@ -3026,6 +3040,19 @@ def validate_voucher():
         if voucher.expiry_date and datetime.now().date() > voucher.expiry_date:
             return jsonify({'valid': False, 'error': 'Voucher has expired'}), 200
         
+        # Check vendor restrictions (support multi-shop redemption)
+        if voucher.vendor_restrictions:
+            import json
+            allowed_shop_ids = json.loads(voucher.vendor_restrictions)
+            
+            # Get all shops owned by this vendor
+            vendor_shops = VendorShop.query.filter_by(vendor_id=user_id, is_active=True).all()
+            vendor_shop_ids = [shop.id for shop in vendor_shops]
+            
+            # Check if any of vendor's shops are in the allowed list
+            if not any(shop_id in allowed_shop_ids for shop_id in vendor_shop_ids):
+                return jsonify({'valid': False, 'error': 'This voucher cannot be redeemed at your shops'}), 200
+        
         # Get recipient details
         recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
         
@@ -3821,5 +3848,122 @@ def delete_admin_account(admin_id):
         db.session.rollback()
         return jsonify({'error': f'Failed to delete admin: {str(e)}'}), 500
     
+@app.route('/api/voucher/reassign', methods=['POST'])
+def reassign_voucher():
+    """Reassign a voucher to a different recipient (max 3 times)"""
+    try:
+        data = request.json
+        voucher_id = data.get('voucher_id')
+        new_recipient_email = data.get('new_recipient_email')
+        reason = data.get('reason', '')
+        
+        # Get voucher
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Check if voucher can be reassigned
+        if voucher.status != 'active':
+            return jsonify({'error': f'Cannot reassign {voucher.status} voucher'}), 400
+        
+        if voucher.reassignment_count >= 3:
+            return jsonify({'error': 'Voucher has reached maximum reassignment limit (3)'}), 400
+        
+        # Get new recipient
+        new_recipient = User.query.filter_by(email=new_recipient_email, user_type='recipient').first()
+        if not new_recipient:
+            return jsonify({'error': 'Recipient not found'}), 404
+        
+        # Store original recipient on first reassignment
+        if voucher.reassignment_count == 0:
+            voucher.original_recipient_id = voucher.recipient_id
+        
+        # Update reassignment history
+        import json
+        history = json.loads(voucher.reassignment_history) if voucher.reassignment_history else []
+        history.append({
+            'from_recipient_id': voucher.recipient_id,
+            'from_recipient_name': voucher.recipient.first_name + ' ' + voucher.recipient.last_name if voucher.recipient else 'N/A',
+            'to_recipient_id': new_recipient.id,
+            'to_recipient_name': new_recipient.first_name + ' ' + new_recipient.last_name,
+            'reason': reason,
+            'reassigned_at': datetime.utcnow().isoformat()
+        })
+        voucher.reassignment_history = json.dumps(history)
+        
+        # Update voucher
+        voucher.recipient_id = new_recipient.id
+        voucher.reassignment_count += 1
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Voucher reassigned successfully',
+            'voucher_code': voucher.code,
+            'new_recipient': new_recipient.first_name + ' ' + new_recipient.last_name,
+            'reassignment_count': voucher.reassignment_count
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/vendor/shops/all', methods=['GET'])
+def get_all_vendor_shops():
+    """Get all vendor shops for dropdown selection"""
+    try:
+        shops = VendorShop.query.filter_by(is_active=True).all()
+        return jsonify([
+            {
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'vendor_name': shop.vendor.first_name + ' ' + shop.vendor.last_name,
+                'vendor_id': shop.vendor_id,
+                'address': shop.address,
+                'city': shop.city
+            }
+            for shop in shops
+        ]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/login-stats', methods=['GET'])
+def get_login_stats():
+    """Get login frequency statistics for all users"""
+    try:
+        users = User.query.filter(User.user_type != 'admin').all()
+        
+        stats = []
+        for user in users:
+            stats.append({
+                'id': user.id,
+                'name': user.first_name + ' ' + user.last_name,
+                'email': user.email,
+                'user_type': user.user_type,
+                'organization': user.organization_name or user.shop_name or 'N/A',
+                'last_login': user.last_login.isoformat() if user.last_login else 'Never',
+                'login_count': user.login_count,
+                'is_active': user.is_active,
+                'created_at': user.created_at.isoformat()
+            })
+        
+        # Calculate summary statistics
+        total_users = len(stats)
+        active_users = sum(1 for s in stats if s['is_active'])
+        logged_in_users = sum(1 for s in stats if s['last_login'] != 'Never')
+        
+        return jsonify({
+            'users': stats,
+            'summary': {
+                'total_users': total_users,
+                'active_users': active_users,
+                'logged_in_users': logged_in_users,
+                'never_logged_in': total_users - logged_in_users
+            }
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
     app.run(host='0.0.0.0', port=5000, debug=True)
 

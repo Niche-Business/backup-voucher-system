@@ -4,6 +4,7 @@ import './i18n'
 import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
 import PasswordChangeModal from './components/PasswordChangeModal'
+import QRScanner from './components/QRScanner'
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -696,12 +697,25 @@ function AdminDashboard({ user, onLogout }) {
   const [editingSchool, setEditingSchool] = useState(null)
   const [editingVcse, setEditingVcse] = useState(null)
   const [editFormData, setEditFormData] = useState({})
+  const [loginStats, setLoginStats] = useState(null)
+
+  const loadLoginStats = async () => {
+    try {
+      const data = await apiCall('/admin/login-stats')
+      setLoginStats(data)
+    } catch (error) {
+      console.error('Error loading login stats:', error)
+    }
+  }
 
   useEffect(() => {
     loadVcseOrgs()
     loadSchools()
     loadVouchers()
     loadVendorShops()
+    if (activeTab === 'settings') {
+      loadLoginStats()
+    }
     loadToGoItems()
   }, [])
 
@@ -1412,6 +1426,12 @@ function AdminSettingsTab({ user }) {
         >
           👥 Manage Admins
         </button>
+        <button 
+          onClick={() => setSettingsTab('loginstats')} 
+          style={settingsTab === 'loginstats' ? styles.activeTab : styles.tab}
+        >
+          📊 Login Statistics
+        </button>
       </div>
 
       {settingsTab === 'password' && (
@@ -1594,6 +1614,84 @@ function AdminSettingsTab({ user }) {
           </div>
         </div>
       )}
+      
+      {settingsTab === 'loginstats' && (
+        <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px'}}>
+          <h3>📊 User Login Statistics</h3>
+          <p style={{color: '#666', marginBottom: '20px'}}>Track user activity and engagement across all portals</p>
+          
+          {loginStats ? (
+            <div>
+              {/* Summary Cards */}
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+                <div style={{backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '10px'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>{loginStats.total_users}</div>
+                  <div style={{color: '#666'}}>Total Users</div>
+                </div>
+                <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>{loginStats.active_users}</div>
+                  <div style={{color: '#666'}}>Active Users (30 days)</div>
+                </div>
+                <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{loginStats.total_logins}</div>
+                  <div style={{color: '#666'}}>Total Logins</div>
+                </div>
+              </div>
+              
+              {/* User Table */}
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{backgroundColor: '#f5f5f5'}}>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Name</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Email</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Role</th>
+                      <th style={{padding: '12px', textAlign: 'left', borderBottom: '2px solid #ddd'}}>Last Login</th>
+                      <th style={{padding: '12px', textAlign: 'center', borderBottom: '2px solid #ddd'}}>Login Count</th>
+                      <th style={{padding: '12px', textAlign: 'center', borderBottom: '2px solid #ddd'}}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loginStats.users.map(u => (
+                      <tr key={u.id} style={{borderBottom: '1px solid #eee'}}>
+                        <td style={{padding: '12px'}}>{u.first_name} {u.last_name}</td>
+                        <td style={{padding: '12px', fontSize: '14px'}}>{u.email}</td>
+                        <td style={{padding: '12px'}}>
+                          <span style={{
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            backgroundColor: u.role === 'admin' ? '#e8f5e9' : u.role === 'vcse' ? '#e3f2fd' : u.role === 'vendor' ? '#fff3e0' : '#f3e5f5',
+                            color: u.role === 'admin' ? '#2e7d32' : u.role === 'vcse' ? '#1565c0' : u.role === 'vendor' ? '#e65100' : '#6a1b9a'
+                          }}>
+                            {u.role.toUpperCase()}
+                          </span>
+                        </td>
+                        <td style={{padding: '12px'}}>{u.last_login ? new Date(u.last_login).toLocaleString() : 'Never'}</td>
+                        <td style={{padding: '12px', textAlign: 'center', fontWeight: 'bold'}}>{u.login_count || 0}</td>
+                        <td style={{padding: '12px', textAlign: 'center'}}>
+                          {u.days_since_login === null ? (
+                            <span style={{color: '#999'}}>Never logged in</span>
+                          ) : u.days_since_login <= 7 ? (
+                            <span style={{color: '#4CAF50', fontWeight: 'bold'}}>✓ Active</span>
+                          ) : u.days_since_login <= 30 ? (
+                            <span style={{color: '#FF9800'}}>⚠ Inactive</span>
+                          ) : (
+                            <span style={{color: '#f44336'}}>✗ Dormant</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <p>Loading statistics...</p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -1749,12 +1847,19 @@ function VCSEDashboard({ user, onLogout }) {
   const [statusFilter, setStatusFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [vendorShops, setVendorShops] = useState([])
+  const [selectedShops, setSelectedShops] = useState('all')
+  const [showReassignModal, setShowReassignModal] = useState(false)
+  const [reassignVoucher, setReassignVoucher] = useState(null)
+  const [reassignEmail, setReassignEmail] = useState('')
+  const [reassignReason, setReassignReason] = useState('')
 
   useEffect(() => {
     loadBalance()
     loadToGoItems()
     loadVouchers()
     loadAnalytics()
+    loadVendorShops()
   }, [])
 
   useEffect(() => {
@@ -1792,6 +1897,15 @@ function VCSEDashboard({ user, onLogout }) {
     }
   }
 
+  const loadVendorShops = async () => {
+    try {
+      const data = await apiCall('/vendor/shops/all')
+      setVendorShops(data || [])
+    } catch (error) {
+      console.error('Failed to load vendor shops:', error)
+    }
+  }
+
   const loadAnalytics = async () => {
     try {
       const data = await apiCall('/vcse/analytics')
@@ -1814,7 +1928,8 @@ function VCSEDashboard({ user, onLogout }) {
           recipient_phone: voucherForm.recipientPhone,
           recipient_address: voucherForm.recipientAddress,
           value: parseFloat(voucherForm.value),
-          expiry_days: parseInt(voucherForm.expiryDays)
+          expiry_days: parseInt(voucherForm.expiryDays),
+          selected_shops: selectedShops === 'all' ? 'all' : selectedShops
         })
       })
       setMessage('Voucher issued successfully!')
@@ -1828,7 +1943,31 @@ function VCSEDashboard({ user, onLogout }) {
         value: '',
         expiryDays: '30'
       })
+      setSelectedShops('all')
       loadBalance()
+      loadVouchers()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  const handleReassignVoucher = async (e) => {
+    e.preventDefault()
+    try {
+      await apiCall('/voucher/reassign', {
+        method: 'POST',
+        body: JSON.stringify({
+          voucher_id: reassignVoucher.id,
+          new_recipient_email: reassignEmail,
+          reason: reassignReason
+        })
+      })
+      setMessage(`Voucher ${reassignVoucher.code} reassigned successfully!`)
+      setShowReassignModal(false)
+      setReassignVoucher(null)
+      setReassignEmail('')
+      setReassignReason('')
       loadVouchers()
       setTimeout(() => setMessage(''), 3000)
     } catch (error) {
@@ -1960,14 +2099,27 @@ function VCSEDashboard({ user, onLogout }) {
                           <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
                           <td style={{padding: '12px', fontSize: '14px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
-                            <a 
-                              href={`/api/vcse/voucher-pdf/${voucher.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
-                            >
-                              📝 PDF
-                            </a>
+                            <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
+                              <a 
+                                href={`/api/vcse/voucher-pdf/${voucher.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
+                              >
+                                📝 PDF
+                              </a>
+                              {voucher.status === 'active' && voucher.reassignment_count < 3 && (
+                                <button
+                                  onClick={() => {
+                                    setReassignVoucher(voucher)
+                                    setShowReassignModal(true)
+                                  }}
+                                  style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', backgroundColor: '#FF9800'}}
+                                >
+                                  🔄 Reassign
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -2210,6 +2362,33 @@ function VCSEDashboard({ user, onLogout }) {
               </div>
               
               <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Accepted At (Local Food Shops)</label>
+                <select
+                  value={selectedShops}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === 'all') {
+                      setSelectedShops('all')
+                    } else {
+                      // For multi-select, we'd need a different UI, but for now single shop
+                      setSelectedShops([parseInt(value)])
+                    }
+                  }}
+                  style={styles.input}
+                >
+                  <option value="all">All Local Food Shops</option>
+                  {vendorShops.map(shop => (
+                    <option key={shop.id} value={shop.id}>
+                      {shop.shop_name} - {shop.city}
+                    </option>
+                  ))}
+                </select>
+                <small style={{color: '#666', display: 'block', marginTop: '5px'}}>
+                  Select which shop(s) can accept this voucher
+                </small>
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Expiry (Days)</label>
                 <input
                   type="number"
@@ -2247,6 +2426,81 @@ function VCSEDashboard({ user, onLogout }) {
           </div>
         )}
       </div>
+      
+      {/* Reassign Voucher Modal */}
+      {showReassignModal && reassignVoucher && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '10px',
+            maxWidth: '500px',
+            width: '90%'
+          }}>
+            <h3 style={{marginTop: 0}}>🔄 Reassign Voucher</h3>
+            <div style={{backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px', marginBottom: '20px'}}>
+              <strong>Voucher Code:</strong> {reassignVoucher.code}<br />
+              <strong>Value:</strong> £{reassignVoucher.value.toFixed(2)}<br />
+              <strong>Current Recipient:</strong> {reassignVoucher.recipient.name}<br />
+              <strong>Reassignments:</strong> {reassignVoucher.reassignment_count || 0} / 3
+            </div>
+            <form onSubmit={handleReassignVoucher}>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>New Recipient Email</label>
+                <input
+                  type="email"
+                  value={reassignEmail}
+                  onChange={(e) => setReassignEmail(e.target.value)}
+                  placeholder="recipient@example.com"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              <div style={{marginBottom: '20px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Reason for Reassignment</label>
+                <textarea
+                  value={reassignReason}
+                  onChange={(e) => setReassignReason(e.target.value)}
+                  placeholder="Why is this voucher being reassigned?"
+                  style={{...styles.input, minHeight: '80px'}}
+                  required
+                />
+              </div>
+              <div style={{display: 'flex', gap: '10px', justifyContent: 'flex-end'}}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowReassignModal(false)
+                    setReassignVoucher(null)
+                    setReassignEmail('')
+                    setReassignReason('')
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#757575'}}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{...styles.primaryButton, backgroundColor: '#FF9800'}}
+                >
+                  Reassign Voucher
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -2258,6 +2512,7 @@ function VendorDashboard({ user, onLogout }) {
   const [shops, setShops] = useState([])
   const [toGoItems, setToGoItems] = useState([])
   const [toGoCount, setToGoCount] = useState(0)
+  const [showQRScanner, setShowQRScanner] = useState(false)
   const [toGoForm, setToGoForm] = useState({
     shopName: '',
     shopAddress: '',
@@ -2443,6 +2698,13 @@ function VendorDashboard({ user, onLogout }) {
     }
   }
 
+  const handleQRScan = (scannedCode) => {
+    setVoucherCode(scannedCode.toUpperCase())
+    setShowQRScanner(false)
+    setRedemptionMessage('QR code scanned! Click Validate or Redeem.')
+    setTimeout(() => setRedemptionMessage(''), 3000)
+  }
+
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
@@ -2593,6 +2855,20 @@ function VendorDashboard({ user, onLogout }) {
                     textTransform: 'uppercase'
                   }}
                 />
+              </div>
+              
+              <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                <button
+                  onClick={() => setShowQRScanner(true)}
+                  style={{
+                    ...styles.primaryButton,
+                    backgroundColor: '#9C27B0',
+                    width: '100%',
+                    fontSize: '16px'
+                  }}
+                >
+                  📷 Scan QR Code
+                </button>
               </div>
               
               <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
@@ -2903,6 +3179,14 @@ function VendorDashboard({ user, onLogout }) {
           </div>
         )}
       </div>
+      
+      {/* QR Code Scanner */}
+      {showQRScanner && (
+        <QRScanner 
+          onScan={handleQRScan}
+          onClose={() => setShowQRScanner(false)}
+        />
+      )}
     </div>
   )
 }
