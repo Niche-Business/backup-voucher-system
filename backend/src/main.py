@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import os
 import secrets
 from email_service import email_service
+from sms_service import sms_service
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
@@ -1242,6 +1243,17 @@ def vcse_issue_voucher():
             'success'
         )
         
+        # Send SMS notification to recipient with voucher code
+        if recipient.phone:
+            sms_result = sms_service.send_voucher_code(
+                recipient.phone,
+                voucher_code,
+                f"{recipient.first_name} {recipient.last_name}",
+                value
+            )
+            if not sms_result.get('success'):
+                print(f"Failed to send SMS: {sms_result.get('error')}")
+        
         return jsonify({
             'message': 'Voucher issued successfully',
             'voucher_code': voucher_code,
@@ -1703,6 +1715,23 @@ def claim_surplus_item():
             f'{user.organization_name} has claimed your surplus item: {item.title}. Collection by: {item.collection_time_limit.strftime("%H:%M")}',
             'success'
         )
+        
+        # Send SMS to vendor about collection
+        vendor = User.query.get(item.vendor_id)
+        if vendor and vendor.phone:
+            # Get shop info if available
+            shop = VendorShop.query.get(item.shop_id) if hasattr(item, 'shop_id') else None
+            shop_name = shop.shop_name if shop else vendor.shop_name or f"{vendor.first_name} {vendor.last_name}"
+            
+            sms_result = sms_service.send_collection_notification(
+                vendor.phone,
+                shop_name,
+                user.organization_name or f"{user.first_name} {user.last_name}",
+                item.title,
+                item.quantity if hasattr(item, 'quantity') else 1
+            )
+            if not sms_result.get('success'):
+                print(f"Failed to send SMS to vendor: {sms_result.get('error')}")
         
         # Notify VCSE
         create_notification(
@@ -2228,7 +2257,29 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
-        # In a real app, this would trigger notifications to VCSE organizations
+        # Notify all VCSE organizations about new surplus food
+        vcse_users = User.query.filter_by(user_type='vcse', is_active=True).all()
+        for vcse in vcse_users:
+            # Create in-app notification
+            create_notification(
+                vcse.id,
+                'New Surplus Food Available',
+                f'{data["item_name"]} ({data["quantity"]}) available at {shop.shop_name}',
+                'info'
+            )
+            
+            # Send SMS notification if phone number is available
+            if vcse.phone:
+                sms_result = sms_service.send_surplus_alert(
+                    vcse.phone,
+                    vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
+                    shop.shop_name,
+                    data['item_name'],
+                    data['quantity']
+                )
+                if not sms_result.get('success'):
+                    print(f"Failed to send SMS to {vcse.email}: {sms_result.get('error')}")
+        
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         
         return jsonify({
@@ -2884,6 +2935,17 @@ def school_issue_voucher():
             'success'
         )
         
+        # Send SMS notification to recipient with voucher code
+        if recipient.phone:
+            sms_result = sms_service.send_voucher_code(
+                recipient.phone,
+                voucher_code,
+                f"{recipient.first_name} {recipient.last_name}",
+                amount
+            )
+            if not sms_result.get('success'):
+                print(f"Failed to send SMS: {sms_result.get('error')}")
+        
         return jsonify({
             'message': 'Voucher issued successfully',
             'voucher_code': voucher_code,
@@ -2988,6 +3050,19 @@ def vendor_redeem_voucher():
         user.balance = current_balance + float(voucher.value)
         
         db.session.commit()
+        
+        # Optional: Send SMS to recipient confirming redemption
+        if recipient and recipient.phone:
+            redemption_message = f"""BAK UP Voucher Update
+
+Your voucher {voucher_code} (£{voucher.value:.2f}) has been redeemed at {user.shop_name or 'a vendor shop'}.
+
+Thank you for using BAK UP!
+
+BAK UP Team"""
+            sms_result = sms_service.send_sms(recipient.phone, redemption_message)
+            if not sms_result.get('success'):
+                print(f"Failed to send redemption SMS to recipient: {sms_result.get('error')}")
         
         return jsonify({
             'message': 'Voucher redeemed successfully',
