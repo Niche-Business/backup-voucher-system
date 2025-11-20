@@ -547,7 +547,7 @@ function RegisterPage({ onRegister, onNavigate }) {
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
             <select name="userType" value={formData.userType} onChange={handleChange} style={styles.input} required>
               <option value="recipient">Recipient</option>
-              <option value="vendor">Local Shops</option>
+                <option value="vendor">Local Food Shop</option>
               <option value="vcse">VCSE Organization</option>
               <option value="school">School/Care Organization</option>
             </select>
@@ -1060,7 +1060,7 @@ function AdminDashboard({ user, onLogout }) {
                         <strong>📞 Phone:</strong> {shop.phone}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>👤 Vendor:</strong> {shop.vendor_name}
+                         <strong>👤 Shop Owner:</strong> {shop.vendor_name}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
                         <strong>📧 Email:</strong> {shop.vendor_email}
@@ -1280,7 +1280,7 @@ function AdminDashboard({ user, onLogout }) {
                       <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
                         <p style={{margin: '2px 0', fontSize: '13px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
                         <p style={{margin: '2px 0', fontSize: '13px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
-                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>👤 Vendor:</strong> {item.vendor_name}</p>
+                         <p style={{margin: '2px 0', fontSize: '13px'}}><strong>👤 Shop Owner:</strong> {item.vendor_name}</p>
                       </div>
                     </div>
                   ))}
@@ -3593,7 +3593,7 @@ function SchoolDashboard({ user, onLogout }) {
                 As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities who need assistance.
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                Use your allocated balance to issue e-vouchers directly to families, giving them dignity and choice in accessing food from local vendors.
+                Use your allocated balance to issue e-vouchers directly to families, giving them dignity and choice in accessing food from local food shops.
               </p>
             </div>
           </div>
@@ -3679,16 +3679,36 @@ function SchoolDashboard({ user, onLogout }) {
 
               <div style={{marginBottom: '20px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Voucher Amount (£)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  max={balance}
+                <select
                   value={voucherAmount}
                   onChange={(e) => setVoucherAmount(e.target.value)}
                   style={styles.input}
                   required
-                />
+                >
+                  <option value="">Select amount</option>
+                  <option value="10">£10</option>
+                  <option value="20">£20</option>
+                  <option value="30">£30</option>
+                  <option value="40">£40</option>
+                  <option value="50">£50</option>
+                  <option value="75">£75</option>
+                  <option value="100">£100</option>
+                  <option value="150">£150</option>
+                  <option value="200">£200</option>
+                  <option value="custom">Custom amount</option>
+                </select>
+                {voucherAmount === 'custom' && (
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    max={balance}
+                    placeholder="Enter custom amount"
+                    onChange={(e) => setVoucherAmount(e.target.value)}
+                    style={{...styles.input, marginTop: '10px'}}
+                    required
+                  />
+                )}
               </div>
 
               <button type="submit" style={{...styles.primaryButton, backgroundColor: '#9C27B0', width: '100%'}}>
@@ -3767,7 +3787,7 @@ function SchoolDashboard({ user, onLogout }) {
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
                   <p>No To Go items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for surplus food items from local vendors</p>
+                  <p style={{fontSize: '14px'}}>Check back later for surplus food items from local food shops</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
