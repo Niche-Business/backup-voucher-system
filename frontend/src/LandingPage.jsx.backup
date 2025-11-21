@@ -1,22 +1,8 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from './components/LanguageSwitcher';
 
 const LandingPage = ({ onNavigate }) => {
-  const { t } = useTranslation();
-
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      {/* Language Switcher - Top Right */}
-      <div style={{
-        position: 'absolute',
-        top: '20px',
-        right: '20px',
-        zIndex: 1000
-      }}>
-        <LanguageSwitcher />
-      </div>
-
       {/* Hero Section */}
       <div style={{ 
         background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
@@ -25,10 +11,10 @@ const LandingPage = ({ onNavigate }) => {
         textAlign: 'center'
       }}>
         <h1 style={{ fontSize: '3em', marginBottom: '20px', fontWeight: 'bold' }}>
-          {t('landing.hero.title')}
+          BAK UP E-Voucher System
         </h1>
         <p style={{ fontSize: '1.3em', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
-          {t('landing.hero.subtitle')}
+          Connecting food vendors, VCSE organizations, and vulnerable families through a unified digital solution
         </p>
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <button
@@ -45,7 +31,7 @@ const LandingPage = ({ onNavigate }) => {
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
             }}
           >
-            {t('landing.hero.getStarted')}
+            Get Started
           </button>
           <button
             onClick={() => onNavigate('login')}
@@ -60,7 +46,7 @@ const LandingPage = ({ onNavigate }) => {
               fontWeight: 'bold'
             }}
           >
-            {t('landing.hero.signIn')}
+            Sign In
           </button>
         </div>
       </div>
@@ -77,11 +63,9 @@ const LandingPage = ({ onNavigate }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '3em', marginBottom: '15px' }}>🎫</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
-              {t('landing.features.communities.title')}
-            </h3>
+            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>Supporting Communities</h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
-              {t('landing.features.communities.description')}
+              Digital food vouchers promoting dignity and choice for vulnerable families
             </p>
           </div>
 
@@ -94,11 +78,9 @@ const LandingPage = ({ onNavigate }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '3em', marginBottom: '15px' }}>🤝</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
-              {t('landing.features.vcse.title')}
-            </h3>
+            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>VCSE Partnership</h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
-              {t('landing.features.vcse.description')}
+              Charitable organizations can fund and manage voucher distributions efficiently
             </p>
           </div>
 
@@ -111,15 +93,13 @@ const LandingPage = ({ onNavigate }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '3em', marginBottom: '15px' }}>🏪</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
-              {t('landing.features.vendors.title')}
-            </h3>
+            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>Vendor Network</h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
-              {t('landing.features.vendors.description')}
+              Local shops join the network to accept vouchers and support their community
             </p>
           </div>
 
-          {/* Feature 4 */}
+          {/* Feature 4 - UPDATED */}
           <div style={{ 
             backgroundColor: 'white',
             padding: '30px',
@@ -128,20 +108,18 @@ const LandingPage = ({ onNavigate }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '3em', marginBottom: '15px' }}>🍎</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
-              {t('landing.features.surplus.title')}
-            </h3>
+            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>Surplus Food Sharing</h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
-              {t('landing.features.surplus.description')}
+              Vendors can post surplus food items for families as discount and free food surplus to VCSE partners to support the families they serve, reducing food waste
             </p>
           </div>
         </div>
       </div>
 
-      {/* Who We Serve Section */}
+      {/* Who We Serve Section - UPDATED */}
       <div style={{ backgroundColor: '#fff', padding: '60px 20px' }}>
         <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: '#333' }}>
-          {t('landing.whoWeServe.title')}
+          Who We Serve
         </h2>
         <div style={{ 
           display: 'grid',
@@ -150,7 +128,7 @@ const LandingPage = ({ onNavigate }) => {
           maxWidth: '1200px',
           margin: '0 auto'
         }}>
-          {/* For Recipients */}
+          {/* For Recipients - UPDATED */}
           <div style={{
             backgroundColor: '#f9f9f9',
             padding: '30px',
@@ -158,13 +136,13 @@ const LandingPage = ({ onNavigate }) => {
             border: '2px solid #9C27B0'
           }}>
             <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#9C27B0' }}>
-              👤 {t('landing.whoWeServe.recipients.title')}
+              👤 For Recipients
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• {t('landing.whoWeServe.recipients.item1')}</li>
-              <li>• {t('landing.whoWeServe.recipients.item2')}</li>
-              <li>• <strong>{t('landing.whoWeServe.recipients.item3')}</strong></li>
-              <li>• {t('landing.whoWeServe.recipients.item4')}</li>
+              <li>• Receive digital food vouchers with dignity</li>
+              <li>• Choose what you need from local vendors</li>
+              <li>• <strong>Food to Go at a discount</strong> - Buy discounted food from participating vendors</li>
+              <li>• Track your voucher balance easily</li>
             </ul>
           </div>
 
@@ -176,18 +154,18 @@ const LandingPage = ({ onNavigate }) => {
             border: '2px solid #FF9800'
           }}>
             <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#FF9800' }}>
-              🏪 {t('landing.whoWeServe.vendors.title')}
+              🏪 For Vendors
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• {t('landing.whoWeServe.vendors.item1')}</li>
-              <li>• {t('landing.whoWeServe.vendors.item2')}</li>
-              <li>• {t('landing.whoWeServe.vendors.item3')}</li>
-              <li>• {t('landing.whoWeServe.vendors.item4')}</li>
-              <li>• {t('landing.whoWeServe.vendors.item5')}</li>
+              <li>• Accept digital vouchers seamlessly</li>
+              <li>• Post discounted food items for recipients</li>
+              <li>• Post free surplus food for VCSE collection</li>
+              <li>• Support your local community</li>
+              <li>• Manage multiple shop locations</li>
             </ul>
           </div>
 
-          {/* For VCSE Organizations */}
+          {/* For VCSE Organizations - UPDATED */}
           <div style={{
             backgroundColor: '#f9f9f9',
             padding: '30px',
@@ -195,18 +173,18 @@ const LandingPage = ({ onNavigate }) => {
             border: '2px solid #4CAF50'
           }}>
             <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#4CAF50' }}>
-              🤝 {t('landing.whoWeServe.vcse.title')}
+              🤝 For VCSE Organizations
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• {t('landing.whoWeServe.vcse.item1')}</li>
-              <li>• {t('landing.whoWeServe.vcse.item2')}</li>
-              <li>• <strong>{t('landing.whoWeServe.vcse.item3')}</strong></li>
-              <li>• {t('landing.whoWeServe.vcse.item4')}</li>
-              <li>• {t('landing.whoWeServe.vcse.item5')}</li>
+              <li>• Issue and manage vouchers efficiently</li>
+              <li>• Fund families digitally</li>
+              <li>• <strong>Collect free surplus food</strong> to distribute to families you serve</li>
+              <li>• Track usage and impact</li>
+              <li>• Generate detailed reports</li>
             </ul>
           </div>
 
-          {/* For Schools/Care Organizations */}
+          {/* For Schools/Care Organizations - NEW */}
           <div style={{
             backgroundColor: '#f9f9f9',
             padding: '30px',
@@ -214,14 +192,14 @@ const LandingPage = ({ onNavigate }) => {
             border: '2px solid #2196F3'
           }}>
             <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#2196F3' }}>
-              🎓 {t('landing.whoWeServe.schools.title')}
+              🎓 For Schools & Care Organizations
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• <strong>{t('landing.whoWeServe.schools.item1')}</strong></li>
-              <li>• {t('landing.whoWeServe.schools.item2')}</li>
-              <li>• {t('landing.whoWeServe.schools.item3')}</li>
-              <li>• {t('landing.whoWeServe.schools.item4')}</li>
-              <li>• {t('landing.whoWeServe.schools.item5')}</li>
+              <li>• <strong>Receive e-vouchers from BAK UP</strong> to support families</li>
+              <li>• Distribute vouchers to families from underrepresented communities</li>
+              <li>• Track voucher distribution and impact</li>
+              <li>• Support students and families through trusted institutions</li>
+              <li>• Generate reports for accountability</li>
             </ul>
           </div>
 
@@ -233,14 +211,14 @@ const LandingPage = ({ onNavigate }) => {
             border: '2px solid #1976d2'
           }}>
             <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#1976d2' }}>
-              👨‍💼 {t('landing.whoWeServe.admins.title')}
+              👨‍💼 For Administrators
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• {t('landing.whoWeServe.admins.item1')}</li>
-              <li>• {t('landing.whoWeServe.admins.item2')}</li>
-              <li>• {t('landing.whoWeServe.admins.item3')}</li>
-              <li>• {t('landing.whoWeServe.admins.item4')}</li>
-              <li>• {t('landing.whoWeServe.admins.item5')}</li>
+              <li>• Oversee the entire platform</li>
+              <li>• Manage users and roles</li>
+              <li>• Monitor discount and surplus food programs</li>
+              <li>• Generate comprehensive reports</li>
+              <li>• Ensure system integrity</li>
             </ul>
           </div>
         </div>
@@ -254,10 +232,10 @@ const LandingPage = ({ onNavigate }) => {
         textAlign: 'center'
       }}>
         <h2 style={{ fontSize: '2.5em', marginBottom: '20px' }}>
-          {t('landing.cta.title')}
+          Ready to Make a Difference?
         </h2>
         <p style={{ fontSize: '1.2em', marginBottom: '30px' }}>
-          {t('landing.cta.subtitle')}
+          Join our community-driven platform today
         </p>
         <button
           onClick={() => onNavigate('register')}
@@ -273,11 +251,11 @@ const LandingPage = ({ onNavigate }) => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
           }}
         >
-          {t('landing.cta.button')}
+          Create Account
         </button>
       </div>
       
-      {/* Admin Access Link */}
+      {/* Admin Access Link - Subtle footer link */}
       <div style={{
         textAlign: 'center',
         padding: '20px',
@@ -296,7 +274,7 @@ const LandingPage = ({ onNavigate }) => {
             padding: '5px 10px'
           }}
         >
-          {t('landing.footer.adminAccess')}
+          Administrator Access
         </button>
       </div>
     </div>

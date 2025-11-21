@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "Sistemul de Vouchere Electronice BAK UP",
+    "tagline": "Conectând excedentul alimentar cu cei care au cea mai mare nevoie"
+  },
+  "common": {
+    "email": "Email",
+    "password": "Parolă",
+    "signIn": "Autentificare",
+    "signOut": "Deconectare",
+    "cancel": "Anulare",
+    "save": "Salvare",
+    "delete": "Ștergere",
+    "edit": "Editare",
+    "add": "Adăugare",
+    "remove": "Eliminare",
+    "close": "Închidere",
+    "search": "Căutare",
+    "filter": "Filtrare",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes",
+    "confirm": "Confirmare",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "submit": "Trimite"
+  },
+  "auth": {
+    "selectRole": "Selectați rolul dvs.",
+    "vendor": "Vânzător de alimente / Magazin",
+    "vcse": "Organizație VCSE",
+    "recipient": "Beneficiar de vouchere",
+    "vendorDesc": "Donați excedent alimentar și acceptați vouchere",
+    "vcseDesc": "Gestionați vouchere pentru familii vulnerabile",
+    "recipientDesc": "Răsfoiți și valorificați vouchere alimentare",
+    "loginTitle": "Autentificare",
+    "noAccount": "Nu aveți un cont?",
+    "registerHere": "Înregistrați-vă aici",
+    "forgotPassword": "Ați uitat parola?"
+  },
+  "dashboard": {
+    "welcome": "Bun venit",
+    "overview": "Prezentare generală",
+    "myVouchers": "Voucherele mele",
+    "browseToGo": "Răsfoiți de luat",
+    "shoppingCart": "Coș de cumpărături",
+    "profile": "Profil",
+    "settings": "Setări",
+    "activeBalance": "Sold activ",
+    "activeVouchers": "Vouchere active",
+    "redeemed": "Valorificate",
+    "emptyCart": "Coșul dvs. este gol",
+    "noToGoItems": "Nu există articole de luat disponibile în acest moment",
+    "redeemVouchers": "Valorificați vouchere",
+    "toGo": "De luat",
+    "issueVouchers": "Emiteți vouchere"
+  },
+  "voucher": {
+    "title": "Vouchere",
+    "balance": "Sold",
+    "status": "Stare",
+    "active": "Activ",
+    "used": "Folosit",
+    "expired": "Expirat",
+    "validUntil": "Valid până la",
+    "qrCode": "Cod QR",
+    "showQR": "Afișați codul QR",
+    "hideQR": "Ascundeți codul QR"
+  },
+  "toGo": {
+    "title": "Răsfoiți articolele disponibile de luat",
+    "noItems": "Nu există articole de luat disponibile în acest moment",
+    "addToCart": "Adăugați în coș",
+    "quantity": "Cantitate",
+    "available": "disponibil",
+    "category": "Categorie",
+    "shop": "Magazin",
+    "description": "Descriere",
+    "price": "Preț",
+    "per": "pe"
+  },
+  "cart": {
+    "title": "Coș de cumpărături",
+    "empty": "Coșul dvs. este gol",
+    "browseItems": "Răsfoiți articolele de luat",
+    "continueShopping": "Continuați cumpărăturile",
+    "viewVouchers": "Vizualizați voucherele mele",
+    "nextSteps": "Pașii următori",
+    "step1": "Verificați articolele din coș mai sus",
+    "step2": "Vizitați locațiile magazinelor pentru a ridica articolele",
+    "step3": "Arătați codul QR al voucherului la magazin pentru a finaliza achiziția",
+    "step4": "Soldul voucherului dvs. va fi dedus la magazin"
+  },
+  "categories": {
+    "bakery": "Brutărie",
+    "fruits": "Fructe",
+    "vegetables": "Legume",
+    "dairy": "Lactate",
+    "meat": "Carne",
+    "cannedGoods": "Conserve",
+    "freshProduce": "Produse proaspete",
+    "other": "Altele"
+  },
+  "language": {
+    "select": "Selectați limba",
+    "en": "Engleză",
+    "ar": "Arabă",
+    "ro": "Română",
+    "es": "Spaniolă",
+    "pl": "Poloneză"
+  }
+}

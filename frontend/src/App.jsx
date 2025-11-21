@@ -5,6 +5,7 @@ import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
+import VoucherPrint from './components/VoucherPrint'
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -3201,6 +3202,7 @@ function RecipientDashboard({ user, onLogout }) {
   const [toGoItems, setToGoItems] = useState([])
   const [selectedVoucher, setSelectedVoucher] = useState(null)
   const [showQR, setShowQR] = useState(false)
+  const [showPrint, setShowPrint] = useState(false)
   const [cart, setCart] = useState([])
   const [cartCount, setCartCount] = useState(0)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -3421,7 +3423,10 @@ function RecipientDashboard({ user, onLogout }) {
                         {voucher.status === 'active' && (
                           <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
                             <button 
-                              onClick={() => handlePrintVoucher(voucher)}
+                              onClick={() => {
+                                setSelectedVoucher(voucher)
+                                setShowPrint(true)
+                              }}
                               style={{
                                 ...styles.primaryButton,
                                 padding: '10px 20px',
@@ -3510,6 +3515,17 @@ function RecipientDashboard({ user, onLogout }) {
                   </button>
                 </div>
               </div>
+            )}
+            
+            {/* Print Voucher Modal */}
+            {showPrint && selectedVoucher && (
+              <VoucherPrint 
+                voucher={selectedVoucher}
+                onClose={() => {
+                  setShowPrint(false)
+                  setSelectedVoucher(null)
+                }}
+              />
             )}
           </div>
         )}
