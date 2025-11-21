@@ -1878,7 +1878,7 @@ function VCSEDashboard({ user, onLogout }) {
 
   const loadToGoItems = async () => {
     try {
-      const data = await apiCall('/items/available')
+      const data = await apiCall('/admin/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
       console.error('Failed to load to go items:', error)
@@ -2109,7 +2109,7 @@ function VCSEDashboard({ user, onLogout }) {
                               >
                                 📝 PDF
                               </a>
-                              {voucher.status === 'active' && voucher.reassignment_count < 3 && (
+                              {(voucher.status === 'active' || voucher.status === 'expired') && voucher.reassignment_count < 3 && (
                                 <button
                                   onClick={() => {
                                     setReassignVoucher(voucher)
@@ -3770,7 +3770,7 @@ function SchoolDashboard({ user, onLogout }) {
 
   const loadToGoItems = async () => {
     try {
-      const data = await apiCall('/items/available')
+      const data = await apiCall('/admin/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
       console.error('Failed to load to go items:', error)
