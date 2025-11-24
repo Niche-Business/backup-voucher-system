@@ -65,6 +65,27 @@ if __name__ == '__main__':
         else:
             print("Database already initialized")
         
+        # Create cart_notification table if it doesn't exist
+        try:
+            from sqlalchemy import text
+            db.session.execute(text("""
+                CREATE TABLE IF NOT EXISTS cart_notification (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    message TEXT NOT NULL,
+                    type VARCHAR(50) NOT NULL,
+                    surplus_item_id INTEGER,
+                    is_read BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES "user" (id)
+                )
+            """))
+            db.session.commit()
+            print("✓ cart_notification table created/verified")
+        except Exception as e:
+            print(f"Note: cart_notification table setup: {e}")
+            db.session.rollback()
+        
         # Create default admin account if it doesn't exist
         admin_email = 'admin@bakup.com'
         if not User.query.filter_by(email=admin_email).first():
