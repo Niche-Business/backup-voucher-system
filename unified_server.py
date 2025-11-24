@@ -11,7 +11,8 @@ from pathlib import Path
 backend_path = Path(__file__).parent / 'backend' / 'src'
 sys.path.insert(0, str(backend_path))
 
-from flask import send_from_directory
+from flask import send_from_directory, Response
+import mimetypes
 from main import app, db, Category, User
 from werkzeug.security import generate_password_hash
 
@@ -21,9 +22,20 @@ frontend_build = Path(__file__).parent / 'frontend' / 'dist'
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_frontend(path):
-    """Serve React frontend"""
+    """Serve React frontend with correct MIME types"""
+    # Ensure proper MIME types for JavaScript modules
+    mimetypes.add_type('application/javascript', '.js')
+    mimetypes.add_type('application/javascript', '.mjs')
+    mimetypes.add_type('text/css', '.css')
+    
     if path and (frontend_build / path).exists():
-        return send_from_directory(str(frontend_build), path)
+        # Get the file and set correct MIME type
+        file_path = frontend_build / path
+        mime_type, _ = mimetypes.guess_type(str(file_path))
+        response = send_from_directory(str(frontend_build), path)
+        if mime_type:
+            response.headers['Content-Type'] = mime_type
+        return response
     return send_from_directory(str(frontend_build), 'index.html')
 
 if __name__ == '__main__':
