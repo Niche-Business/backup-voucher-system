@@ -3216,6 +3216,54 @@ def get_schools():
         return jsonify({'error': f'Failed to get schools: {str(e)}'}), 500
 
 
+@app.route('/api/admin/recipients', methods=['GET'])
+def get_recipients():
+    """Get all recipients with their voucher information"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get all recipients
+        recipients = User.query.filter_by(user_type='recipient').all()
+        
+        result = []
+        for recipient in recipients:
+            # Get voucher statistics for this recipient
+            vouchers = Voucher.query.filter_by(recipient_id=recipient.id).all()
+            total_vouchers = len(vouchers)
+            active_vouchers = len([v for v in vouchers if v.status == 'active'])
+            redeemed_vouchers = len([v for v in vouchers if v.status == 'redeemed'])
+            total_value = sum([float(v.value) for v in vouchers if v.status == 'active'])
+            
+            result.append({
+                'id': recipient.id,
+                'first_name': recipient.first_name,
+                'last_name': recipient.last_name,
+                'name': f"{recipient.first_name} {recipient.last_name}",
+                'email': recipient.email,
+                'phone': recipient.phone if hasattr(recipient, 'phone') else '',
+                'address': recipient.address if hasattr(recipient, 'address') else '',
+                'city': recipient.city if hasattr(recipient, 'city') else '',
+                'postcode': recipient.postcode if hasattr(recipient, 'postcode') else '',
+                'date_of_birth': recipient.date_of_birth.isoformat() if hasattr(recipient, 'date_of_birth') and recipient.date_of_birth else None,
+                'created_at': recipient.created_at.isoformat() if recipient.created_at else None,
+                'total_vouchers': total_vouchers,
+                'active_vouchers': active_vouchers,
+                'redeemed_vouchers': redeemed_vouchers,
+                'total_active_value': float(total_value)
+            })
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get recipients: {str(e)}'}), 500
+
+
 @app.route('/api/admin/allocate-funds', methods=['POST'])
 def allocate_funds():
     """Admin allocates funds to a VCSE organization or School"""
@@ -4465,6 +4513,9 @@ def edit_vcse(vcse_id):
             vcse.charity_commission_number = data['charity_commission_number']
         if 'allocated_balance' in data:
             vcse.allocated_balance = float(data['allocated_balance'])
+        if 'new_password' in data and data['new_password']:
+            # Reset password if provided
+            vcse.password_hash = generate_password_hash(data['new_password'])
         
         db.session.commit()
         
@@ -4527,6 +4578,97 @@ def delete_vcse(vcse_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to delete VCSE organization: {str(e)}'}), 500
+
+
+@app.route('/api/admin/shops/<int:shop_id>', methods=['PUT'])
+def admin_edit_shop(shop_id):
+    """Admin edits a local shop"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the shop
+        shop = VendorShop.query.get(shop_id)
+        if not shop:
+            return jsonify({'error': 'Shop not found'}), 404
+        
+        # Get update data
+        data = request.get_json()
+        
+        # Update fields if provided
+        if 'shop_name' in data:
+            shop.shop_name = data['shop_name']
+        if 'address' in data:
+            shop.address = data['address']
+        if 'city' in data:
+            shop.city = data['city']
+        if 'postcode' in data:
+            shop.postcode = data['postcode']
+        if 'phone' in data:
+            shop.phone = data['phone']
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Shop updated successfully',
+            'shop': {
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'city': shop.city,
+                'postcode': shop.postcode,
+                'phone': shop.phone
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update shop: {str(e)}'}), 500
+
+
+@app.route('/api/admin/shops/<int:shop_id>', methods=['DELETE'])
+def admin_delete_shop(shop_id):
+    """Admin deletes a local shop"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the shop
+        shop = VendorShop.query.get(shop_id)
+        if not shop:
+            return jsonify({'error': 'Shop not found'}), 404
+        
+        # Check if shop has to-go items
+        togo_count = ToGoItem.query.filter_by(shop_id=shop_id).count()
+        if togo_count > 0:
+            return jsonify({
+                'error': f'Cannot delete shop. It has {togo_count} to-go item(s). Please remove items first.'
+            }), 400
+        
+        shop_name = shop.shop_name
+        
+        # Delete the shop
+        db.session.delete(shop)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Shop deleted successfully',
+            'shop_name': shop_name
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete shop: {str(e)}'}), 500
 
 
 @app.route('/api/initialize-admin', methods=['POST'])

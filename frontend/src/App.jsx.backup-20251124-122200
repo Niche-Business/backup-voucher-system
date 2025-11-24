@@ -912,82 +912,7 @@ function AdminDashboard({ user, onLogout }) {
         
         {activeTab === 'overview' && (
           <div>
-            <h2>📊 Admin Dashboard Overview</h2>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
-              <div 
-                onClick={() => setActiveTab('vouchers')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🎫</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
-                <div style={{color: '#666'}}>Total Vouchers</div>
-              </div>
-              
-              <div 
-                onClick={() => setActiveTab('vouchers')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>💰</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>
-                  £{vouchers.filter(v => v.status === 'active').reduce((sum, v) => sum + parseFloat(v.value || 0), 0).toFixed(2)}
-                </div>
-                <div style={{color: '#666'}}>Active Value</div>
-              </div>
-              
-              <div 
-                onClick={() => setActiveTab('vcse')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🤝</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#9C27B0'}}>{vcseOrgs.length}</div>
-                <div style={{color: '#666'}}>VCSE Organizations</div>
-              </div>
-              
-              <div 
-                onClick={() => setActiveTab('schools')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🎓</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#FF9800'}}>{schools.length}</div>
-                <div style={{color: '#666'}}>Schools/Care Orgs</div>
-              </div>
-              
-              <div 
-                onClick={() => setActiveTab('recipients')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>👥</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#00BCD4'}}>{recipients.length}</div>
-                <div style={{color: '#666'}}>Recipients</div>
-              </div>
-              
-              <div 
-                onClick={() => setActiveTab('shops')}
-                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
-                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
-                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
-              >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🏪</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#F44336'}}>{vendorShops.length}</div>
-                <div style={{color: '#666'}}>Local Shops</div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {activeTab === 'funding' && (
-          <div>
-            <h2>💰 {t('admin.fundAllocation')}</h2>
+            <h2>{t('admin.fundAllocation')}</h2>
             {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
             
             <form onSubmit={handleAllocateFunds} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
@@ -1037,12 +962,8 @@ function AdminDashboard({ user, onLogout }) {
               
               <button type="submit" style={styles.primaryButton}>💸 {t('admin.allocateFunds')}</button>
             </form>
-          </div>
-        )}
-        
-        {activeTab === 'vcse' && (
-          <div>
-            <h3>🤝 {t('admin.vcseOrganizations')} ({vcseOrgs.length})</h3>
+            
+            <h3>{t('admin.vcseOrganizations')}</h3>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {vcseOrgs.map(org => (
                 <div key={org.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
@@ -1114,90 +1035,47 @@ function AdminDashboard({ user, onLogout }) {
                       <div style={{display: 'flex', gap: '10px'}}>
                         <button 
                           onClick={() => handleEditVcse(org)}
-                          style={{
-                            padding: '8px 16px',
-                            backgroundColor: '#2196F3',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '14px'
-                          }}
-                        >
-                          ✏️ {t('admin.edit')}
-                        </button>
-                        <button 
-                          onClick={async () => {
-                            if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
-                              try {
-                                await apiCall(`/admin/vcse/${org.id}`, { method: 'DELETE' })
-                                alert('VCSE organization deleted successfully')
-                                loadVcseOrgs()
-                              } catch (error) {
-                                alert('Error deleting VCSE organization: ' + error.message)
-                              }
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#2196F3',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        ✏️ {t('admin.edit')}
+                      </button>
+                      <button 
+                        onClick={async () => {
+                          if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
+                            try {
+                              await apiCall(`/admin/vcse/${org.id}`, { method: 'DELETE' })
+                              alert('VCSE organization deleted successfully')
+                              loadVcseOrgs()
+                            } catch (error) {
+                              alert('Error deleting VCSE organization: ' + error.message)
                             }
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            backgroundColor: '#f44336',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '14px'
-                          }}
-                        >
-                          🗑️ {t('admin.delete')}
-                        </button>
+                          }
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#f44336',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        🗑️ {t('admin.delete')}
+                      </button>
                       </div>
                     </div>
                   )}
                 </div>
               ))}
-            </div>
-          </div>
-        )}
-        
-        {activeTab === 'recipients' && (
-          <div>
-            <h2>👥 Recipients ({recipients.length})</h2>
-            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {recipients.length === 0 ? (
-                <p>No recipients found</p>
-              ) : (
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
-                  {recipients.map(recipient => (
-                    <div key={recipient.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
-                      <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{recipient.name}</h3>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>📧 Email:</strong> {recipient.email}
-                      </p>
-                      {recipient.phone && (
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          <strong>📞 Phone:</strong> {recipient.phone}
-                        </p>
-                      )}
-                      {recipient.address && (
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          <strong>📍 Address:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
-                        </p>
-                      )}
-                      <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
-                        <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold'}}>
-                          🎫 Total Vouchers: {recipient.total_vouchers}
-                        </p>
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          ✅ Active: {recipient.active_vouchers} | ✓ Redeemed: {recipient.redeemed_vouchers}
-                        </p>
-                        <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold', color: '#4CAF50'}}>
-                          💰 Active Value: £{recipient.total_active_value.toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -1241,111 +1119,22 @@ function AdminDashboard({ user, onLogout }) {
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
                   {vendorShops.map(shop => (
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
-                      {editingShop === shop.id ? (
-                        <div>
-                          <h3 style={{margin: '0 0 15px 0', color: '#1976d2'}}>Edit Shop</h3>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Shop Name:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.shop_name || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, shop_name: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Address:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.address || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, address: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>City:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.city || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, city: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Postcode:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.postcode || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, postcode: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Phone:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.phone || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, phone: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{display: 'flex', gap: '10px'}}>
-                            <button onClick={handleSaveShop} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>Save</button>
-                            <button onClick={() => { setEditingShop(null); setEditFormData({}) }} style={{...styles.primaryButton, backgroundColor: '#757575'}}>Cancel</button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📞 Phone:</strong> {shop.phone}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                             <strong>👤 Shop Owner:</strong> {shop.vendor_name}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📧 Email:</strong> {shop.vendor_email}
-                          </p>
-                          <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
-                            🍎 To Go: {shop.to_go_items_count}
-                          </p>
-                          <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
-                            <button 
-                              onClick={() => handleEditShop(shop)}
-                              style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#2196F3',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                flex: 1
-                              }}
-                            >
-                              ✏️ Edit
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteShop(shop.id, shop.shop_name)}
-                              style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#f44336',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                flex: 1
-                              }}
-                            >
-                              🗑️ Delete
-                            </button>
-                          </div>
-                        </div>
-                      )}
+                      <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📞 Phone:</strong> {shop.phone}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                         <strong>👤 Shop Owner:</strong> {shop.vendor_name}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📧 Email:</strong> {shop.vendor_email}
+                      </p>
+                      <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
+                        🍎 To Go: {shop.to_go_items_count}
+                      </p>
                     </div>
                   ))}
                 </div>

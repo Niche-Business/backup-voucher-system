@@ -1241,111 +1241,22 @@ function AdminDashboard({ user, onLogout }) {
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
                   {vendorShops.map(shop => (
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
-                      {editingShop === shop.id ? (
-                        <div>
-                          <h3 style={{margin: '0 0 15px 0', color: '#1976d2'}}>Edit Shop</h3>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Shop Name:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.shop_name || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, shop_name: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Address:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.address || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, address: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>City:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.city || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, city: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Postcode:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.postcode || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, postcode: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{marginBottom: '10px'}}>
-                            <label>Phone:</label><br />
-                            <input 
-                              type="text" 
-                              value={editFormData.phone || ''} 
-                              onChange={(e) => setEditFormData({...editFormData, phone: e.target.value})}
-                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
-                            />
-                          </div>
-                          <div style={{display: 'flex', gap: '10px'}}>
-                            <button onClick={handleSaveShop} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>Save</button>
-                            <button onClick={() => { setEditingShop(null); setEditFormData({}) }} style={{...styles.primaryButton, backgroundColor: '#757575'}}>Cancel</button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📞 Phone:</strong> {shop.phone}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                             <strong>👤 Shop Owner:</strong> {shop.vendor_name}
-                          </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>📧 Email:</strong> {shop.vendor_email}
-                          </p>
-                          <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
-                            🍎 To Go: {shop.to_go_items_count}
-                          </p>
-                          <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
-                            <button 
-                              onClick={() => handleEditShop(shop)}
-                              style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#2196F3',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                flex: 1
-                              }}
-                            >
-                              ✏️ Edit
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteShop(shop.id, shop.shop_name)}
-                              style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#f44336',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                flex: 1
-                              }}
-                            >
-                              🗑️ Delete
-                            </button>
-                          </div>
-                        </div>
-                      )}
+                      <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📞 Phone:</strong> {shop.phone}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                         <strong>👤 Shop Owner:</strong> {shop.vendor_name}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📧 Email:</strong> {shop.vendor_email}
+                      </p>
+                      <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
+                        🍎 To Go: {shop.to_go_items_count}
+                      </p>
                     </div>
                   ))}
                 </div>
