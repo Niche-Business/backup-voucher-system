@@ -27,31 +27,46 @@
     "welcome": "مرحبا"
   },
   "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "myVouchers": "My Vouchers",
+    "browseToGo": "Browse To Go",
+    "shoppingCart": "Shopping Cart",
+    "profile": "Profile",
+    "settings": "Settings",
+    "activeBalance": "Active Balance",
+    "activeVouchers": "Active Vouchers",
+    "redeemed": "Redeemed",
+    "emptyCart": "Your cart is empty",
+    "noToGoItems": "No to go items available at the moment",
+    "redeemVouchers": "Redeem Vouchers",
+    "toGo": "To Go",
+    "issueVouchers": "Issue Vouchers",
     "tabs": {
-      "overview": "نظرة عامة",
-      "voucherManagement": "إدارة القسائم",
-      "voucherOrders": "طلبات القسائم",
-      "reports": "التقارير",
-      "issueVouchers": "إصدار قسائم",
-      "toGo": "للأخذ",
-      "localShops": "المتاجر المحلية",
-      "allToGo": "جميع العروض",
-      "settings": "الإعدادات",
-      "myShops": "متاجري",
-      "surplusFood": "الطعام الفائض",
-      "myVouchers": "قسائمي",
-      "redeemVoucher": "استبدال قسيمة",
-      "schoolsOrgs": "المدارس/منظمات الرعاية"
+      "overview": "Overview",
+      "voucherManagement": "Voucher Management",
+      "voucherOrders": "Voucher Orders",
+      "reports": "Reports",
+      "issueVouchers": "Issue Vouchers",
+      "toGo": "To Go",
+      "localShops": "Local Shops",
+      "allToGo": "All To Go",
+      "settings": "Settings",
+      "myShops": "My Shops",
+      "surplusFood": "Surplus Food",
+      "myVouchers": "My Vouchers",
+      "redeemVoucher": "Redeem Voucher",
+      "schoolsOrgs": "Schools/Care Orgs"
     },
     "buttons": {
-      "changePassword": "تغيير كلمة المرور",
-      "manageAdmins": "إدارة المسؤولين",
-      "loginStatistics": "إحصائيات تسجيل الدخول"
+      "changePassword": "Change Password",
+      "manageAdmins": "Manage Admins",
+      "loginStatistics": "Login Statistics"
     },
     "headings": {
-      "settings": "الإعدادات",
-      "localShopsWithToGo": "المتاجر المحلية مع عروض",
-      "allToGoItems": "جميع المنتجات للأخذ"
+      "settings": "Settings",
+      "localShopsWithToGo": "Local Shops with To Gos",
+      "allToGoItems": "All To Go Items"
     }
   },
   "landing": {
@@ -148,23 +163,6 @@
     "register": "تسجيل",
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
     "loginHere": "سجل الدخول هنا"
-  },
-  "dashboard": {
-    "welcome": "مرحبا",
-    "overview": "نظرة عامة",
-    "myVouchers": "قسائمي",
-    "browseToGo": "تصفح للذهاب",
-    "shoppingCart": "عربة التسوق",
-    "profile": "الملف الشخصي",
-    "settings": "الإعدادات",
-    "activeBalance": "الرصيد النشط",
-    "activeVouchers": "القسائم النشطة",
-    "redeemed": "تم الاسترداد",
-    "emptyCart": "عربة التسوق فارغة",
-    "noToGoItems": "لا توجد عناصر للذهاب متاحة في الوقت الحالي",
-    "redeemVouchers": "استرداد القسائم",
-    "toGo": "للذهاب",
-    "issueVouchers": "إصدار القسائم"
   },
   "voucher": {
     "title": "القسائم",

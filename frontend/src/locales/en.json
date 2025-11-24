@@ -27,6 +27,21 @@
     "welcome": "Welcome"
   },
   "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "myVouchers": "My Vouchers",
+    "browseToGo": "Browse To Go",
+    "shoppingCart": "Shopping Cart",
+    "profile": "Profile",
+    "settings": "Settings",
+    "activeBalance": "Active Balance",
+    "activeVouchers": "Active Vouchers",
+    "redeemed": "Redeemed",
+    "emptyCart": "Your cart is empty",
+    "noToGoItems": "No to go items available at the moment",
+    "redeemVouchers": "Redeem Vouchers",
+    "toGo": "To Go",
+    "issueVouchers": "Issue Vouchers",
     "tabs": {
       "overview": "Overview",
       "voucherManagement": "Voucher Management",
@@ -148,23 +163,6 @@
     "register": "Register",
     "alreadyHaveAccount": "Already have an account?",
     "loginHere": "Login here"
-  },
-  "dashboard": {
-    "welcome": "Welcome",
-    "overview": "Overview",
-    "myVouchers": "My Vouchers",
-    "browseToGo": "Browse To Go",
-    "shoppingCart": "Shopping Cart",
-    "profile": "Profile",
-    "settings": "Settings",
-    "activeBalance": "Active Balance",
-    "activeVouchers": "Active Vouchers",
-    "redeemed": "Redeemed",
-    "emptyCart": "Your cart is empty",
-    "noToGoItems": "No to go items available at the moment",
-    "redeemVouchers": "Redeem Vouchers",
-    "toGo": "To Go",
-    "issueVouchers": "Issue Vouchers"
   },
   "voucher": {
     "title": "Vouchers",

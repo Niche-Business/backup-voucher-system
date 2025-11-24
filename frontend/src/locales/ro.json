@@ -27,31 +27,46 @@
     "welcome": "Bun venit"
   },
   "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "myVouchers": "My Vouchers",
+    "browseToGo": "Browse To Go",
+    "shoppingCart": "Shopping Cart",
+    "profile": "Profile",
+    "settings": "Settings",
+    "activeBalance": "Active Balance",
+    "activeVouchers": "Active Vouchers",
+    "redeemed": "Redeemed",
+    "emptyCart": "Your cart is empty",
+    "noToGoItems": "No to go items available at the moment",
+    "redeemVouchers": "Redeem Vouchers",
+    "toGo": "To Go",
+    "issueVouchers": "Issue Vouchers",
     "tabs": {
-      "overview": "Prezentare generală",
-      "voucherManagement": "Gestionarea Voucherelor",
-      "voucherOrders": "Comenzi Vouchere",
-      "reports": "Rapoarte",
-      "issueVouchers": "Emite Vouchere",
-      "toGo": "De Luat",
-      "localShops": "Magazine Locale",
-      "allToGo": "Toate De Luat",
-      "settings": "Setări",
-      "myShops": "Magazinele Mele",
-      "surplusFood": "Alimente Excedentare",
-      "myVouchers": "Voucherele Mele",
-      "redeemVoucher": "Valorifică Voucher",
-      "schoolsOrgs": "Școli/Organizații de Îngrijire"
+      "overview": "Overview",
+      "voucherManagement": "Voucher Management",
+      "voucherOrders": "Voucher Orders",
+      "reports": "Reports",
+      "issueVouchers": "Issue Vouchers",
+      "toGo": "To Go",
+      "localShops": "Local Shops",
+      "allToGo": "All To Go",
+      "settings": "Settings",
+      "myShops": "My Shops",
+      "surplusFood": "Surplus Food",
+      "myVouchers": "My Vouchers",
+      "redeemVoucher": "Redeem Voucher",
+      "schoolsOrgs": "Schools/Care Orgs"
     },
     "buttons": {
-      "changePassword": "Schimbă Parola",
-      "manageAdmins": "Gestionează Administratorii",
-      "loginStatistics": "Statistici de Autentificare"
+      "changePassword": "Change Password",
+      "manageAdmins": "Manage Admins",
+      "loginStatistics": "Login Statistics"
     },
     "headings": {
-      "settings": "Setări",
-      "localShopsWithToGo": "Magazine Locale cu Oferte De Luat",
-      "allToGoItems": "Toate Produsele De Luat"
+      "settings": "Settings",
+      "localShopsWithToGo": "Local Shops with To Gos",
+      "allToGoItems": "All To Go Items"
     }
   },
   "landing": {
@@ -148,23 +163,6 @@
     "register": "Înregistrare",
     "alreadyHaveAccount": "Aveți deja un cont?",
     "loginHere": "Autentificați-vă aici"
-  },
-  "dashboard": {
-    "welcome": "Bun venit",
-    "overview": "Prezentare generală",
-    "myVouchers": "Voucherele Mele",
-    "browseToGo": "Răsfoiți De Luat",
-    "shoppingCart": "Coș de Cumpărături",
-    "profile": "Profil",
-    "settings": "Setări",
-    "activeBalance": "Sold Activ",
-    "activeVouchers": "Vouchere Active",
-    "redeemed": "Valorificate",
-    "emptyCart": "Coșul dumneavoastră este gol",
-    "noToGoItems": "Niciun articol de luat disponibil momentan",
-    "redeemVouchers": "Valorificați Vouchere",
-    "toGo": "De Luat",
-    "issueVouchers": "Emiteți Vouchere"
   },
   "voucher": {
     "title": "Vouchere",
