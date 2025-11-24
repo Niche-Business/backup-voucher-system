@@ -6,6 +6,7 @@ import LanguageSelector from './components/LanguageSelector'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
+import { QRCodeSVG } from 'qrcode.react'
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -3958,10 +3959,12 @@ function RecipientDashboard({ user, onLogout }) {
                   </div>
                   <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
                     <div style={{padding: '20px', backgroundColor: 'white', border: '2px solid #4CAF50', borderRadius: '10px'}}>
-                      {/* QR Code placeholder - would need QRCode library */}
-                      <div style={{width: '200px', height: '200px', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        QR Code: {selectedVoucher.code}
-                      </div>
+                      <QRCodeSVG 
+                        value={selectedVoucher.code} 
+                        size={200}
+                        level="H"
+                        includeMargin={true}
+                      />
                     </div>
                   </div>
                   <button 
