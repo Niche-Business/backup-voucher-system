@@ -94,6 +94,7 @@
     "redeemVouchers": "Redeem Vouchers",
     "toGo": "To Go",
     "issueVouchers": "Issue Vouchers",
+    "participatingShops": "Participating Shops",
     "tabs": {
       "overview": "Overview",
       "voucherManagement": "Voucher Management",
@@ -223,6 +224,7 @@
     "active": "Active",
     "used": "Used",
     "expired": "Expired",
+    "redeemed": "Redeemed",
     "validUntil": "Valid Until",
     "qrCode": "QR Code",
     "showQR": "Show QR Code",
@@ -250,7 +252,40 @@
     "step1": "Review your cart items above",
     "step2": "Visit the shop locations to collect your items",
     "step3": "Show your voucher QR code at the shop to complete purchase",
-    "step4": "Your voucher balance will be deducted at the shop"
+    "step4": "Your voucher balance will be deducted at the shop",
+    "itemsInCart": "Items in your cart:",
+    "quantityInCart": "Quantity in cart:",
+    "remove": "Remove"
+  },
+  "recipient": {
+    "noVouchersAvailable": "No vouchers available",
+    "code": "Code:",
+    "status": "Status:",
+    "expires": "Expires:",
+    "issuedBy": "Issued by:",
+    "redeemed": "Redeemed:",
+    "printVoucher": "Print Voucher",
+    "showQRCode": "Show QR Code",
+    "scanToRedeem": "Scan to Redeem",
+    "presentCode": "Present this code at the shop or scan the QR code below",
+    "noShopsAvailable": "No shops available",
+    "address": "Address:",
+    "phone": "Phone:",
+    "availableToGo": "Available To Go:",
+    "available": "Available:",
+    "category": "Category:",
+    "description": "Description:",
+    "freshReady": "Fresh and ready for collection",
+    "addToCart": "Add to Cart",
+    "useVoucher": "Use your voucher to purchase this item at the shop",
+    "per": "per",
+    "at": "at"
+  },
+  "alerts": {
+    "itemAddedToCart": "Item added to cart successfully!",
+    "failedToAddToCart": "Failed to add item to cart:",
+    "itemRemoved": "Item removed from cart",
+    "failedToRemove": "Failed to remove item:"
   },
   "categories": {
     "bakery": "Bakery",

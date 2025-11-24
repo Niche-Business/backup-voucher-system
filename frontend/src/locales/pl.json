@@ -1,10 +1,10 @@
 {
   "app": {
-    "title": "System E-Voucherów BAK UP",
+    "title": "System Voucherów Elektronicznych BAK UP",
     "tagline": "Łączenie nadwyżek żywności z tymi, którzy najbardziej jej potrzebują"
   },
   "common": {
-    "email": "E-mail",
+    "email": "Email",
     "password": "Hasło",
     "signIn": "Zaloguj się",
     "signOut": "Wyloguj się",
@@ -27,12 +27,12 @@
     "welcome": "Witaj"
   },
   "admin": {
-    "fundAllocation": "Alokacja środków",
+    "fundAllocation": "Alokacja Funduszy",
     "organizationType": "Typ Organizacji",
     "selectVCSE": "Wybierz Organizację VCSE",
     "amount": "Kwota (£)",
-    "notes": "Notatki (Opcjonalnie)",
-    "allocateFunds": "Przydziel Środki",
+    "notes": "Notatki (Opcjonalne)",
+    "allocateFunds": "Przydziel Fundusze",
     "vcseOrganizations": "Organizacje VCSE",
     "allocatedBalance": "Przydzielone Saldo",
     "chooseOrganization": "Wybierz organizację VCSE...",
@@ -51,7 +51,7 @@
     "localShops": "Lokalne Sklepy z To Gos",
     "noShops": "Nie znaleziono lokalnych sklepów",
     "schoolsOrganizations": "Szkoły i Organizacje Opieki",
-    "noSchools": "Nie zarejestrowano jeszcze żadnych szkół / organizacji opieki",
+    "noSchools": "Nie zarejestrowano jeszcze szkół / organizacji opieki",
     "editSchool": "Edytuj Szkołę",
     "firstName": "Imię",
     "lastName": "Nazwisko",
@@ -59,8 +59,8 @@
     "address": "Adres",
     "city": "Miasto",
     "postcode": "Kod Pocztowy",
-    "resetPassword": "Zresetuj Hasło (Opcjonalnie)",
-    "noToGoItems": "Nie znaleziono elementów to go",
+    "resetPassword": "Zresetuj Hasło (Opcjonalne)",
+    "noToGoItems": "Nie znaleziono artykułów to go",
     "changePassword": "Zmień Swoje Hasło",
     "currentPassword": "Obecne Hasło",
     "newPassword": "Nowe Hasło",
@@ -75,56 +75,57 @@
     "lastLogin": "Ostatnie Logowanie",
     "logins": "Logowania",
     "actions": "Działania",
-    "currentUser": "Aktualny Użytkownik",
+    "currentUser": "Obecny Użytkownik",
     "loginStatistics": "Statystyki Logowania Użytkowników"
   },
   "dashboard": {
-    "welcome": "Welcome",
-    "overview": "Overview",
-    "myVouchers": "My Vouchers",
-    "browseToGo": "Browse To Go",
-    "shoppingCart": "Shopping Cart",
-    "profile": "Profile",
-    "settings": "Settings",
-    "activeBalance": "Active Balance",
-    "activeVouchers": "Active Vouchers",
-    "redeemed": "Redeemed",
-    "emptyCart": "Your cart is empty",
-    "noToGoItems": "No to go items available at the moment",
-    "redeemVouchers": "Redeem Vouchers",
+    "welcome": "Witaj",
+    "overview": "Przegląd",
+    "myVouchers": "Moje Vouchery",
+    "browseToGo": "Przeglądaj To Go",
+    "shoppingCart": "Koszyk",
+    "profile": "Profil",
+    "settings": "Ustawienia",
+    "activeBalance": "Aktywne Saldo",
+    "activeVouchers": "Aktywne Vouchery",
+    "redeemed": "Zrealizowane",
+    "emptyCart": "Twój koszyk jest pusty",
+    "noToGoItems": "Brak artykułów to go w tej chwili",
+    "redeemVouchers": "Zrealizuj Vouchery",
     "toGo": "To Go",
-    "issueVouchers": "Issue Vouchers",
+    "issueVouchers": "Wydaj Vouchery",
+    "participatingShops": "Uczestniczące Sklepy",
     "tabs": {
-      "overview": "Overview",
-      "voucherManagement": "Voucher Management",
-      "voucherOrders": "Voucher Orders",
-      "reports": "Reports",
-      "issueVouchers": "Issue Vouchers",
+      "overview": "Przegląd",
+      "voucherManagement": "Zarządzanie Voucherami",
+      "voucherOrders": "Zamówienia Voucherów",
+      "reports": "Raporty",
+      "issueVouchers": "Wydaj Vouchery",
       "toGo": "To Go",
-      "localShops": "Local Shops",
-      "allToGo": "All To Go",
-      "settings": "Settings",
-      "myShops": "My Shops",
-      "surplusFood": "Surplus Food",
-      "myVouchers": "My Vouchers",
-      "redeemVoucher": "Redeem Voucher",
-      "schoolsOrgs": "Schools/Care Orgs"
+      "localShops": "Lokalne Sklepy",
+      "allToGo": "Wszystkie To Go",
+      "settings": "Ustawienia",
+      "myShops": "Moje Sklepy",
+      "surplusFood": "Nadwyżki Żywności",
+      "myVouchers": "Moje Vouchery",
+      "redeemVoucher": "Zrealizuj Voucher",
+      "schoolsOrgs": "Szkoły/Org. Opieki"
     },
     "buttons": {
-      "changePassword": "Change Password",
-      "manageAdmins": "Manage Admins",
-      "loginStatistics": "Login Statistics"
+      "changePassword": "Zmień Hasło",
+      "manageAdmins": "Zarządzaj Administratorami",
+      "loginStatistics": "Statystyki Logowania"
     },
     "headings": {
-      "settings": "Settings",
-      "localShopsWithToGo": "Local Shops with To Gos",
-      "allToGoItems": "All To Go Items"
+      "settings": "Ustawienia",
+      "localShopsWithToGo": "Lokalne Sklepy z To Go",
+      "allToGoItems": "Wszystkie Artykuły To Go"
     }
   },
   "landing": {
     "hero": {
-      "title": "System E-Voucherów BAK UP",
-      "subtitle": "Łączenie sprzedawców żywności, organizacji VCSE i rodzin w trudnej sytuacji poprzez zunifikowane rozwiązanie cyfrowe",
+      "title": "System Voucherów Elektronicznych BAK UP",
+      "subtitle": "Łączenie sprzedawców żywności, organizacji VCSE i rodzin w trudnej sytuacji poprzez ujednolicone rozwiązanie cyfrowe",
       "getStarted": "Rozpocznij",
       "signIn": "Zaloguj się"
     },
@@ -143,7 +144,7 @@
       },
       "surplus": {
         "title": "Dzielenie się Nadwyżkami Żywności",
-        "description": "Sprzedawcy mogą publikować nadwyżki żywności dla rodzin w obniżonych cenach oraz darmowe nadwyżki żywności dla partnerów VCSE, aby wspierać rodziny, którym służą, redukując marnotrawstwo żywności"
+        "description": "Sprzedawcy mogą publikować artykuły spożywcze nadwyżkowe dla rodzin po obniżonych cenach oraz darmowe nadwyżki żywności dla partnerów VCSE, aby wspierać rodziny, którym służą, zmniejszając marnotrawstwo żywności"
       }
     },
     "whoWeServe": {
@@ -152,13 +153,13 @@
         "title": "Dla Odbiorców",
         "item1": "Otrzymuj cyfrowe vouchery żywnościowe z godnością",
         "item2": "Wybieraj to, czego potrzebujesz od lokalnych sprzedawców",
-        "item3": "Żywność na wynos w obniżonej cenie - Kupuj przecenioną żywność od uczestniczących sprzedawców",
+        "item3": "Jedzenie To Go w promocji - Kupuj zniżkową żywność od uczestniczących sprzedawców",
         "item4": "Łatwo śledź saldo swojego vouchera"
       },
       "vendors": {
         "title": "Dla Sprzedawców",
-        "item1": "Akceptuj cyfrowe vouchery bez problemu",
-        "item2": "Publikuj przecenione artykuły spożywcze dla odbiorców",
+        "item1": "Akceptuj cyfrowe vouchery bezproblemowo",
+        "item2": "Publikuj zniżkowe artykuły spożywcze dla odbiorców",
         "item3": "Publikuj darmowe nadwyżki żywności do odbioru przez VCSE",
         "item4": "Wspieraj swoją lokalną społeczność",
         "item5": "Zarządzaj wieloma lokalizacjami sklepów"
@@ -167,30 +168,30 @@
         "title": "Dla Organizacji VCSE",
         "item1": "Wydawaj i zarządzaj voucherami efektywnie",
         "item2": "Finansuj rodziny cyfrowo",
-        "item3": "Zbieraj darmowe nadwyżki żywności do dystrybucji dla rodzin, którym służysz",
+        "item3": "Zbieraj darmowe nadwyżki żywności do dystrybucji rodzinom, którym służysz",
         "item4": "Śledź wykorzystanie i wpływ",
         "item5": "Generuj szczegółowe raporty"
       },
       "schools": {
-        "title": "Dla Szkół i Organizacji Opiekuńczych",
+        "title": "Dla Szkół i Organizacji Opieki",
         "item1": "Otrzymuj e-vouchery od BAK UP, aby wspierać rodziny",
-        "item2": "Dystrybuuj vouchery rodzinom z niedoreprezentowanych społeczności",
+        "item2": "Dystrybuuj vouchery rodzinom ze społeczności niedostatecznie reprezentowanych",
         "item3": "Śledź dystrybucję voucherów i wpływ",
         "item4": "Wspieraj uczniów i rodziny poprzez zaufane instytucje",
-        "item5": "Generuj raporty dla odpowiedzialności"
+        "item5": "Generuj raporty dla rozliczalności"
       },
       "admins": {
         "title": "Dla Administratorów",
         "item1": "Nadzoruj całą platformę",
         "item2": "Zarządzaj użytkownikami i rolami",
-        "item3": "Monitoruj programy rabatowe i nadwyżek żywności",
+        "item3": "Monitoruj programy zniżek i nadwyżek żywności",
         "item4": "Generuj kompleksowe raporty",
         "item5": "Zapewnij integralność systemu"
       }
     },
     "cta": {
       "title": "Gotowy, aby Zrobić Różnicę?",
-      "subtitle": "Dołącz do naszej platformy napędzanej przez społeczność już dziś",
+      "subtitle": "Dołącz do naszej platformy społecznościowej już dziś",
       "button": "Utwórz Konto"
     },
     "footer": {
@@ -209,10 +210,10 @@
     "noAccount": "Nie masz konta?",
     "registerHere": "Zarejestruj się tutaj",
     "forgotPassword": "Zapomniałeś hasła?",
-    "name": "Imię",
+    "name": "Nazwa",
     "organizationName": "Nazwa Organizacji",
     "phoneNumber": "Numer Telefonu",
-    "register": "Zarejestruj",
+    "register": "Zarejestruj się",
     "alreadyHaveAccount": "Masz już konto?",
     "loginHere": "Zaloguj się tutaj"
   },
@@ -223,14 +224,15 @@
     "active": "Aktywny",
     "used": "Użyty",
     "expired": "Wygasły",
+    "redeemed": "Zrealizowany",
     "validUntil": "Ważny Do",
     "qrCode": "Kod QR",
     "showQR": "Pokaż Kod QR",
     "hideQR": "Ukryj Kod QR"
   },
   "toGo": {
-    "title": "Przeglądaj Dostępne Na Wynos",
-    "noItems": "Brak dostępnych artykułów na wynos w tej chwili",
+    "title": "Przeglądaj Dostępne To Go",
+    "noItems": "Brak artykułów to go w tej chwili",
     "addToCart": "Dodaj do Koszyka",
     "quantity": "Ilość",
     "available": "dostępne",
@@ -243,14 +245,47 @@
   "cart": {
     "title": "Koszyk",
     "empty": "Twój koszyk jest pusty",
-    "browseItems": "Przeglądaj Artykuły Na Wynos",
+    "browseItems": "Przeglądaj Artykuły To Go",
     "continueShopping": "Kontynuuj Zakupy",
     "viewVouchers": "Zobacz Moje Vouchery",
     "nextSteps": "Następne Kroki",
-    "step1": "Sprawdź artykuły w koszyku powyżej",
+    "step1": "Przejrzyj artykuły w koszyku powyżej",
     "step2": "Odwiedź lokalizacje sklepów, aby odebrać artykuły",
     "step3": "Pokaż kod QR vouchera w sklepie, aby sfinalizować zakup",
-    "step4": "Saldo twojego vouchera zostanie pomniejszone w sklepie"
+    "step4": "Saldo vouchera zostanie potrącone w sklepie",
+    "itemsInCart": "Artykuły w Twoim koszyku:",
+    "quantityInCart": "Ilość w koszyku:",
+    "remove": "Usuń"
+  },
+  "recipient": {
+    "noVouchersAvailable": "Brak dostępnych voucherów",
+    "code": "Kod:",
+    "status": "Status:",
+    "expires": "Wygasa:",
+    "issuedBy": "Wydany przez:",
+    "redeemed": "Zrealizowany:",
+    "printVoucher": "Wydrukuj Voucher",
+    "showQRCode": "Pokaż Kod QR",
+    "scanToRedeem": "Zeskanuj, aby Zrealizować",
+    "presentCode": "Przedstaw ten kod w sklepie lub zeskanuj kod QR poniżej",
+    "noShopsAvailable": "Brak dostępnych sklepów",
+    "address": "Adres:",
+    "phone": "Telefon:",
+    "availableToGo": "Dostępne To Go:",
+    "available": "Dostępne:",
+    "category": "Kategoria:",
+    "description": "Opis:",
+    "freshReady": "Świeże i gotowe do odbioru",
+    "addToCart": "Dodaj do Koszyka",
+    "useVoucher": "Użyj swojego vouchera, aby kupić ten artykuł w sklepie",
+    "per": "za",
+    "at": "w"
+  },
+  "alerts": {
+    "itemAddedToCart": "Artykuł dodany do koszyka pomyślnie!",
+    "failedToAddToCart": "Nie udało się dodać artykułu do koszyka:",
+    "itemRemoved": "Artykuł usunięty z koszyka",
+    "failedToRemove": "Nie udało się usunąć artykułu:"
   },
   "categories": {
     "bakery": "Piekarnia",

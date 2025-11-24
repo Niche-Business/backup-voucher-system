@@ -3172,7 +3172,7 @@ function VendorDashboard({ user, onLogout }) {
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 Password</button>
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 {t('common.password')}</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>
       </div>
@@ -3759,10 +3759,10 @@ function RecipientDashboard({ user, onLogout }) {
         body: JSON.stringify({ item_id: itemId, quantity: 1 })
       })
       await loadCart()
-      alert('Item added to cart successfully!')
+      alert(t('alerts.itemAddedToCart'))
     } catch (error) {
       console.error('Failed to add to cart:', error)
-      alert('Failed to add item to cart: ' + error.message)
+      alert(t('alerts.failedToAddToCart') + ' ' + error.message)
     }
   }
 
@@ -3770,10 +3770,10 @@ function RecipientDashboard({ user, onLogout }) {
     try {
       await apiCall(`/cart/remove/${cartId}`, { method: 'DELETE' })
       await loadCart()
-      alert('Item removed from cart')
+      alert(t('alerts.itemRemoved'))
     } catch (error) {
       console.error('Failed to remove from cart:', error)
-      alert('Failed to remove item: ' + error.message)
+      alert(t('alerts.failedToRemove') + ' ' + error.message)
     }
   }
 
@@ -3783,7 +3783,7 @@ function RecipientDashboard({ user, onLogout }) {
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 Password</button>
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 {t('common.password')}</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>
       </div>
@@ -3792,7 +3792,7 @@ function RecipientDashboard({ user, onLogout }) {
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.myVouchers')}</button>
-          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Participating Shops</button>
+          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.participatingShops')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.browseToGo')}</button>
           <button onClick={() => setActiveTab('cart')} style={{...(activeTab === 'cart' ? styles.activeTab : styles.tab), position: 'relative'}}>
             🛒 {t('dashboard.shoppingCart')}
@@ -3839,7 +3839,7 @@ function RecipientDashboard({ user, onLogout }) {
 
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {vouchers.length === 0 ? (
-                <p>No vouchers available</p>
+                <p>{t('recipient.noVouchersAvailable')}</p>
               ) : (
                 <div style={{display: 'grid', gap: '20px'}}>
                   {vouchers.map(voucher => (
@@ -3855,27 +3855,27 @@ function RecipientDashboard({ user, onLogout }) {
                             £{voucher.value}
                           </div>
                           <div style={{fontSize: '18px', marginBottom: '5px'}}>
-                            <strong>Code:</strong> <span style={{backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontFamily: 'monospace', fontSize: '16px'}}>{voucher.code}</span>
+                            <strong>{t('recipient.code')}</strong> <span style={{backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontFamily: 'monospace', fontSize: '16px'}}>{voucher.code}</span>
                           </div>
                           <div style={{marginBottom: '5px'}}>
-                            <strong>Status:</strong> <span style={{
+                            <strong>{t('recipient.status')}</strong> <span style={{
                               color: voucher.status === 'active' ? '#4CAF50' : voucher.status === 'redeemed' ? '#FF9800' : '#666',
                               fontWeight: 'bold',
                               textTransform: 'uppercase'
                             }}>{voucher.status}</span>
                           </div>
                           <div style={{marginBottom: '5px'}}>
-                            <strong>Expires:</strong> {new Date(voucher.expiry_date).toLocaleDateString()}
+                            <strong>{t('recipient.expires')}</strong> {new Date(voucher.expiry_date).toLocaleDateString()}
                           </div>
                           {voucher.issued_by && (
                             <div style={{marginTop: '10px', fontSize: '14px', color: '#666'}}>
-                              <strong>Issued by:</strong> {voucher.issued_by.name}
+                              <strong>{t('recipient.issuedBy')}</strong> {voucher.issued_by.name}
                             </div>
                           )}
                           {voucher.redeemed_at && (
                             <div style={{marginTop: '5px', fontSize: '14px', color: '#666'}}>
-                              <strong>Redeemed:</strong> {new Date(voucher.redeemed_at).toLocaleDateString()}
-                              {voucher.redeemed_by && ` at ${voucher.redeemed_by.name}`}
+                              <strong>{t('recipient.redeemed')}</strong> {new Date(voucher.redeemed_at).toLocaleDateString()}
+                              {voucher.redeemed_by && ` ${t('recipient.at')} ${voucher.redeemed_by.name}`}
                             </div>
                           )}
                         </div>
@@ -3896,7 +3896,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 gap: '5px'
                               }}
                             >
-                              🖨️ Print Voucher
+                              🖨️ {t('recipient.printVoucher')}
                             </button>
                             <button 
                               onClick={() => {
@@ -3913,7 +3913,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 gap: '5px'
                               }}
                             >
-                              📱 Show QR Code
+                              📱 {t('recipient.showQRCode')}
                             </button>
                           </div>
                         )}
@@ -3944,7 +3944,7 @@ function RecipientDashboard({ user, onLogout }) {
                   textAlign: 'center',
                   maxWidth: '500px'
                 }}>
-                  <h2 style={{marginBottom: '20px'}}>Scan to Redeem</h2>
+                  <h2 style={{marginBottom: '20px'}}>{t('recipient.scanToRedeem')}</h2>
                   <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '20px'}}>
                     £{selectedVoucher.value}
                   </div>
@@ -3954,7 +3954,7 @@ function RecipientDashboard({ user, onLogout }) {
                     </div>
                   </div>
                   <div style={{marginBottom: '20px', fontSize: '14px', color: '#666'}}>
-                    Present this code at the shop or scan the QR code below
+                    {t('recipient.presentCode')}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
                     <div style={{padding: '20px', backgroundColor: 'white', border: '2px solid #4CAF50', borderRadius: '10px'}}>
@@ -3971,7 +3971,7 @@ function RecipientDashboard({ user, onLogout }) {
                     }}
                     style={{...styles.primaryButton, backgroundColor: '#666'}}
                   >
-                    Close
+                    {t('common.close')}
                   </button>
                 </div>
               </div>
@@ -3992,23 +3992,23 @@ function RecipientDashboard({ user, onLogout }) {
         
         {activeTab === 'shops' && (
           <div>
-            <h2>🏪 Participating Shops ({shops.length})</h2>
+            <h2>🏪 {t('dashboard.participatingShops')} ({shops.length})</h2>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {shops.length === 0 ? (
-                <p>No shops available</p>
+                <p>{t('recipient.noShopsAvailable')}</p>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
                   {shops.map(shop => (
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{shop.shop_name}</h3>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                        <strong>📍 {t('recipient.address')}</strong> {shop.address}, {shop.city} {shop.postcode}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>📞 Phone:</strong> {shop.phone}
+                        <strong>📞 {t('recipient.phone')}</strong> {shop.phone}
                       </p>
                       <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#f3e5f5', borderRadius: '5px', fontWeight: 'bold', color: '#9C27B0'}}>
-                        🍎 Available To Go: {shop.to_go_items_count}
+                        🍎 {t('recipient.availableToGo')} {shop.to_go_items_count}
                       </p>
                     </div>
                   ))}
@@ -4033,13 +4033,13 @@ function RecipientDashboard({ user, onLogout }) {
                         💰 £{item.price.toFixed(2)} per {item.unit}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>Available:</strong> {item.quantity} {item.unit}
+                        <strong>{t('recipient.available')}</strong> {item.quantity} {item.unit}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>Category:</strong> {item.category}
+                        <strong>{t('recipient.category')}</strong> {item.category}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>Description:</strong> {item.description || 'Fresh and ready for collection'}
+                        <strong>{t('recipient.description')}</strong> {item.description || t('recipient.freshReady')}
                       </p>
                       <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
                         <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
@@ -4064,10 +4064,10 @@ function RecipientDashboard({ user, onLogout }) {
                             fontWeight: 'bold'
                           }}
                         >
-                          🛒 Add to Cart
+                         🛍️ {t('recipient.addToCart')}
                         </button>
                         <p style={{fontSize: '12px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
-                          💳 Use your voucher to purchase this item at the shop
+                          💳 {t('recipient.useVoucher')}
                         </p>
                       </div>
                     </div>
@@ -4095,7 +4095,7 @@ function RecipientDashboard({ user, onLogout }) {
               ) : (
                 <div>
                   <div style={{marginBottom: '20px'}}>
-                    <h3 style={{marginBottom: '15px'}}>Items in your cart:</h3>
+                    <h3 style={{marginBottom: '15px'}}>{t('cart.itemsInCart')}</h3>
                     <div style={{display: 'grid', gap: '15px'}}>
                       {cart.map(cartItem => (
                         <div key={cartItem.cart_id} style={{
@@ -4115,10 +4115,10 @@ function RecipientDashboard({ user, onLogout }) {
                               💰 £{cartItem.item.price.toFixed(2)} per {cartItem.item.unit}
                             </p>
                             <p style={{margin: '5px 0', fontSize: '14px'}}>
-                              <strong>Quantity in cart:</strong> {cartItem.quantity}
+                              <strong>{t('cart.quantityInCart')}</strong> {cartItem.quantity}
                             </p>
                             <p style={{margin: '5px 0', fontSize: '14px'}}>
-                              <strong>Category:</strong> {cartItem.item.category}
+                              <strong>{t('recipient.category')}</strong> {cartItem.item.category}
                             </p>
                             <div style={{marginTop: '10px', padding: '10px', backgroundColor: 'white', borderRadius: '5px'}}>
                               <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
@@ -4138,7 +4138,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 padding: '10px 20px'
                               }}
                             >
-                              🗑️ Remove
+                              🗑️ {t('cart.remove')}
                             </button>
                           </div>
                         </div>
@@ -4153,25 +4153,25 @@ function RecipientDashboard({ user, onLogout }) {
                     borderRadius: '10px',
                     border: '2px solid #2196F3'
                   }}>
-                    <h3 style={{margin: '0 0 15px 0', color: '#1565c0'}}>Next Steps:</h3>
+                    <h3 style={{margin: '0 0 15px 0', color: '#1565c0'}}>{t('cart.nextSteps')}</h3>
                     <ol style={{margin: 0, paddingLeft: '20px'}}>
-                      <li style={{marginBottom: '10px'}}>Review your cart items above</li>
-                      <li style={{marginBottom: '10px'}}>Visit the shop locations to collect your items</li>
-                      <li style={{marginBottom: '10px'}}>Show your voucher QR code at the shop to complete purchase</li>
-                      <li>Your voucher balance will be deducted at the shop</li>
+                      <li style={{marginBottom: '10px'}}>{t('cart.step1')}</li>
+                      <li style={{marginBottom: '10px'}}>{t('cart.step2')}</li>
+                      <li style={{marginBottom: '10px'}}>{t('cart.step3')}</li>
+                      <li>{t('cart.step4')}</li>
                     </ol>
                     <div style={{marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
                       <button
                         onClick={() => setActiveTab('vouchers')}
                         style={{...styles.primaryButton, backgroundColor: '#2196F3'}}
                       >
-                        View My Vouchers
+                        {t('cart.viewVouchers')}
                       </button>
                       <button
                         onClick={() => setActiveTab('togo')}
                         style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}
                       >
-                        Continue Shopping
+                        {t('cart.continueShopping')}
                       </button>
                     </div>
                   </div>

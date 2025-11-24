@@ -79,46 +79,47 @@
     "loginStatistics": "Statistici de Autentificare Utilizatori"
   },
   "dashboard": {
-    "welcome": "Welcome",
-    "overview": "Overview",
-    "myVouchers": "My Vouchers",
-    "browseToGo": "Browse To Go",
-    "shoppingCart": "Shopping Cart",
-    "profile": "Profile",
-    "settings": "Settings",
-    "activeBalance": "Active Balance",
-    "activeVouchers": "Active Vouchers",
-    "redeemed": "Redeemed",
-    "emptyCart": "Your cart is empty",
-    "noToGoItems": "No to go items available at the moment",
-    "redeemVouchers": "Redeem Vouchers",
+    "welcome": "Bun venit",
+    "overview": "Prezentare Generală",
+    "myVouchers": "Voucherele Mele",
+    "browseToGo": "Răsfoiește To Go",
+    "shoppingCart": "Coș de Cumpărături",
+    "profile": "Profil",
+    "settings": "Setări",
+    "activeBalance": "Sold Activ",
+    "activeVouchers": "Vouchere Active",
+    "redeemed": "Răscumpărate",
+    "emptyCart": "Coșul tău este gol",
+    "noToGoItems": "Nu există articole to go disponibile momentan",
+    "redeemVouchers": "Răscumpără Vouchere",
     "toGo": "To Go",
-    "issueVouchers": "Issue Vouchers",
+    "issueVouchers": "Emite Vouchere",
+    "participatingShops": "Magazine Participante",
     "tabs": {
-      "overview": "Overview",
-      "voucherManagement": "Voucher Management",
-      "voucherOrders": "Voucher Orders",
-      "reports": "Reports",
-      "issueVouchers": "Issue Vouchers",
+      "overview": "Prezentare Generală",
+      "voucherManagement": "Gestionare Vouchere",
+      "voucherOrders": "Comenzi Vouchere",
+      "reports": "Rapoarte",
+      "issueVouchers": "Emite Vouchere",
       "toGo": "To Go",
-      "localShops": "Local Shops",
-      "allToGo": "All To Go",
-      "settings": "Settings",
-      "myShops": "My Shops",
-      "surplusFood": "Surplus Food",
-      "myVouchers": "My Vouchers",
-      "redeemVoucher": "Redeem Voucher",
-      "schoolsOrgs": "Schools/Care Orgs"
+      "localShops": "Magazine Locale",
+      "allToGo": "Toate To Go",
+      "settings": "Setări",
+      "myShops": "Magazinele Mele",
+      "surplusFood": "Alimente Excedentare",
+      "myVouchers": "Voucherele Mele",
+      "redeemVoucher": "Răscumpără Voucher",
+      "schoolsOrgs": "Școli/Org. de Îngrijire"
     },
     "buttons": {
-      "changePassword": "Change Password",
-      "manageAdmins": "Manage Admins",
-      "loginStatistics": "Login Statistics"
+      "changePassword": "Schimbă Parola",
+      "manageAdmins": "Gestionează Administratori",
+      "loginStatistics": "Statistici Autentificare"
     },
     "headings": {
-      "settings": "Settings",
-      "localShopsWithToGo": "Local Shops with To Gos",
-      "allToGoItems": "All To Go Items"
+      "settings": "Setări",
+      "localShopsWithToGo": "Magazine Locale cu To Go",
+      "allToGoItems": "Toate Articolele To Go"
     }
   },
   "landing": {
@@ -135,15 +136,15 @@
       },
       "vcse": {
         "title": "Parteneriat VCSE",
-        "description": "Organizațiile caritabile pot finanța și gestiona eficient distribuția de vouchere"
+        "description": "Organizațiile caritabile pot finanța și gestiona eficient distribuția voucherelor"
       },
       "vendors": {
-        "title": "Rețeaua de Vânzători",
+        "title": "Rețea de Vânzători",
         "description": "Magazinele locale se alătură rețelei pentru a accepta vouchere și a-și sprijini comunitatea"
       },
       "surplus": {
         "title": "Partajarea Alimentelor Excedentare",
-        "description": "Vânzătorii pot posta alimente excedentare pentru familii la preț redus și alimente excedentare gratuite pentru partenerii VCSE pentru a sprijini familiile pe care le servesc, reducând risipa alimentară"
+        "description": "Vânzătorii pot posta articole alimentare excedentare pentru familii la prețuri reduse și alimente excedentare gratuite pentru partenerii VCSE pentru a sprijini familiile pe care le servesc, reducând risipa alimentară"
       }
     },
     "whoWeServe": {
@@ -152,8 +153,8 @@
         "title": "Pentru Beneficiari",
         "item1": "Primiți vouchere digitale pentru alimente cu demnitate",
         "item2": "Alegeți ce aveți nevoie de la vânzătorii locali",
-        "item3": "Alimente de luat la reducere - Cumpărați alimente reduse de la vânzătorii participanți",
-        "item4": "Urmăriți cu ușurință soldul voucherului dumneavoastră"
+        "item3": "Alimente To Go la reducere - Cumpărați alimente reduse de la vânzătorii participanți",
+        "item4": "Urmăriți cu ușurință soldul voucherului"
       },
       "vendors": {
         "title": "Pentru Vânzători",
@@ -166,14 +167,14 @@
       "vcse": {
         "title": "Pentru Organizațiile VCSE",
         "item1": "Emiteți și gestionați vouchere eficient",
-        "item2": "Finanțați familiile digital",
+        "item2": "Finanțați familii digital",
         "item3": "Colectați alimente excedentare gratuite pentru a le distribui familiilor pe care le serviți",
         "item4": "Urmăriți utilizarea și impactul",
         "item5": "Generați rapoarte detaliate"
       },
       "schools": {
         "title": "Pentru Școli și Organizații de Îngrijire",
-        "item1": "Primiți vouchere electronice de la BAK UP pentru a sprijini familiile",
+        "item1": "Primiți e-vouchere de la BAK UP pentru a sprijini familiile",
         "item2": "Distribuiți vouchere familiilor din comunitățile subreprezentate",
         "item3": "Urmăriți distribuția voucherelor și impactul",
         "item4": "Sprijiniți elevii și familiile prin instituții de încredere",
@@ -183,28 +184,28 @@
         "title": "Pentru Administratori",
         "item1": "Supravegheați întreaga platformă",
         "item2": "Gestionați utilizatorii și rolurile",
-        "item3": "Monitorizați programele de reduceri și alimente excedentare",
+        "item3": "Monitorizați programele de reducere și alimente excedentare",
         "item4": "Generați rapoarte cuprinzătoare",
         "item5": "Asigurați integritatea sistemului"
       }
     },
     "cta": {
-      "title": "Gata să Faceți o Diferență?",
-      "subtitle": "Alăturați-vă platformei noastre conduse de comunitate astăzi",
-      "button": "Creați Cont"
+      "title": "Gata să Faci o Diferență?",
+      "subtitle": "Alătură-te platformei noastre comunitare astăzi",
+      "button": "Creează Cont"
     },
     "footer": {
       "adminAccess": "Acces Administrator"
     }
   },
   "auth": {
-    "selectRole": "Selectați Rolul Dumneavoastră",
+    "selectRole": "Selectați Rolul Dvs.",
     "vendor": "Vânzător de Alimente / Magazin",
     "vcse": "Organizație VCSE",
-    "recipient": "Beneficiar de Vouchere",
+    "recipient": "Beneficiar de Voucher",
     "vendorDesc": "Donați alimente excedentare și acceptați vouchere",
-    "vcseDesc": "Gestionați vouchere pentru familiile vulnerabile",
-    "recipientDesc": "Răsfoiți și valorificați vouchere alimentare",
+    "vcseDesc": "Gestionați vouchere pentru familii vulnerabile",
+    "recipientDesc": "Răsfoiți și răscumpărați vouchere pentru alimente",
     "loginTitle": "Autentificare",
     "noAccount": "Nu aveți un cont?",
     "registerHere": "Înregistrați-vă aici",
@@ -219,38 +220,72 @@
   "voucher": {
     "title": "Vouchere",
     "balance": "Sold",
-    "status": "Status",
+    "status": "Stare",
     "active": "Activ",
     "used": "Folosit",
     "expired": "Expirat",
+    "redeemed": "Răscumpărat",
     "validUntil": "Valid Până La",
     "qrCode": "Cod QR",
-    "showQR": "Afișați Codul QR",
-    "hideQR": "Ascundeți Codul QR"
+    "showQR": "Arată Cod QR",
+    "hideQR": "Ascunde Cod QR"
   },
   "toGo": {
-    "title": "Răsfoiți Disponibile De Luat",
-    "noItems": "Niciun articol de luat disponibil momentan",
-    "addToCart": "Adăugați în Coș",
+    "title": "Răsfoiește To Go Disponibil",
+    "noItems": "Nu există articole to go disponibile momentan",
+    "addToCart": "Adaugă în Coș",
     "quantity": "Cantitate",
     "available": "disponibil",
     "category": "Categorie",
     "shop": "Magazin",
     "description": "Descriere",
     "price": "Preț",
-    "per": "per"
+    "per": "pe"
   },
   "cart": {
     "title": "Coș de Cumpărături",
-    "empty": "Coșul dumneavoastră este gol",
-    "browseItems": "Răsfoiți Articole De Luat",
-    "continueShopping": "Continuați Cumpărăturile",
-    "viewVouchers": "Vizualizați Voucherele Mele",
+    "empty": "Coșul tău este gol",
+    "browseItems": "Răsfoiește Articole To Go",
+    "continueShopping": "Continuă Cumpărăturile",
+    "viewVouchers": "Vezi Voucherele Mele",
     "nextSteps": "Pașii Următori",
-    "step1": "Revizuiți articolele din coș de mai sus",
-    "step2": "Vizitați locațiile magazinelor pentru a colecta articolele",
-    "step3": "Arătați codul QR al voucherului la magazin pentru a finaliza achiziția",
-    "step4": "Soldul voucherului dumneavoastră va fi dedus la magazin"
+    "step1": "Revizuiește articolele din coș de mai sus",
+    "step2": "Vizitează locațiile magazinului pentru a colecta articolele",
+    "step3": "Arată codul QR al voucherului la magazin pentru a finaliza achiziția",
+    "step4": "Soldul voucherului tău va fi dedus la magazin",
+    "itemsInCart": "Articole în coșul tău:",
+    "quantityInCart": "Cantitate în coș:",
+    "remove": "Elimină"
+  },
+  "recipient": {
+    "noVouchersAvailable": "Nu există vouchere disponibile",
+    "code": "Cod:",
+    "status": "Stare:",
+    "expires": "Expiră:",
+    "issuedBy": "Emis de:",
+    "redeemed": "Răscumpărat:",
+    "printVoucher": "Tipărește Voucher",
+    "showQRCode": "Arată Cod QR",
+    "scanToRedeem": "Scanează pentru Răscumpărare",
+    "presentCode": "Prezintă acest cod la magazin sau scanează codul QR de mai jos",
+    "noShopsAvailable": "Nu există magazine disponibile",
+    "address": "Adresă:",
+    "phone": "Telefon:",
+    "availableToGo": "Disponibil To Go:",
+    "available": "Disponibil:",
+    "category": "Categorie:",
+    "description": "Descriere:",
+    "freshReady": "Proaspăt și gata de colectare",
+    "addToCart": "Adaugă în Coș",
+    "useVoucher": "Folosește voucherul tău pentru a cumpăra acest articol la magazin",
+    "per": "pe",
+    "at": "la"
+  },
+  "alerts": {
+    "itemAddedToCart": "Articol adăugat în coș cu succes!",
+    "failedToAddToCart": "Eșec la adăugarea articolului în coș:",
+    "itemRemoved": "Articol eliminat din coș",
+    "failedToRemove": "Eșec la eliminarea articolului:"
   },
   "categories": {
     "bakery": "Brutărie",
