@@ -2023,8 +2023,10 @@ def get_available_shops_for_voucher(voucher_code):
 
 @app.route('/api/admin/login-stats', methods=['GET'])
 def admin_get_login_stats():
-    """Get login frequency statistics for vendors and VCSE organizations"""
+    """Get login frequency statistics for all users"""
     try:
+        from datetime import datetime, timedelta
+        
         user_id = session.get('user_id')
         
         if not user_id:
@@ -2034,42 +2036,110 @@ def admin_get_login_stats():
         if not user or user.user_type != 'admin':
             return jsonify({'error': 'Only admins can view login statistics'}), 403
         
-        # Get all vendors
-        vendors = User.query.filter_by(user_type='vendor', is_active=True).all()
-        vendor_stats = []
-        for vendor in vendors:
-            vendor_stats.append({
-                'id': vendor.id,
-                'name': vendor.shop_name or f'{vendor.first_name} {vendor.last_name}',
-                'email': vendor.email,
-                'login_count': vendor.login_count,
-                'last_login': vendor.last_login.isoformat() if vendor.last_login else None,
-                'created_at': vendor.created_at.isoformat()
+        # Get all users (excluding admins)
+        all_users = User.query.filter(User.user_type != 'admin', User.is_active == True).all()
+        
+        users_data = []
+        total_logins = 0
+        active_users_count = 0
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        
+        for u in all_users:
+            login_count = u.login_count or 0
+            total_logins += login_count
+            
+            # Calculate days since last login
+            days_since_login = None
+            if u.last_login:
+                days_since_login = (datetime.utcnow() - u.last_login).days
+                if u.last_login >= thirty_days_ago:
+                    active_users_count += 1
+            
+            # Determine display name based on user type
+            if u.user_type == 'vendor':
+                display_name = u.shop_name or f'{u.first_name} {u.last_name}'
+            elif u.user_type == 'vcse':
+                display_name = u.organization_name or f'{u.first_name} {u.last_name}'
+            elif u.user_type == 'school':
+                display_name = u.school_name or f'{u.first_name} {u.last_name}'
+            else:
+                display_name = f'{u.first_name} {u.last_name}'
+            
+            users_data.append({
+                'id': u.id,
+                'first_name': u.first_name,
+                'last_name': u.last_name,
+                'email': u.email,
+                'role': u.user_type,
+                'login_count': login_count,
+                'last_login': u.last_login.isoformat() if u.last_login else None,
+                'days_since_login': days_since_login,
+                'display_name': display_name
             })
         
-        # Get all VCSE organizations
-        vcse_orgs = User.query.filter_by(user_type='vcse', is_active=True).all()
-        vcse_stats = []
-        for vcse in vcse_orgs:
-            vcse_stats.append({
-                'id': vcse.id,
-                'organization_name': vcse.organization_name,
-                'email': vcse.email,
-                'login_count': vcse.login_count,
-                'last_login': vcse.last_login.isoformat() if vcse.last_login else None,
-                'balance': vcse.balance,
-                'created_at': vcse.created_at.isoformat()
-            })
+        # Sort by login count (descending)
+        users_data.sort(key=lambda x: x['login_count'], reverse=True)
         
         return jsonify({
-            'vendors': vendor_stats,
-            'vcse_organizations': vcse_stats,
-            'total_vendors': len(vendor_stats),
-            'total_vcse': len(vcse_stats)
+            'users': users_data,
+            'total_users': len(users_data),
+            'active_users': active_users_count,
+            'total_logins': total_logins
         }), 200
         
     except Exception as e:
         return jsonify({'error': f'Failed to get login stats: {str(e)}'}), 500
+
+@app.route('/api/admin/prepopulate-login-stats', methods=['POST'])
+def prepopulate_login_stats():
+    """Prepopulate login statistics with test data for demonstration"""
+    try:
+        from datetime import datetime, timedelta
+        import random
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can prepopulate data'}), 403
+        
+        # Get all non-admin users
+        all_users = User.query.filter(User.user_type != 'admin').all()
+        
+        updated_count = 0
+        for u in all_users:
+            # Generate realistic login data
+            if u.user_type == 'vcse':
+                login_count = random.randint(15, 50)
+                days_ago = random.randint(1, 7)
+            elif u.user_type == 'vendor':
+                login_count = random.randint(20, 60)
+                days_ago = random.randint(1, 5)
+            elif u.user_type == 'school':
+                login_count = random.randint(10, 40)
+                days_ago = random.randint(2, 10)
+            else:  # recipient
+                login_count = random.randint(5, 30)
+                days_ago = random.randint(1, 14)
+            
+            # Update user
+            u.login_count = login_count
+            u.last_login = datetime.utcnow() - timedelta(days=days_ago)
+            updated_count += 1
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Login statistics prepopulated successfully',
+            'updated_users': updated_count
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to prepopulate login stats: {str(e)}'}), 500
 
 # ============================================
 # Admin Voucher Reassignment Routes
