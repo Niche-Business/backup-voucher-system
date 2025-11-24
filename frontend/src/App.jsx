@@ -698,25 +698,12 @@ function AdminDashboard({ user, onLogout }) {
   const [editingSchool, setEditingSchool] = useState(null)
   const [editingVcse, setEditingVcse] = useState(null)
   const [editFormData, setEditFormData] = useState({})
-  const [loginStats, setLoginStats] = useState(null)
-
-  const loadLoginStats = async () => {
-    try {
-      const data = await apiCall('/admin/login-stats')
-      setLoginStats(data)
-    } catch (error) {
-      console.error('Error loading login stats:', error)
-    }
-  }
 
   useEffect(() => {
     loadVcseOrgs()
     loadSchools()
     loadVouchers()
     loadVendorShops()
-    if (activeTab === 'settings') {
-      loadLoginStats()
-    }
     loadToGoItems()
   }, [])
 
