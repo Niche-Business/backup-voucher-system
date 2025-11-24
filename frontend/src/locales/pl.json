@@ -26,6 +26,19 @@
     "submit": "Wyślij",
     "welcome": "Witaj"
   },
+  "admin": {
+    "fundAllocation": "Alokacja środków",
+    "organizationType": "Typ Organizacji",
+    "selectVCSE": "Wybierz Organizację VCSE",
+    "amount": "Kwota (£)",
+    "notes": "Notatki (Opcjonalnie)",
+    "allocateFunds": "Przydziel Środki",
+    "vcseOrganizations": "Organizacje VCSE",
+    "allocatedBalance": "Przydzielone Saldo",
+    "chooseOrganization": "Wybierz organizację VCSE...",
+    "vcseOrganization": "Organizacja VCSE",
+    "schoolOrganization": "Szkoła / Organizacja Opieki"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "overview": "Overview",

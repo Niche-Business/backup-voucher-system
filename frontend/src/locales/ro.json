@@ -26,6 +26,19 @@
     "submit": "Trimite",
     "welcome": "Bun venit"
   },
+  "admin": {
+    "fundAllocation": "Alocare Fonduri",
+    "organizationType": "Tipul Organizației",
+    "selectVCSE": "Selectați Organizația VCSE",
+    "amount": "Sumă (£)",
+    "notes": "Note (Opțional)",
+    "allocateFunds": "Alocați Fonduri",
+    "vcseOrganizations": "Organizații VCSE",
+    "allocatedBalance": "Sold Alocat",
+    "chooseOrganization": "Alegeți o organizație VCSE...",
+    "vcseOrganization": "Organizație VCSE",
+    "schoolOrganization": "Școală / Organizație de Îngrijire"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "overview": "Overview",

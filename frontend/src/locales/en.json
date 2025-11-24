@@ -26,6 +26,19 @@
     "submit": "Submit",
     "welcome": "Welcome"
   },
+  "admin": {
+    "fundAllocation": "Fund Allocation",
+    "organizationType": "Organization Type",
+    "selectVCSE": "Select VCSE Organization",
+    "amount": "Amount (£)",
+    "notes": "Notes (Optional)",
+    "allocateFunds": "Allocate Funds",
+    "vcseOrganizations": "VCSE Organizations",
+    "allocatedBalance": "Allocated Balance",
+    "chooseOrganization": "Choose a VCSE organization...",
+    "vcseOrganization": "VCSE Organization",
+    "schoolOrganization": "School/Care Organization"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "overview": "Overview",

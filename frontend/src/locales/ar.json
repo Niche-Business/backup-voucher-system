@@ -26,6 +26,19 @@
     "submit": "إرسال",
     "welcome": "مرحبا"
   },
+  "admin": {
+    "fundAllocation": "تخصيص الأموال",
+    "organizationType": "نوع المنظمة",
+    "selectVCSE": "اختر منظمة VCSE",
+    "amount": "المبلغ (£)",
+    "notes": "ملاحظات (اختياري)",
+    "allocateFunds": "تخصيص الأموال",
+    "vcseOrganizations": "منظمات VCSE",
+    "allocatedBalance": "الرصيد المخصص",
+    "chooseOrganization": "اختر منظمة VCSE...",
+    "vcseOrganization": "منظمة VCSE",
+    "schoolOrganization": "مدرسة / منظمة رعاية"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "overview": "Overview",
