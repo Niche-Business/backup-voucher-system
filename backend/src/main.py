@@ -2195,7 +2195,7 @@ def prepopulate_school_data():
                 value=random.choice([5.0, 10.0, 15.0, 20.0]),
                 status=status,
                 recipient_id=recipient.id,
-                issued_by_id=school_user.id,
+                issued_by=school_user.id,
                 created_at=datetime.utcnow() - timedelta(days=random.randint(1, 30)),
                 expiry_date=expiry_date
             )
