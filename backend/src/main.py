@@ -4362,7 +4362,7 @@ def edit_school(school_id):
         # Handle password reset if provided
         if 'new_password' in data and data['new_password']:
             from werkzeug.security import generate_password_hash
-            school.password = generate_password_hash(data['new_password'])
+            school.password_hash = generate_password_hash(data['new_password'])
         
         db.session.commit()
         
