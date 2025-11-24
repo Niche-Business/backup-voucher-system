@@ -3191,24 +3191,24 @@ function VendorDashboard({ user, onLogout }) {
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>{toGoCount}</div>
-                <div>To Go Posted</div>
+                <div>{t('shop.toGoPosted')}</div>
               </div>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>{shops.length}</div>
-                <div>Shops Registered</div>
+                <div>{t('shop.shopsRegistered')}</div>
               </div>
             </div>
             
-            <h3>Your Shops</h3>
+            <h3>{t('shop.yourShops')}</h3>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {shops.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px'}}>
-                  <p style={{marginBottom: '20px', color: '#666'}}>You haven't registered a shop yet. Create your shop profile to start posting To Go items.</p>
+                  <p style={{marginBottom: '20px', color: '#666'}}>{t('shop.noShopYet')}</p>
                   <button 
                     onClick={() => setActiveTab('create-shop')} 
                     style={{...styles.primaryButton, backgroundColor: '#FF9800'}}
                   >
-                    ➕ Create Shop Profile
+                    ➕ {t('shop.createShopProfile')}
                   </button>
                 </div>
               ) : (
@@ -3218,7 +3218,7 @@ function VendorDashboard({ user, onLogout }) {
                       <div style={{flex: 1}}>
                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
                           <div>
-                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
                             <input
                               type="text"
                               value={shopEditForm.shop_name}
@@ -3227,7 +3227,7 @@ function VendorDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div>
-                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Phone</label>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.phone')}</label>
                             <input
                               type="text"
                               value={shopEditForm.phone}
@@ -3237,7 +3237,7 @@ function VendorDashboard({ user, onLogout }) {
                           </div>
                         </div>
                         <div style={{marginBottom: '15px'}}>
-                          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+                          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.address')}</label>
                           <input
                             type="text"
                             value={shopEditForm.address}
@@ -3247,7 +3247,7 @@ function VendorDashboard({ user, onLogout }) {
                         </div>
                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
                           <div>
-                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City/County</label>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.cityCounty')}</label>
                             <input
                               type="text"
                               value={shopEditForm.city}
@@ -3257,7 +3257,7 @@ function VendorDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div>
-                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+                            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.postcode')}</label>
                             <input
                               type="text"
                               value={shopEditForm.postcode}
@@ -3268,8 +3268,8 @@ function VendorDashboard({ user, onLogout }) {
                           </div>
                         </div>
                         <div style={{display: 'flex', gap: '10px'}}>
-                          <button onClick={handleSaveShop} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>💾 Save</button>
-                          <button onClick={() => setEditingShop(null)} style={{...styles.primaryButton, backgroundColor: '#757575'}}>Cancel</button>
+                          <button onClick={handleSaveShop} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>💾 {t('shop.save')}</button>
+                          <button onClick={() => setEditingShop(null)} style={{...styles.primaryButton, backgroundColor: '#757575'}}>{t('shop.cancel')}</button>
                         </div>
                       </div>
                     ) : (
@@ -3281,8 +3281,8 @@ function VendorDashboard({ user, onLogout }) {
                           <span style={{color: '#666'}}>📞 {shop.phone}</span>
                         </div>
                         <div style={{display: 'flex', gap: '10px'}}>
-                          <button onClick={() => handleEditShop(shop)} style={{...styles.primaryButton, backgroundColor: '#2196F3', padding: '8px 16px'}}>✏️ Edit</button>
-                          <button onClick={() => handleDeleteShop(shop.id)} style={{...styles.primaryButton, backgroundColor: '#f44336', padding: '8px 16px'}}>🗑️ Delete</button>
+                          <button onClick={() => handleEditShop(shop)} style={{...styles.primaryButton, backgroundColor: '#2196F3', padding: '8px 16px'}}>✏️ {t('shop.edit')}</button>
+                          <button onClick={() => handleDeleteShop(shop.id)} style={{...styles.primaryButton, backgroundColor: '#f44336', padding: '8px 16px'}}>🗑️ {t('shop.delete')}</button>
                         </div>
                       </>
                     )}
@@ -3295,11 +3295,11 @@ function VendorDashboard({ user, onLogout }) {
         
         {activeTab === 'vouchers' && (
           <div>
-            <h2>🎫 Redeem Vouchers</h2>
+            <h2>🎫 {t('shop.redeemVouchers')}</h2>
             
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', maxWidth: '600px', margin: '0 auto'}}>
               <div style={{marginBottom: '20px'}}>
-                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>Enter Voucher Code</label>
+                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>{t('shop.enterVoucherCode')}</label>
                 <input
                   type="text"
                   value={voucherCode}
@@ -3329,7 +3329,7 @@ function VendorDashboard({ user, onLogout }) {
                     fontSize: '16px'
                   }}
                 >
-                  📷 Scan QR Code
+                  📷 {t('shop.scanQRCode')}
                 </button>
               </div>
               
@@ -3342,7 +3342,7 @@ function VendorDashboard({ user, onLogout }) {
                     flex: 1
                   }}
                 >
-                  🔍 Validate
+                  🔍 {t('shop.validate')}
                 </button>
                 <button 
                   onClick={handleRedeemVoucher}
@@ -3353,7 +3353,7 @@ function VendorDashboard({ user, onLogout }) {
                   }}
                   disabled={!voucherCode.trim()}
                 >
-                  ✅ Redeem
+                  ✅ {t('shop.redeem')}
                 </button>
               </div>
               
@@ -3377,39 +3377,39 @@ function VendorDashboard({ user, onLogout }) {
                   padding: '20px',
                   backgroundColor: '#f1f8f4'
                 }}>
-                  <h3 style={{margin: '0 0 15px 0', color: '#4CAF50'}}>✅ Valid Voucher</h3>
+                  <h3 style={{margin: '0 0 15px 0', color: '#4CAF50'}}>✅ {t('shop.validVoucher')}</h3>
                   <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '15px'}}>
                     £{voucherValidation.value}
                   </div>
                   <div style={{marginBottom: '10px'}}>
-                    <strong>Code:</strong> <span style={{fontFamily: 'monospace'}}>{voucherValidation.code}</span>
+                    <strong>{t('shop.code')}:</strong> <span style={{fontFamily: 'monospace'}}>{voucherValidation.code}</span>
                   </div>
                   {voucherValidation.recipient && (
                     <div>
                       <div style={{marginBottom: '5px'}}>
-                        <strong>Recipient:</strong> {voucherValidation.recipient.name}
+                        <strong>{t('shop.recipient')}:</strong> {voucherValidation.recipient.name}
                       </div>
                       <div style={{marginBottom: '5px'}}>
-                        <strong>Phone:</strong> {voucherValidation.recipient.phone}
+                        <strong>{t('shop.phone')}:</strong> {voucherValidation.recipient.phone}
                       </div>
                     </div>
                   )}
                   {voucherValidation.expiry_date && (
                     <div style={{marginTop: '10px', fontSize: '14px', color: '#666'}}>
-                      <strong>Expires:</strong> {new Date(voucherValidation.expiry_date).toLocaleDateString()}
+                      <strong>{t('shop.expires')}:</strong> {new Date(voucherValidation.expiry_date).toLocaleDateString()}
                     </div>
                   )}
                 </div>
               )}
               
               <div style={{marginTop: '30px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '10px'}}>
-                <h4 style={{margin: '0 0 10px 0'}}>📊 How to Redeem:</h4>
+                <h4 style={{margin: '0 0 10px 0'}}>📊 {t('shop.howToRedeem')}</h4>
                 <ol style={{margin: 0, paddingLeft: '20px'}}>
-                  <li>Ask customer for their voucher code</li>
-                  <li>Enter the code above</li>
-                  <li>Click "Validate" to check the voucher</li>
-                  <li>Click "Redeem" to complete the transaction</li>
-                  <li>The voucher amount will be added to your balance</li>
+                  <li>{t('shop.step1')}</li>
+                  <li>{t('shop.step2')}</li>
+                  <li>{t('shop.step3')}</li>
+                  <li>{t('shop.step4')}</li>
+                  <li>{t('shop.step5')}</li>
                 </ol>
               </div>
             </div>
