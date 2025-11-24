@@ -8,7 +8,8 @@ services:
     branch: master
     buildCommand: |
       pip install -r backend/requirements.txt
-      cd frontend && npm install && npm run build
+      npm install -g pnpm
+      cd frontend && pnpm install && pnpm run build
     startCommand: python3 unified_server.py
     envVars:
       - key: PYTHON_VERSION
