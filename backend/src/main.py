@@ -4359,6 +4359,11 @@ def edit_school(school_id):
         if 'allocated_balance' in data:
             school.allocated_balance = float(data['allocated_balance'])
         
+        # Handle password reset if provided
+        if 'new_password' in data and data['new_password']:
+            from werkzeug.security import generate_password_hash
+            school.password = generate_password_hash(data['new_password'])
+        
         db.session.commit()
         
         return jsonify({

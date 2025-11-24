@@ -1173,6 +1173,17 @@ function AdminDashboard({ user, onLogout }) {
                               style={{width: '100%', padding: '8px', marginTop: '5px'}}
                             />
                           </div>
+                          <div style={{marginBottom: '10px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px', border: '1px solid #ffc107'}}>
+                            <label style={{fontWeight: 'bold', color: '#856404'}}>🔐 Reset Password (Optional):</label><br />
+                            <input 
+                              type="text" 
+                              placeholder="Enter new password (leave blank to keep current)"
+                              value={editFormData.new_password || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, new_password: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ffc107'}}
+                            />
+                            <small style={{color: '#856404', display: 'block', marginTop: '5px'}}>⚠️ Only fill this if you want to change the password</small>
+                          </div>
                           <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
                             <button onClick={handleSaveSchool} style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}>Save</button>
                             <button onClick={() => { setEditingSchool(null); setEditFormData({}) }} style={{...styles.primaryButton, backgroundColor: '#757575'}}>Cancel</button>
