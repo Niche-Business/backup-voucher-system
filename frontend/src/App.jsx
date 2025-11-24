@@ -3770,10 +3770,17 @@ function SchoolDashboard({ user, onLogout }) {
 
   const loadToGoItems = async () => {
     try {
-      const data = await apiCall('/admin/to-go-items')
+      const data = await apiCall('/school/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
       console.error('Failed to load to go items:', error)
+      // Fallback to admin endpoint if school endpoint doesn't exist
+      try {
+        const fallbackData = await apiCall('/admin/to-go-items')
+        setToGoItems(fallbackData.items || [])
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError)
+      }
     }
   }
 
@@ -3868,22 +3875,59 @@ function SchoolDashboard({ user, onLogout }) {
               </p>
             </div>
 
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
-              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px'}}>
+              <div 
+                onClick={() => setActiveTab('vouchers')}
+                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
+                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
+                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
+              >
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#9C27B0'}}>{vouchers.length}</div>
                 <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
               </div>
-              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+              <div 
+                onClick={() => setActiveTab('vouchers')}
+                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
+                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
+                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
+              >
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
               </div>
-              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+              <div 
+                onClick={() => setActiveTab('vouchers')}
+                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
+                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
+                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
+              >
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
+              </div>
+              <div 
+                onClick={() => setActiveTab('vouchers')}
+                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
+                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
+                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
+              >
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#F44336'}}>
+                  {vouchers.filter(v => v.status === 'expired').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Expired Vouchers</div>
+              </div>
+              <div 
+                onClick={() => setActiveTab('vouchers')}
+                style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}
+                onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
+                onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
+              >
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
+                  {vouchers.filter(v => v.status === 'reassigned').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Reissued Vouchers</div>
               </div>
             </div>
 
@@ -4064,11 +4108,9 @@ function SchoolDashboard({ user, onLogout }) {
                       <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}>
                         <strong>Issued:</strong> {new Date(voucher.created_at).toLocaleDateString()}
                       </p>
-                      {voucher.expiry_date && (
-                        <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}>
-                          <strong>Expires:</strong> {new Date(voucher.expiry_date).toLocaleDateString()}
-                        </p>
-                      )}
+                      <p style={{margin: '5px 0', fontSize: '14px', color: voucher.status === 'expired' ? '#F44336' : '#666'}}>
+                        <strong>Expires:</strong> {voucher.expiry_date ? new Date(voucher.expiry_date).toLocaleDateString() : 'N/A'}
+                      </p>
                     </div>
                   </div>
                 ))}

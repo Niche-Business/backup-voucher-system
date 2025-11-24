@@ -3630,6 +3630,50 @@ def get_school_vouchers():
         return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
 
 
+@app.route('/api/school/to-go-items', methods=['GET'])
+def get_school_to_go_items():
+    """Get all available To Go items for schools to view and order"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'School/Care Organization access required'}), 403
+        
+        # Get all available surplus items
+        items = SurplusItem.query.filter_by(status='available').order_by(SurplusItem.posted_at.desc()).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            vendor = User.query.get(shop.vendor_id) if shop else None
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'price': float(item.price) if item.price else 0.0,
+                'description': item.description,
+                'status': item.status,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'created_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get to-go items: {str(e)}'}), 500
+
+
 # ============================================
 # Vendor Voucher Redemption Routes
 # ============================================
