@@ -2061,7 +2061,8 @@ def admin_get_login_stats():
             elif u.user_type == 'vcse':
                 display_name = u.organization_name or f'{u.first_name} {u.last_name}'
             elif u.user_type == 'school':
-                display_name = u.school_name or f'{u.first_name} {u.last_name}'
+                # School users use organization_name field
+                display_name = u.organization_name or f'{u.first_name} {u.last_name}'
             else:
                 display_name = f'{u.first_name} {u.last_name}'
             
