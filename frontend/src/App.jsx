@@ -1315,6 +1315,7 @@ function AdminDashboard({ user, onLogout }) {
 
 // ADMIN SETTINGS TAB COMPONENT
 function AdminSettingsTab({ user }) {
+  const { t } = useTranslation()
   const [settingsTab, setSettingsTab] = useState('password')
   const [passwordForm, setPasswordForm] = useState({
     current_password: '',
