@@ -1332,12 +1332,24 @@ function AdminSettingsTab({ user }) {
     last_name: ''
   })
   const [adminMessage, setAdminMessage] = useState('')
+  const [loginStats, setLoginStats] = useState(null)
 
   useEffect(() => {
     if (settingsTab === 'admins') {
       loadAdmins()
+    } else if (settingsTab === 'loginstats') {
+      loadLoginStats()
     }
   }, [settingsTab])
+
+  const loadLoginStats = async () => {
+    try {
+      const data = await apiCall('/admin/login-stats')
+      setLoginStats(data)
+    } catch (error) {
+      console.error('Error loading login stats:', error)
+    }
+  }
 
   const loadAdmins = async () => {
     try {

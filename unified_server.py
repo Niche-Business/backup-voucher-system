@@ -35,6 +35,11 @@ def serve_frontend(path):
         response = send_from_directory(str(frontend_build), path)
         if mime_type:
             response.headers['Content-Type'] = mime_type
+        # Add cache-busting headers for JavaScript and CSS files
+        if path.endswith(('.js', '.mjs', '.css')):
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
         return response
     return send_from_directory(str(frontend_build), 'index.html')
 
