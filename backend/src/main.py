@@ -2142,8 +2142,118 @@ def prepopulate_login_stats():
         db.session.rollback()
         return jsonify({'error': f'Failed to prepopulate login stats: {str(e)}'}), 500
 
-# ============================================
-# Admin Voucher Reassignment Routes
+
+@app.route('/api/admin/prepopulate-school-data', methods=['POST'])
+def prepopulate_school_data():
+    """Prepopulate school portal with test vouchers and To Go items"""
+    try:
+        from datetime import datetime, timedelta
+        import random
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can prepopulate data'}), 403
+        
+        # Get a school user to issue vouchers from
+        school_user = User.query.filter_by(user_type='school').first()
+        if not school_user:
+            return jsonify({'error': 'No school users found'}), 404
+        
+        # Create test vouchers with different statuses
+        voucher_count = 0
+        statuses = ['active', 'active', 'active', 'redeemed', 'redeemed', 'expired', 'reassigned']
+        
+        for i, status in enumerate(statuses):
+            # Create or get recipient
+            recipient_email = f"testrecipient{i+1}@example.com"
+            recipient = User.query.filter_by(email=recipient_email).first()
+            
+            if not recipient:
+                recipient = User(
+                    email=recipient_email,
+                    first_name=f"Test{i+1}",
+                    last_name="Recipient",
+                    phone=f"07700{900000+i}",
+                    address=f"{i+1} Test Street, London",
+                    user_type='recipient',
+                    password_hash='dummy'
+                )
+                db.session.add(recipient)
+                db.session.flush()
+            
+            # Create voucher
+            voucher_code = f"TEST{random.randint(10000, 99999)}"
+            expiry_date = datetime.utcnow() + timedelta(days=30 if status != 'expired' else -5)
+            
+            voucher = Voucher(
+                code=voucher_code,
+                value=random.choice([5.0, 10.0, 15.0, 20.0]),
+                status=status,
+                recipient_id=recipient.id,
+                issued_by_id=school_user.id,
+                created_at=datetime.utcnow() - timedelta(days=random.randint(1, 30)),
+                expiry_date=expiry_date
+            )
+            db.session.add(voucher)
+            voucher_count += 1
+        
+        # Create test To Go items
+        # First, ensure we have a vendor with a shop
+        vendor = User.query.filter_by(user_type='vendor').first()
+        if vendor:
+            shop = VendorShop.query.filter_by(vendor_id=vendor.id).first()
+            if shop:
+                # Create surplus items
+                items_data = [
+                    {'name': 'Fresh Bread Loaves', 'qty': 10, 'unit': 'loaves', 'category': 'Bakery', 'price': 1.50},
+                    {'name': 'Milk Bottles', 'qty': 8, 'unit': 'bottles', 'category': 'Dairy', 'price': 1.20},
+                    {'name': 'Fresh Vegetables Mix', 'qty': 15, 'unit': 'bags', 'category': 'Produce', 'price': 2.00},
+                    {'name': 'Canned Soup', 'qty': 20, 'unit': 'cans', 'category': 'Canned Goods', 'price': 0.80},
+                    {'name': 'Rice Bags', 'qty': 12, 'unit': 'bags', 'category': 'Grains', 'price': 3.00}
+                ]
+                
+                items_count = 0
+                for item_data in items_data:
+                    # Check if item already exists
+                    existing = SurplusItem.query.filter_by(
+                        shop_id=shop.id,
+                        item_name=item_data['name']
+                    ).first()
+                    
+                    if not existing:
+                        surplus_item = SurplusItem(
+                            shop_id=shop.id,
+                            item_name=item_data['name'],
+                            quantity=item_data['qty'],
+                            unit=item_data['unit'],
+                            category=item_data['category'],
+                            price=item_data['price'],
+                            description=f"Fresh {item_data['name']} available for collection",
+                            status='available',
+                            posted_at=datetime.utcnow()
+                        )
+                        db.session.add(surplus_item)
+                        items_count += 1
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'School test data prepopulated successfully',
+            'vouchers_created': voucher_count,
+            'items_created': items_count if vendor and shop else 0
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to prepopulate school data: {str(e)}'}), 500
+
+
+# ============================================# Admin Voucher Reassignment Routes
 # ============================================
 
 @app.route('/api/admin/vouchers/unredeemed', methods=['GET'])
