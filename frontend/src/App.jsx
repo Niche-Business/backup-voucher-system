@@ -699,6 +699,7 @@ function AdminDashboard({ user, onLogout }) {
   const [editingSchool, setEditingSchool] = useState(null)
   const [editingVcse, setEditingVcse] = useState(null)
   const [editingShop, setEditingShop] = useState(null)
+  const [editingRecipient, setEditingRecipient] = useState(null)
   const [editFormData, setEditFormData] = useState({})
 
   useEffect(() => {
@@ -884,6 +885,35 @@ function AdminDashboard({ user, onLogout }) {
       loadVendorShops()
     } catch (error) {
       alert('Error deleting shop: ' + error.message)
+    }
+  }
+
+  const handleSaveRecipient = async (recipientId) => {
+    try {
+      await apiCall(`/admin/recipient/${recipientId}`, {
+        method: 'PUT',
+        body: JSON.stringify(editFormData)
+      })
+      alert('Recipient updated successfully')
+      setEditingRecipient(null)
+      setEditFormData({})
+      loadRecipients()
+    } catch (error) {
+      alert('Error updating recipient: ' + error.message)
+    }
+  }
+
+  const handleDeleteRecipient = async (recipientId) => {
+    if (!confirm('Are you sure you want to deactivate this recipient account?')) return
+    
+    try {
+      await apiCall(`/admin/recipient/${recipientId}`, {
+        method: 'DELETE'
+      })
+      alert('Recipient account deactivated successfully')
+      loadRecipients()
+    } catch (error) {
+      alert('Error deactivating recipient: ' + error.message)
     }
   }
 
@@ -1169,31 +1199,174 @@ function AdminDashboard({ user, onLogout }) {
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
                   {recipients.map(recipient => (
                     <div key={recipient.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
-                      <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{recipient.name}</h3>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
-                        <strong>📧 Email:</strong> {recipient.email}
-                      </p>
-                      {recipient.phone && (
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          <strong>📞 Phone:</strong> {recipient.phone}
-                        </p>
+                      {editingRecipient === recipient.id ? (
+                        <div>
+                          <h3 style={{margin: '0 0 15px 0', color: '#1976d2'}}>Edit Recipient</h3>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Name:</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.name || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Email:</label><br />
+                            <input 
+                              type="email" 
+                              value={editFormData.email || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, email: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Phone:</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.phone || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, phone: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Address:</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.address || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, address: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>City:</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.city || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, city: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Postcode:</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.postcode || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, postcode: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{marginBottom: '10px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '5px'}}>
+                            <label style={{fontWeight: 'bold'}}>🔑 Reset Password (Optional):</label><br />
+                            <input 
+                              type="text" 
+                              value={editFormData.reset_password || ''} 
+                              onChange={(e) => setEditFormData({...editFormData, reset_password: e.target.value})}
+                              placeholder="Enter new password (leave blank to keep current)"
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            />
+                          </div>
+                          <div style={{display: 'flex', gap: '10px'}}>
+                            <button 
+                              onClick={() => handleSaveRecipient(recipient.id)}
+                              style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                flex: 1
+                              }}
+                            >
+                              Save
+                            </button>
+                            <button 
+                              onClick={() => setEditingRecipient(null)}
+                              style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#757575',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                flex: 1
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{recipient.name}</h3>
+                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <strong>📧 Email:</strong> {recipient.email}
+                          </p>
+                          {recipient.phone && (
+                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                              <strong>📞 Phone:</strong> {recipient.phone}
+                            </p>
+                          )}
+                          {recipient.address && (
+                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                              <strong>📍 Address:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
+                            </p>
+                          )}
+                          <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
+                            <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold'}}>
+                              🎫 Total Vouchers: {recipient.total_vouchers}
+                            </p>
+                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                              ✅ Active: {recipient.active_vouchers} | ✓ Redeemed: {recipient.redeemed_vouchers}
+                            </p>
+                            <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold', color: '#4CAF50'}}>
+                              💰 Active Value: £{recipient.total_active_value.toFixed(2)}
+                            </p>
+                          </div>
+                          <div style={{marginTop: '15px', display: 'flex', gap: '10px'}}>
+                            <button 
+                              onClick={() => {
+                                setEditingRecipient(recipient.id);
+                                setEditFormData({
+                                  name: recipient.name,
+                                  email: recipient.email,
+                                  phone: recipient.phone || '',
+                                  address: recipient.address || '',
+                                  city: recipient.city || '',
+                                  postcode: recipient.postcode || '',
+                                  reset_password: ''
+                                });
+                              }}
+                              style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#2196F3',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                flex: 1
+                              }}
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteRecipient(recipient.id)}
+                              style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#f44336',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                flex: 1
+                              }}
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </div>
                       )}
-                      {recipient.address && (
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          <strong>📍 Address:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
-                        </p>
-                      )}
-                      <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
-                        <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold'}}>
-                          🎫 Total Vouchers: {recipient.total_vouchers}
-                        </p>
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          ✅ Active: {recipient.active_vouchers} | ✓ Redeemed: {recipient.redeemed_vouchers}
-                        </p>
-                        <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold', color: '#4CAF50'}}>
-                          💰 Active Value: £{recipient.total_active_value.toFixed(2)}
-                        </p>
-                      </div>
                     </div>
                   ))}
                 </div>
