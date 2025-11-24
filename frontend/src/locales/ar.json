@@ -23,7 +23,36 @@
     "confirm": "تأكيد",
     "back": "رجوع",
     "next": "التالي",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "welcome": "مرحبا"
+  },
+  "dashboard": {
+    "tabs": {
+      "overview": "نظرة عامة",
+      "voucherManagement": "إدارة القسائم",
+      "voucherOrders": "طلبات القسائم",
+      "reports": "التقارير",
+      "issueVouchers": "إصدار قسائم",
+      "toGo": "للأخذ",
+      "localShops": "المتاجر المحلية",
+      "allToGo": "جميع العروض",
+      "settings": "الإعدادات",
+      "myShops": "متاجري",
+      "surplusFood": "الطعام الفائض",
+      "myVouchers": "قسائمي",
+      "redeemVoucher": "استبدال قسيمة",
+      "schoolsOrgs": "المدارس/منظمات الرعاية"
+    },
+    "buttons": {
+      "changePassword": "تغيير كلمة المرور",
+      "manageAdmins": "إدارة المسؤولين",
+      "loginStatistics": "إحصائيات تسجيل الدخول"
+    },
+    "headings": {
+      "settings": "الإعدادات",
+      "localShopsWithToGo": "المتاجر المحلية مع عروض",
+      "allToGoItems": "جميع المنتجات للأخذ"
+    }
   },
   "landing": {
     "hero": {

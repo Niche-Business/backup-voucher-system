@@ -860,12 +860,12 @@ function AdminDashboard({ user, onLogout }) {
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>Voucher Management</button>
-          <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>Schools/Care Orgs</button>
-          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Local Shops</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>All To Go</button>
-          <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ Settings</button>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.overview')}</button>
+          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.voucherManagement')}</button>
+          <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.schoolsOrgs')}</button>
+          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.localShops')}</button>
+          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.allToGo')}</button>
+          <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ {t('dashboard.tabs.settings')}</button>
         </div>
         
         {activeTab === 'overview' && (
@@ -1268,7 +1268,7 @@ function AdminDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🍎 All To Go Items ({toGoItems.length})</h2>
+            <h2>🍎 {t('dashboard.headings.allToGoItems')} ({toGoItems.length})</h2>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <p>No to go items found</p>
@@ -1412,26 +1412,26 @@ function AdminSettingsTab({ user }) {
 
   return (
     <div>
-      <h2>⚙️ Settings</h2>
+      <h2>⚙️ {t('dashboard.headings.settings')}</h2>
       
       <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
         <button 
           onClick={() => setSettingsTab('password')} 
           style={settingsTab === 'password' ? styles.activeTab : styles.tab}
         >
-          🔒 Change Password
+          🔒 {t('dashboard.buttons.changePassword')}
         </button>
         <button 
           onClick={() => setSettingsTab('admins')} 
           style={settingsTab === 'admins' ? styles.activeTab : styles.tab}
         >
-          👥 Manage Admins
+          👥 {t('dashboard.buttons.manageAdmins')}
         </button>
         <button 
           onClick={() => setSettingsTab('loginstats')} 
           style={settingsTab === 'loginstats' ? styles.activeTab : styles.tab}
         >
-          📊 Login Statistics
+          📊 {t('dashboard.buttons.loginStatistics')}
         </button>
       </div>
 

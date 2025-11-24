@@ -23,7 +23,36 @@
     "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
-    "submit": "Submit"
+    "submit": "Submit",
+    "welcome": "Welcome"
+  },
+  "dashboard": {
+    "tabs": {
+      "overview": "Overview",
+      "voucherManagement": "Voucher Management",
+      "voucherOrders": "Voucher Orders",
+      "reports": "Reports",
+      "issueVouchers": "Issue Vouchers",
+      "toGo": "To Go",
+      "localShops": "Local Shops",
+      "allToGo": "All To Go",
+      "settings": "Settings",
+      "myShops": "My Shops",
+      "surplusFood": "Surplus Food",
+      "myVouchers": "My Vouchers",
+      "redeemVoucher": "Redeem Voucher",
+      "schoolsOrgs": "Schools/Care Orgs"
+    },
+    "buttons": {
+      "changePassword": "Change Password",
+      "manageAdmins": "Manage Admins",
+      "loginStatistics": "Login Statistics"
+    },
+    "headings": {
+      "settings": "Settings",
+      "localShopsWithToGo": "Local Shops with To Gos",
+      "allToGoItems": "All To Go Items"
+    }
   },
   "landing": {
     "hero": {

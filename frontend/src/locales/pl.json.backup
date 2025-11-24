@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "System Bonów Elektronicznych BAK UP",
+    "title": "System E-Voucherów BAK UP",
     "tagline": "Łączenie nadwyżek żywności z tymi, którzy najbardziej jej potrzebują"
   },
   "common": {
@@ -25,52 +25,134 @@
     "next": "Dalej",
     "submit": "Wyślij"
   },
+  "landing": {
+    "hero": {
+      "title": "System E-Voucherów BAK UP",
+      "subtitle": "Łączenie sprzedawców żywności, organizacji VCSE i rodzin w trudnej sytuacji poprzez zunifikowane rozwiązanie cyfrowe",
+      "getStarted": "Rozpocznij",
+      "signIn": "Zaloguj się"
+    },
+    "features": {
+      "communities": {
+        "title": "Wspieranie Społeczności",
+        "description": "Cyfrowe vouchery żywnościowe promujące godność i wybór dla rodzin w trudnej sytuacji"
+      },
+      "vcse": {
+        "title": "Partnerstwo VCSE",
+        "description": "Organizacje charytatywne mogą efektywnie finansować i zarządzać dystrybucją voucherów"
+      },
+      "vendors": {
+        "title": "Sieć Sprzedawców",
+        "description": "Lokalne sklepy dołączają do sieci, aby akceptować vouchery i wspierać swoją społeczność"
+      },
+      "surplus": {
+        "title": "Dzielenie się Nadwyżkami Żywności",
+        "description": "Sprzedawcy mogą publikować nadwyżki żywności dla rodzin w obniżonych cenach oraz darmowe nadwyżki żywności dla partnerów VCSE, aby wspierać rodziny, którym służą, redukując marnotrawstwo żywności"
+      }
+    },
+    "whoWeServe": {
+      "title": "Komu Służymy",
+      "recipients": {
+        "title": "Dla Odbiorców",
+        "item1": "Otrzymuj cyfrowe vouchery żywnościowe z godnością",
+        "item2": "Wybieraj to, czego potrzebujesz od lokalnych sprzedawców",
+        "item3": "Żywność na wynos w obniżonej cenie - Kupuj przecenioną żywność od uczestniczących sprzedawców",
+        "item4": "Łatwo śledź saldo swojego vouchera"
+      },
+      "vendors": {
+        "title": "Dla Sprzedawców",
+        "item1": "Akceptuj cyfrowe vouchery bez problemu",
+        "item2": "Publikuj przecenione artykuły spożywcze dla odbiorców",
+        "item3": "Publikuj darmowe nadwyżki żywności do odbioru przez VCSE",
+        "item4": "Wspieraj swoją lokalną społeczność",
+        "item5": "Zarządzaj wieloma lokalizacjami sklepów"
+      },
+      "vcse": {
+        "title": "Dla Organizacji VCSE",
+        "item1": "Wydawaj i zarządzaj voucherami efektywnie",
+        "item2": "Finansuj rodziny cyfrowo",
+        "item3": "Zbieraj darmowe nadwyżki żywności do dystrybucji dla rodzin, którym służysz",
+        "item4": "Śledź wykorzystanie i wpływ",
+        "item5": "Generuj szczegółowe raporty"
+      },
+      "schools": {
+        "title": "Dla Szkół i Organizacji Opiekuńczych",
+        "item1": "Otrzymuj e-vouchery od BAK UP, aby wspierać rodziny",
+        "item2": "Dystrybuuj vouchery rodzinom z niedoreprezentowanych społeczności",
+        "item3": "Śledź dystrybucję voucherów i wpływ",
+        "item4": "Wspieraj uczniów i rodziny poprzez zaufane instytucje",
+        "item5": "Generuj raporty dla odpowiedzialności"
+      },
+      "admins": {
+        "title": "Dla Administratorów",
+        "item1": "Nadzoruj całą platformę",
+        "item2": "Zarządzaj użytkownikami i rolami",
+        "item3": "Monitoruj programy rabatowe i nadwyżek żywności",
+        "item4": "Generuj kompleksowe raporty",
+        "item5": "Zapewnij integralność systemu"
+      }
+    },
+    "cta": {
+      "title": "Gotowy, aby Zrobić Różnicę?",
+      "subtitle": "Dołącz do naszej platformy napędzanej przez społeczność już dziś",
+      "button": "Utwórz Konto"
+    },
+    "footer": {
+      "adminAccess": "Dostęp Administratora"
+    }
+  },
   "auth": {
-    "selectRole": "Wybierz swoją rolę",
-    "vendor": "Sprzedawca żywności / Sklep",
+    "selectRole": "Wybierz Swoją Rolę",
+    "vendor": "Sprzedawca Żywności / Sklep",
     "vcse": "Organizacja VCSE",
-    "recipient": "Odbiorca bonów",
-    "vendorDesc": "Przekaż nadwyżki żywności i akceptuj bony",
-    "vcseDesc": "Zarządzaj bonami dla rodzin w trudnej sytuacji",
-    "recipientDesc": "Przeglądaj i realizuj bony żywnościowe",
+    "recipient": "Odbiorca Vouchera",
+    "vendorDesc": "Przekaż nadwyżki żywności i akceptuj vouchery",
+    "vcseDesc": "Zarządzaj voucherami dla rodzin w trudnej sytuacji",
+    "recipientDesc": "Przeglądaj i realizuj vouchery żywnościowe",
     "loginTitle": "Logowanie",
     "noAccount": "Nie masz konta?",
     "registerHere": "Zarejestruj się tutaj",
-    "forgotPassword": "Zapomniałeś hasła?"
+    "forgotPassword": "Zapomniałeś hasła?",
+    "name": "Imię",
+    "organizationName": "Nazwa Organizacji",
+    "phoneNumber": "Numer Telefonu",
+    "register": "Zarejestruj",
+    "alreadyHaveAccount": "Masz już konto?",
+    "loginHere": "Zaloguj się tutaj"
   },
   "dashboard": {
     "welcome": "Witaj",
     "overview": "Przegląd",
-    "myVouchers": "Moje bony",
-    "browseToGo": "Przeglądaj na wynos",
+    "myVouchers": "Moje Vouchery",
+    "browseToGo": "Przeglądaj Na Wynos",
     "shoppingCart": "Koszyk",
     "profile": "Profil",
     "settings": "Ustawienia",
-    "activeBalance": "Aktywne saldo",
-    "activeVouchers": "Aktywne bony",
+    "activeBalance": "Aktywne Saldo",
+    "activeVouchers": "Aktywne Vouchery",
     "redeemed": "Zrealizowane",
     "emptyCart": "Twój koszyk jest pusty",
-    "noToGoItems": "Brak dostępnych produktów na wynos w tej chwili",
-    "redeemVouchers": "Zrealizuj bony",
-    "toGo": "Na wynos",
-    "issueVouchers": "Wydaj bony"
+    "noToGoItems": "Brak dostępnych artykułów na wynos w tej chwili",
+    "redeemVouchers": "Realizuj Vouchery",
+    "toGo": "Na Wynos",
+    "issueVouchers": "Wydaj Vouchery"
   },
   "voucher": {
-    "title": "Bony",
+    "title": "Vouchery",
     "balance": "Saldo",
     "status": "Status",
     "active": "Aktywny",
     "used": "Użyty",
     "expired": "Wygasły",
-    "validUntil": "Ważny do",
+    "validUntil": "Ważny Do",
     "qrCode": "Kod QR",
-    "showQR": "Pokaż kod QR",
-    "hideQR": "Ukryj kod QR"
+    "showQR": "Pokaż Kod QR",
+    "hideQR": "Ukryj Kod QR"
   },
   "toGo": {
-    "title": "Przeglądaj dostępne artykuły na wynos",
-    "noItems": "Brak dostępnych artykułów na wynos w tym momencie",
-    "addToCart": "Dodaj do koszyka",
+    "title": "Przeglądaj Dostępne Na Wynos",
+    "noItems": "Brak dostępnych artykułów na wynos w tej chwili",
+    "addToCart": "Dodaj do Koszyka",
     "quantity": "Ilość",
     "available": "dostępne",
     "category": "Kategoria",
@@ -82,14 +164,14 @@
   "cart": {
     "title": "Koszyk",
     "empty": "Twój koszyk jest pusty",
-    "browseItems": "Przeglądaj artykuły na wynos",
-    "continueShopping": "Kontynuuj zakupy",
-    "viewVouchers": "Zobacz moje bony",
-    "nextSteps": "Następne kroki",
-    "step1": "Przejrzyj artykuły w koszyku powyżej",
-    "step2": "Odwiedź lokalizacje sklepów, aby odebrać swoje artykuły",
-    "step3": "Pokaż kod QR bonu w sklepie, aby sfinalizować zakup",
-    "step4": "Saldo Twojego bonu zostanie odliczone w sklepie"
+    "browseItems": "Przeglądaj Artykuły Na Wynos",
+    "continueShopping": "Kontynuuj Zakupy",
+    "viewVouchers": "Zobacz Moje Vouchery",
+    "nextSteps": "Następne Kroki",
+    "step1": "Sprawdź artykuły w koszyku powyżej",
+    "step2": "Odwiedź lokalizacje sklepów, aby odebrać artykuły",
+    "step3": "Pokaż kod QR vouchera w sklepie, aby sfinalizować zakup",
+    "step4": "Saldo twojego vouchera zostanie pomniejszone w sklepie"
   },
   "categories": {
     "bakery": "Piekarnia",
@@ -98,15 +180,14 @@
     "dairy": "Nabiał",
     "meat": "Mięso",
     "cannedGoods": "Konserwy",
-    "freshProduce": "Świeże produkty",
+    "freshProduce": "Świeże Produkty",
     "other": "Inne"
   },
   "language": {
-    "select": "Wybierz język",
+    "select": "Wybierz Język",
     "en": "Angielski",
     "ar": "Arabski",
-    "fr": "Francuski",
-    "es": "Hiszpański",
+    "ro": "Rumuński",
     "pl": "Polski"
   }
 }

@@ -23,7 +23,36 @@
     "confirm": "Potwierdź",
     "back": "Wstecz",
     "next": "Dalej",
-    "submit": "Wyślij"
+    "submit": "Wyślij",
+    "welcome": "Witaj"
+  },
+  "dashboard": {
+    "tabs": {
+      "overview": "Przegląd",
+      "voucherManagement": "Zarządzanie Voucherami",
+      "voucherOrders": "Zamówienia Voucherów",
+      "reports": "Raporty",
+      "issueVouchers": "Wydaj Vouchery",
+      "toGo": "Na Wynos",
+      "localShops": "Lokalne Sklepy",
+      "allToGo": "Wszystko Na Wynos",
+      "settings": "Ustawienia",
+      "myShops": "Moje Sklepy",
+      "surplusFood": "Nadwyżki Żywności",
+      "myVouchers": "Moje Vouchery",
+      "redeemVoucher": "Zrealizuj Voucher",
+      "schoolsOrgs": "Szkoły/Organizacje Opieki"
+    },
+    "buttons": {
+      "changePassword": "Zmień Hasło",
+      "manageAdmins": "Zarządzaj Administratorami",
+      "loginStatistics": "Statystyki Logowania"
+    },
+    "headings": {
+      "settings": "Ustawienia",
+      "localShopsWithToGo": "Lokalne Sklepy z Ofertami Na Wynos",
+      "allToGoItems": "Wszystkie Produkty Na Wynos"
+    }
   },
   "landing": {
     "hero": {

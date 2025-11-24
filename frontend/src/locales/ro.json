@@ -23,7 +23,36 @@
     "confirm": "Confirmare",
     "back": "Înapoi",
     "next": "Următorul",
-    "submit": "Trimite"
+    "submit": "Trimite",
+    "welcome": "Bun venit"
+  },
+  "dashboard": {
+    "tabs": {
+      "overview": "Prezentare generală",
+      "voucherManagement": "Gestionarea Voucherelor",
+      "voucherOrders": "Comenzi Vouchere",
+      "reports": "Rapoarte",
+      "issueVouchers": "Emite Vouchere",
+      "toGo": "De Luat",
+      "localShops": "Magazine Locale",
+      "allToGo": "Toate De Luat",
+      "settings": "Setări",
+      "myShops": "Magazinele Mele",
+      "surplusFood": "Alimente Excedentare",
+      "myVouchers": "Voucherele Mele",
+      "redeemVoucher": "Valorifică Voucher",
+      "schoolsOrgs": "Școli/Organizații de Îngrijire"
+    },
+    "buttons": {
+      "changePassword": "Schimbă Parola",
+      "manageAdmins": "Gestionează Administratorii",
+      "loginStatistics": "Statistici de Autentificare"
+    },
+    "headings": {
+      "settings": "Setări",
+      "localShopsWithToGo": "Magazine Locale cu Oferte De Luat",
+      "allToGoItems": "Toate Produsele De Luat"
+    }
   },
   "landing": {
     "hero": {

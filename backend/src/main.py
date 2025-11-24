@@ -3294,6 +3294,12 @@ def admin_get_all_surplus_items():
         return jsonify({'error': f'Failed to get surplus items: {str(e)}'}), 500
 
 
+@app.route('/api/admin/to-go-items', methods=['GET'])
+def admin_get_to_go_items():
+    """Alias for admin_get_all_surplus_items - Get all to-go items across all vendors"""
+    return admin_get_all_surplus_items()
+
+
 @app.route('/api/recipient/shops', methods=['GET'])
 def get_shops_for_recipient():
     """Recipient endpoint to view all participating shops"""
