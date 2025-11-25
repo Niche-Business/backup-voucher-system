@@ -6,6 +6,7 @@ import LanguageSelector from './components/LanguageSelector'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
+import Pagination from './components/Pagination'
 import { QRCodeSVG } from 'qrcode.react'
 
 // API Helper Function
@@ -707,6 +708,10 @@ function AdminDashboard({ user, onLogout }) {
   const [voucherSearchQuery, setVoucherSearchQuery] = useState('')
   const [voucherStatusFilter, setVoucherStatusFilter] = useState('all')
   const [voucherSortBy, setVoucherSortBy] = useState('recent')
+  const [recipientPage, setRecipientPage] = useState(1)
+  const [voucherPage, setVoucherPage] = useState(1)
+  const [shopPage, setShopPage] = useState(1)
+  const itemsPerPage = 12
 
   useEffect(() => {
     loadVcseOrgs()
@@ -1242,12 +1247,9 @@ function AdminDashboard({ user, onLogout }) {
             </div>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {recipients.length === 0 ? (
-                <p>No recipients found</p>
-              ) : (
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
-                  {recipients
-                    .filter(recipient => {
+              {(() => {
+                const filteredRecipients = recipients
+                  .filter(recipient => {
                       if (!recipientSearchQuery) return true
                       const query = recipientSearchQuery.toLowerCase()
                       return (
@@ -1270,7 +1272,20 @@ function AdminDashboard({ user, onLogout }) {
                       }
                       return 0
                     })
-                    .map(recipient => (
+                
+                const totalRecipients = filteredRecipients.length
+                const startIndex = (recipientPage - 1) * itemsPerPage
+                const endIndex = startIndex + itemsPerPage
+                const paginatedRecipients = filteredRecipients.slice(startIndex, endIndex)
+                
+                return (
+                  <>
+                    {totalRecipients === 0 ? (
+                      <p>No recipients found</p>
+                    ) : (
+                      <>
+                        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                          {paginatedRecipients.map(recipient => (
                     <div key={recipient.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       {editingRecipient === recipient.id ? (
                         <div>
@@ -1441,9 +1456,20 @@ function AdminDashboard({ user, onLogout }) {
                         </div>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
+                          ))}
+                        </div>
+                        
+                        <Pagination
+                          currentPage={recipientPage}
+                          totalItems={totalRecipients}
+                          itemsPerPage={itemsPerPage}
+                          onPageChange={setRecipientPage}
+                        />
+                      </>
+                    )}
+                  </>
+                )
+              })()}
             </div>
           </div>
         )}
