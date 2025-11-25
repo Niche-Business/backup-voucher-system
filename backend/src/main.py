@@ -2987,6 +2987,9 @@ def post_surplus_item():
             category=data['category'],
             description=data.get('description', ''),
             expiry_date=expiry_date,
+            item_type=data.get('item_type', 'free'),  # 'free' or 'discount'
+            price=data.get('price') if data.get('item_type') == 'discount' else None,
+            original_price=data.get('original_price') if data.get('item_type') == 'discount' else None,
             status='available',
             posted_at=datetime.now()
         )
@@ -2994,41 +2997,42 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
-        # Notify all VCSE organizations about new surplus food
-        vcse_users = User.query.filter_by(user_type='vcse', is_active=True).all()
-        for vcse in vcse_users:
-            # Create in-app notification
-            create_notification(
-                vcse.id,
-                'New Surplus Food Available',
-                f'{data["item_name"]} ({data["quantity"]}) available at {shop.shop_name}',
-                'info'
-            )
-            
-            # Send SMS notification if phone number is available
-            if vcse.phone:
-                sms_result = sms_service.send_surplus_alert(
-                    vcse.phone,
-                    vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
-                    shop.shop_name,
-                    data['item_name'],
-                    data['quantity']
+        # Notify all VCSE organizations about new FREE surplus food (not discounted items)
+        if data.get('item_type', 'free') == 'free':
+            vcse_users = User.query.filter_by(user_type='vcse', is_active=True).all()
+            for vcse in vcse_users:
+                # Create in-app notification
+                create_notification(
+                    vcse.id,
+                    'New Surplus Food Available',
+                    f'{data["item_name"]} ({data["quantity"]}) available at {shop.shop_name}',
+                    'info'
                 )
-                if not sms_result.get('success'):
-                    print(f"Failed to send SMS to {vcse.email}: {sms_result.get('error')}")
-            
-            # Send email notification
-            if vcse.email:
-                email_result = email_service.send_surplus_food_alert_email(
-                    vcse.email,
-                    vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
-                    data['item_name'],
-                    data['quantity'],
-                    shop.shop_name,
-                    data['shop_address']
-                )
-                if not email_result:
-                    print(f"Failed to send email to {vcse.email}")
+                
+                # Send SMS notification if phone number is available
+                if vcse.phone:
+                    sms_result = sms_service.send_surplus_alert(
+                        vcse.phone,
+                        vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
+                        shop.shop_name,
+                        data['item_name'],
+                        data['quantity']
+                    )
+                    if not sms_result.get('success'):
+                        print(f"Failed to send SMS to {vcse.email}: {sms_result.get('error')}")
+                
+                # Send email notification
+                if vcse.email:
+                    email_result = email_service.send_surplus_food_alert_email(
+                        vcse.email,
+                        vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
+                        data['item_name'],
+                        data['quantity'],
+                        shop.shop_name,
+                        data['shop_address']
+                    )
+                    if not email_result:
+                        print(f"Failed to send email to {vcse.email}")
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         
@@ -3549,6 +3553,54 @@ def admin_get_all_surplus_items():
 def admin_get_to_go_items():
     """Alias for admin_get_all_surplus_items - Get all to-go items across all vendors"""
     return admin_get_all_surplus_items()
+
+
+@app.route('/api/vcse/to-go-items', methods=['GET'])
+def vcse_get_to_go_items():
+    """VCSE endpoint to view free surplus items available for collection"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCSE access required'}), 403
+        
+        # Get only FREE surplus items that are available
+        items = SurplusItem.query.filter_by(
+            item_type='free',
+            status='available'
+        ).order_by(SurplusItem.posted_at.desc()).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            vendor = User.query.get(shop.vendor_id) if shop else None
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'description': item.description,
+                'status': item.status,
+                'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'shop_phone': shop.phone if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'created_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get to-go items: {str(e)}'}), 500
 
 
 @app.route('/api/recipient/shops', methods=['GET'])

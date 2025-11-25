@@ -2982,7 +2982,7 @@ function VCSEDashboard({ user, onLogout }) {
 
   const loadToGoItems = async () => {
     try {
-      const data = await apiCall('/admin/to-go-items')
+      const data = await apiCall('/vcse/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
       console.error('Failed to load to go items:', error)
@@ -3768,7 +3768,10 @@ function VendorDashboard({ user, onLogout }) {
     quantity: '',
     category: 'Fresh Produce',
     description: '',
-    expiry_date: ''
+    expiry_date: '',
+    item_type: 'free',  // 'free' or 'discount'
+    price: '',
+    original_price: ''
   })
   const [message, setMessage] = useState('')
   const [voucherCode, setVoucherCode] = useState('')
@@ -3878,11 +3881,14 @@ function VendorDashboard({ user, onLogout }) {
           quantity: toGoForm.quantity,
           category: toGoForm.category,
           description: toGoForm.description,
-          expiry_date: toGoForm.expiry_date
+          expiry_date: toGoForm.expiry_date,
+          item_type: toGoForm.item_type,
+          price: toGoForm.item_type === 'discount' ? toGoForm.price : null,
+          original_price: toGoForm.item_type === 'discount' ? toGoForm.original_price : null
         })
       })
       setMessage('To Go item posted successfully!')
-      setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '' })
+      setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '', item_type: 'free', price: '', original_price: '' })
       loadToGoItems()
       setTimeout(() => setMessage(''), 3000)
     } catch (error) {
@@ -4314,6 +4320,67 @@ function VendorDashboard({ user, onLogout }) {
                   <option>Non-Food Items</option>
                 </select>
               </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold'}}>Item Type</label>
+                <div style={{display: 'flex', gap: '20px'}}>
+                  <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
+                    <input
+                      type="radio"
+                      value="free"
+                      checked={toGoForm.item_type === 'free'}
+                      onChange={(e) => setToGoForm({...toGoForm, item_type: e.target.value, price: '', original_price: ''})}
+                      style={{marginRight: '8px'}}
+                    />
+                    <span>🆓 Free for VCSE Collection</span>
+                  </label>
+                  <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
+                    <input
+                      type="radio"
+                      value="discount"
+                      checked={toGoForm.item_type === 'discount'}
+                      onChange={(e) => setToGoForm({...toGoForm, item_type: e.target.value})}
+                      style={{marginRight: '8px'}}
+                    />
+                    <span>💰 Discounted for Recipients</span>
+                  </label>
+                </div>
+                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                  Free items can be collected by VCSE organizations. Discounted items can be purchased by recipients.
+                </small>
+              </div>
+              
+              {toGoForm.item_type === 'discount' && (
+                <>
+                  <div style={{marginBottom: '15px'}}>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Discounted Price (£)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={toGoForm.price}
+                      onChange={(e) => setToGoForm({...toGoForm, price: e.target.value})}
+                      placeholder="e.g., 2.50"
+                      style={styles.input}
+                      required
+                    />
+                  </div>
+                  
+                  <div style={{marginBottom: '15px'}}>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Original Price (£) <span style={{color: '#999', fontWeight: 'normal'}}>(Optional)</span></label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={toGoForm.original_price}
+                      onChange={(e) => setToGoForm({...toGoForm, original_price: e.target.value})}
+                      placeholder="e.g., 5.00"
+                      style={styles.input}
+                    />
+                    <small style={{color: '#666', fontSize: '12px'}}>Show the original price to display discount percentage</small>
+                  </div>
+                </>
+              )}
               
               <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Expiry/Best Before Date</label>
