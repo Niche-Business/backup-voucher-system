@@ -1532,14 +1532,10 @@ function AdminDashboard({ user, onLogout }) {
                 </div>
               </div>
             </div>
-            
-            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {vouchers.length === 0 ? (
-                <p>{t('admin.noVouchers')}</p>
-              ) : (
-                vouchers
-                  .filter(voucher => {
-                    // Status filter
+                      <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {(() => {
+                const filteredVouchers = vouchers
+                  .filter(voucher => {     // Status filter
                     if (voucherStatusFilter !== 'all' && voucher.status !== voucherStatusFilter) return false
                     // Search filter
                     if (voucherSearchQuery) {
@@ -1566,7 +1562,20 @@ function AdminDashboard({ user, onLogout }) {
                     }
                     return 0
                   })
-                  .map(voucher => (
+                
+                const totalVouchers = filteredVouchers.length
+                const startIndex = (voucherPage - 1) * itemsPerPage
+                const endIndex = startIndex + itemsPerPage
+                const paginatedVouchers = filteredVouchers.slice(startIndex, endIndex)
+                
+                return (
+                  <>
+                    {totalVouchers === 0 ? (
+                      <p>No vouchers found</p>
+                    ) : (
+                      <>
+                        <div>
+                          {paginatedVouchers.map(voucher => (
                   <div key={voucher.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
                     <strong>Code: {voucher.code}</strong> - £{voucher.value.toFixed(2)}<br />
                     Status: <span style={{color: voucher.status === 'active' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{voucher.status.toUpperCase()}</span><br />
@@ -1582,8 +1591,20 @@ function AdminDashboard({ user, onLogout }) {
                     Issued by: {voucher.issued_by?.name || 'N/A'} ({voucher.issued_by?.organization || 'N/A'})<br />
                     Expires: {new Date(voucher.expiry_date).toLocaleDateString()}
                   </div>
-                ))
-              )}
+                          ))}
+                        </div>
+                        
+                        <Pagination
+                          currentPage={voucherPage}
+                          totalItems={totalVouchers}
+                          itemsPerPage={itemsPerPage}
+                          onPageChange={setVoucherPage}
+                        />
+                      </>
+                    )}
+                  </>
+                )
+              })()}
             </div>
           </div>
         )}
@@ -1592,11 +1613,20 @@ function AdminDashboard({ user, onLogout }) {
           <div>
             <h2>🏪 {t('admin.localShops')} ({vendorShops.length})</h2>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {vendorShops.length === 0 ? (
-                <p>{t('admin.noShops')}</p>
-              ) : (
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
-                  {vendorShops.map(shop => (
+              {(() => {
+                const totalShops = vendorShops.length
+                const startIndex = (shopPage - 1) * itemsPerPage
+                const endIndex = startIndex + itemsPerPage
+                const paginatedShops = vendorShops.slice(startIndex, endIndex)
+                
+                return (
+                  <>
+                    {totalShops === 0 ? (
+                      <p>{t('admin.noShops')}</p>
+                    ) : (
+                      <>
+                        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
+                          {paginatedShops.map(shop => (
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       {editingShop === shop.id ? (
                         <div>
@@ -1704,9 +1734,20 @@ function AdminDashboard({ user, onLogout }) {
                         </div>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
+                          ))}
+                        </div>
+                        
+                        <Pagination
+                          currentPage={shopPage}
+                          totalItems={totalShops}
+                          itemsPerPage={itemsPerPage}
+                          onPageChange={setShopPage}
+                        />
+                      </>
+                    )}
+                  </>
+                )
+              })()}
             </div>
           </div>
         )}
