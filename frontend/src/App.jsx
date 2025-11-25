@@ -702,6 +702,11 @@ function AdminDashboard({ user, onLogout }) {
   const [editingShop, setEditingShop] = useState(null)
   const [editingRecipient, setEditingRecipient] = useState(null)
   const [editFormData, setEditFormData] = useState({})
+  const [recipientSearchQuery, setRecipientSearchQuery] = useState('')
+  const [recipientSortBy, setRecipientSortBy] = useState('name')
+  const [voucherSearchQuery, setVoucherSearchQuery] = useState('')
+  const [voucherStatusFilter, setVoucherStatusFilter] = useState('all')
+  const [voucherSortBy, setVoucherSortBy] = useState('recent')
 
   useEffect(() => {
     loadVcseOrgs()
@@ -1194,12 +1199,78 @@ function AdminDashboard({ user, onLogout }) {
         {activeTab === 'recipients' && (
           <div>
             <h2>👥 Recipients ({recipients.length})</h2>
+            
+            {/* Search and Filter Bar */}
+            <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Recipients</label>
+                  <input
+                    type="text"
+                    placeholder="Search by name, email, or phone..."
+                    value={recipientSearchQuery || ''}
+                    onChange={(e) => setRecipientSearchQuery(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📊 Sort By</label>
+                  <select
+                    value={recipientSortBy || 'name'}
+                    onChange={(e) => setRecipientSortBy(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  >
+                    <option value="name">Name (A-Z)</option>
+                    <option value="email">Email (A-Z)</option>
+                    <option value="vouchers">Most Vouchers</option>
+                    <option value="value">Highest Value</option>
+                    <option value="recent">Most Recent</option>
+                  </select>
+                </div>
+                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                  <button
+                    onClick={() => {
+                      setRecipientSearchQuery('')
+                      setRecipientSortBy('name')
+                    }}
+                    style={{...styles.secondaryButton, width: '100%'}}
+                  >
+                    ✖️ Clear Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+            
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {recipients.length === 0 ? (
                 <p>No recipients found</p>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
-                  {recipients.map(recipient => (
+                  {recipients
+                    .filter(recipient => {
+                      if (!recipientSearchQuery) return true
+                      const query = recipientSearchQuery.toLowerCase()
+                      return (
+                        (recipient.first_name + ' ' + recipient.last_name).toLowerCase().includes(query) ||
+                        recipient.email.toLowerCase().includes(query) ||
+                        (recipient.phone && recipient.phone.toLowerCase().includes(query))
+                      )
+                    })
+                    .sort((a, b) => {
+                      if (recipientSortBy === 'name') {
+                        return (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name)
+                      } else if (recipientSortBy === 'email') {
+                        return a.email.localeCompare(b.email)
+                      } else if (recipientSortBy === 'vouchers') {
+                        return (b.total_vouchers || 0) - (a.total_vouchers || 0)
+                      } else if (recipientSortBy === 'value') {
+                        return (b.active_value || 0) - (a.active_value || 0)
+                      } else if (recipientSortBy === 'recent') {
+                        return new Date(b.created_at || 0) - new Date(a.created_at || 0)
+                      }
+                      return 0
+                    })
+                    .map(recipient => (
                     <div key={recipient.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       {editingRecipient === recipient.id ? (
                         <div>
@@ -1380,11 +1451,96 @@ function AdminDashboard({ user, onLogout }) {
         {activeTab === 'vouchers' && (
           <div>
             <h2>{t('admin.allVouchers')} ({vouchers.length})</h2>
+            
+            {/* Search and Filter Bar */}
+            <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Vouchers</label>
+                  <input
+                    type="text"
+                    placeholder="Search by code, recipient..."
+                    value={voucherSearchQuery || ''}
+                    onChange={(e) => setVoucherSearchQuery(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📋 Status Filter</label>
+                  <select
+                    value={voucherStatusFilter || 'all'}
+                    onChange={(e) => setVoucherStatusFilter(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  >
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="redeemed">Redeemed</option>
+                    <option value="expired">Expired</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📊 Sort By</label>
+                  <select
+                    value={voucherSortBy || 'recent'}
+                    onChange={(e) => setVoucherSortBy(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  >
+                    <option value="recent">Most Recent</option>
+                    <option value="value_high">Highest Value</option>
+                    <option value="value_low">Lowest Value</option>
+                    <option value="expiry">Expiring Soon</option>
+                    <option value="code">Code (A-Z)</option>
+                  </select>
+                </div>
+                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                  <button
+                    onClick={() => {
+                      setVoucherSearchQuery('')
+                      setVoucherStatusFilter('all')
+                      setVoucherSortBy('recent')
+                    }}
+                    style={{...styles.secondaryButton, width: '100%'}}
+                  >
+                    ✖️ Clear Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+            
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {vouchers.length === 0 ? (
                 <p>{t('admin.noVouchers')}</p>
               ) : (
-                vouchers.map(voucher => (
+                vouchers
+                  .filter(voucher => {
+                    // Status filter
+                    if (voucherStatusFilter !== 'all' && voucher.status !== voucherStatusFilter) return false
+                    // Search filter
+                    if (voucherSearchQuery) {
+                      const query = voucherSearchQuery.toLowerCase()
+                      return (
+                        voucher.code.toLowerCase().includes(query) ||
+                        (voucher.recipient?.name || '').toLowerCase().includes(query) ||
+                        (voucher.recipient?.email || '').toLowerCase().includes(query)
+                      )
+                    }
+                    return true
+                  })
+                  .sort((a, b) => {
+                    if (voucherSortBy === 'recent') {
+                      return new Date(b.created_at || 0) - new Date(a.created_at || 0)
+                    } else if (voucherSortBy === 'value_high') {
+                      return b.value - a.value
+                    } else if (voucherSortBy === 'value_low') {
+                      return a.value - b.value
+                    } else if (voucherSortBy === 'expiry') {
+                      return new Date(a.expiry_date) - new Date(b.expiry_date)
+                    } else if (voucherSortBy === 'code') {
+                      return a.code.localeCompare(b.code)
+                    }
+                    return 0
+                  })
+                  .map(voucher => (
                   <div key={voucher.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
                     <strong>Code: {voucher.code}</strong> - £{voucher.value.toFixed(2)}<br />
                     Status: <span style={{color: voucher.status === 'active' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{voucher.status.toUpperCase()}</span><br />
