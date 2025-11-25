@@ -22,18 +22,25 @@ const PWAInstallPrompt = () => {
       return
     }
 
+    // Testing mode: Check URL parameter for instant prompt
+    const urlParams = new URLSearchParams(window.location.search)
+    const testMode = urlParams.get('pwa-test') === 'true'
+    
+    // Delay: 5 seconds for testing mode, 30 seconds for production
+    const promptDelay = testMode ? 5000 : 30000
+
     // Listen for beforeinstallprompt event (Android/Chrome)
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
       
-      // Show prompt after 30 seconds on first visit
+      // Show prompt after delay on first visit
       // Or immediately if user has visited before
       const hasSeenPrompt = localStorage.getItem('pwa-prompt-seen')
       if (!hasSeenPrompt) {
         setTimeout(() => {
           setShowPrompt(true)
-        }, 30000) // 30 seconds
+        }, promptDelay)
       } else {
         // Show immediately on subsequent visits
         setShowPrompt(true)
@@ -48,7 +55,10 @@ const PWAInstallPrompt = () => {
       if (!hasSeenIOSPrompt) {
         setTimeout(() => {
           setShowPrompt(true)
-        }, 30000) // 30 seconds
+        }, promptDelay)
+      } else {
+        // Show immediately on subsequent visits
+        setShowPrompt(true)
       }
     }
 
