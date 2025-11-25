@@ -7,9 +7,16 @@ services:
     plan: free
     branch: master
     buildCommand: |
+      echo "=== Installing Python dependencies ==="
       pip install -r backend/requirements.txt
+      echo "=== Installing pnpm ==="
       npm install -g pnpm
+      echo "=== Building frontend ==="
       cd frontend && pnpm install && pnpm run build
+      echo "=== Verifying build ==="
+      ls -lah dist/
+      ls -lah dist/assets/
+      echo "=== Build complete ==="
     startCommand: python3 unified_server.py
     envVars:
       - key: PYTHON_VERSION
