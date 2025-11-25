@@ -4475,201 +4475,6 @@ function VendorDashboard({ user, onLogout }) {
             </div>
           </div>
         )}
-        {activeTab === 'payout' && (
-          <div>
-            <h2>💰 {t('payout.requestPayout')}</h2>
-            
-            <div style={{marginBottom: '20px'}}>
-              <button 
-                onClick={() => setShowPayoutForm(!showPayoutForm)}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '16px'
-                }}
-              >
-                {showPayoutForm ? t('common.cancel') : t('payout.requestPayment')}
-              </button>
-            </div>
-
-            {showPayoutForm && (
-              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
-                <h3 style={{marginTop: 0}}>{t('payout.requestPayment')}</h3>
-                <form onSubmit={handlePayoutRequest}>
-                  <div style={{display: 'grid', gap: '15px'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
-                      <select
-                        value={payoutForm.shop_id}
-                        onChange={(e) => setPayoutForm({...payoutForm, shop_id: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        required
-                      >
-                        <option value="">Select Shop</option>
-                        {shops.map(shop => (
-                          <option key={shop.id} value={shop.id}>{shop.shop_name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.amount')}</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={payoutForm.amount}
-                        onChange={(e) => setPayoutForm({...payoutForm, amount: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        placeholder="0.00"
-                        required
-                      />
-                    </div>
-                    
-                    <h4 style={{marginTop: '10px', marginBottom: '5px'}}>{t('payout.bankDetails')}</h4>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.bankName')}</label>
-                      <input
-                        type="text"
-                        value={payoutForm.bank_name}
-                        onChange={(e) => setPayoutForm({...payoutForm, bank_name: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountNumber')}</label>
-                      <input
-                        type="text"
-                        value={payoutForm.account_number}
-                        onChange={(e) => setPayoutForm({...payoutForm, account_number: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.sortCode')}</label>
-                      <input
-                        type="text"
-                        value={payoutForm.sort_code}
-                        onChange={(e) => setPayoutForm({...payoutForm, sort_code: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        placeholder="12-34-56"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountHolderName')}</label>
-                      <input
-                        type="text"
-                        value={payoutForm.account_holder_name}
-                        onChange={(e) => setPayoutForm({...payoutForm, account_holder_name: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.notes')}</label>
-                      <textarea
-                        value={payoutForm.notes}
-                        onChange={(e) => setPayoutForm({...payoutForm, notes: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', minHeight: '80px'}}
-                      />
-                    </div>
-                    
-                    <button
-                      type="submit"
-                      style={{
-                        padding: '12px 24px',
-                        backgroundColor: '#4CAF50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '16px',
-                        marginTop: '10px'
-                      }}
-                    >
-                      {t('payout.submitRequest')}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              <h3>{t('payout.payoutHistory')}</h3>
-              
-              {payoutRequests.length === 0 ? (
-                <p style={{textAlign: 'center', color: '#666', padding: '40px'}}>{t('payout.noPayoutRequests')}</p>
-              ) : (
-                <div style={{display: 'grid', gap: '15px'}}>
-                  {payoutRequests.map(payout => (
-                    <div key={payout.id} style={{
-                      padding: '20px',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
-                    }}>
-                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
-                        <div>
-                          <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
-                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
-                        </div>
-                        <div style={{
-                          padding: '5px 15px',
-                          borderRadius: '20px',
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          backgroundColor: 
-                            payout.status === 'paid' ? '#e8f5e9' :
-                            payout.status === 'approved' ? '#fff3e0' :
-                            payout.status === 'rejected' ? '#ffebee' : '#e3f2fd',
-                          color: 
-                            payout.status === 'paid' ? '#2e7d32' :
-                            payout.status === 'approved' ? '#e65100' :
-                            payout.status === 'rejected' ? '#c62828' : '#1565c0'
-                        }}>
-                          {payout.status.toUpperCase()}
-                        </div>
-                      </div>
-                      
-                      <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
-                          <strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}
-                        </p>
-                        {payout.reviewed_at && (
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>{t('payout.reviewedAt')}:</strong> {new Date(payout.reviewed_at).toLocaleString()}
-                          </p>
-                        )}
-                        {payout.paid_at && (
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
-                            <strong>{t('payout.paidAt')}:</strong> {new Date(payout.paid_at).toLocaleString()}
-                          </p>
-                        )}
-                        {payout.admin_notes && (
-                          <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px'}}>
-                            <strong>{t('payout.adminNotes')}:</strong>
-                            <p style={{margin: '5px 0'}}>{payout.admin_notes}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
       
       {/* QR Code Scanner */}
@@ -5810,6 +5615,201 @@ function SchoolDashboard({ user, onLogout }) {
           </div>
         )}
 
+        {activeTab === 'payout' && (
+          <div>
+            <h2>💰 {t('payout.requestPayout')}</h2>
+            
+            <div style={{marginBottom: '20px'}}>
+              <button 
+                onClick={() => setShowPayoutForm(!showPayoutForm)}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '16px'
+                }}
+              >
+                {showPayoutForm ? t('common.cancel') : t('payout.requestPayment')}
+              </button>
+            </div>
+
+            {showPayoutForm && (
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
+                <h3 style={{marginTop: 0}}>{t('payout.requestPayment')}</h3>
+                <form onSubmit={handlePayoutRequest}>
+                  <div style={{display: 'grid', gap: '15px'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
+                      <select
+                        value={payoutForm.shop_id}
+                        onChange={(e) => setPayoutForm({...payoutForm, shop_id: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      >
+                        <option value="">Select Shop</option>
+                        {shops.map(shop => (
+                          <option key={shop.id} value={shop.id}>{shop.shop_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.amount')}</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={payoutForm.amount}
+                        onChange={(e) => setPayoutForm({...payoutForm, amount: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        placeholder="0.00"
+                        required
+                      />
+                    </div>
+                    
+                    <h4 style={{marginTop: '10px', marginBottom: '5px'}}>{t('payout.bankDetails')}</h4>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.bankName')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.bank_name}
+                        onChange={(e) => setPayoutForm({...payoutForm, bank_name: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountNumber')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.account_number}
+                        onChange={(e) => setPayoutForm({...payoutForm, account_number: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.sortCode')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.sort_code}
+                        onChange={(e) => setPayoutForm({...payoutForm, sort_code: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        placeholder="12-34-56"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountHolderName')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.account_holder_name}
+                        onChange={(e) => setPayoutForm({...payoutForm, account_holder_name: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.notes')}</label>
+                      <textarea
+                        value={payoutForm.notes}
+                        onChange={(e) => setPayoutForm({...payoutForm, notes: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', minHeight: '80px'}}
+                      />
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      style={{
+                        padding: '12px 24px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        marginTop: '10px'
+                      }}
+                    >
+                      {t('payout.submitRequest')}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              <h3>{t('payout.payoutHistory')}</h3>
+              
+              {payoutRequests.length === 0 ? (
+                <p style={{textAlign: 'center', color: '#666', padding: '40px'}}>{t('payout.noPayoutRequests')}</p>
+              ) : (
+                <div style={{display: 'grid', gap: '15px'}}>
+                  {payoutRequests.map(payout => (
+                    <div key={payout.id} style={{
+                      padding: '20px',
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      backgroundColor: '#fafafa'
+                    }}>
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+                        <div>
+                          <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
+                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
+                        </div>
+                        <div style={{
+                          padding: '5px 15px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: 
+                            payout.status === 'paid' ? '#e8f5e9' :
+                            payout.status === 'approved' ? '#fff3e0' :
+                            payout.status === 'rejected' ? '#ffebee' : '#e3f2fd',
+                          color: 
+                            payout.status === 'paid' ? '#2e7d32' :
+                            payout.status === 'approved' ? '#e65100' :
+                            payout.status === 'rejected' ? '#c62828' : '#1565c0'
+                        }}>
+                          {payout.status.toUpperCase()}
+                        </div>
+                      </div>
+                      
+                      <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
+                        <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}
+                        </p>
+                        {payout.reviewed_at && (
+                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <strong>{t('payout.reviewedAt')}:</strong> {new Date(payout.reviewed_at).toLocaleString()}
+                          </p>
+                        )}
+                        {payout.paid_at && (
+                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <strong>{t('payout.paidAt')}:</strong> {new Date(payout.paid_at).toLocaleString()}
+                          </p>
+                        )}
+                        {payout.admin_notes && (
+                          <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px'}}>
+                            <strong>{t('payout.adminNotes')}:</strong>
+                            <p style={{margin: '5px 0'}}>{payout.admin_notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
