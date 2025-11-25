@@ -5615,9 +5615,7 @@ function SchoolDashboard({ user, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'payout' && (() => {
-          console.log('[PAYOUT TAB] Rendering, activeTab:', activeTab, 'showPayoutForm:', showPayoutForm);
-          return (
+        {activeTab === 'payout' && (
           <div>
             <h2>💰 {t('payout.requestPayout')}</h2>
             
@@ -5811,8 +5809,7 @@ function SchoolDashboard({ user, onLogout }) {
               )}
             </div>
           </div>
-          );
-        })()}
+        )}
       </div>
     </div>
   )
