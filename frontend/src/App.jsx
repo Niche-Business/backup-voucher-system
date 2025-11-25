@@ -523,6 +523,9 @@ function RegisterPage({ onRegister, onNavigate }) {
 
   const handleChange = (e) => {
     console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
+    if (e.target.name === 'userType') {
+      console.log('[RegisterPage] ⚠️ USER TYPE CHANGED FROM', formData.userType, 'TO', e.target.value)
+    }
     const newFormData = { ...formData, [e.target.name]: e.target.value }
     console.log('[RegisterPage] New formData.userType:', newFormData.userType)
     setFormData(newFormData)
