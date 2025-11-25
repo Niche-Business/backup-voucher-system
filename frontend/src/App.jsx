@@ -3848,6 +3848,10 @@ function VendorDashboard({ user, onLogout }) {
 
   const handlePayoutRequest = async (e) => {
     e.preventDefault()
+    console.log('=== PAYOUT FORM SUBMISSION ==');
+    console.log('payoutForm state:', payoutForm);
+    console.log('shop_id:', payoutForm.shop_id, typeof payoutForm.shop_id);
+    console.log('=============================');
     try {
       await apiCall('/vendor/payout/request', {
         method: 'POST',
@@ -4573,7 +4577,11 @@ function VendorDashboard({ user, onLogout }) {
                       <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
                       <select
                         value={payoutForm.shop_id}
-                        onChange={(e) => setPayoutForm({...payoutForm, shop_id: e.target.value})}
+                        onChange={(e) => {
+                          const shopId = parseInt(e.target.value) || '';
+                          console.log('Shop selected:', shopId, typeof shopId);
+                          setPayoutForm({...payoutForm, shop_id: shopId});
+                        }}
                         style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
                         required
                       >
