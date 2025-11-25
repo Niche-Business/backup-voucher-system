@@ -5489,6 +5489,7 @@ function RecipientDashboard({ user, onLogout }) {
 
 // SCHOOL/CARE ORGANIZATION DASHBOARD
 function SchoolDashboard({ user, onLogout }) {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
   const [balance, setBalance] = useState(0)
   const [vouchers, setVouchers] = useState([])
