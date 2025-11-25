@@ -7,6 +7,7 @@ import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
 import Pagination from './components/Pagination'
+import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { QRCodeSVG } from 'qrcode.react'
 
 // Error Boundary Component
@@ -246,6 +247,7 @@ function App() {
       {currentView === 'dashboard' && user && (
         <Dashboard user={user} onLogout={handleLogout} />
       )}
+      <PWAInstallPrompt />
     </div>
   )
 }
