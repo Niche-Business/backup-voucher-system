@@ -573,6 +573,15 @@ def login():
     except Exception as e:
         return jsonify({'error': f'Login failed: {str(e)}'}), 500
 
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """Logout user and clear session"""
+    try:
+        session.clear()
+        return jsonify({'success': True, 'message': 'Logged out successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': f'Logout failed: {str(e)}'}), 500
+
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     """Request password reset link"""
@@ -3844,7 +3853,7 @@ def get_school_vouchers():
         if not user or user.user_type != 'school':
             return jsonify({'error': 'School/Care Organization access required'}), 403
         
-        vouchers = Voucher.query.filter_by(issued_by_id=user_id).order_by(Voucher.created_at.desc()).all()
+        vouchers = Voucher.query.filter_by(issued_by=user_id).order_by(Voucher.created_at.desc()).all()
         
         vouchers_data = []
         for voucher in vouchers:
