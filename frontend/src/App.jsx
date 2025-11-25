@@ -521,25 +521,7 @@ function RegisterPage({ onRegister, onNavigate }) {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Monitor userType dropdown for changes (including browser automation)
-  useEffect(() => {
-    const userTypeSelect = document.getElementById('register-usertype-select')
-    if (!userTypeSelect) return
-    
-    const handleUserTypeChange = () => {
-      const userType = userTypeSelect.value
-      console.log('[useEffect] Registration userType changed to:', userType)
-      if (userType !== formData.userType) {
-        console.log('[useEffect] Updating formData.userType from', formData.userType, 'to', userType)
-        setFormData(prev => ({...prev, userType: userType}))
-      }
-    }
-    
-    // Poll for changes every 100ms
-    const interval = setInterval(handleUserTypeChange, 100)
-    
-    return () => clearInterval(interval)
-  }, [formData.userType])
+  // Registration userType dropdown - simple onChange handler (no polling needed)
 
   const handleChange = (e) => {
     console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
@@ -589,7 +571,6 @@ function RegisterPage({ onRegister, onNavigate }) {
               name="userType" 
               value={formData.userType} 
               onChange={handleChange}
-              onInput={handleChange}
               style={styles.input} 
               required
             >
@@ -3835,27 +3816,7 @@ function VendorDashboard({ user, onLogout }) {
     loadPayoutHistory()
   }, [])
 
-  // Monitor payout shop dropdown for changes (including browser automation)
-  useEffect(() => {
-    if (!showPayoutForm) return
-    
-    const shopSelect = document.getElementById('payout-shop-select')
-    if (!shopSelect) return
-    
-    const handleShopChange = () => {
-      const shopId = parseInt(shopSelect.value) || ''
-      console.log('[useEffect] Payout shop changed to:', shopId, typeof shopId)
-      if (shopId !== payoutForm.shop_id) {
-        console.log('[useEffect] Updating payoutForm.shop_id from', payoutForm.shop_id, 'to', shopId)
-        setPayoutForm(prev => ({...prev, shop_id: shopId}))
-      }
-    }
-    
-    // Poll for changes every 100ms when form is visible
-    const interval = setInterval(handleShopChange, 100)
-    
-    return () => clearInterval(interval)
-  }, [showPayoutForm, payoutForm.shop_id])
+  // Payout shop dropdown - simple onChange handler (no polling needed)
 
   const loadShops = async () => {
     try {
@@ -4632,11 +4593,6 @@ function VendorDashboard({ user, onLogout }) {
                         onChange={(e) => {
                           const shopId = parseInt(e.target.value) || '';
                           console.log('Shop selected:', shopId, typeof shopId);
-                          setPayoutForm({...payoutForm, shop_id: shopId});
-                        }}
-                        onInput={(e) => {
-                          const shopId = parseInt(e.target.value) || '';
-                          console.log('Shop input:', shopId, typeof shopId);
                           setPayoutForm({...payoutForm, shop_id: shopId});
                         }}
                         style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
