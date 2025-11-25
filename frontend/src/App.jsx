@@ -938,6 +938,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.schoolsOrgs')}</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.localShops')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.allToGo')}</button>
+          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📊 Reports</button>
           <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ {t('dashboard.tabs.settings')}</button>
         </div>
         
@@ -1749,6 +1750,183 @@ function AdminDashboard({ user, onLogout }) {
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'reports' && (
+          <div>
+            <h2>📊 System Reports & Analytics</h2>
+            <p style={{marginBottom: '30px', color: '#666'}}>Generate comprehensive reports for system oversight and compliance</p>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '20px'}}>
+              <h3 style={{marginTop: 0}}>📄 Generate System Report</h3>
+              <p style={{color: '#666', marginBottom: '20px'}}>Comprehensive report including all vouchers, organizations, and transactions</p>
+              
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>From Date</label>
+                  <input 
+                    type="date" 
+                    id="adminReportDateFrom"
+                    style={styles.input}
+                    defaultValue={new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0]}
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>To Date</label>
+                  <input 
+                    type="date" 
+                    id="adminReportDateTo"
+                    style={styles.input}
+                    defaultValue={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+              </div>
+              
+              <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                <button
+                  onClick={async () => {
+                    try {
+                      const dateFrom = document.getElementById('adminReportDateFrom').value
+                      const dateTo = document.getElementById('adminReportDateTo').value
+                      
+                      const response = await fetch('/api/admin/reports/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ date_from: dateFrom, date_to: dateTo })
+                      })
+                      
+                      if (response.ok) {
+                        const data = await response.json()
+                        alert('Report generated successfully!')
+                        console.log('Admin Report Data:', data)
+                      } else {
+                        alert('Failed to generate report')
+                      }
+                    } catch (error) {
+                      alert('Error generating report: ' + error.message)
+                    }
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}
+                >
+                  📊 Generate Report
+                </button>
+                
+                <button
+                  onClick={async () => {
+                    try {
+                      const dateFrom = document.getElementById('adminReportDateFrom').value
+                      const dateTo = document.getElementById('adminReportDateTo').value
+                      
+                      const response = await fetch(`/api/admin/export/financial-report?start_date=${dateFrom}&end_date=${dateTo}`, {
+                        credentials: 'include'
+                      })
+                      
+                      if (response.ok) {
+                        const blob = await response.blob()
+                        const url = window.URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        a.download = `financial_report_${dateFrom}_to_${dateTo}.csv`
+                        document.body.appendChild(a)
+                        a.click()
+                        window.URL.revokeObjectURL(url)
+                        document.body.removeChild(a)
+                      } else {
+                        alert('Failed to download financial report')
+                      }
+                    } catch (error) {
+                      alert('Error downloading report: ' + error.message)
+                    }
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#2196F3'}}
+                >
+                  💰 Download Financial Report (CSV)
+                </button>
+                
+                <button
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/admin/export/impact-report', {
+                        credentials: 'include'
+                      })
+                      
+                      if (response.ok) {
+                        const blob = await response.blob()
+                        const url = window.URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        a.download = `impact_report_${new Date().toISOString().split('T')[0]}.csv`
+                        document.body.appendChild(a)
+                        a.click()
+                        window.URL.revokeObjectURL(url)
+                        document.body.removeChild(a)
+                      } else {
+                        alert('Failed to download impact report')
+                      }
+                    } catch (error) {
+                      alert('Error downloading report: ' + error.message)
+                    }
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#FF9800'}}
+                >
+                  🌍 Download Impact Report (CSV)
+                </button>
+              </div>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0}}>📅 Expired Vouchers Report</h3>
+              <p style={{color: '#666', marginBottom: '20px'}}>Track expired vouchers and identify trends</p>
+              
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>From Date</label>
+                  <input 
+                    type="date" 
+                    id="expiredReportDateFrom"
+                    style={styles.input}
+                    defaultValue={new Date(Date.now() - 90*24*60*60*1000).toISOString().split('T')[0]}
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>To Date</label>
+                  <input 
+                    type="date" 
+                    id="expiredReportDateTo"
+                    style={styles.input}
+                    defaultValue={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+              </div>
+              
+              <button
+                onClick={async () => {
+                  try {
+                    const dateFrom = document.getElementById('expiredReportDateFrom').value
+                    const dateTo = document.getElementById('expiredReportDateTo').value
+                    
+                    const response = await fetch(`/api/admin/expired-report?start_date=${dateFrom}&end_date=${dateTo}`, {
+                      credentials: 'include'
+                    })
+                    
+                    if (response.ok) {
+                      const data = await response.json()
+                      alert(`Expired Vouchers Report:\n\nTotal Expired: ${data.total_expired}\nTotal Value Lost: £${data.total_value_lost}\n\nCheck console for details.`)
+                      console.log('Expired Vouchers Report:', data)
+                    } else {
+                      alert('Failed to generate expired vouchers report')
+                    }
+                  } catch (error) {
+                    alert('Error generating report: ' + error.message)
+                  }
+                }}
+                style={{...styles.primaryButton, backgroundColor: '#f44336'}}
+              >
+                📅 Generate Expired Vouchers Report
+              </button>
             </div>
           </div>
         )}
@@ -2720,6 +2898,149 @@ function VCSEDashboard({ user, onLogout }) {
                         )
                       })}
                     </div>
+                  </div>
+                </div>
+                
+                {/* Report Generation Section */}
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '30px'}}>
+                  <h3 style={{marginTop: 0}}>📄 Generate Detailed Report</h3>
+                  <p style={{color: '#666', marginBottom: '20px'}}>Generate and download comprehensive reports for your funders and stakeholders</p>
+                  
+                  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>From Date</label>
+                      <input 
+                        type="date" 
+                        id="reportDateFrom"
+                        style={styles.input}
+                        defaultValue={new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0]}
+                      />
+                    </div>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>To Date</label>
+                      <input 
+                        type="date" 
+                        id="reportDateTo"
+                        style={styles.input}
+                        defaultValue={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const dateFrom = document.getElementById('reportDateFrom').value
+                          const dateTo = document.getElementById('reportDateTo').value
+                          
+                          const response = await fetch('/api/vcse/reports/generate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ date_from: dateFrom, date_to: dateTo })
+                          })
+                          
+                          if (response.ok) {
+                            const data = await response.json()
+                            alert('Report generated successfully! Check the console for details.')
+                            console.log('Report Data:', data)
+                          } else {
+                            alert('Failed to generate report')
+                          }
+                        } catch (error) {
+                          alert('Error generating report: ' + error.message)
+                        }
+                      }}
+                      style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}
+                    >
+                      📊 Generate Report
+                    </button>
+                    
+                    <button
+                      onClick={async () => {
+                        try {
+                          const dateFrom = document.getElementById('reportDateFrom').value
+                          const dateTo = document.getElementById('reportDateTo').value
+                          
+                          const response = await fetch(`/api/vcse/reports/pdf?date_from=${dateFrom}&date_to=${dateTo}`, {
+                            credentials: 'include'
+                          })
+                          
+                          if (response.ok) {
+                            const blob = await response.blob()
+                            const url = window.URL.createObjectURL(blob)
+                            const a = document.createElement('a')
+                            a.href = url
+                            a.download = `vcse_report_${dateFrom}_to_${dateTo}.pdf`
+                            document.body.appendChild(a)
+                            a.click()
+                            window.URL.revokeObjectURL(url)
+                            document.body.removeChild(a)
+                          } else {
+                            alert('Failed to download PDF report')
+                          }
+                        } catch (error) {
+                          alert('Error downloading PDF: ' + error.message)
+                        }
+                      }}
+                      style={{...styles.primaryButton, backgroundColor: '#f44336'}}
+                    >
+                      📥 Download PDF
+                    </button>
+                    
+                    <button
+                      onClick={async () => {
+                        try {
+                          const dateFrom = document.getElementById('reportDateFrom').value
+                          const dateTo = document.getElementById('reportDateTo').value
+                          
+                          // Use the report data to create CSV
+                          const response = await fetch('/api/vcse/reports/generate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ date_from: dateFrom, date_to: dateTo })
+                          })
+                          
+                          if (response.ok) {
+                            const data = await response.json()
+                            const report = data.report
+                            
+                            // Create CSV content
+                            let csv = 'VCSE Organization Report\n\n'
+                            csv += `Organization,${report.organization_name}\n`
+                            csv += `Period,${report.date_from} to ${report.date_to}\n\n`
+                            csv += 'Metric,Value\n'
+                            csv += `Vouchers Issued,${report.vouchers_issued}\n`
+                            csv += `Total Value Distributed,£${report.total_value_distributed}\n`
+                            csv += `Active Vouchers,${report.active_vouchers}\n`
+                            csv += `Redeemed Vouchers,${report.redeemed_vouchers}\n`
+                            csv += `Families Supported,${report.families_supported}\n`
+                            csv += `Surplus Items Claimed,${report.surplus_items_claimed}\n`
+                            csv += `Surplus Items Collected,${report.surplus_items_collected}\n`
+                            
+                            // Download CSV
+                            const blob = new Blob([csv], { type: 'text/csv' })
+                            const url = window.URL.createObjectURL(blob)
+                            const a = document.createElement('a')
+                            a.href = url
+                            a.download = `vcse_report_${dateFrom}_to_${dateTo}.csv`
+                            document.body.appendChild(a)
+                            a.click()
+                            window.URL.revokeObjectURL(url)
+                            document.body.removeChild(a)
+                          } else {
+                            alert('Failed to generate CSV report')
+                          }
+                        } catch (error) {
+                          alert('Error generating CSV: ' + error.message)
+                        }
+                      }}
+                      style={{...styles.primaryButton, backgroundColor: '#2196F3'}}
+                    >
+                      📥 Download Excel (CSV)
+                    </button>
                   </div>
                 </div>
               </div>
