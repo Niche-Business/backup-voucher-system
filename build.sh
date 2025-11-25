@@ -10,6 +10,9 @@ echo "Installing Node.js dependencies..."
 cd frontend
 npm install
 
+echo "Cleaning previous build..."
+rm -rf dist
+
 echo "Building frontend..."
 npm run build
 
