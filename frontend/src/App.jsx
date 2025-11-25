@@ -59,8 +59,17 @@ function App() {
   const checkAuth = async () => {
     try {
       const data = await apiCall('/check-auth')
-      if (data.authenticated) {
-        setUser(data.user)
+      if (data.authenticated && data.user) {
+        // Map backend user_type to frontend userType
+        setUser({
+          id: data.user.id,
+          email: data.user.email,
+          userType: data.user.user_type,
+          name: `${data.user.first_name} ${data.user.last_name}`,
+          balance: data.user.balance,
+          organizationName: data.user.organization_name,
+          shopName: data.user.shop_name
+        })
         setCurrentView('dashboard')
       }
     } catch (error) {
