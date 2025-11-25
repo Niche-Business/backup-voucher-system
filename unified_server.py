@@ -78,10 +78,21 @@ if __name__ == '__main__':
     print("✓ Frontend build verified:")
     print(f"  - Build directory: {frontend_build}")
     print(f"  - Index file: {index_file}")
+    
+    # Read and display what's in index.html
+    with open(index_file, 'r') as f:
+        html_content = f.read()
+        # Find the script tag
+        import re
+        script_match = re.search(r'src="(/assets/index\.[^"]+\.js)"', html_content)
+        if script_match:
+            print(f"  - index.html references: {script_match.group(1)}")
+    
     js_files = list(assets_dir.glob('*.js'))
+    print(f"  - JavaScript files in assets/:")
     for js_file in js_files:
         size_kb = js_file.stat().st_size / 1024
-        print(f"  - {js_file.name}: {size_kb:.1f} KB")
+        print(f"    * {js_file.name}: {size_kb:.1f} KB")
     
     # Initialize database
     with app.app_context():
