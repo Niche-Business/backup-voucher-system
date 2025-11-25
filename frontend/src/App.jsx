@@ -712,6 +712,9 @@ function AdminDashboard({ user, onLogout }) {
   const [voucherPage, setVoucherPage] = useState(1)
   const [shopPage, setShopPage] = useState(1)
   const itemsPerPage = 12
+  const [payoutRequests, setPayoutRequests] = useState([])
+  const [payoutStatusFilter, setPayoutStatusFilter] = useState('all')
+  const [payoutSummary, setPayoutSummary] = useState(null)
 
   useEffect(() => {
     loadVcseOrgs()
@@ -720,6 +723,7 @@ function AdminDashboard({ user, onLogout }) {
     loadVendorShops()
     loadToGoItems()
     loadRecipients()
+    loadPayoutRequests()
   }, [])
 
   const loadVcseOrgs = async () => {
@@ -773,6 +777,52 @@ function AdminDashboard({ user, onLogout }) {
       setRecipients(data || [])
     } catch (error) {
       console.error('Failed to load recipients:', error)
+    }
+  }
+
+  const loadPayoutRequests = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (payoutStatusFilter !== 'all') params.append('status', payoutStatusFilter)
+      
+      const data = await apiCall(`/admin/payout/requests?${params.toString()}`)
+      setPayoutRequests(data.payouts || [])
+      setPayoutSummary(data.summary || null)
+    } catch (error) {
+      console.error('Failed to load payout requests:', error)
+    }
+  }
+
+  const handleReviewPayout = async (payoutId, action, adminNotes = '') => {
+    if (!window.confirm(t(`payout.confirm${action === 'approve' ? 'Approve' : 'Reject'}`))) {
+      return
+    }
+    
+    try {
+      await apiCall(`/admin/payout/${payoutId}/review`, {
+        method: 'POST',
+        body: JSON.stringify({ action, admin_notes: adminNotes })
+      })
+      alert(t(`payout.payout${action === 'approve' ? 'Approved' : 'Rejected'}`))
+      loadPayoutRequests()
+    } catch (error) {
+      alert('Failed to review payout: ' + error.message)
+    }
+  }
+
+  const handleMarkPaid = async (payoutId) => {
+    if (!window.confirm(t('payout.confirmMarkPaid'))) {
+      return
+    }
+    
+    try {
+      await apiCall(`/admin/payout/${payoutId}/mark-paid`, {
+        method: 'POST'
+      })
+      alert(t('payout.payoutMarkedPaid'))
+      loadPayoutRequests()
+    } catch (error) {
+      alert('Failed to mark payout as paid: ' + error.message)
     }
   }
 
@@ -948,6 +998,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.schoolsOrgs')}</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.localShops')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.allToGo')}</button>
+          <button onClick={() => setActiveTab('payouts')} style={activeTab === 'payouts' ? styles.activeTab : styles.tab}>💰 {t('payout.managePayout')}</button>
           <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📊 Reports</button>
           <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ {t('dashboard.tabs.settings')}</button>
         </div>
@@ -2150,6 +2201,180 @@ function AdminDashboard({ user, onLogout }) {
               >
                 📅 Generate Expired Vouchers Report
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'payouts' && (
+          <div>
+            <h2>💰 {t('payout.managePayout')}</h2>
+            
+            {payoutSummary && (
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>{payoutSummary.pending}</div>
+                  <div style={{color: '#666'}}>{t('payout.pending')}</div>
+                  <div style={{fontSize: '20px', color: '#2196F3', marginTop: '5px'}}>£{payoutSummary.total_amount_pending.toFixed(2)}</div>
+                </div>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{payoutSummary.approved}</div>
+                  <div style={{color: '#666'}}>{t('payout.approved')}</div>
+                  <div style={{fontSize: '20px', color: '#FF9800', marginTop: '5px'}}>£{payoutSummary.total_amount_approved.toFixed(2)}</div>
+                </div>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>{payoutSummary.paid}</div>
+                  <div style={{color: '#666'}}>{t('payout.paid')}</div>
+                  <div style={{fontSize: '20px', color: '#4CAF50', marginTop: '5px'}}>£{payoutSummary.total_amount_paid.toFixed(2)}</div>
+                </div>
+              </div>
+            )}
+
+            <div style={{marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '10px'}}>
+              <label style={{marginRight: '10px', fontWeight: 'bold'}}>{t('payout.filterByStatus')}:</label>
+              <select
+                value={payoutStatusFilter}
+                onChange={(e) => {
+                  setPayoutStatusFilter(e.target.value)
+                  setTimeout(() => loadPayoutRequests(), 100)
+                }}
+                style={{padding: '8px 15px', borderRadius: '5px', border: '1px solid #ddd'}}
+              >
+                <option value="all">{t('payout.allStatuses')}</option>
+                <option value="pending">{t('payout.pending')}</option>
+                <option value="approved">{t('payout.approved')}</option>
+                <option value="rejected">{t('payout.rejected')}</option>
+                <option value="paid">{t('payout.paid')}</option>
+              </select>
+            </div>
+
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {payoutRequests.length === 0 ? (
+                <p style={{textAlign: 'center', color: '#666', padding: '40px'}}>{t('payout.noPayoutRequests')}</p>
+              ) : (
+                <div style={{display: 'grid', gap: '20px'}}>
+                  {payoutRequests.map(payout => (
+                    <div key={payout.id} style={{
+                      padding: '25px',
+                      border: '2px solid #e0e0e0',
+                      borderRadius: '10px',
+                      backgroundColor: '#fafafa'
+                    }}>
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '20px'}}>
+                        <div>
+                          <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
+                          <div style={{fontSize: '16px', fontWeight: 'bold', marginTop: '5px'}}>{payout.vendor_name}</div>
+                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
+                        </div>
+                        <div style={{
+                          padding: '8px 20px',
+                          borderRadius: '25px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          backgroundColor: 
+                            payout.status === 'paid' ? '#e8f5e9' :
+                            payout.status === 'approved' ? '#fff3e0' :
+                            payout.status === 'rejected' ? '#ffebee' : '#e3f2fd',
+                          color: 
+                            payout.status === 'paid' ? '#2e7d32' :
+                            payout.status === 'approved' ? '#e65100' :
+                            payout.status === 'rejected' ? '#c62828' : '#1565c0'
+                        }}>
+                          {payout.status.toUpperCase()}
+                        </div>
+                      </div>
+                      
+                      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                        <div>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.bankName')}:</strong> {payout.bank_name}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.accountNumber')}:</strong> {payout.account_number}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.sortCode')}:</strong> {payout.sort_code}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.accountHolderName')}:</strong> {payout.account_holder_name}</p>
+                        </div>
+                        <div>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.vendorName')}:</strong> {payout.vendor_name}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>Email:</strong> {payout.vendor_email}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>Phone:</strong> {payout.vendor_phone}</p>
+                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}</p>
+                        </div>
+                      </div>
+
+                      {payout.notes && (
+                        <div style={{marginBottom: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
+                          <strong>Vendor Notes:</strong>
+                          <p style={{margin: '5px 0'}}>{payout.notes}</p>
+                        </div>
+                      )}
+
+                      {payout.status === 'pending' && (
+                        <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
+                          <button
+                            onClick={() => {
+                              const notes = prompt('Admin notes (optional):') || ''
+                              handleReviewPayout(payout.id, 'approve', notes)
+                            }}
+                            style={{
+                              padding: '10px 20px',
+                              backgroundColor: '#4CAF50',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '5px',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            ✅ {t('payout.approve')}
+                          </button>
+                          <button
+                            onClick={() => {
+                              const notes = prompt('Reason for rejection:') || ''
+                              handleReviewPayout(payout.id, 'reject', notes)
+                            }}
+                            style={{
+                              padding: '10px 20px',
+                              backgroundColor: '#f44336',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '5px',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            ❌ {t('payout.reject')}
+                          </button>
+                        </div>
+                      )}
+
+                      {payout.status === 'approved' && (
+                        <button
+                          onClick={() => handleMarkPaid(payout.id)}
+                          style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#2196F3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            marginTop: '15px'
+                          }}
+                        >
+                          💰 {t('payout.markAsPaid')}
+                        </button>
+                      )}
+
+                      {payout.admin_notes && (
+                        <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px'}}>
+                          <strong>{t('payout.adminNotes')}:</strong>
+                          <p style={{margin: '5px 0'}}>{payout.admin_notes}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -3543,10 +3768,22 @@ function VendorDashboard({ user, onLogout }) {
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [redemptionHistorySearch, setRedemptionHistorySearch] = useState('')
   const [redemptionHistoryFilter, setRedemptionHistoryFilter] = useState('all')
+  const [payoutRequests, setPayoutRequests] = useState([])
+  const [showPayoutForm, setShowPayoutForm] = useState(false)
+  const [payoutForm, setPayoutForm] = useState({
+    shop_id: '',
+    amount: '',
+    bank_name: '',
+    account_number: '',
+    sort_code: '',
+    account_holder_name: '',
+    notes: ''
+  })
 
   useEffect(() => {
     loadShops()
     loadToGoItems()
+    loadPayoutHistory()
   }, [])
 
   const loadShops = async () => {
@@ -3576,6 +3813,39 @@ function VendorDashboard({ user, onLogout }) {
       setToGoCount(data.total_count || 0)
     } catch (error) {
       console.error('Failed to load to go items:', error)
+    }
+  }
+
+  const loadPayoutHistory = async () => {
+    try {
+      const data = await apiCall('/vendor/payout/history')
+      setPayoutRequests(data.payouts || [])
+    } catch (error) {
+      console.error('Failed to load payout history:', error)
+    }
+  }
+
+  const handlePayoutRequest = async (e) => {
+    e.preventDefault()
+    try {
+      await apiCall('/vendor/payout/request', {
+        method: 'POST',
+        body: JSON.stringify(payoutForm)
+      })
+      alert(t('payout.payoutRequestSubmitted'))
+      setShowPayoutForm(false)
+      setPayoutForm({
+        shop_id: '',
+        amount: '',
+        bank_name: '',
+        account_number: '',
+        sort_code: '',
+        account_holder_name: '',
+        notes: ''
+      })
+      loadPayoutHistory()
+    } catch (error) {
+      alert('Failed to submit payout request: ' + error.message)
     }
   }
 
@@ -3726,10 +3996,11 @@ function VendorDashboard({ user, onLogout }) {
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.redeemVouchers')}</button>
           <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('shop.redemptionHistory')}</button>
+          <button onClick={() => setActiveTab('payout')} style={activeTab === 'payout' ? styles.activeTab : styles.tab}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
         
@@ -5323,6 +5594,202 @@ function SchoolDashboard({ user, onLogout }) {
                   </div>
                 )
               })()}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'payout' && (
+          <div>
+            <h2>💰 {t('payout.requestPayout')}</h2>
+            
+            <div style={{marginBottom: '20px'}}>
+              <button 
+                onClick={() => setShowPayoutForm(!showPayoutForm)}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '16px'
+                }}
+              >
+                {showPayoutForm ? t('common.cancel') : t('payout.requestPayment')}
+              </button>
+            </div>
+
+            {showPayoutForm && (
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
+                <h3 style={{marginTop: 0}}>{t('payout.requestPayment')}</h3>
+                <form onSubmit={handlePayoutRequest}>
+                  <div style={{display: 'grid', gap: '15px'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
+                      <select
+                        value={payoutForm.shop_id}
+                        onChange={(e) => setPayoutForm({...payoutForm, shop_id: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      >
+                        <option value="">Select Shop</option>
+                        {shops.map(shop => (
+                          <option key={shop.id} value={shop.id}>{shop.shop_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.amount')}</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={payoutForm.amount}
+                        onChange={(e) => setPayoutForm({...payoutForm, amount: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        placeholder="0.00"
+                        required
+                      />
+                    </div>
+                    
+                    <h4 style={{marginTop: '10px', marginBottom: '5px'}}>{t('payout.bankDetails')}</h4>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.bankName')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.bank_name}
+                        onChange={(e) => setPayoutForm({...payoutForm, bank_name: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountNumber')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.account_number}
+                        onChange={(e) => setPayoutForm({...payoutForm, account_number: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.sortCode')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.sort_code}
+                        onChange={(e) => setPayoutForm({...payoutForm, sort_code: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        placeholder="12-34-56"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.accountHolderName')}</label>
+                      <input
+                        type="text"
+                        value={payoutForm.account_holder_name}
+                        onChange={(e) => setPayoutForm({...payoutForm, account_holder_name: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('payout.notes')}</label>
+                      <textarea
+                        value={payoutForm.notes}
+                        onChange={(e) => setPayoutForm({...payoutForm, notes: e.target.value})}
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', minHeight: '80px'}}
+                      />
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      style={{
+                        padding: '12px 24px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        marginTop: '10px'
+                      }}
+                    >
+                      {t('payout.submitRequest')}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              <h3>{t('payout.payoutHistory')}</h3>
+              
+              {payoutRequests.length === 0 ? (
+                <p style={{textAlign: 'center', color: '#666', padding: '40px'}}>{t('payout.noPayoutRequests')}</p>
+              ) : (
+                <div style={{display: 'grid', gap: '15px'}}>
+                  {payoutRequests.map(payout => (
+                    <div key={payout.id} style={{
+                      padding: '20px',
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      backgroundColor: '#fafafa'
+                    }}>
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+                        <div>
+                          <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
+                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
+                        </div>
+                        <div style={{
+                          padding: '5px 15px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: 
+                            payout.status === 'paid' ? '#e8f5e9' :
+                            payout.status === 'approved' ? '#fff3e0' :
+                            payout.status === 'rejected' ? '#ffebee' : '#e3f2fd',
+                          color: 
+                            payout.status === 'paid' ? '#2e7d32' :
+                            payout.status === 'approved' ? '#e65100' :
+                            payout.status === 'rejected' ? '#c62828' : '#1565c0'
+                        }}>
+                          {payout.status.toUpperCase()}
+                        </div>
+                      </div>
+                      
+                      <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
+                        <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}
+                        </p>
+                        {payout.reviewed_at && (
+                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <strong>{t('payout.reviewedAt')}:</strong> {new Date(payout.reviewed_at).toLocaleString()}
+                          </p>
+                        )}
+                        {payout.paid_at && (
+                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <strong>{t('payout.paidAt')}:</strong> {new Date(payout.paid_at).toLocaleString()}
+                          </p>
+                        )}
+                        {payout.admin_notes && (
+                          <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px'}}>
+                            <strong>{t('payout.adminNotes')}:</strong>
+                            <p style={{margin: '5px 0'}}>{payout.admin_notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

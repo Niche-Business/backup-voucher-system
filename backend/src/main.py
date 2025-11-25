@@ -226,6 +226,28 @@ class Order(db.Model):
     vcse = db.relationship('User', backref='placed_orders')
     surplus_item = db.relationship('SurplusItem', backref='orders')
 
+class PayoutRequest(db.Model):
+    __tablename__ = 'payout_request'
+    id = db.Column(db.Integer, primary_key=True)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Shop requesting payout
+    shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'), nullable=False)  # Specific shop
+    amount = db.Column(db.Float, nullable=False)  # Amount requested
+    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected, paid
+    bank_name = db.Column(db.String(100))  # Bank details
+    account_number = db.Column(db.String(50))
+    sort_code = db.Column(db.String(20))
+    account_holder_name = db.Column(db.String(100))
+    notes = db.Column(db.Text)  # Additional notes from vendor
+    admin_notes = db.Column(db.Text)  # Notes from admin
+    requested_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reviewed_at = db.Column(db.DateTime)  # When admin reviewed
+    reviewed_by = db.Column(db.Integer, db.ForeignKey('user.id'))  # Admin who reviewed
+    paid_at = db.Column(db.DateTime)  # When payment was made
+    
+    vendor = db.relationship('User', foreign_keys=[vendor_id], backref='payout_requests')
+    shop = db.relationship('VendorShop', backref='payouts')
+    reviewer = db.relationship('User', foreign_keys=[reviewed_by], backref='reviewed_payouts')
+
 # Helper Functions
 def send_verification_email(user):
     try:
@@ -4988,6 +5010,275 @@ def get_login_stats():
         }), 200
         
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ==================== PAYOUT REQUEST ROUTES ====================
+
+@app.route('/api/vendor/payout/request', methods=['POST'])
+def request_payout():
+    """Vendor requests a payout for redeemed vouchers"""
+    try:
+        data = request.json
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        # Validate required fields
+        required_fields = ['shop_id', 'amount', 'bank_name', 'account_number', 'sort_code', 'account_holder_name']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Verify shop belongs to vendor
+        shop = VendorShop.query.get(data['shop_id'])
+        if not shop or shop.vendor_id != user_id:
+            return jsonify({'error': 'Invalid shop'}), 400
+        
+        # Create payout request
+        payout = PayoutRequest(
+            vendor_id=user_id,
+            shop_id=data['shop_id'],
+            amount=float(data['amount']),
+            bank_name=data['bank_name'],
+            account_number=data['account_number'],
+            sort_code=data['sort_code'],
+            account_holder_name=data['account_holder_name'],
+            notes=data.get('notes', '')
+        )
+        
+        db.session.add(payout)
+        db.session.commit()
+        
+        # Send email notification to admin
+        try:
+            email_service.send_payout_request_notification(
+                vendor_name=f"{user.first_name} {user.last_name}",
+                shop_name=shop.shop_name,
+                amount=payout.amount
+            )
+        except Exception as e:
+            print(f"Failed to send payout request email: {e}")
+        
+        return jsonify({
+            'message': 'Payout request submitted successfully',
+            'payout_id': payout.id
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/vendor/payout/history', methods=['GET'])
+def get_payout_history():
+    """Get payout request history for vendor"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vendor':
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        payouts = PayoutRequest.query.filter_by(vendor_id=user_id).order_by(PayoutRequest.requested_at.desc()).all()
+        
+        payout_list = []
+        for payout in payouts:
+            payout_list.append({
+                'id': payout.id,
+                'shop_name': payout.shop.shop_name,
+                'amount': payout.amount,
+                'status': payout.status,
+                'requested_at': payout.requested_at.isoformat(),
+                'reviewed_at': payout.reviewed_at.isoformat() if payout.reviewed_at else None,
+                'paid_at': payout.paid_at.isoformat() if payout.paid_at else None,
+                'notes': payout.notes,
+                'admin_notes': payout.admin_notes
+            })
+        
+        return jsonify({'payouts': payout_list}), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/payout/requests', methods=['GET'])
+def get_all_payout_requests():
+    """Admin: Get all payout requests"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        # Get filter parameters
+        status_filter = request.args.get('status', 'all')
+        
+        query = PayoutRequest.query
+        
+        if status_filter != 'all':
+            query = query.filter_by(status=status_filter)
+        
+        payouts = query.order_by(PayoutRequest.requested_at.desc()).all()
+        
+        payout_list = []
+        for payout in payouts:
+            payout_list.append({
+                'id': payout.id,
+                'vendor_name': f"{payout.vendor.first_name} {payout.vendor.last_name}",
+                'vendor_email': payout.vendor.email,
+                'vendor_phone': payout.vendor.phone,
+                'shop_name': payout.shop.shop_name,
+                'amount': payout.amount,
+                'status': payout.status,
+                'bank_name': payout.bank_name,
+                'account_number': payout.account_number,
+                'sort_code': payout.sort_code,
+                'account_holder_name': payout.account_holder_name,
+                'requested_at': payout.requested_at.isoformat(),
+                'reviewed_at': payout.reviewed_at.isoformat() if payout.reviewed_at else None,
+                'paid_at': payout.paid_at.isoformat() if payout.paid_at else None,
+                'notes': payout.notes,
+                'admin_notes': payout.admin_notes
+            })
+        
+        # Calculate summary
+        summary = {
+            'total_requests': len(payouts),
+            'pending': sum(1 for p in payouts if p.status == 'pending'),
+            'approved': sum(1 for p in payouts if p.status == 'approved'),
+            'rejected': sum(1 for p in payouts if p.status == 'rejected'),
+            'paid': sum(1 for p in payouts if p.status == 'paid'),
+            'total_amount_pending': sum(p.amount for p in payouts if p.status == 'pending'),
+            'total_amount_approved': sum(p.amount for p in payouts if p.status == 'approved'),
+            'total_amount_paid': sum(p.amount for p in payouts if p.status == 'paid')
+        }
+        
+        return jsonify({
+            'payouts': payout_list,
+            'summary': summary
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/payout/<int:payout_id>/review', methods=['POST'])
+def review_payout(payout_id):
+    """Admin: Approve or reject payout request"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        data = request.json
+        action = data.get('action')  # 'approve' or 'reject'
+        admin_notes = data.get('admin_notes', '')
+        
+        if action not in ['approve', 'reject']:
+            return jsonify({'error': 'Invalid action'}), 400
+        
+        payout = PayoutRequest.query.get(payout_id)
+        if not payout:
+            return jsonify({'error': 'Payout request not found'}), 404
+        
+        if payout.status != 'pending':
+            return jsonify({'error': 'Payout request already reviewed'}), 400
+        
+        # Update payout status
+        payout.status = 'approved' if action == 'approve' else 'rejected'
+        payout.reviewed_by = user_id
+        payout.reviewed_at = datetime.utcnow()
+        payout.admin_notes = admin_notes
+        
+        db.session.commit()
+        
+        # Send email notification to vendor
+        try:
+            email_service.send_payout_status_notification(
+                vendor_email=payout.vendor.email,
+                vendor_name=f"{payout.vendor.first_name} {payout.vendor.last_name}",
+                shop_name=payout.shop.shop_name,
+                amount=payout.amount,
+                status=payout.status,
+                admin_notes=admin_notes
+            )
+        except Exception as e:
+            print(f"Failed to send payout status email: {e}")
+        
+        return jsonify({
+            'message': f'Payout request {action}d successfully',
+            'payout': {
+                'id': payout.id,
+                'status': payout.status,
+                'reviewed_at': payout.reviewed_at.isoformat()
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/payout/<int:payout_id>/mark-paid', methods=['POST'])
+def mark_payout_paid(payout_id):
+    """Admin: Mark approved payout as paid"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        payout = PayoutRequest.query.get(payout_id)
+        if not payout:
+            return jsonify({'error': 'Payout request not found'}), 404
+        
+        if payout.status != 'approved':
+            return jsonify({'error': 'Can only mark approved payouts as paid'}), 400
+        
+        payout.status = 'paid'
+        payout.paid_at = datetime.utcnow()
+        
+        db.session.commit()
+        
+        # Send payment confirmation email
+        try:
+            email_service.send_payout_paid_notification(
+                vendor_email=payout.vendor.email,
+                vendor_name=f"{payout.vendor.first_name} {payout.vendor.last_name}",
+                shop_name=payout.shop.shop_name,
+                amount=payout.amount
+            )
+        except Exception as e:
+            print(f"Failed to send payment confirmation email: {e}")
+        
+        return jsonify({
+            'message': 'Payout marked as paid successfully',
+            'payout': {
+                'id': payout.id,
+                'status': payout.status,
+                'paid_at': payout.paid_at.isoformat()
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
     app.run(host='0.0.0.0', port=5000, debug=True)
