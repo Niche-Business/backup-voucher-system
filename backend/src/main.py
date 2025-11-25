@@ -5393,5 +5393,39 @@ def run_migration():
         db.session.rollback()
         return jsonify({'error': f'Migration failed: {str(e)}'}), 500
 
+@app.route('/api/admin/update-user-type/<int:user_id>', methods=['POST'])
+def update_user_type(user_id):
+    """Update a user's type (for fixing registration issues)"""
+    admin_id = session.get('user_id')
+    if not admin_id:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    admin_user = User.query.get(admin_id)
+    if not admin_user or admin_user.user_type != 'admin':
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    data = request.get_json()
+    new_user_type = data.get('user_type')
+    
+    if new_user_type not in ['recipient', 'vendor', 'vcse', 'school', 'admin']:
+        return jsonify({'error': 'Invalid user type'}), 400
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    old_type = user.user_type
+    user.user_type = new_user_type
+    db.session.commit()
+    
+    return jsonify({
+        'message': f'User type updated from {old_type} to {new_user_type}',
+        'user_id': user_id,
+        'email': user.email,
+        'old_type': old_type,
+        'new_type': new_user_type
+    })
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
