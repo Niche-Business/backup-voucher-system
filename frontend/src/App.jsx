@@ -522,7 +522,10 @@ function RegisterPage({ onRegister, onNavigate }) {
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
+    const newFormData = { ...formData, [e.target.name]: e.target.value }
+    console.log('[RegisterPage] New formData.userType:', newFormData.userType)
+    setFormData(newFormData)
   }
 
   const handleSubmit = async (e) => {
