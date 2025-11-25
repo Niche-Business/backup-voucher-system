@@ -95,6 +95,13 @@
     "toGo": "للذهاب",
     "issueVouchers": "إصدار القسائم",
     "participatingShops": "المتاجر المشاركة",
+    "voucherHistory": "سجل القسائم",
+    "searchByCode": "البحث برمز القسيمة...",
+    "allVouchers": "جميع القسائم",
+    "activeVouchers": "نشطة",
+    "redeemedVouchers": "تم استردادها",
+    "expiredVouchers": "منتهية الصلاحية",
+    "noVouchersFound": "لم يتم العثور على قسائم",
     "tabs": {
       "overview": "نظرة عامة",
       "voucherManagement": "إدارة القسائم",
@@ -262,8 +269,11 @@
     "code": "الرمز:",
     "status": "الحالة:",
     "expires": "تنتهي:",
+    "expiry": "انتهاء الصلاحية:",
     "issuedBy": "صادر عن:",
     "redeemed": "تم الاسترداد:",
+    "redeemedOn": "تم الاسترداد في:",
+    "redeemedAt": "تم الاسترداد في:",
     "printVoucher": "طباعة القسيمة",
     "showQRCode": "إظهار رمز الاستجابة السريعة",
     "scanToRedeem": "امسح للاسترداد",
@@ -333,6 +343,36 @@
     "step2": "أدخل الرمز أعلاه",
     "step3": "انقر فوق \"التحقق\" للتحقق من القسيمة",
     "step4": "انقر فوق \"استرداد\" لإكمال المعاملة",
-    "step5": "سيتم إضافة مبلغ القسيمة إلى رصيدك"
+    "step5": "سيتم إضافة مبلغ القسيمة إلى رصيدك",
+    "redemptionHistory": "سجل الاسترداد",
+    "searchByCodeOrRecipient": "البحث بالرمز أو المستلم...",
+    "allRedemptions": "جميع عمليات الاسترداد",
+    "today": "اليوم",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "redemptionHistoryComingSoon": "سجل الاسترداد قريبًا",
+    "redemptionHistoryDescription": "عرض السجل التفصيلي لجميع القسائم التي تم استردادها في متجرك"
+  },
+  "reports": {
+    "generateReport": "إنشاء تقرير",
+    "downloadPDF": "تنزيل PDF",
+    "downloadExcel": "تنزيل Excel",
+    "dateRange": "نطاق التاريخ",
+    "from": "من",
+    "to": "إلى",
+    "reportType": "نوع التقرير",
+    "voucherActivity": "نشاط القسائم",
+    "financialSummary": "ملخص مالي",
+    "impactReport": "تقرير التأثير"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من",
+    "showing": "عرض",
+    "to": "إلى",
+    "entries": "إدخالات",
+    "totalItems": "إجمالي العناصر"
   }
 }

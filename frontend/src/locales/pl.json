@@ -95,6 +95,13 @@
     "toGo": "To Go",
     "issueVouchers": "Wydaj Vouchery",
     "participatingShops": "Uczestniczące Sklepy",
+    "voucherHistory": "Historia Voucherów",
+    "searchByCode": "Szukaj po kodzie vouchera...",
+    "allVouchers": "Wszystkie Vouchery",
+    "activeVouchers": "Aktywne",
+    "redeemedVouchers": "Zrealizowane",
+    "expiredVouchers": "Wygasłe",
+    "noVouchersFound": "Nie znaleziono voucherów",
     "tabs": {
       "overview": "Przegląd",
       "voucherManagement": "Zarządzanie Voucherami",
@@ -262,8 +269,11 @@
     "code": "Kod:",
     "status": "Status:",
     "expires": "Wygasa:",
+    "expiry": "Wygaśnięcie:",
     "issuedBy": "Wydany przez:",
     "redeemed": "Zrealizowany:",
+    "redeemedOn": "Zrealizowany Dnia:",
+    "redeemedAt": "Zrealizowany W:",
     "printVoucher": "Wydrukuj Voucher",
     "showQRCode": "Pokaż Kod QR",
     "scanToRedeem": "Zeskanuj, aby Zrealizować",
@@ -333,6 +343,36 @@
     "step2": "Wprowadź kod powyżej",
     "step3": "Kliknij \"Zwaliduj\", aby sprawdzić voucher",
     "step4": "Kliknij \"Zrealizuj\", aby zakończyć transakcję",
-    "step5": "Kwota vouchera zostanie dodana do Twojego salda"
+    "step5": "Kwota vouchera zostanie dodana do Twojego salda",
+    "redemptionHistory": "Historia Realizacji",
+    "searchByCodeOrRecipient": "Szukaj po kodzie lub odbiorcy...",
+    "allRedemptions": "Wszystkie Realizacje",
+    "today": "Dzisiaj",
+    "thisWeek": "Ten Tydzień",
+    "thisMonth": "Ten Miesiąc",
+    "redemptionHistoryComingSoon": "Historia Realizacji Wkrótce",
+    "redemptionHistoryDescription": "Zobacz szczegółową historię wszystkich voucherów zrealizowanych w Twoim sklepie"
+  },
+  "reports": {
+    "generateReport": "Generuj Raport",
+    "downloadPDF": "Pobierz PDF",
+    "downloadExcel": "Pobierz Excel",
+    "dateRange": "Zakres Dat",
+    "from": "Od",
+    "to": "Do",
+    "reportType": "Typ Raportu",
+    "voucherActivity": "Aktywność Voucherów",
+    "financialSummary": "Podsumowanie Finansowe",
+    "impactReport": "Raport Wpływu"
+  },
+  "pagination": {
+    "previous": "Poprzedni",
+    "next": "Następny",
+    "page": "Strona",
+    "of": "z",
+    "showing": "Pokazując",
+    "to": "do",
+    "entries": "wpisów",
+    "totalItems": "wszystkich elementów"
   }
 }

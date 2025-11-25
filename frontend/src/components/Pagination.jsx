@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
+  const { t } = useTranslation()
   const totalPages = Math.ceil(totalItems / itemsPerPage)
   
   if (totalPages <= 1) return null
@@ -58,7 +60,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
         disabled={currentPage === 1}
         style={currentPage === 1 ? disabledButtonStyle : buttonStyle}
       >
-        ← Previous
+        ← {t('pagination.previous')}
       </button>
       
       {startPage > 1 && (
@@ -90,11 +92,11 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
         disabled={currentPage === totalPages}
         style={currentPage === totalPages ? disabledButtonStyle : buttonStyle}
       >
-        Next →
+        {t('pagination.next')} →
       </button>
       
       <div style={{marginLeft: '20px', fontSize: '14px', color: '#666'}}>
-        Page {currentPage} of {totalPages} ({totalItems} total items)
+        {t('pagination.page')} {currentPage} {t('pagination.of')} {totalPages} ({totalItems} {t('pagination.totalItems')})
       </div>
     </div>
   )

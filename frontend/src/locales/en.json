@@ -95,6 +95,13 @@
     "toGo": "To Go",
     "issueVouchers": "Issue Vouchers",
     "participatingShops": "Participating Shops",
+    "voucherHistory": "Voucher History",
+    "searchByCode": "Search by voucher code...",
+    "allVouchers": "All Vouchers",
+    "activeVouchers": "Active",
+    "redeemedVouchers": "Redeemed",
+    "expiredVouchers": "Expired",
+    "noVouchersFound": "No vouchers found",
     "tabs": {
       "overview": "Overview",
       "voucherManagement": "Voucher Management",
@@ -262,8 +269,11 @@
     "code": "Code:",
     "status": "Status:",
     "expires": "Expires:",
+    "expiry": "Expiry:",
     "issuedBy": "Issued by:",
     "redeemed": "Redeemed:",
+    "redeemedOn": "Redeemed On:",
+    "redeemedAt": "Redeemed At:",
     "printVoucher": "Print Voucher",
     "showQRCode": "Show QR Code",
     "scanToRedeem": "Scan to Redeem",
@@ -333,6 +343,36 @@
     "step2": "Enter the code above",
     "step3": "Click \"Validate\" to check the voucher",
     "step4": "Click \"Redeem\" to complete the transaction",
-    "step5": "The voucher amount will be added to your balance"
+    "step5": "The voucher amount will be added to your balance",
+    "redemptionHistory": "Redemption History",
+    "searchByCodeOrRecipient": "Search by code or recipient...",
+    "allRedemptions": "All Redemptions",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "redemptionHistoryComingSoon": "Redemption History Coming Soon",
+    "redemptionHistoryDescription": "View detailed history of all vouchers redeemed at your shop"
+  },
+  "reports": {
+    "generateReport": "Generate Report",
+    "downloadPDF": "Download PDF",
+    "downloadExcel": "Download Excel",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To",
+    "reportType": "Report Type",
+    "voucherActivity": "Voucher Activity",
+    "financialSummary": "Financial Summary",
+    "impactReport": "Impact Report"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "entries": "entries",
+    "totalItems": "total items"
   }
 }

@@ -4998,7 +4998,7 @@ function SchoolDashboard({ user, onLogout }) {
             onClick={() => setActiveTab('vouchers')} 
             style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}
           >
-            Voucher History
+            {t('dashboard.voucherHistory')}
           </button>
           <button 
             onClick={() => setActiveTab('togo')} 
@@ -5211,7 +5211,7 @@ function SchoolDashboard({ user, onLogout }) {
         {/* Voucher History Tab */}
         {activeTab === 'vouchers' && (
           <div>
-            <h2 style={{marginBottom: '20px', color: '#9C27B0'}}>Voucher History</h2>
+            <h2 style={{marginBottom: '20px', color: '#9C27B0'}}>{t('dashboard.voucherHistory')}</h2>
             {vouchers.length === 0 ? (
               <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', textAlign: 'center'}}>
                 <p style={{color: '#666'}}>No vouchers issued yet</p>

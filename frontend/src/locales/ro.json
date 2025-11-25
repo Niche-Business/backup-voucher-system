@@ -95,6 +95,13 @@
     "toGo": "To Go",
     "issueVouchers": "Emite Vouchere",
     "participatingShops": "Magazine Participante",
+    "voucherHistory": "Istoric Vouchere",
+    "searchByCode": "Caută după cod voucher...",
+    "allVouchers": "Toate Voucherele",
+    "activeVouchers": "Active",
+    "redeemedVouchers": "Răscumpărate",
+    "expiredVouchers": "Expirate",
+    "noVouchersFound": "Nu s-au găsit vouchere",
     "tabs": {
       "overview": "Prezentare Generală",
       "voucherManagement": "Gestionare Vouchere",
@@ -262,8 +269,11 @@
     "code": "Cod:",
     "status": "Stare:",
     "expires": "Expiră:",
+    "expiry": "Expirare:",
     "issuedBy": "Emis de:",
     "redeemed": "Răscumpărat:",
+    "redeemedOn": "Răscumpărat La:",
+    "redeemedAt": "Răscumpărat La:",
     "printVoucher": "Tipărește Voucher",
     "showQRCode": "Arată Cod QR",
     "scanToRedeem": "Scanează pentru Răscumpărare",
@@ -333,6 +343,36 @@
     "step2": "Introduceți codul mai sus",
     "step3": "Faceți clic pe \"Validați\" pentru a verifica voucherul",
     "step4": "Faceți clic pe \"Răscumpărați\" pentru a finaliza tranzacția",
-    "step5": "Suma voucherului va fi adăugată la soldul dvs."
+    "step5": "Suma voucherului va fi adăugată la soldul dvs.",
+    "redemptionHistory": "Istoric Răscumpărări",
+    "searchByCodeOrRecipient": "Caută după cod sau beneficiar...",
+    "allRedemptions": "Toate Răscumpărările",
+    "today": "Astăzi",
+    "thisWeek": "Această Săptămână",
+    "thisMonth": "Această Lună",
+    "redemptionHistoryComingSoon": "Istoric Răscumpărări În Curând",
+    "redemptionHistoryDescription": "Vedeți istoricul detaliat al tuturor voucherelor răscumpărate la magazinul dvs."
+  },
+  "reports": {
+    "generateReport": "Generează Raport",
+    "downloadPDF": "Descarcă PDF",
+    "downloadExcel": "Descarcă Excel",
+    "dateRange": "Interval de Date",
+    "from": "De la",
+    "to": "Până la",
+    "reportType": "Tip Raport",
+    "voucherActivity": "Activitate Vouchere",
+    "financialSummary": "Rezumat Financiar",
+    "impactReport": "Raport de Impact"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Următor",
+    "page": "Pagina",
+    "of": "din",
+    "showing": "Afișare",
+    "to": "până la",
+    "entries": "intrări",
+    "totalItems": "total articole"
   }
 }
