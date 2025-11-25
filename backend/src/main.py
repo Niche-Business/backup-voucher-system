@@ -5282,12 +5282,13 @@ def mark_payout_paid(payout_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/admin/run-migration', methods=['POST'])
-@login_required
 def run_migration():
     """Run database migrations (admin only)"""
     user_id = session.get('user_id')
-    user = User.query.get(user_id)
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
     
+    user = User.query.get(user_id)
     if not user or user.user_type != 'admin':
         return jsonify({'error': 'Unauthorized'}), 403
     
