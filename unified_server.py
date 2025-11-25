@@ -28,6 +28,16 @@ def serve_frontend(path):
     mimetypes.add_type('application/javascript', '.mjs')
     mimetypes.add_type('text/css', '.css')
     
+    # Debug logging
+    if path and path.endswith('.js'):
+        file_path = frontend_build / path
+        print(f"[SERVE] Requested: {path}")
+        print(f"[SERVE] Looking in: {frontend_build}")
+        print(f"[SERVE] Full path: {file_path}")
+        print(f"[SERVE] Exists: {file_path.exists()}")
+        if file_path.exists():
+            print(f"[SERVE] File size: {file_path.stat().st_size} bytes")
+    
     if path and (frontend_build / path).exists():
         # Get the file and set correct MIME type
         file_path = frontend_build / path
