@@ -5070,7 +5070,13 @@ def request_payout():
         }), 201
         
     except Exception as e:
+        import traceback
         db.session.rollback()
+        error_trace = traceback.format_exc()
+        print(f"\n{'='*80}")
+        print(f"ERROR in payout request endpoint:")
+        print(error_trace)
+        print(f"{'='*80}\n")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/vendor/payout/history', methods=['GET'])
