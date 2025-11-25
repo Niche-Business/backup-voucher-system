@@ -521,6 +521,26 @@ function RegisterPage({ onRegister, onNavigate }) {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
+  // Monitor userType dropdown for changes (including browser automation)
+  useEffect(() => {
+    const userTypeSelect = document.getElementById('register-usertype-select')
+    if (!userTypeSelect) return
+    
+    const handleUserTypeChange = () => {
+      const userType = userTypeSelect.value
+      console.log('[useEffect] Registration userType changed to:', userType)
+      if (userType !== formData.userType) {
+        console.log('[useEffect] Updating formData.userType from', formData.userType, 'to', userType)
+        setFormData(prev => ({...prev, userType: userType}))
+      }
+    }
+    
+    // Poll for changes every 100ms
+    const interval = setInterval(handleUserTypeChange, 100)
+    
+    return () => clearInterval(interval)
+  }, [formData.userType])
+
   const handleChange = (e) => {
     console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
     if (e.target.name === 'userType') {
@@ -564,7 +584,15 @@ function RegisterPage({ onRegister, onNavigate }) {
         <form onSubmit={handleSubmit}>
           <div style={{marginBottom: '15px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
-            <select name="userType" value={formData.userType} onChange={handleChange} style={styles.input} required>
+            <select 
+              id="register-usertype-select"
+              name="userType" 
+              value={formData.userType} 
+              onChange={handleChange}
+              onInput={handleChange}
+              style={styles.input} 
+              required
+            >
               <option value="recipient">Recipient</option>
                 <option value="vendor">Local Food Shop</option>
               <option value="vcse">VCSE Organization</option>
@@ -3807,6 +3835,28 @@ function VendorDashboard({ user, onLogout }) {
     loadPayoutHistory()
   }, [])
 
+  // Monitor payout shop dropdown for changes (including browser automation)
+  useEffect(() => {
+    if (!showPayoutForm) return
+    
+    const shopSelect = document.getElementById('payout-shop-select')
+    if (!shopSelect) return
+    
+    const handleShopChange = () => {
+      const shopId = parseInt(shopSelect.value) || ''
+      console.log('[useEffect] Payout shop changed to:', shopId, typeof shopId)
+      if (shopId !== payoutForm.shop_id) {
+        console.log('[useEffect] Updating payoutForm.shop_id from', payoutForm.shop_id, 'to', shopId)
+        setPayoutForm(prev => ({...prev, shop_id: shopId}))
+      }
+    }
+    
+    // Poll for changes every 100ms when form is visible
+    const interval = setInterval(handleShopChange, 100)
+    
+    return () => clearInterval(interval)
+  }, [showPayoutForm, payoutForm.shop_id])
+
   const loadShops = async () => {
     try {
       const data = await apiCall('/vendor/shops')
@@ -4576,10 +4626,17 @@ function VendorDashboard({ user, onLogout }) {
                     <div>
                       <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('shop.shopName')}</label>
                       <select
+                        id="payout-shop-select"
+                        name="shop_id"
                         value={payoutForm.shop_id}
                         onChange={(e) => {
                           const shopId = parseInt(e.target.value) || '';
                           console.log('Shop selected:', shopId, typeof shopId);
+                          setPayoutForm({...payoutForm, shop_id: shopId});
+                        }}
+                        onInput={(e) => {
+                          const shopId = parseInt(e.target.value) || '';
+                          console.log('Shop input:', shopId, typeof shopId);
                           setPayoutForm({...payoutForm, shop_id: shopId});
                         }}
                         style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}

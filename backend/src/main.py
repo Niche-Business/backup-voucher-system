@@ -426,6 +426,12 @@ def health_check():
 def register():
     try:
         data = request.get_json()
+        print(f"\n{'='*80}")
+        print(f"REGISTRATION REQUEST RECEIVED:")
+        print(f"Email: {data.get('email')}")
+        print(f"User Type: {data.get('user_type')} (type: {type(data.get('user_type'))})")
+        print(f"Full data keys: {list(data.keys())}")
+        print(f"{'='*80}\n")
         
         # Validate required fields
         required_fields = ['email', 'password', 'first_name', 'last_name', 'user_type']
