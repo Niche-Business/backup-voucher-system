@@ -4144,6 +4144,8 @@ function RecipientDashboard({ user, onLogout }) {
   const [cart, setCart] = useState([])
   const [cartCount, setCartCount] = useState(0)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [recipientVoucherSearch, setRecipientVoucherSearch] = useState('')
+  const [recipientVoucherStatus, setRecipientVoucherStatus] = useState('all')
 
   useEffect(() => {
     loadVouchers()
@@ -4298,6 +4300,46 @@ function RecipientDashboard({ user, onLogout }) {
           <div>
             <h2>💳 {t('dashboard.myVouchers')}</h2>
             
+            {/* Search and Filter Bar */}
+            <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Vouchers</label>
+                  <input
+                    type="text"
+                    placeholder="Search by code..."
+                    value={recipientVoucherSearch || ''}
+                    onChange={(e) => setRecipientVoucherSearch(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📋 Status Filter</label>
+                  <select
+                    value={recipientVoucherStatus || 'all'}
+                    onChange={(e) => setRecipientVoucherStatus(e.target.value)}
+                    style={{...styles.input, width: '100%'}}
+                  >
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="redeemed">Redeemed</option>
+                    <option value="expired">Expired</option>
+                  </select>
+                </div>
+                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                  <button
+                    onClick={() => {
+                      setRecipientVoucherSearch('')
+                      setRecipientVoucherStatus('all')
+                    }}
+                    style={{...styles.secondaryButton, width: '100%'}}
+                  >
+                    ✖️ Clear Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+            
             {voucherSummary && (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
                 <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
@@ -4320,7 +4362,17 @@ function RecipientDashboard({ user, onLogout }) {
                 <p>{t('recipient.noVouchersAvailable')}</p>
               ) : (
                 <div style={{display: 'grid', gap: '20px'}}>
-                  {vouchers.map(voucher => (
+                  {vouchers
+                    .filter(voucher => {
+                      // Status filter
+                      if (recipientVoucherStatus !== 'all' && voucher.status !== recipientVoucherStatus) return false
+                      // Search filter
+                      if (recipientVoucherSearch) {
+                        return voucher.code.toLowerCase().includes(recipientVoucherSearch.toLowerCase())
+                      }
+                      return true
+                    })
+                    .map(voucher => (
                     <div key={voucher.id} style={{
                       padding: '25px',
                       border: `3px solid ${voucher.status === 'active' ? '#4CAF50' : '#ccc'}`,
