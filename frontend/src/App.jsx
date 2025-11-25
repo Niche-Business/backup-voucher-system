@@ -674,6 +674,8 @@ function RegisterPage({ onRegister, onNavigate }) {
 
 // Dashboard Router Component
 function Dashboard({ user, onLogout }) {
+  console.log('Dashboard received user:', user)
+  console.log('User type:', user.userType)
   if (user.userType === 'admin') return <AdminDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vcse') return <VCSEDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vendor') return <VendorDashboard user={user} onLogout={onLogout} />
