@@ -5281,5 +5281,58 @@ def mark_payout_paid(payout_id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/admin/run-migration', methods=['POST'])
+@login_required
+def run_migration():
+    """Run database migrations (admin only)"""
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    
+    if not user or user.user_type != 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    try:
+        # Check if payout_request table exists
+        from sqlalchemy import inspect, text
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+        
+        if 'payout_request' not in tables:
+            # Create the table using raw SQL
+            create_table_sql = text("""
+            CREATE TABLE IF NOT EXISTS payout_request (
+                id SERIAL PRIMARY KEY,
+                vendor_id INTEGER NOT NULL REFERENCES "user"(id),
+                shop_id INTEGER NOT NULL REFERENCES vendor_shop(id),
+                amount FLOAT NOT NULL,
+                status VARCHAR(20) DEFAULT 'pending',
+                bank_name VARCHAR(100),
+                account_number VARCHAR(50),
+                sort_code VARCHAR(20),
+                account_holder_name VARCHAR(100),
+                notes TEXT,
+                admin_notes TEXT,
+                requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                reviewed_at TIMESTAMP,
+                reviewed_by INTEGER REFERENCES "user"(id),
+                paid_at TIMESTAMP
+            );
+            """)
+            db.session.execute(create_table_sql)
+            
+            # Create indexes
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_payout_vendor ON payout_request(vendor_id);"))
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_payout_shop ON payout_request(shop_id);"))
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_payout_status ON payout_request(status);"))
+            
+            db.session.commit()
+            return jsonify({'message': 'Migration completed: payout_request table created'}), 200
+        else:
+            return jsonify({'message': 'Migration not needed: payout_request table already exists'}), 200
+            
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Migration failed: {str(e)}'}), 500
+
     app.run(host='0.0.0.0', port=5000, debug=True)
 
