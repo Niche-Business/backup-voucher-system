@@ -3754,6 +3754,7 @@ function VCSEDashboard({ user, onLogout }) {
 }
 
 // VENDOR DASHBOARD - WITH FIXED SURPLUS COUNTER
+// Force rebuild - To Go form with item_type field
 function VendorDashboard({ user, onLogout }) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
