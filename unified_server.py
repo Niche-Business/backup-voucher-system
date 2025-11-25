@@ -44,6 +44,35 @@ def serve_frontend(path):
     return send_from_directory(str(frontend_build), 'index.html')
 
 if __name__ == '__main__':
+    # Verify frontend build exists
+    if not frontend_build.exists():
+        print("❌ ERROR: Frontend build directory not found!")
+        print(f"   Expected: {frontend_build}")
+        print("   Run: cd frontend && pnpm run build")
+        sys.exit(1)
+    
+    # Check for index.html
+    index_file = frontend_build / 'index.html'
+    if not index_file.exists():
+        print("❌ ERROR: index.html not found in build directory!")
+        print(f"   Expected: {index_file}")
+        sys.exit(1)
+    
+    # Check for assets directory
+    assets_dir = frontend_build / 'assets'
+    if not assets_dir.exists() or not list(assets_dir.glob('*.js')):
+        print("❌ ERROR: No JavaScript files found in assets directory!")
+        print(f"   Expected: {assets_dir}/*.js")
+        sys.exit(1)
+    
+    print("✓ Frontend build verified:")
+    print(f"  - Build directory: {frontend_build}")
+    print(f"  - Index file: {index_file}")
+    js_files = list(assets_dir.glob('*.js'))
+    for js_file in js_files:
+        size_kb = js_file.stat().st_size / 1024
+        print(f"  - {js_file.name}: {size_kb:.1f} KB")
+    
     # Initialize database
     with app.app_context():
         print("Initializing database...")
