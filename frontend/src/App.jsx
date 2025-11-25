@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, Component } from 'react'
 import { useTranslation } from 'react-i18next'
 import './i18n'
 import LandingPage from './LandingPage'
@@ -8,6 +8,92 @@ import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
 import Pagination from './components/Pagination'
 import { QRCodeSVG } from 'qrcode.react'
+
+// Error Boundary Component
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false, error: null, errorInfo: null }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo)
+    this.setState({ error, errorInfo })
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '40px',
+          maxWidth: '800px',
+          margin: '100px auto',
+          textAlign: 'center',
+          backgroundColor: '#fff',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h1 style={{ color: '#e74c3c', marginBottom: '20px' }}>⚠️ Something went wrong</h1>
+          <p style={{ fontSize: '18px', color: '#555', marginBottom: '30px' }}>
+            We're sorry, but something unexpected happened. Please try refreshing the page.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '12px 24px',
+              fontSize: '16px',
+              backgroundColor: '#3498db',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginRight: '10px'
+            }}
+          >
+            🔄 Refresh Page
+          </button>
+          <button
+            onClick={() => window.location.href = '/'}
+            style={{
+              padding: '12px 24px',
+              fontSize: '16px',
+              backgroundColor: '#95a5a6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            🏠 Go to Home
+          </button>
+          {this.state.error && (
+            <details style={{ marginTop: '30px', textAlign: 'left' }}>
+              <summary style={{ cursor: 'pointer', color: '#7f8c8d' }}>Technical Details</summary>
+              <pre style={{
+                marginTop: '10px',
+                padding: '15px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '4px',
+                overflow: 'auto',
+                fontSize: '12px',
+                color: '#e74c3c'
+              }}>
+                {this.state.error.toString()}
+                {this.state.errorInfo && this.state.errorInfo.componentStack}
+              </pre>
+            </details>
+          )}
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
@@ -6136,4 +6222,11 @@ const styles = {
   }
 }
 
-export default App
+// Wrap App with ErrorBoundary
+const AppWithErrorBoundary = () => (
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+)
+
+export default AppWithErrorBoundary
