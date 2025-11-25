@@ -3541,6 +3541,8 @@ function VendorDashboard({ user, onLogout }) {
     phone: ''
   })
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [redemptionHistorySearch, setRedemptionHistorySearch] = useState('')
+  const [redemptionHistoryFilter, setRedemptionHistoryFilter] = useState('all')
 
   useEffect(() => {
     loadShops()
@@ -3727,6 +3729,7 @@ function VendorDashboard({ user, onLogout }) {
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.redeemVouchers')}</button>
+          <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('shop.redemptionHistory')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
         
@@ -4213,6 +4216,8 @@ function RecipientDashboard({ user, onLogout }) {
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [recipientVoucherSearch, setRecipientVoucherSearch] = useState('')
   const [recipientVoucherStatus, setRecipientVoucherStatus] = useState('all')
+  const [voucherHistorySearch, setVoucherHistorySearch] = useState('')
+  const [voucherHistoryFilter, setVoucherHistoryFilter] = useState('all')
 
   useEffect(() => {
     loadVouchers()
@@ -4341,6 +4346,7 @@ function RecipientDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.myVouchers')}</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.participatingShops')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.browseToGo')}</button>
+          <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('dashboard.voucherHistory')}</button>
           <button onClick={() => setActiveTab('cart')} style={{...(activeTab === 'cart' ? styles.activeTab : styles.tab), position: 'relative'}}>
             🛒 {t('dashboard.shoppingCart')}
             {cartCount > 0 && (
@@ -4779,6 +4785,87 @@ function RecipientDashboard({ user, onLogout }) {
             </div>
           </div>
         )}
+        
+        {activeTab === 'history' && (
+          <div>
+            <h2>📜 {t('dashboard.voucherHistory')}</h2>
+            
+            {/* Filter Bar */}
+            <div style={{marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '10px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+              <input
+                type="text"
+                placeholder={t('dashboard.searchByCode')}
+                value={voucherHistorySearch}
+                onChange={(e) => setVoucherHistorySearch(e.target.value)}
+                style={{flex: 1, minWidth: '200px', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+              />
+              <select
+                value={voucherHistoryFilter}
+                onChange={(e) => setVoucherHistoryFilter(e.target.value)}
+                style={{padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+              >
+                <option value="all">{t('dashboard.allVouchers')}</option>
+                <option value="active">{t('dashboard.activeVouchers')}</option>
+                <option value="redeemed">{t('dashboard.redeemedVouchers')}</option>
+                <option value="expired">{t('dashboard.expiredVouchers')}</option>
+              </select>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {(() => {
+                const filteredHistory = vouchers
+                  .filter(v => {
+                    if (voucherHistoryFilter !== 'all' && v.status !== voucherHistoryFilter) return false
+                    if (voucherHistorySearch && !v.code.toLowerCase().includes(voucherHistorySearch.toLowerCase())) return false
+                    return true
+                  })
+                  .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+                
+                return filteredHistory.length === 0 ? (
+                  <p>{t('dashboard.noVouchersFound')}</p>
+                ) : (
+                  <div style={{display: 'grid', gap: '15px'}}>
+                    {filteredHistory.map(voucher => (
+                      <div key={voucher.id} style={{
+                        padding: '20px',
+                        border: `2px solid ${voucher.status === 'active' ? '#4CAF50' : voucher.status === 'redeemed' ? '#2196F3' : '#757575'}`,
+                        borderRadius: '10px',
+                        backgroundColor: '#fafafa'
+                      }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+                          <div>
+                            <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>£{voucher.value.toFixed(2)}</h3>
+                            <p style={{margin: '5px 0'}}><strong>{t('recipient.code')}:</strong> {voucher.code}</p>
+                            <p style={{margin: '5px 0'}}>
+                              <strong>{t('recipient.status')}:</strong>{' '}
+                              <span style={{
+                                color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#1976d2' : '#757575',
+                                fontWeight: 'bold',
+                                textTransform: 'uppercase'
+                              }}>
+                                {voucher.status}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0'}}><strong>{t('recipient.issuedBy')}:</strong> {voucher.issued_by?.organization || 'N/A'}</p>
+                          <p style={{margin: '5px 0'}}><strong>{t('recipient.expiry')}:</strong> {new Date(voucher.expiry_date).toLocaleDateString()}</p>
+                          {voucher.redeemed_at && (
+                            <p style={{margin: '5px 0'}}><strong>{t('recipient.redeemedOn')}:</strong> {new Date(voucher.redeemed_at).toLocaleDateString()}</p>
+                          )}
+                          {voucher.redeemed_at && voucher.shop && (
+                            <p style={{margin: '5px 0'}}><strong>{t('recipient.redeemedAt')}:</strong> {voucher.shop.name}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })()}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -5200,12 +5287,51 @@ function SchoolDashboard({ user, onLogout }) {
             </div>
           </div>
         )}
+        
+        {activeTab === 'history' && (
+          <div>
+            <h2>📜 {t('shop.redemptionHistory')}</h2>
+            
+            <div style={{marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '10px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+              <input
+                type="text"
+                placeholder={t('shop.searchByCodeOrRecipient')}
+                value={redemptionHistorySearch}
+                onChange={(e) => setRedemptionHistorySearch(e.target.value)}
+                style={{flex: 1, minWidth: '200px', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+              />
+              <select
+                value={redemptionHistoryFilter}
+                onChange={(e) => setRedemptionHistoryFilter(e.target.value)}
+                style={{padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
+              >
+                <option value="all">{t('shop.allRedemptions')}</option>
+                <option value="today">{t('shop.today')}</option>
+                <option value="week">{t('shop.thisWeek')}</option>
+                <option value="month">{t('shop.thisMonth')}</option>
+              </select>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {(() => {
+                // Note: This would need a backend API endpoint to fetch redeemed vouchers
+                // For now, showing placeholder
+                return (
+                  <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                    <p style={{fontSize: '18px', marginBottom: '10px'}}>{t('shop.redemptionHistoryComingSoon')}</p>
+                    <p>{t('shop.redemptionHistoryDescription')}</p>
+                  </div>
+                )
+              })()}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-// SCHOOL TO GO ORDER CARD COMPONENT
+// RECIPIENT DASHBOARDER CARD COMPONENT
 function SchoolToGoOrderCard({ item, onOrderPlaced }) {
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [orderForm, setOrderForm] = useState({
