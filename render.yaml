@@ -12,7 +12,7 @@ services:
       echo "=== Installing pnpm ==="
       npm install -g pnpm
       echo "=== Building frontend ==="
-      cd frontend && rm -rf dist node_modules/.vite && pnpm install --force && pnpm run build
+      cd frontend && rm -rf dist node_modules/.vite node_modules/.cache .vite && pnpm cache clean --force && pnpm install --force --no-cache && pnpm run build --force
       echo "=== Verifying build ==="
       ls -lah dist/
       ls -lah dist/assets/
