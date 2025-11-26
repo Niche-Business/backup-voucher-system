@@ -12,6 +12,7 @@ import os
 import secrets
 from email_service import email_service
 from sms_service import sms_service
+import stripe_payment
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
@@ -261,6 +262,38 @@ class PayoutRequest(db.Model):
     vendor = db.relationship('User', foreign_keys=[vendor_id], backref='payout_requests')
     shop = db.relationship('VendorShop', backref='payouts')
     reviewer = db.relationship('User', foreign_keys=[reviewed_by], backref='reviewed_payouts')
+
+class PaymentTransaction(db.Model):
+    """Stripe payment transactions for VCSE fund loading"""
+    __tablename__ = 'payment_transaction'
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # User Information
+    vcse_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    # Payment Details
+    amount = db.Column(db.Float, nullable=False)  # Amount in GBP
+    currency = db.Column(db.String(3), default='GBP')
+    
+    # Stripe Information
+    stripe_payment_intent_id = db.Column(db.String(255), unique=True)
+    stripe_customer_id = db.Column(db.String(255))  # For saved payment methods
+    payment_method_id = db.Column(db.String(255))  # Card used
+    
+    # Status Tracking
+    status = db.Column(db.String(20), default='pending')
+    # Status values: pending, processing, succeeded, failed, cancelled, refunded
+    
+    # Transaction Metadata
+    description = db.Column(db.Text)
+    failure_reason = db.Column(db.Text)  # Error message if failed
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    completed_at = db.Column(db.DateTime)  # When payment succeeded
+    
+    # Relationship
+    vcse = db.relationship('User', backref='payment_transactions')
 
 # Helper Functions
 def send_verification_email(user):
@@ -1858,6 +1891,318 @@ def vcse_get_balance():
         
     except Exception as e:
         return jsonify({'error': f'Failed to get balance: {str(e)}'}), 500
+
+# ============================================
+# Stripe Payment Integration Routes
+# ============================================
+
+@app.route('/api/payment/create-intent', methods=['POST'])
+def create_payment_intent():
+    """Create a Stripe Payment Intent for VCSE fund loading"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can load funds'}), 403
+        
+        data = request.get_json()
+        amount = data.get('amount')
+        description = data.get('description', 'Fund loading for voucher distribution')
+        
+        # Validate amount
+        if not amount:
+            return jsonify({'error': 'Amount is required'}), 400
+        
+        try:
+            amount = float(amount)
+        except ValueError:
+            return jsonify({'error': 'Invalid amount format'}), 400
+        
+        # Minimum £10, maximum £10,000
+        if amount < 10:
+            return jsonify({'error': 'Minimum payment amount is £10'}), 400
+        if amount > 10000:
+            return jsonify({'error': 'Maximum payment amount is £10,000'}), 400
+        
+        # Create Stripe Payment Intent
+        try:
+            payment_result = stripe_payment.create_payment_intent(
+                amount=amount,
+                vcse_id=user.id,
+                vcse_email=user.email,
+                description=description
+            )
+        except Exception as stripe_error:
+            return jsonify({'error': f'Payment setup failed: {str(stripe_error)}'}), 500
+        
+        # Create payment transaction record
+        transaction = PaymentTransaction(
+            vcse_id=user.id,
+            amount=amount,
+            currency='GBP',
+            stripe_payment_intent_id=payment_result['payment_intent_id'],
+            status='pending',
+            description=description
+        )
+        
+        db.session.add(transaction)
+        db.session.commit()
+        
+        return jsonify({
+            'client_secret': payment_result['client_secret'],
+            'payment_intent_id': payment_result['payment_intent_id'],
+            'amount': amount,
+            'transaction_id': transaction.id
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to create payment intent: {str(e)}'}), 500
+
+@app.route('/api/payment/verify', methods=['POST'])
+def verify_payment():
+    """Verify payment completion and update user balance"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can load funds'}), 403
+        
+        data = request.get_json()
+        payment_intent_id = data.get('payment_intent_id')
+        
+        if not payment_intent_id:
+            return jsonify({'error': 'Payment intent ID is required'}), 400
+        
+        # Verify payment with Stripe
+        try:
+            verification = stripe_payment.verify_payment(payment_intent_id)
+        except Exception as stripe_error:
+            return jsonify({'error': f'Payment verification failed: {str(stripe_error)}'}), 500
+        
+        # Find transaction record
+        transaction = PaymentTransaction.query.filter_by(
+            stripe_payment_intent_id=payment_intent_id
+        ).first()
+        
+        if not transaction:
+            return jsonify({'error': 'Transaction not found'}), 404
+        
+        # Verify transaction belongs to this user
+        if transaction.vcse_id != user.id:
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        # Check if already processed
+        if transaction.status == 'succeeded':
+            return jsonify({
+                'success': True,
+                'message': 'Payment already processed',
+                'amount': transaction.amount,
+                'new_balance': user.balance,
+                'transaction_id': transaction.id
+            }), 200
+        
+        # Update transaction based on verification
+        if verification['verified']:
+            transaction.status = 'succeeded'
+            transaction.completed_at = datetime.utcnow()
+            transaction.payment_method_id = verification.get('payment_method')
+            
+            # Add funds to user balance
+            user.balance = (user.balance or 0) + transaction.amount
+            
+            # Create success notification
+            create_notification(
+                user.id,
+                '💳 Payment Successful',
+                f'Your payment of £{transaction.amount:.2f} has been processed successfully. Your new balance is £{user.balance:.2f}.',
+                'success'
+            )
+            
+            db.session.commit()
+            
+            return jsonify({
+                'success': True,
+                'amount': transaction.amount,
+                'new_balance': user.balance,
+                'transaction_id': transaction.id
+            }), 200
+        else:
+            transaction.status = 'failed'
+            transaction.failure_reason = f"Payment status: {verification['status']}"
+            db.session.commit()
+            
+            return jsonify({
+                'success': False,
+                'error': 'Payment not completed',
+                'status': verification['status']
+            }), 400
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Payment verification failed: {str(e)}'}), 500
+
+@app.route('/api/payment/history', methods=['GET'])
+def get_payment_history():
+    """Get payment transaction history for VCSE user"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCSE organizations can view payment history'}), 403
+        
+        # Get query parameters
+        limit = request.args.get('limit', 50, type=int)
+        offset = request.args.get('offset', 0, type=int)
+        status_filter = request.args.get('status')
+        
+        # Build query
+        query = PaymentTransaction.query.filter_by(vcse_id=user.id)
+        
+        if status_filter:
+            query = query.filter_by(status=status_filter)
+        
+        # Get total count
+        total = query.count()
+        
+        # Get transactions with pagination
+        transactions = query.order_by(
+            PaymentTransaction.created_at.desc()
+        ).limit(limit).offset(offset).all()
+        
+        # Format response
+        transaction_list = []
+        for t in transactions:
+            transaction_list.append({
+                'id': t.id,
+                'amount': t.amount,
+                'currency': t.currency,
+                'status': t.status,
+                'description': t.description,
+                'created_at': t.created_at.isoformat() if t.created_at else None,
+                'completed_at': t.completed_at.isoformat() if t.completed_at else None,
+                'failure_reason': t.failure_reason
+            })
+        
+        return jsonify({
+            'transactions': transaction_list,
+            'total': total,
+            'current_balance': user.balance,
+            'allocated_balance': user.allocated_balance
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get payment history: {str(e)}'}), 500
+
+@app.route('/api/payment/webhook', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhook events"""
+    try:
+        payload = request.data
+        sig_header = request.headers.get('Stripe-Signature')
+        webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+        
+        if not webhook_secret:
+            print('Warning: STRIPE_WEBHOOK_SECRET not configured')
+            return jsonify({'error': 'Webhook not configured'}), 500
+        
+        try:
+            import stripe
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, webhook_secret
+            )
+        except ValueError as e:
+            # Invalid payload
+            return jsonify({'error': 'Invalid payload'}), 400
+        except stripe.error.SignatureVerificationError as e:
+            # Invalid signature
+            return jsonify({'error': 'Invalid signature'}), 400
+        
+        # Handle the event
+        if event['type'] == 'payment_intent.succeeded':
+            payment_intent = event['data']['object']
+            payment_intent_id = payment_intent['id']
+            
+            # Find transaction
+            transaction = PaymentTransaction.query.filter_by(
+                stripe_payment_intent_id=payment_intent_id
+            ).first()
+            
+            if transaction and transaction.status != 'succeeded':
+                # Update transaction
+                transaction.status = 'succeeded'
+                transaction.completed_at = datetime.utcnow()
+                
+                # Update user balance
+                user = User.query.get(transaction.vcse_id)
+                if user:
+                    user.balance = (user.balance or 0) + transaction.amount
+                    
+                    # Create notification
+                    create_notification(
+                        user.id,
+                        '💳 Payment Confirmed',
+                        f'Your payment of £{transaction.amount:.2f} has been confirmed. Your new balance is £{user.balance:.2f}.',
+                        'success'
+                    )
+                
+                db.session.commit()
+                print(f'Payment succeeded webhook processed: {payment_intent_id}')
+        
+        elif event['type'] == 'payment_intent.payment_failed':
+            payment_intent = event['data']['object']
+            payment_intent_id = payment_intent['id']
+            
+            # Find transaction
+            transaction = PaymentTransaction.query.filter_by(
+                stripe_payment_intent_id=payment_intent_id
+            ).first()
+            
+            if transaction:
+                transaction.status = 'failed'
+                transaction.failure_reason = payment_intent.get('last_payment_error', {}).get('message', 'Payment failed')
+                
+                # Create notification
+                user = User.query.get(transaction.vcse_id)
+                if user:
+                    create_notification(
+                        user.id,
+                        '❌ Payment Failed',
+                        f'Your payment of £{transaction.amount:.2f} failed. Please try again or use a different payment method.',
+                        'error'
+                    )
+                
+                db.session.commit()
+                print(f'Payment failed webhook processed: {payment_intent_id}')
+        
+        elif event['type'] == 'payment_intent.canceled':
+            payment_intent = event['data']['object']
+            payment_intent_id = payment_intent['id']
+            
+            # Find transaction
+            transaction = PaymentTransaction.query.filter_by(
+                stripe_payment_intent_id=payment_intent_id
+            ).first()
+            
+            if transaction:
+                transaction.status = 'cancelled'
+                db.session.commit()
+                print(f'Payment cancelled webhook processed: {payment_intent_id}')
+        
+        return jsonify({'success': True}), 200
+        
+    except Exception as e:
+        print(f'Webhook error: {str(e)}')
+        return jsonify({'error': str(e)}), 500
 
 # ============================================
 # Vendor Multi-Shop Management Routes

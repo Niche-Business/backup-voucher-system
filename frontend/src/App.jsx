@@ -9,6 +9,8 @@ import VoucherPrint from './components/VoucherPrint'
 import Pagination from './components/Pagination'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { QRCodeSVG } from 'qrcode.react'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
 // Error Boundary Component
 class ErrorBoundary extends Component {
@@ -3028,6 +3030,372 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
   )
 }
 
+// Payment Tab Component with Stripe Elements
+function PaymentTab({ user, onBalanceUpdate }) {
+  const [amount, setAmount] = useState('')
+  const [paymentHistory, setPaymentHistory] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [showPaymentForm, setShowPaymentForm] = useState(false)
+  const [clientSecret, setClientSecret] = useState('')
+  const [paymentIntentId, setPaymentIntentId] = useState('')
+  
+  useEffect(() => {
+    loadPaymentHistory()
+  }, [])
+  
+  const loadPaymentHistory = async () => {
+    try {
+      const data = await apiCall('/payment/history?limit=20')
+      setPaymentHistory(data.transactions || [])
+    } catch (error) {
+      console.error('Failed to load payment history:', error)
+    }
+  }
+  
+  const handleCreatePayment = async (e) => {
+    e.preventDefault()
+    
+    const amountNum = parseFloat(amount)
+    if (isNaN(amountNum) || amountNum < 10 || amountNum > 10000) {
+      setMessage('Please enter an amount between £10 and £10,000')
+      return
+    }
+    
+    setLoading(true)
+    setMessage('')
+    
+    try {
+      const data = await apiCall('/payment/create-intent', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: amountNum,
+          description: 'Fund loading for voucher distribution'
+        })
+      })
+      
+      setClientSecret(data.client_secret)
+      setPaymentIntentId(data.payment_intent_id)
+      setShowPaymentForm(true)
+    } catch (error) {
+      setMessage(`Error: ${error.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  const handlePaymentSuccess = async () => {
+    setMessage('Payment successful! Your balance has been updated.')
+    setAmount('')
+    setShowPaymentForm(false)
+    setClientSecret('')
+    setPaymentIntentId('')
+    await loadPaymentHistory()
+    if (onBalanceUpdate) {
+      await onBalanceUpdate()
+    }
+  }
+  
+  const handlePaymentCancel = () => {
+    setShowPaymentForm(false)
+    setClientSecret('')
+    setPaymentIntentId('')
+    setMessage('Payment cancelled')
+  }
+  
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'succeeded': return { bg: '#e8f5e9', color: '#2e7d32' }
+      case 'pending': return { bg: '#fff3e0', color: '#e65100' }
+      case 'processing': return { bg: '#e3f2fd', color: '#1565c0' }
+      case 'failed': return { bg: '#ffebee', color: '#c62828' }
+      case 'cancelled': return { bg: '#f5f5f5', color: '#666' }
+      default: return { bg: '#f5f5f5', color: '#666' }
+    }
+  }
+  
+  return (
+    <div>
+      <h2>💳 Load Funds</h2>
+      <p style={{marginBottom: '20px', color: '#666'}}>Add funds to your account using a credit or debit card</p>
+      
+      {message && (
+        <div style={{
+          backgroundColor: message.includes('Error') || message.includes('cancelled') ? '#ffebee' : '#e8f5e9',
+          color: message.includes('Error') || message.includes('cancelled') ? '#c62828' : '#2e7d32',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px'
+        }}>
+          {message}
+        </div>
+      )}
+      
+      {!showPaymentForm ? (
+        <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '30px'}}>
+          <h3 style={{marginTop: 0}}>Enter Amount</h3>
+          <form onSubmit={handleCreatePayment}>
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '8px', fontWeight: 'bold'}}>Amount (£)</label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount (£10 - £10,000)"
+                min="10"
+                max="10000"
+                step="0.01"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '18px',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px'
+                }}
+                required
+                disabled={loading}
+              />
+              <p style={{fontSize: '14px', color: '#666', marginTop: '8px'}}>
+                Minimum: £10 | Maximum: £10,000 per transaction
+              </p>
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                ...styles.primaryButton,
+                width: '100%',
+                fontSize: '18px',
+                padding: '15px',
+                backgroundColor: '#4CAF50'
+              }}
+            >
+              {loading ? 'Processing...' : `Continue to Payment`}
+            </button>
+          </form>
+          
+          <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
+            <p style={{margin: 0, fontSize: '14px', color: '#666'}}>
+              🔒 <strong>Secure Payment:</strong> Your card details are processed securely by Stripe. We never store your card information.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <StripePaymentForm
+          clientSecret={clientSecret}
+          paymentIntentId={paymentIntentId}
+          amount={parseFloat(amount)}
+          onSuccess={handlePaymentSuccess}
+          onCancel={handlePaymentCancel}
+        />
+      )}
+      
+      {/* Payment History */}
+      <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px'}}>
+        <h3 style={{marginTop: 0}}>Payment History</h3>
+        
+        {paymentHistory.length === 0 ? (
+          <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+            <p>No payment history yet</p>
+            <p style={{fontSize: '14px'}}>Your payment transactions will appear here</p>
+          </div>
+        ) : (
+          <div style={{overflowX: 'auto'}}>
+            <table style={{width: '100%', borderCollapse: 'collapse'}}>
+              <thead>
+                <tr style={{backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd'}}>
+                  <th style={{padding: '12px', textAlign: 'left'}}>Date</th>
+                  <th style={{padding: '12px', textAlign: 'right'}}>Amount</th>
+                  <th style={{padding: '12px', textAlign: 'center'}}>Status</th>
+                  <th style={{padding: '12px', textAlign: 'left'}}>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paymentHistory.map(transaction => {
+                  const statusStyle = getStatusColor(transaction.status)
+                  return (
+                    <tr key={transaction.id} style={{borderBottom: '1px solid #eee'}}>
+                      <td style={{padding: '12px'}}>
+                        {new Date(transaction.created_at).toLocaleDateString()}
+                        <br />
+                        <span style={{fontSize: '12px', color: '#666'}}>
+                          {new Date(transaction.created_at).toLocaleTimeString()}
+                        </span>
+                      </td>
+                      <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', fontSize: '16px'}}>
+                        £{transaction.amount.toFixed(2)}
+                      </td>
+                      <td style={{padding: '12px', textAlign: 'center'}}>
+                        <span style={{
+                          padding: '4px 12px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: statusStyle.bg,
+                          color: statusStyle.color
+                        }}>
+                          {transaction.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td style={{padding: '12px', fontSize: '14px', color: '#666'}}>
+                        {transaction.description || 'Fund loading'}
+                        {transaction.failure_reason && (
+                          <div style={{color: '#c62828', fontSize: '12px', marginTop: '4px'}}>
+                            {transaction.failure_reason}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Stripe Payment Form Component
+function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, onCancel }) {
+  const stripe = useStripe()
+  const elements = useElements()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!stripe || !elements) {
+      return
+    }
+    
+    setLoading(true)
+    setError('')
+    
+    try {
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement)
+        }
+      })
+      
+      if (stripeError) {
+        setError(stripeError.message)
+        setLoading(false)
+        return
+      }
+      
+      if (paymentIntent.status === 'succeeded') {
+        // Verify payment with backend
+        try {
+          await apiCall('/payment/verify', {
+            method: 'POST',
+            body: JSON.stringify({
+              payment_intent_id: paymentIntentId
+            })
+          })
+          
+          onSuccess()
+        } catch (verifyError) {
+          setError(`Payment succeeded but verification failed: ${verifyError.message}`)
+        }
+      }
+    } catch (err) {
+      setError(`Payment failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  return (
+    <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '30px'}}>
+      <h3 style={{marginTop: 0}}>💳 Enter Card Details</h3>
+      <div style={{marginBottom: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
+        <strong>Amount to pay:</strong> £{amount.toFixed(2)}
+      </div>
+      
+      <form onSubmit={handleSubmit}>
+        <div style={{marginBottom: '20px'}}>
+          <label style={{display: 'block', marginBottom: '8px', fontWeight: 'bold'}}>Card Information</label>
+          <div style={{
+            padding: '12px',
+            border: '2px solid #ddd',
+            borderRadius: '8px',
+            backgroundColor: 'white'
+          }}>
+            <CardElement options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': {
+                    color: '#aab7c4'
+                  }
+                },
+                invalid: {
+                  color: '#9e2146'
+                }
+              }
+            }} />
+          </div>
+        </div>
+        
+        {error && (
+          <div style={{
+            backgroundColor: '#ffebee',
+            color: '#c62828',
+            padding: '12px',
+            borderRadius: '8px',
+            marginBottom: '20px'
+          }}>
+            {error}
+          </div>
+        )}
+        
+        <div style={{display: 'flex', gap: '10px'}}>
+          <button
+            type="submit"
+            disabled={!stripe || loading}
+            style={{
+              ...styles.primaryButton,
+              flex: 1,
+              fontSize: '16px',
+              padding: '15px',
+              backgroundColor: '#4CAF50'
+            }}
+          >
+            {loading ? 'Processing...' : `Pay £${amount.toFixed(2)}`}
+          </button>
+          
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={loading}
+            style={{
+              ...styles.primaryButton,
+              flex: 1,
+              fontSize: '16px',
+              padding: '15px',
+              backgroundColor: '#f44336'
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+      
+      <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
+        <p style={{margin: 0, fontSize: '14px', color: '#666'}}>
+          🔒 <strong>Secure Payment:</strong> Powered by Stripe. Your payment information is encrypted and secure.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // VCSE DASHBOARD
 function VCSEDashboard({ user, onLogout }) {
   const { t } = useTranslation()
@@ -3193,6 +3561,7 @@ function VCSEDashboard({ user, onLogout }) {
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
+          <button onClick={() => setActiveTab('payment')} style={activeTab === 'payment' ? styles.activeTab : styles.tab}>💳 Load Funds</button>
           <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 Voucher Orders</button>
           <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 Reports</button>
           <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
@@ -3201,16 +3570,43 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'overview' && (
           <div>
-            <div style={{backgroundColor: '#e3f2fd', padding: '30px', borderRadius: '15px', marginBottom: '30px'}}>
-              <h3 style={{marginTop: 0, color: '#1565c0'}}>💰 Funds Allocated by Administrator</h3>
-              <p>The System Administrator allocates funds to your organization. Use these funds to issue vouchers to recipients.</p>
-              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '12px', textAlign: 'center'}}>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#1976d2'}}>£{allocatedBalance.toFixed(2)}</div>
-                <div style={{fontSize: '18px', color: '#666'}}>Available Balance for Voucher Issuance</div>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+              {/* Admin Allocated Balance */}
+              <div style={{backgroundColor: '#e3f2fd', padding: '25px', borderRadius: '15px'}}>
+                <h3 style={{marginTop: 0, color: '#1565c0'}}>💼 Admin Allocated Funds</h3>
+                <p style={{fontSize: '14px', color: '#666'}}>Funds allocated by administrator</p>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>£{allocatedBalance.toFixed(2)}</div>
+                </div>
               </div>
-              <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px'}}>
-                <p style={{margin: 0, color: '#856404'}}>⚠️ <strong>Note:</strong> You cannot load money directly. Only the System Administrator can allocate funds to your organization.</p>
+              
+              {/* Self-Loaded Balance */}
+              <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '15px'}}>
+                <h3 style={{marginTop: 0, color: '#2e7d32'}}>💳 Self-Loaded Funds</h3>
+                <p style={{fontSize: '14px', color: '#666'}}>Funds loaded via payment</p>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>£{(user.balance || 0).toFixed(2)}</div>
+                </div>
+                <button
+                  onClick={() => setActiveTab('payment')}
+                  style={{...styles.primaryButton, width: '100%', marginTop: '15px', backgroundColor: '#4CAF50'}}
+                >
+                  💳 Load Funds
+                </button>
               </div>
+              
+              {/* Total Balance */}
+              <div style={{backgroundColor: '#fff3e0', padding: '25px', borderRadius: '15px'}}>
+                <h3 style={{marginTop: 0, color: '#e65100'}}>💰 Total Available</h3>
+                <p style={{fontSize: '14px', color: '#666'}}>Combined balance for vouchers</p>
+                <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>£{((user.balance || 0) + allocatedBalance).toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
+              <p style={{margin: 0, color: '#1565c0'}}>ℹ️ <strong>Note:</strong> You can load funds directly using a credit/debit card, or receive allocated funds from the administrator.</p>
             </div>
           </div>
         )}
@@ -3770,6 +4166,10 @@ function VCSEDashboard({ user, onLogout }) {
               )}
             </div>
           </div>
+        )}
+        
+        {activeTab === 'payment' && (
+          <PaymentTab user={user} onBalanceUpdate={loadBalance} />
         )}
       </div>
       
@@ -6245,10 +6645,15 @@ const styles = {
   }
 }
 
-// Wrap App with ErrorBoundary
+// Initialize Stripe (will be loaded with publishable key from env)
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder')
+
+// Wrap App with Stripe Elements and ErrorBoundary
 const AppWithErrorBoundary = () => (
   <ErrorBoundary>
-    <App />
+    <Elements stripe={stripePromise}>
+      <App />
+    </Elements>
   </ErrorBoundary>
 )
 
