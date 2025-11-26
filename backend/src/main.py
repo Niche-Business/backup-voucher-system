@@ -1864,15 +1864,12 @@ def vendor_get_shops():
         shops = VendorShop.query.filter_by(vendor_id=user_id, is_active=True).all()
         
         # Calculate total sales across all vendor's shops
-        total_sales = 0
-        for shop in shops:
-            # Get all redemptions for this shop
-            redemptions = Voucher.query.filter_by(
-                redeemed_by_shop_id=shop.id,
-                status='redeemed'
-            ).all()
-            shop_total = sum(float(v.value) for v in redemptions)
-            total_sales += shop_total
+        # Note: Vouchers are redeemed by vendor (user_id), not by specific shop
+        redemptions = Voucher.query.filter_by(
+            redeemed_by_vendor=user_id,
+            status='redeemed'
+        ).all()
+        total_sales = sum(float(v.value) for v in redemptions)
         
         return jsonify({
             'shops': [{
