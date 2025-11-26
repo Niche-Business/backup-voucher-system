@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flask_cors import CORS
 from flask_mail import Mail, Message
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_compress import Compress
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
@@ -42,6 +45,17 @@ app.config['MAIL_SUPPRESS_SEND'] = os.environ.get('MAIL_SUPPRESS_SEND', 'True') 
 db = SQLAlchemy(app)
 CORS(app, supports_credentials=True)
 mail = Mail(app)
+
+# Initialize Flask-Compress for Gzip compression
+Compress(app)
+
+# Initialize Flask-Limiter for rate limiting
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # Enhanced Database Models
 class User(db.Model):
@@ -531,6 +545,7 @@ def register():
         return jsonify({'error': f'Registration failed: {str(e)}'}), 500
 
 @app.route('/api/login', methods=['POST'])
+@limiter.limit("5 per 15 minutes")
 def login():
     try:
         data = request.get_json()
