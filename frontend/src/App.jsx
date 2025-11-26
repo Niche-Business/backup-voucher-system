@@ -962,6 +962,7 @@ function AdminDashboard({ user, onLogout }) {
       setAmount('')
       setNotes('')
       loadVcseOrgs()
+      loadSchools()  // Reload schools to show updated balance
       setTimeout(() => setMessage(''), 3000)
     } catch (error) {
       setMessage('Error: ' + error.message)
