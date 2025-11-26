@@ -23,8 +23,7 @@ export default defineConfig({
         // Manual chunk splitting for better caching
         manualChunks: {
           // Vendor libraries
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['react-qr-code', 'qrcode'],
+          'vendor-react': ['react', 'react-dom'],
           'vendor-i18n': ['i18next', 'react-i18next'],
           // App code can be split by feature if needed
         }
