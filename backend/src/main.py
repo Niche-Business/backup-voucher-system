@@ -1863,6 +1863,17 @@ def vendor_get_shops():
         
         shops = VendorShop.query.filter_by(vendor_id=user_id, is_active=True).all()
         
+        # Calculate total sales across all vendor's shops
+        total_sales = 0
+        for shop in shops:
+            # Get all redemptions for this shop
+            redemptions = Voucher.query.filter_by(
+                redeemed_by_shop_id=shop.id,
+                status='redeemed'
+            ).all()
+            shop_total = sum(float(v.value) for v in redemptions)
+            total_sales += shop_total
+        
         return jsonify({
             'shops': [{
                 'id': shop.id,
@@ -1872,7 +1883,8 @@ def vendor_get_shops():
                 'city': shop.city,
                 'phone': shop.phone,
                 'created_at': shop.created_at.isoformat()
-            } for shop in shops]
+            } for shop in shops],
+            'total_sales': float(total_sales)
         }), 200
         
     except Exception as e:
@@ -4254,6 +4266,42 @@ def get_voucher_qr_code(voucher_id):
         
     except Exception as e:
         return jsonify({'error': f'Failed to generate QR code: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/vouchers/<int:voucher_id>/resend-sms', methods=['POST'])
+def resend_voucher_sms(voucher_id):
+    """Resend voucher code via SMS"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher or voucher.recipient_id != user_id:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        recipient = User.query.get(user_id)
+        if not recipient.phone:
+            return jsonify({'error': 'No phone number on file'}), 400
+        
+        # Send SMS with voucher code
+        sms_result = sms_service.send_voucher_code(
+            recipient.phone,
+            voucher.code,
+            recipient.first_name or recipient.name,
+            float(voucher.value)
+        )
+        
+        if not sms_result.get('success'):
+            return jsonify({'error': sms_result.get('error', 'Failed to send SMS')}), 500
+        
+        return jsonify({
+            'success': True,
+            'message': 'SMS sent successfully'
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to send SMS: {str(e)}'}), 500
 
 
 if __name__ == '__main__':

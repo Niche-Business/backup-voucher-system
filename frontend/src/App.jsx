@@ -265,8 +265,8 @@ function HomePage({ onNavigate }) {
       
       <div style={{marginTop: '80px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px', maxWidth: '1200px', margin: '80px auto 0'}}>
         <FeatureCard icon="🎫" title="Digital Vouchers" description="Recipients receive digital vouchers via text or email to redeem at local shops" />
-        <FeatureCard icon="🏪" title="Local Shops" description="Partner shops accept vouchers and notify about to go available for collection" />
-        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect to go to support communities" />
+        <FeatureCard icon="🏪" title="Local Shops" description="Partner shops accept vouchers and notify about food to go available for collection" />
+        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect food to go to support communities" />
         <FeatureCard icon="📊" title="Impact Tracking" description="Comprehensive reporting for admins and VCSE organizations to measure community impact" />
       </div>
     </div>
@@ -881,7 +881,7 @@ function AdminDashboard({ user, onLogout }) {
       const data = await apiCall('/admin/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load to go items:', error)
+      console.error('Failed to load food to go items:', error)
     }
   }
 
@@ -1862,7 +1862,7 @@ function AdminDashboard({ user, onLogout }) {
                             <strong>📧 Email:</strong> {shop.vendor_email}
                           </p>
                           <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
-                            🍎 To Go: {shop.to_go_items_count}
+                            🍎 Food to GO: {shop.to_go_items_count}
                           </p>
                           <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
                             <button 
@@ -2898,7 +2898,7 @@ function AdminSettingsTab({ user }) {
   )
 }
 
-// TO GO ORDER CARD COMPONENT FOR VCSE
+// FOOD TO GO ORDER CARD COMPONENT FOR VCSE
 function ToGoOrderCard({ item, onOrderPlaced }) {
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [orderForm, setOrderForm] = useState({
@@ -3082,7 +3082,7 @@ function VCSEDashboard({ user, onLogout }) {
       const data = await apiCall('/vcse/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load to go items:', error)
+      console.error('Failed to load food to go items:', error)
     }
   }
 
@@ -3751,13 +3751,13 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🛍️ Available To Go - Order for Clients</h2>
-            <p style={{marginBottom: '20px', color: '#666'}}>Browse available To Go items from local shops and order them on behalf of your clients by providing their contact details.</p>
+            <h2>🛍️ Available Food to GO - Order for Clients</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Browse available Food to GO items from local shops and order them on behalf of your clients by providing their contact details.</p>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                  <p>No To Go items available at the moment</p>
+                  <p>No Food to GO items available at the moment</p>
                   <p style={{fontSize: '14px'}}>Check back later for surplus food items from local shops</p>
                 </div>
               ) : (
@@ -3851,13 +3851,14 @@ function VCSEDashboard({ user, onLogout }) {
 }
 
 // VENDOR DASHBOARD - WITH FIXED SURPLUS COUNTER
-// Force rebuild - To Go form with item_type field
+// Force rebuild - Food to GO form with item_type field
 function VendorDashboard({ user, onLogout }) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
   const [shops, setShops] = useState([])
   const [toGoItems, setToGoItems] = useState([])
   const [toGoCount, setToGoCount] = useState(0)
+  const [totalSales, setTotalSales] = useState(0)
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [toGoForm, setToGoForm] = useState({
     shopName: '',
@@ -3910,6 +3911,7 @@ function VendorDashboard({ user, onLogout }) {
     try {
       const data = await apiCall('/vendor/shops')
       setShops(data.shops || [])
+      setTotalSales(data.total_sales || 0)
       // Auto-populate shop details from first shop
       if (data.shops && data.shops.length > 0) {
         const firstShop = data.shops[0]
@@ -3932,7 +3934,7 @@ function VendorDashboard({ user, onLogout }) {
       setToGoItems(data.surplus_items || data.to_go_items || [])
       setToGoCount(data.total_count || 0)
     } catch (error) {
-      console.error('Failed to load to go items:', error)
+      console.error('Failed to load food to go items:', error)
     }
   }
 
@@ -3991,7 +3993,7 @@ function VendorDashboard({ user, onLogout }) {
           original_price: toGoForm.item_type === 'discount' ? toGoForm.original_price : null
         })
       })
-      setMessage('To Go item posted successfully!')
+      setMessage('Food to GO item posted successfully!')
       setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '', item_type: 'free', price: '', original_price: '' })
       loadToGoItems()
       setTimeout(() => setMessage(''), 3000)
@@ -4135,11 +4137,15 @@ function VendorDashboard({ user, onLogout }) {
           <div>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>£{totalSales.toFixed(2)}</div>
+                <div>💰 Total Sales</div>
+              </div>
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>{toGoCount}</div>
                 <div>{t('shop.toGoPosted')}</div>
               </div>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>{shops.length}</div>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#2196F3'}}>{shops.length}</div>
                 <div>{t('shop.shopsRegistered')}</div>
               </div>
             </div>
@@ -4363,7 +4369,7 @@ function VendorDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>Post To Go</h2>
+            <h2>Post Food to GO</h2>
             {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
             
             <form onSubmit={handlePostToGo} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
@@ -4508,13 +4514,13 @@ function VendorDashboard({ user, onLogout }) {
                 />
               </div>
               
-              <button type="submit" style={styles.primaryButton}>Post To Go Item</button>
+              <button type="submit" style={styles.primaryButton}>Post Food to GO Item</button>
             </form>
             
-            <h3>Your To Go ({toGoCount})</h3>
+            <h3>Your Food to GO ({toGoCount})</h3>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
-                <p>No to go items posted yet</p>
+                <p>No food to go items posted yet</p>
               ) : (
                 toGoItems.map(item => (
                   <div key={item.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
@@ -4950,7 +4956,7 @@ function RecipientDashboard({ user, onLogout }) {
       const data = await apiCall('/recipient/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load to go items:', error)
+      console.error('Failed to load food to go items:', error)
     }
   }
 
@@ -5177,6 +5183,64 @@ function RecipientDashboard({ user, onLogout }) {
                               }}
                             >
                               📱 {t('recipient.showQRCode')}
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch(`/api/vcse/voucher-pdf/${voucher.id}`, {
+                                    credentials: 'include'
+                                  })
+                                  if (!response.ok) throw new Error('Failed to download PDF')
+                                  const blob = await response.blob()
+                                  const url = window.URL.createObjectURL(blob)
+                                  const a = document.createElement('a')
+                                  a.href = url
+                                  a.download = `voucher_${voucher.code}.pdf`
+                                  document.body.appendChild(a)
+                                  a.click()
+                                  window.URL.revokeObjectURL(url)
+                                  document.body.removeChild(a)
+                                } catch (error) {
+                                  alert('Failed to download PDF: ' + error.message)
+                                }
+                              }}
+                              style={{
+                                ...styles.primaryButton,
+                                backgroundColor: '#FF5722',
+                                padding: '10px 20px',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                              }}
+                            >
+                              📄 Download PDF
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch(`/api/recipient/vouchers/${voucher.id}/resend-sms`, {
+                                    method: 'POST',
+                                    credentials: 'include'
+                                  })
+                                  const data = await response.json()
+                                  if (!response.ok) throw new Error(data.error || 'Failed to send SMS')
+                                  alert('✅ SMS sent successfully!')
+                                } catch (error) {
+                                  alert('Failed to send SMS: ' + error.message)
+                                }
+                              }}
+                              style={{
+                                ...styles.primaryButton,
+                                backgroundColor: '#9C27B0',
+                                padding: '10px 20px',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                              }}
+                            >
+                              💬 Resend SMS
                             </button>
                           </div>
                         )}
@@ -5580,7 +5644,7 @@ function SchoolDashboard({ user, onLogout }) {
       const data = await apiCall('/school/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load to go items:', error)
+      console.error('Failed to load food to go items:', error)
       // Fallback to admin endpoint if school endpoint doesn't exist
       try {
         const fallbackData = await apiCall('/admin/to-go-items')
@@ -5665,7 +5729,7 @@ function SchoolDashboard({ user, onLogout }) {
             onClick={() => setActiveTab('togo')} 
             style={activeTab === 'togo' ? styles.activeTab : styles.tab}
           >
-            🛍️ To Go Items
+            🛍️ Food to GO Items
           </button>
         </div>
 
@@ -5926,16 +5990,16 @@ function SchoolDashboard({ user, onLogout }) {
           </div>
         )}
 
-        {/* To Go Items Tab */}
+        {/* Food to GO Items Tab */}
         {activeTab === 'togo' && (
           <div>
-            <h2 style={{marginBottom: '10px', color: '#9C27B0'}}>🛍️ Available To Go Items</h2>
+            <h2 style={{marginBottom: '10px', color: '#9C27B0'}}>🛍️ Available Food to GO Items</h2>
             <p style={{marginBottom: '20px', color: '#666'}}>Browse surplus food items from local shops and order them for families in your community.</p>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                  <p>No To Go items available at the moment</p>
+                  <p>No Food to GO items available at the moment</p>
                   <p style={{fontSize: '14px'}}>Check back later for surplus food items from local food shops</p>
                 </div>
               ) : (
