@@ -6,13 +6,7 @@ export default defineConfig({
   build: {
     // Optimize bundle size
     target: 'es2015',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true
-      }
-    },
+    minify: 'esbuild',
     // Code splitting configuration
     rollupOptions: {
       output: {
