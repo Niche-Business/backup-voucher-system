@@ -1896,6 +1896,15 @@ def vcse_get_balance():
 # Stripe Payment Integration Routes
 # ============================================
 
+@app.route('/api/config/stripe', methods=['GET'])
+def get_stripe_config():
+    """Get Stripe publishable key for frontend initialization"""
+    try:
+        publishable_key = stripe_payment.get_publishable_key()
+        return jsonify({'publishableKey': publishable_key}), 200
+    except Exception as e:
+        return jsonify({'error': f'Failed to get Stripe config: {str(e)}'}), 500
+
 @app.route('/api/payment/create-intent', methods=['POST'])
 def create_payment_intent():
     """Create a Stripe Payment Intent for VCSE fund loading"""

@@ -6,6 +6,15 @@ from datetime import datetime
 # Initialize Stripe with API key from environment
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY', '')
 
+def get_publishable_key():
+    """
+    Get Stripe publishable key from environment
+    
+    Returns:
+        str: Stripe publishable key
+    """
+    return os.getenv('STRIPE_PUBLISHABLE_KEY', '')
+
 def create_payment_intent(amount, vcse_id, vcse_email, description="Fund Loading"):
     """
     Create a Stripe Payment Intent for VCSE fund loading

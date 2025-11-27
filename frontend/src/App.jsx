@@ -6645,16 +6645,66 @@ const styles = {
   }
 }
 
-// Initialize Stripe (will be loaded with publishable key from env)
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder')
+// Initialize Stripe dynamically by fetching publishable key from backend
+let stripePromise = null
+
+const getStripePromise = async () => {
+  if (stripePromise) return stripePromise
+  
+  try {
+    const response = await fetch('/api/config/stripe')
+    const data = await response.json()
+    
+    if (data.publishableKey) {
+      stripePromise = loadStripe(data.publishableKey)
+    } else {
+      console.error('No Stripe publishable key received from backend')
+      throw new Error('Stripe configuration not available')
+    }
+  } catch (error) {
+    console.error('Failed to fetch Stripe config:', error)
+    throw error
+  }
+  
+  return stripePromise
+}
 
 // Wrap App with Stripe Elements and ErrorBoundary
-const AppWithErrorBoundary = () => (
-  <ErrorBoundary>
-    <Elements stripe={stripePromise}>
-      <App />
-    </Elements>
-  </ErrorBoundary>
-)
+const AppWithErrorBoundary = () => {
+  const [stripe, setStripe] = useState(null)
+  const [stripeError, setStripeError] = useState(null)
+  
+  useEffect(() => {
+    getStripePromise()
+      .then(promise => setStripe(promise))
+      .catch(error => setStripeError(error.message))
+  }, [])
+  
+  if (stripeError) {
+    return (
+      <div style={{padding: '40px', textAlign: 'center'}}>
+        <h2>Payment System Error</h2>
+        <p style={{color: '#c62828'}}>Failed to initialize payment system: {stripeError}</p>
+        <p>Please contact support or try again later.</p>
+      </div>
+    )
+  }
+  
+  if (!stripe) {
+    return (
+      <div style={{padding: '40px', textAlign: 'center'}}>
+        <p>Loading payment system...</p>
+      </div>
+    )
+  }
+  
+  return (
+    <ErrorBoundary>
+      <Elements stripe={stripe}>
+        <App />
+      </Elements>
+    </ErrorBoundary>
+  )
+}
 
 export default AppWithErrorBoundary
