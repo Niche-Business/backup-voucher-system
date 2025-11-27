@@ -135,19 +135,57 @@ const PWAInstallPrompt = () => {
                 <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#666' }}>Add to Home Screen</p>
               </div>
             </div>
-            <p style={{ fontSize: '14px', color: '#555', margin: '10px 0' }}>
-              Install this app on your iPhone: tap <span style={{ 
-                display: 'inline-block', 
-                padding: '2px 6px', 
-                backgroundColor: '#007AFF', 
-                color: 'white', 
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: '600'
-              }}>Share</span> and then <strong>Add to Home Screen</strong>.
+            <p style={{ fontSize: '14px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
+              To install this app on your iPhone:
             </p>
-            <div style={{ fontSize: '24px', textAlign: 'center', margin: '10px 0' }}>
-              📱 ➜ ⬆️ ➜ ➕
+            <div style={{ 
+              backgroundColor: '#f8f9fa', 
+              padding: '15px', 
+              borderRadius: '8px',
+              marginBottom: '10px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                <div style={{ 
+                  fontSize: '24px', 
+                  marginRight: '12px',
+                  minWidth: '30px',
+                  textAlign: 'center'
+                }}>1️⃣</div>
+                <div style={{ fontSize: '14px', color: '#333' }}>
+                  Tap the <strong>Share button</strong> <span style={{ fontSize: '18px' }}>⬆️</span> at the <strong>bottom</strong> of Safari
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                <div style={{ 
+                  fontSize: '24px', 
+                  marginRight: '12px',
+                  minWidth: '30px',
+                  textAlign: 'center'
+                }}>2️⃣</div>
+                <div style={{ fontSize: '14px', color: '#333' }}>
+                  Scroll down and tap <strong>"Add to Home Screen"</strong> <span style={{ fontSize: '18px' }}>➕</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ 
+                  fontSize: '24px', 
+                  marginRight: '12px',
+                  minWidth: '30px',
+                  textAlign: 'center'
+                }}>3️⃣</div>
+                <div style={{ fontSize: '14px', color: '#333' }}>
+                  Tap <strong>"Add"</strong> in the top right corner
+                </div>
+              </div>
+            </div>
+            <div style={{ 
+              fontSize: '12px', 
+              color: '#666', 
+              textAlign: 'center',
+              fontStyle: 'italic',
+              marginTop: '10px'
+            }}>
+              💡 The Share button is in Safari's toolbar, not in this popup
             </div>
           </div>
           <button
