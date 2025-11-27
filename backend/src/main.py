@@ -662,14 +662,19 @@ def forgot_password():
         db.session.commit()
         
         # Send password reset email using SendGrid
+        print(f"[FORGOT-PASSWORD] Attempting to send email to {user.email}")
+        print(f"[FORGOT-PASSWORD] Email service enabled: {email_service.enabled}")
         try:
-            email_service.send_password_reset_email(
+            result = email_service.send_password_reset_email(
                 user_email=user.email,
                 user_name=f"{user.first_name} {user.last_name}",
                 reset_token=token
             )
+            print(f"[FORGOT-PASSWORD] Email send result: {result}")
         except Exception as email_error:
-            print(f"Warning: Could not send password reset email: {email_error}")
+            print(f"[FORGOT-PASSWORD] ERROR: {str(email_error)}")
+            import traceback
+            traceback.print_exc()
         
         return jsonify({
             'message': 'If the email exists, a password reset link has been sent'
