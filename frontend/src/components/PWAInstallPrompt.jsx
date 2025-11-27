@@ -5,6 +5,7 @@ const PWAInstallPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
+  const [showPlatform, setShowPlatform] = useState(null) // 'ios' or 'android' or null (auto-detect)
 
   useEffect(() => {
     // Check if already installed (standalone mode)
@@ -22,12 +23,8 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Testing mode: Check URL parameter for instant prompt
-    const urlParams = new URLSearchParams(window.location.search)
-    const testMode = urlParams.get('pwa-test') === 'true'
-    
-    // Delay: 5 seconds for testing mode, 30 seconds for production
-    const promptDelay = testMode ? 5000 : 30000
+    // Reduced delay for better UX: 5 seconds instead of 30
+    const promptDelay = 5000
 
     // Listen for beforeinstallprompt event (Android/Chrome)
     const handleBeforeInstallPrompt = (e) => {
@@ -111,8 +108,11 @@ const PWAInstallPrompt = () => {
     return null
   }
 
-  // iOS Install Instructions
-  if (isIOS) {
+  // Determine which platform instructions to show
+  const displayPlatform = showPlatform || (isIOS ? 'ios' : 'android')
+  
+  // iOS Install Instructions (or when user selects iOS toggle)
+  if (displayPlatform === 'ios') {
     return (
       <div style={{
         position: 'fixed',
@@ -130,10 +130,53 @@ const PWAInstallPrompt = () => {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
               <img src="/icon-192.png" alt="BAK UP" style={{ width: '40px', height: '40px', marginRight: '12px', borderRadius: '8px' }} />
-              <div>
+              <div style={{ flex: 1 }}>
                 <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#333' }}>Install BAK UP</h3>
                 <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#666' }}>Add to Home Screen</p>
               </div>
+            </div>
+            <div style={{ 
+              display: 'flex', 
+              gap: '8px', 
+              marginBottom: '12px',
+              padding: '4px',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '8px'
+            }}>
+              <button
+                onClick={() => setShowPlatform('ios')}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  backgroundColor: (showPlatform === 'ios' || showPlatform === null) && isIOS ? '#4CAF50' : 'transparent',
+                  color: (showPlatform === 'ios' || showPlatform === null) && isIOS ? 'white' : '#666',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                🍎 iPhone
+              </button>
+              <button
+                onClick={() => setShowPlatform('android')}
+                style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  backgroundColor: showPlatform === 'android' ? '#4CAF50' : 'transparent',
+                  color: showPlatform === 'android' ? 'white' : '#666',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                🤖 Android
+              </button>
             </div>
             <p style={{ fontSize: '14px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
               To install this app on your iPhone:
@@ -221,51 +264,152 @@ const PWAInstallPrompt = () => {
       zIndex: 10000,
       animation: 'slideUp 0.3s ease-out'
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-          <img src="/icon-192.png" alt="BAK UP" style={{ width: '50px', height: '50px', marginRight: '15px', borderRadius: '10px' }} />
-          <div style={{ flex: 1 }}>
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#333' }}>Install BAK UP</h3>
-            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#666' }}>
-              Install this app for quick access and offline use
-            </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <img src="/icon-192.png" alt="BAK UP" style={{ width: '40px', height: '40px', marginRight: '12px', borderRadius: '8px' }} />
+            <div style={{ flex: 1 }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#333' }}>Install BAK UP</h3>
+              <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#666' }}>Add to Home Screen</p>
+            </div>
+          </div>
+          <div style={{ 
+            display: 'flex', 
+            gap: '8px', 
+            marginBottom: '12px',
+            padding: '4px',
+            backgroundColor: '#f0f0f0',
+            borderRadius: '8px'
+          }}>
+            <button
+              onClick={() => setShowPlatform('ios')}
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                backgroundColor: showPlatform === 'ios' ? '#4CAF50' : 'transparent',
+                color: showPlatform === 'ios' ? 'white' : '#666',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              🍎 iPhone
+            </button>
+            <button
+              onClick={() => setShowPlatform('android')}
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                backgroundColor: (showPlatform === 'android' || showPlatform === null) && !isIOS ? '#4CAF50' : 'transparent',
+                color: (showPlatform === 'android' || showPlatform === null) && !isIOS ? 'white' : '#666',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              🤖 Android
+            </button>
+          </div>
+          <p style={{ fontSize: '14px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
+            To install this app on your Android:
+          </p>
+          <div style={{ 
+            backgroundColor: '#f8f9fa', 
+            padding: '15px', 
+            borderRadius: '8px',
+            marginBottom: '10px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ 
+                fontSize: '24px', 
+                marginRight: '12px',
+                minWidth: '30px',
+                textAlign: 'center'
+              }}>1️⃣</div>
+              <div style={{ fontSize: '14px', color: '#333' }}>
+                Tap the green <strong>"Install"</strong> button below
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ 
+                fontSize: '24px', 
+                marginRight: '12px',
+                minWidth: '30px',
+                textAlign: 'center'
+              }}>2️⃣</div>
+              <div style={{ fontSize: '14px', color: '#333' }}>
+                A system dialog will ask <strong>"Add to Home screen?"</strong>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ 
+                fontSize: '24px', 
+                marginRight: '12px',
+                minWidth: '30px',
+                textAlign: 'center'
+              }}>3️⃣</div>
+              <div style={{ fontSize: '14px', color: '#333' }}>
+                Tap <strong>"Add"</strong> to confirm
+              </div>
+            </div>
+          </div>
+            <button
+              onClick={handleDismiss}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#f0f0f0',
+                color: '#333',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flex: 1
+              }}
+            >
+              Not Now
+            </button>
+            <button
+              onClick={handleInstallClick}
+              style={{
+                padding: '10px 20px',
+                background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)',
+                flex: 1
+              }}
+            >
+              Install
+            </button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', marginLeft: '15px' }}>
-          <button
-            onClick={handleDismiss}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#f0f0f0',
-              color: '#333',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            Not Now
-          </button>
-          <button
-            onClick={handleInstallClick}
-            style={{
-              padding: '10px 20px',
-              background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
-            }}
-          >
-            Install
-          </button>
-        </div>
+        <button
+          onClick={handleDismiss}
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: '24px',
+            cursor: 'pointer',
+            color: '#999',
+            padding: '0',
+            marginLeft: '10px'
+          }}
+        >
+          ✕
+        </button>
       </div>
       <style>{`
         @keyframes slideUp {
