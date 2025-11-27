@@ -19,6 +19,12 @@ class EmailService:
         
         if not self.enabled:
             print("⚠️  Gmail SMTP not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD environment variables.")
+            print(f"   GMAIL_USER: {'SET' if self.smtp_user else 'NOT SET'}")
+            print(f"   GMAIL_APP_PASSWORD: {'SET' if self.smtp_password else 'NOT SET'}")
+        else:
+            print("✓ Gmail SMTP configured successfully")
+            print(f"   SMTP Server: {self.smtp_server}:{self.smtp_port}")
+            print(f"   From Email: {self.from_email}")
         
     def send_email(self, to_email, subject, html_content):
         """Send an email using Gmail SMTP"""
