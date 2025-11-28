@@ -24,8 +24,28 @@ class EmailService:
         else:
             print("✓ Gmail SMTP configured successfully")
             print(f"   SMTP Server: {self.smtp_server}:{self.smtp_port}")
+            print(f"   SMTP User: {self.smtp_user}")
             print(f"   From Email: {self.from_email}")
+            print(f"   App Password Length: {len(self.smtp_password) if self.smtp_password else 0} characters")
+            # Test SMTP connection
+            self._test_smtp_connection()
         
+    def _test_smtp_connection(self):
+        """Test SMTP connection on startup"""
+        try:
+            print("   Testing SMTP connection...")
+            with smtplib.SMTP(self.smtp_server, self.smtp_port, timeout=10) as server:
+                server.starttls()
+                server.login(self.smtp_user, self.smtp_password)
+            print("✓ SMTP connection test successful!")
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"✗ SMTP Authentication FAILED: {str(e)}")
+            print("   Please check your GMAIL_USER and GMAIL_APP_PASSWORD")
+            self.enabled = False
+        except Exception as e:
+            print(f"✗ SMTP connection test FAILED: {str(e)}")
+            self.enabled = False
+    
     def send_email(self, to_email, subject, html_content):
         """Send an email using Gmail SMTP"""
         if not self.enabled:
