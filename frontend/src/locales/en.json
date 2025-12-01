@@ -160,7 +160,7 @@
         "title": "For Recipients",
         "item1": "Receive digital food vouchers with dignity",
         "item2": "Choose what you need from local vendors",
-        "item3": "Food to Go at a discount - Buy discounted food from participating vendors",
+        "item3": "Food to Go Items at a discount - Buy discounted Food to Go Items from participating vendors",
         "item4": "Track your voucher balance easily"
       },
       "vendors": {
@@ -175,7 +175,7 @@
         "title": "For VCSE Organizations",
         "item1": "Issue and manage vouchers efficiently",
         "item2": "Fund families digitally",
-        "item3": "Collect free surplus food to distribute to families you serve",
+        "item3": "Collect free surplus Food to Go Items to distribute to families you serve",
         "item4": "Track usage and impact",
         "item5": "Generate detailed reports"
       },
