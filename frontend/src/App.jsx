@@ -1,5 +1,4 @@
-// Force rebuild - town filter fix
-import React, { useState, useEffect } from 'react';ponent } from 'react'
+import React, { useState, useEffect, Component } from 'react'
 import { useTranslation } from 'react-i18next'
 import './i18n'
 import LandingPage from './LandingPage'
