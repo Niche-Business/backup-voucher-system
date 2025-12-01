@@ -267,8 +267,8 @@ function HomePage({ onNavigate }) {
       
       <div style={{marginTop: '80px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px', maxWidth: '1200px', margin: '80px auto 0'}}>
         <FeatureCard icon="🎫" title="Digital Vouchers" description="Recipients receive digital vouchers via text or email to redeem at local shops" />
-        <FeatureCard icon="🏪" title="Local Shops" description="Partner shops accept vouchers and notify about food to go available for collection" />
-        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect food to go to support communities" />
+        <FeatureCard icon="🏪" title="Local Shops" description="Partner shops accept vouchers and notify about Food to Go Items available for collection" />
+        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect Food to Go Items to support communities" />
         <FeatureCard icon="📊" title="Impact Tracking" description="Comprehensive reporting for admins and VCSE organizations to measure community impact" />
       </div>
     </div>
@@ -883,7 +883,7 @@ function AdminDashboard({ user, onLogout }) {
       const data = await apiCall('/admin/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load food to go items:', error)
+      console.error('Failed to load Food to Go Items:', error)
     }
   }
 
@@ -1865,7 +1865,7 @@ function AdminDashboard({ user, onLogout }) {
                             <strong>📧 Email:</strong> {shop.vendor_email}
                           </p>
                           <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
-                            🍎 Food to GO: {shop.to_go_items_count}
+                            🍎 Food to Go Items: {shop.to_go_items_count}
                           </p>
                           <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
                             <button 
@@ -3451,7 +3451,7 @@ function VCSEDashboard({ user, onLogout }) {
       const data = await apiCall('/vcse/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load food to go items:', error)
+      console.error('Failed to load Food to Go Items:', error)
     }
   }
 
@@ -4148,14 +4148,14 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🛍️ Available Food to GO - Order for Clients</h2>
-            <p style={{marginBottom: '20px', color: '#666'}}>Browse available Food to GO items from local shops and order them on behalf of your clients by providing their contact details.</p>
+            <h2>🛍️ Available Food to Go Items - Order for Clients</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Browse available Food to Go Items from local shops and order them on behalf of your clients by providing their contact details.</p>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                  <p>No Food to GO items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for surplus food items from local shops</p>
+                  <p>No Food to Go Items available at the moment</p>
+                  <p style={{fontSize: '14px'}}>Check back later for surplus Food to Go Items from local shops</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
@@ -4252,7 +4252,7 @@ function VCSEDashboard({ user, onLogout }) {
 }
 
 // VENDOR DASHBOARD - WITH FIXED SURPLUS COUNTER
-// Force rebuild - Food to GO form with item_type field
+// Force rebuild - Food to Go Items form with item_type field
 function VendorDashboard({ user, onLogout }) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')
@@ -4335,7 +4335,7 @@ function VendorDashboard({ user, onLogout }) {
       setToGoItems(data.surplus_items || data.to_go_items || [])
       setToGoCount(data.total_count || 0)
     } catch (error) {
-      console.error('Failed to load food to go items:', error)
+      console.error('Failed to load Food to Go Items:', error)
     }
   }
 
@@ -4394,7 +4394,7 @@ function VendorDashboard({ user, onLogout }) {
           original_price: toGoForm.item_type === 'discount' ? toGoForm.original_price : null
         })
       })
-      setMessage('Food to GO item posted successfully!')
+      setMessage('Food to Go Item posted successfully!')
       setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '', item_type: 'free', price: '', original_price: '' })
       loadToGoItems()
       setTimeout(() => setMessage(''), 3000)
@@ -4770,7 +4770,7 @@ function VendorDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>Post Food to GO</h2>
+            <h2>Post Food to Go Items</h2>
             {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
             
             <form onSubmit={handlePostToGo} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
@@ -4915,13 +4915,13 @@ function VendorDashboard({ user, onLogout }) {
                 />
               </div>
               
-              <button type="submit" style={styles.primaryButton}>Post Food to GO Item</button>
+              <button type="submit" style={styles.primaryButton}>Post Food to Go Item</button>
             </form>
             
-            <h3>Your Food to GO ({toGoCount})</h3>
+            <h3>Your Food to Go Items ({toGoCount})</h3>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
-                <p>No food to go items posted yet</p>
+                <p>No Food to Go Items posted yet</p>
               ) : (
                 toGoItems.map(item => (
                   <div key={item.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
@@ -5357,7 +5357,7 @@ function RecipientDashboard({ user, onLogout }) {
       const data = await apiCall('/recipient/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load food to go items:', error)
+      console.error('Failed to load Food to Go Items:', error)
     }
   }
 
@@ -6045,7 +6045,7 @@ function SchoolDashboard({ user, onLogout }) {
       const data = await apiCall('/school/to-go-items')
       setToGoItems(data.items || [])
     } catch (error) {
-      console.error('Failed to load food to go items:', error)
+      console.error('Failed to load Food to Go Items:', error)
       // Fallback to admin endpoint if school endpoint doesn't exist
       try {
         const fallbackData = await apiCall('/admin/to-go-items')
@@ -6130,7 +6130,7 @@ function SchoolDashboard({ user, onLogout }) {
             onClick={() => setActiveTab('togo')} 
             style={activeTab === 'togo' ? styles.activeTab : styles.tab}
           >
-            🛍️ Food to GO Items
+            🛍️ Food to Go Items
           </button>
         </div>
 
@@ -6391,17 +6391,17 @@ function SchoolDashboard({ user, onLogout }) {
           </div>
         )}
 
-        {/* Food to GO Items Tab */}
+        {/* Food to Go Items Tab */}
         {activeTab === 'togo' && (
           <div>
-            <h2 style={{marginBottom: '10px', color: '#9C27B0'}}>🛍️ Available Food to GO Items</h2>
-            <p style={{marginBottom: '20px', color: '#666'}}>Browse surplus food items from local shops and order them for families in your community.</p>
+            <h2 style={{marginBottom: '10px', color: '#9C27B0'}}>🛍️ Available Food to Go Items</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Browse surplus Food to Go Items from local shops and order them for families in your community.</p>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                  <p>No Food to GO items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for surplus food items from local food shops</p>
+                  <p>No Food to Go Items available at the moment</p>
+                  <p style={{fontSize: '14px'}}>Check back later for surplus Food to Go Items from local food shops</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
