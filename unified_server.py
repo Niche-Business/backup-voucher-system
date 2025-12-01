@@ -3,6 +3,7 @@
 Unified server for BAK UP E-Voucher System
 Serves both Flask backend API and React frontend
 """
+# Deployment trigger: UI text updates applied - Dec 1, 2025
 import os
 import sys
 from pathlib import Path
