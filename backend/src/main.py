@@ -90,6 +90,7 @@ class VendorShop(db.Model):
     address = db.Column(db.Text, nullable=False)
     postcode = db.Column(db.String(10))
     city = db.Column(db.String(50))
+    town = db.Column(db.String(50))  # Specific town: Wellingborough, Kettering, Corby, Northampton, Daventry, Brackley, Towcester
     phone = db.Column(db.String(20))
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -2252,6 +2253,7 @@ def vendor_get_shops():
                 'address': shop.address,
                 'postcode': shop.postcode,
                 'city': shop.city,
+                'town': shop.town,
                 'phone': shop.phone,
                 'created_at': shop.created_at.isoformat()
             } for shop in shops],
@@ -2288,6 +2290,7 @@ def vendor_add_shop():
             address=data['address'],
             postcode=data.get('postcode', ''),
             city=data.get('city', ''),
+            town=data.get('town', ''),
             phone=data.get('phone', '')
         )
         
@@ -2337,6 +2340,8 @@ def vendor_update_shop(shop_id):
             shop.postcode = data['postcode']
         if 'city' in data:
             shop.city = data['city']
+        if 'town' in data:
+            shop.town = data['town']
         if 'phone' in data:
             shop.phone = data['phone']
         
@@ -2357,6 +2362,7 @@ def vendor_update_shop(shop_id):
                 'address': shop.address,
                 'postcode': shop.postcode,
                 'city': shop.city,
+                'town': shop.town,
                 'phone': shop.phone
             }
         }), 200
@@ -4003,7 +4009,7 @@ def vcse_get_to_go_items():
 
 @app.route('/api/recipient/shops', methods=['GET'])
 def get_shops_for_recipient():
-    """Recipient endpoint to view all participating shops"""
+    """Recipient endpoint to view all participating shops with optional town filtering"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -4013,8 +4019,15 @@ def get_shops_for_recipient():
         if not user or user.user_type != 'recipient':
             return jsonify({'error': 'Recipient access required'}), 403
         
-        # Get all vendor shops
-        shops = VendorShop.query.all()
+        # Get optional town filter from query parameters
+        town_filter = request.args.get('town', None)
+        
+        # Get vendor shops with optional town filtering
+        query = VendorShop.query
+        if town_filter and town_filter != 'all':
+            query = query.filter_by(town=town_filter)
+        
+        shops = query.all()
         
         shops_data = []
         for shop in shops:
@@ -4029,6 +4042,7 @@ def get_shops_for_recipient():
                 'shop_name': shop.shop_name,
                 'address': shop.address,
                 'city': shop.city,
+                'town': shop.town,
                 'postcode': shop.postcode,
                 'phone': shop.phone,
                 'surplus_items_count': surplus_count
