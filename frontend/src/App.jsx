@@ -216,7 +216,8 @@ function App() {
         shop_category: formData.shopCategory || '',
         address: formData.address || '',
         postcode: formData.postcode || '',
-        city: formData.city || ''
+        city: formData.city || '',
+        town: formData.town || ''
       }
       
       const data = await apiCall('/register', {
@@ -605,7 +606,8 @@ function RegisterPage({ onRegister, onNavigate }) {
     shopCategory: '',
     address: '',
     postcode: '',
-    city: ''
+    city: '',
+    town: ''
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -769,6 +771,26 @@ function RegisterPage({ onRegister, onNavigate }) {
                   <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} required />
                 </div>
               </div>
+              
+              {formData.userType === 'vendor' && (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Town</label>
+                  <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
+                    <option value="">Select your town</option>
+                    <optgroup label="North Northamptonshire">
+                      <option value="Wellingborough">Wellingborough</option>
+                      <option value="Kettering">Kettering</option>
+                      <option value="Corby">Corby</option>
+                    </optgroup>
+                    <optgroup label="West Northamptonshire">
+                      <option value="Northampton">Northampton</option>
+                      <option value="Daventry">Daventry</option>
+                      <option value="Brackley">Brackley</option>
+                      <option value="Towcester">Towcester</option>
+                    </optgroup>
+                  </select>
+                </div>
+              )}
             </>
           )}
           
@@ -1834,6 +1856,27 @@ function AdminDashboard({ user, onLogout }) {
                               onChange={(e) => setEditFormData({...editFormData, postcode: e.target.value})}
                               style={{width: '100%', padding: '8px', marginTop: '5px'}}
                             />
+                          </div>
+                          <div style={{marginBottom: '10px'}}>
+                            <label>Town:</label><br />
+                            <select
+                              value={editFormData.town || ''}
+                              onChange={(e) => setEditFormData({...editFormData, town: e.target.value})}
+                              style={{width: '100%', padding: '8px', marginTop: '5px'}}
+                            >
+                              <option value="">Select town</option>
+                              <optgroup label="North Northamptonshire">
+                                <option value="Wellingborough">Wellingborough</option>
+                                <option value="Kettering">Kettering</option>
+                                <option value="Corby">Corby</option>
+                              </optgroup>
+                              <optgroup label="West Northamptonshire">
+                                <option value="Northampton">Northampton</option>
+                                <option value="Daventry">Daventry</option>
+                                <option value="Brackley">Brackley</option>
+                                <option value="Towcester">Towcester</option>
+                              </optgroup>
+                            </select>
                           </div>
                           <div style={{marginBottom: '10px'}}>
                             <label>Phone:</label><br />
@@ -5285,6 +5328,7 @@ function RecipientDashboard({ user, onLogout }) {
   const [recipientVoucherStatus, setRecipientVoucherStatus] = useState('all')
   const [voucherHistorySearch, setVoucherHistorySearch] = useState('')
   const [voucherHistoryFilter, setVoucherHistoryFilter] = useState('all')
+  const [townFilter, setTownFilter] = useState('all')
 
   useEffect(() => {
     loadVouchers()
@@ -5343,9 +5387,10 @@ function RecipientDashboard({ user, onLogout }) {
     printWindow.document.close()
   }
 
-  const loadShops = async () => {
+  const loadShops = async (town = 'all') => {
     try {
-      const data = await apiCall('/recipient/shops')
+      const url = town && town !== 'all' ? `/recipient/shops?town=${encodeURIComponent(town)}` : '/recipient/shops'
+      const data = await apiCall(url)
       setShops(data.shops || [])
     } catch (error) {
       console.error('Failed to load shops:', error)
@@ -5723,6 +5768,42 @@ function RecipientDashboard({ user, onLogout }) {
         {activeTab === 'shops' && (
           <div>
             <h2>🏪 {t('dashboard.participatingShops')} ({shops.length})</h2>
+            
+            {/* Town Filter Dropdown */}
+            <div style={{marginBottom: '20px', backgroundColor: 'white', padding: '15px', borderRadius: '10px'}}>
+              <label style={{fontWeight: 'bold', marginRight: '10px', color: '#9C27B0'}}>📍 Filter by Town:</label>
+              <select 
+                value={townFilter} 
+                onChange={(e) => {
+                  setTownFilter(e.target.value)
+                  loadShops(e.target.value)
+                }}
+                style={{
+                  padding: '10px 15px',
+                  fontSize: '16px',
+                  borderRadius: '8px',
+                  border: '2px solid #9C27B0',
+                  backgroundColor: 'white',
+                  color: '#333',
+                  cursor: 'pointer',
+                  minWidth: '250px'
+                }}
+              >
+                <option value="all">All Towns</option>
+                <optgroup label="North Northamptonshire">
+                  <option value="Wellingborough">Wellingborough</option>
+                  <option value="Kettering">Kettering</option>
+                  <option value="Corby">Corby</option>
+                </optgroup>
+                <optgroup label="West Northamptonshire">
+                  <option value="Northampton">Northampton</option>
+                  <option value="Daventry">Daventry</option>
+                  <option value="Brackley">Brackley</option>
+                  <option value="Towcester">Towcester</option>
+                </optgroup>
+              </select>
+            </div>
+            
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {shops.length === 0 ? (
                 <p>{t('recipient.noShopsAvailable')}</p>
@@ -5731,6 +5812,11 @@ function RecipientDashboard({ user, onLogout }) {
                   {shops.map(shop => (
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{shop.shop_name}</h3>
+                      {shop.town && (
+                        <p style={{margin: '5px 0', fontSize: '13px', color: '#666', fontWeight: 'bold'}}>
+                          📍 {shop.town}
+                        </p>
+                      )}
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
                         <strong>📍 {t('recipient.address')}</strong> {shop.address}, {shop.city} {shop.postcode}
                       </p>
