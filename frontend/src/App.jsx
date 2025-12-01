@@ -5339,7 +5339,7 @@ function RecipientDashboard({ user, onLogout }) {
 
   // Watch townFilter and reload shops when it changes
   useEffect(() => {
-    loadShops(townFilter)
+    loadRecipientShops(townFilter)
   }, [townFilter])
 
   const loadVouchers = async () => {
@@ -5392,7 +5392,7 @@ function RecipientDashboard({ user, onLogout }) {
     printWindow.document.close()
   }
 
-  const loadShops = async (town = 'all') => {
+  const loadRecipientShops = async (town = 'all') => {
     try {
       const url = town && town !== 'all' ? `/recipient/shops?town=${encodeURIComponent(town)}` : '/recipient/shops'
       const data = await apiCall(url)
