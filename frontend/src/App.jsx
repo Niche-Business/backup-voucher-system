@@ -5332,7 +5332,7 @@ function RecipientDashboard({ user, onLogout }) {
 
   useEffect(() => {
     loadVouchers()
-    loadShops()
+    // loadShops() removed - townFilter useEffect handles this
     loadToGoItems()
     loadCart()
   }, [])
