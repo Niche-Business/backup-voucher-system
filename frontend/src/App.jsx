@@ -5393,6 +5393,7 @@ function RecipientDashboard({ user, onLogout }) {
   }
 
   const loadRecipientShops = async (town = 'all') => {
+    console.log('[TOWN FILTER] loadRecipientShops called with town:', town);
     try {
       const url = town && town !== 'all' ? `/recipient/shops?town=${encodeURIComponent(town)}` : '/recipient/shops'
       const data = await apiCall(url)
