@@ -5339,7 +5339,8 @@ function RecipientDashboard({ user, onLogout }) {
 
   // Watch townFilter and reload shops when it changes
   useEffect(() => {
-    loadRecipientShops(townFilter)
+    console.log('[TOWN FILTER] useEffect triggered with townFilter:', townFilter);
+    loadRecipientShops(townFilter);
   }, [townFilter])
 
   const loadVouchers = async () => {
@@ -5781,7 +5782,9 @@ function RecipientDashboard({ user, onLogout }) {
               <select 
                 value={townFilter} 
                 onChange={(e) => {
-                  setTownFilter(e.target.value)
+                  console.log('[TOWN FILTER] Dropdown changed to:', e.target.value);
+                  setTownFilter(e.target.value);
+                  console.log('[TOWN FILTER] setTownFilter called with:', e.target.value);
                 }}
                 style={{
                   padding: '10px 15px',
