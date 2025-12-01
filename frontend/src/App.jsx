@@ -5337,6 +5337,11 @@ function RecipientDashboard({ user, onLogout }) {
     loadCart()
   }, [])
 
+  // Watch townFilter and reload shops when it changes
+  useEffect(() => {
+    loadShops(townFilter)
+  }, [townFilter])
+
   const loadVouchers = async () => {
     try {
       const data = await apiCall('/recipient/vouchers')
@@ -5776,7 +5781,6 @@ function RecipientDashboard({ user, onLogout }) {
                 value={townFilter} 
                 onChange={(e) => {
                   setTownFilter(e.target.value)
-                  loadShops(e.target.value)
                 }}
                 style={{
                   padding: '10px 15px',
