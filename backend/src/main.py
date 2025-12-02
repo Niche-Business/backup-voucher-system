@@ -4190,6 +4190,15 @@ def school_issue_voucher():
         assign_shop_method = data.get('assign_shop_method', 'specific_shop')  # 'specific_shop' or 'recipient_to_choose'
         selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
         
+        # Enforce £50 maximum per voucher - split into multiple vouchers if needed
+        MAX_VOUCHER_VALUE = 50.0
+        num_vouchers = int(amount / MAX_VOUCHER_VALUE)
+        remainder = amount % MAX_VOUCHER_VALUE
+        
+        voucher_amounts = [MAX_VOUCHER_VALUE] * num_vouchers
+        if remainder > 0:
+            voucher_amounts.append(remainder)
+        
         # Check if school has sufficient wallet balance
         if user.balance < amount:
             return jsonify({'error': f'Insufficient wallet balance. Current balance: £{user.balance:.2f}, Required: £{amount:.2f}'}), 400
@@ -4217,12 +4226,9 @@ def school_issue_voucher():
             db.session.add(recipient)
             db.session.flush()
         
-        # Generate unique voucher code
+        # Generate unique voucher codes and create multiple vouchers
         import random
         import string
-        voucher_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-        
-        # Create voucher
         from datetime import datetime, timedelta
         import json
         
@@ -4230,82 +4236,107 @@ def school_issue_voucher():
         if selected_shops and selected_shops != 'all':
             vendor_restrictions = json.dumps(selected_shops)  # Store as JSON array
         
-        voucher = Voucher(
-            code=voucher_code,
-            value=amount,
-            issued_by=user_id,
-            recipient_id=recipient.id,
-            status='active',
-            expiry_date=datetime.utcnow() + timedelta(days=90),
-            vendor_restrictions=vendor_restrictions,
-            assign_shop_method=assign_shop_method,
-            original_recipient_id=recipient.id,
-            reassignment_count=0
-        )
-        
-        # Deduct from school wallet balance
+        # Deduct total amount from school wallet balance once
         balance_before = user.balance
         user.balance -= amount
         
-        # Create wallet transaction record
+        # Create wallet transaction record for total amount
         wallet_transaction = WalletTransaction(
             user_id=user_id,
             transaction_type='debit',
             amount=amount,
             balance_before=balance_before,
             balance_after=user.balance,
-            description=f'Voucher issued to {recipient.first_name} {recipient.last_name}',
-            reference=voucher_code,
+            description=f'{len(voucher_amounts)} voucher(s) issued to {recipient.first_name} {recipient.last_name} (Total: £{amount:.2f})',
+            reference=f'BATCH_{datetime.utcnow().strftime("%Y%m%d%H%M%S")}',
             status='completed'
         )
         db.session.add(wallet_transaction)
         db.session.flush()
         
-        # Link voucher to wallet transaction
-        voucher.issued_by_user_id = user_id
-        voucher.deducted_from_wallet = True
-        voucher.wallet_transaction_id = wallet_transaction.id
+        # Create multiple vouchers based on split amounts
+        voucher_codes = []
+        for voucher_value in voucher_amounts:
+            voucher_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+            voucher_codes.append(voucher_code)
+            
+            voucher = Voucher(
+                code=voucher_code,
+                value=voucher_value,
+                issued_by=user_id,
+                recipient_id=recipient.id,
+                status='active',
+                expiry_date=datetime.utcnow() + timedelta(days=90),
+                vendor_restrictions=vendor_restrictions,
+                assign_shop_method=assign_shop_method,
+                original_recipient_id=recipient.id,
+                reassignment_count=0,
+                issued_by_user_id=user_id,
+                deducted_from_wallet=True,
+                wallet_transaction_id=wallet_transaction.id
+            )
+            db.session.add(voucher)
         
-        db.session.add(voucher)
         db.session.commit()
         
         # Create notification for recipient
+        voucher_list = ', '.join(voucher_codes)
         create_notification(
             recipient.id,
-            'New Voucher Received',
-            f'You have received a £{amount} voucher from {user.organization_name}. Code: {voucher_code}',
+            'New Voucher(s) Received',
+            f'You have received {len(voucher_codes)} voucher(s) worth £{amount:.2f} from {user.organization_name}. Check your vouchers page for codes.',
             'success'
         )
         
-        # Send SMS notification to recipient with voucher code
+        # Send SMS notification to recipient with voucher codes
         if recipient.phone:
-            sms_result = sms_service.send_voucher_code(
-                recipient.phone,
-                voucher_code,
-                f"{recipient.first_name} {recipient.last_name}",
-                amount
-            )
+            if len(voucher_codes) == 1:
+                sms_result = sms_service.send_voucher_code(
+                    recipient.phone,
+                    voucher_codes[0],
+                    f"{recipient.first_name} {recipient.last_name}",
+                    amount
+                )
+            else:
+                # For multiple vouchers, send summary SMS
+                sms_result = sms_service.send_sms(
+                    recipient.phone,
+                    f"You've received {len(voucher_codes)} vouchers worth £{amount:.2f} from {user.organization_name}. Check your email or login to view codes."
+                )
             if not sms_result.get('success'):
                 print(f"Failed to send SMS: {sms_result.get('error')}")
         
         # Send email notification to recipient with voucher details
         if recipient.email:
-            email_result = email_service.send_voucher_issued_email(
-                recipient.email,
-                f"{recipient.first_name} {recipient.last_name}",
-                voucher_code,
-                amount,
-                user.organization_name
-            )
+            if len(voucher_codes) == 1:
+                email_result = email_service.send_voucher_issued_email(
+                    recipient.email,
+                    f"{recipient.first_name} {recipient.last_name}",
+                    voucher_codes[0],
+                    amount,
+                    user.organization_name
+                )
+            else:
+                # For multiple vouchers, send batch email
+                email_result = email_service.send_batch_vouchers_email(
+                    recipient.email,
+                    f"{recipient.first_name} {recipient.last_name}",
+                    voucher_codes,
+                    voucher_amounts,
+                    amount,
+                    user.organization_name
+                )
             if not email_result:
                 print(f"Failed to send email to {recipient.email}")
         
         return jsonify({
-            'message': 'Voucher issued successfully',
-            'voucher_code': voucher_code,
-            'amount': amount,
+            'message': f'{len(voucher_codes)} voucher(s) issued successfully',
+            'voucher_codes': voucher_codes,
+            'voucher_amounts': voucher_amounts,
+            'total_amount': amount,
+            'num_vouchers': len(voucher_codes),
             'recipient_email': recipient.email,
-            'remaining_balance': float(user.allocated_balance)
+            'remaining_balance': float(user.balance)
         }), 201
         
     except Exception as e:
