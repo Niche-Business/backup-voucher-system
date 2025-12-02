@@ -4248,7 +4248,6 @@ def school_issue_voucher():
         user.balance -= amount
         
         # Create wallet transaction record
-        from wallet_routes import WalletTransaction
         wallet_transaction = WalletTransaction(
             user_id=user_id,
             transaction_type='debit',
