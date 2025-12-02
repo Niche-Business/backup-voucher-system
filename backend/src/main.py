@@ -348,6 +348,10 @@ from notifications_system import notifications_bp, init_socketio, Notification, 
 app.register_blueprint(notifications_bp)
 init_socketio(socketio)
 
+# Initialize notifications migration endpoint
+from migrate_notifications import create_notifications_migration_endpoint
+create_notifications_migration_endpoint(app, db)
+
 # Helper Functions
 def send_verification_email(user):
     try:
