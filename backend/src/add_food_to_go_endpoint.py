@@ -56,7 +56,7 @@ def create_food_to_go_migration_endpoint(app, db):
             try:
                 with db.engine.connect() as conn:
                     conn.execute(text("""
-                        ALTER TABLE user 
+                        ALTER TABLE "user" 
                         ADD COLUMN preferred_shop_id INTEGER
                     """))
                     conn.commit()
