@@ -98,7 +98,7 @@ class VendorShop(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    vendor = db.relationship('User', backref='shops')
+    vendor = db.relationship('User', foreign_keys=[vendor_id], backref='shops')
 
 class Voucher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
