@@ -14,6 +14,7 @@ from email_service import email_service
 from sms_service import sms_service
 import stripe_payment
 from wallet_blueprint import wallet_bp, init_wallet_blueprint
+from admin_enhancements import init_admin_enhancements
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
@@ -335,6 +336,10 @@ class PaymentTransaction(db.Model):
 # Initialize and register wallet blueprint
 init_wallet_blueprint(db, User, Voucher, WalletTransaction)
 app.register_blueprint(wallet_bp)
+
+# Initialize admin enhancement endpoints
+# Note: Transaction model doesn't exist yet, so we pass None for now
+init_admin_enhancements(app, db, User, VendorShop, Voucher, None, email_service)
 
 # Helper Functions
 def send_verification_email(user):

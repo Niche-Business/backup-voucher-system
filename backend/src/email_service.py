@@ -606,3 +606,107 @@ class EmailService:
 
 # Create global instance
 email_service = EmailService()
+
+    def send_broadcast_message(self, recipient_email, recipient_name, title, body):
+        """Send broadcast message from admin to users"""
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .message-body {{ background: white; padding: 20px; border-left: 4px solid #4CAF50; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 0.9em; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📢 Important Announcement</h1>
+                    <h2 style="margin-top: 10px; font-weight: normal;">{title}</h2>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <div class="message-body">
+                        {body.replace(chr(10), '<br>')}
+                    </div>
+                    
+                    <p>If you have any questions, please don't hesitate to contact us.</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
+                    
+                    <div class="footer">
+                        <p>BAK UP CIC | Northamptonshire Community E-Voucher Scheme</p>
+                        <p>Email: admin@bakupcic.co.uk | Phone: 01933698347</p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=recipient_email,
+            subject=f"BAK UP Announcement: {title}",
+            html_content=html_content
+        )
+
+    def send_fund_allocation_notification(self, organization_email, contact_name, organization_name, amount, new_balance):
+        """Send notification when admin allocates funds to an organization"""
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .amount-box {{ background: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; border: 2px solid #4CAF50; }}
+                .amount {{ font-size: 32px; font-weight: bold; color: #4CAF50; }}
+                .balance {{ font-size: 18px; color: #666; margin-top: 10px; }}
+                .cta-button {{ display: inline-block; padding: 12px 30px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>💰 Funds Allocated!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {contact_name},</p>
+                    
+                    <p>Great news! BAK UP CIC has allocated funds to <strong>{organization_name}</strong>.</p>
+                    
+                    <div class="amount-box">
+                        <p style="margin: 0; color: #666;">Allocated Amount</p>
+                        <div class="amount">£{amount:.2f}</div>
+                        <div class="balance">New Balance: £{new_balance:.2f}</div>
+                    </div>
+                    
+                    <p>These funds are now available in your account and can be used to issue vouchers to families in need.</p>
+                    
+                    <p style="text-align: center;">
+                        <a href="{self.app_url}" class="cta-button">Access Your Dashboard</a>
+                    </p>
+                    
+                    <p>Thank you for your continued partnership in supporting our community!</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=organization_email,
+            subject=f"Funds Allocated - £{amount:.2f}",
+            html_content=html_content
+        )

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import './i18n'
 import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
+import { GlobalSearchTab, TransactionSearchTab, BroadcastTab, FundAllocationTab } from './AdminEnhancements'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
@@ -1268,6 +1269,9 @@ function AdminDashboard({ user, onLogout }) {
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.overview')}</button>
+          <button onClick={() => setActiveTab('search')} style={activeTab === 'search' ? styles.activeTab : styles.tab}>🔍 Global Search</button>
+          <button onClick={() => setActiveTab('transactions')} style={activeTab === 'transactions' ? styles.activeTab : styles.tab}>📊 Transactions</button>
+          <button onClick={() => setActiveTab('broadcast')} style={activeTab === 'broadcast' ? styles.activeTab : styles.tab}>📢 Broadcast</button>
           <button onClick={() => setActiveTab('funding')} style={activeTab === 'funding' ? styles.activeTab : styles.tab}>💰 Fund Allocation</button>
           <button onClick={() => setActiveTab('vcse')} style={activeTab === 'vcse' ? styles.activeTab : styles.tab}>🤝 VCSE Organisations</button>
           <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients</button>
@@ -1355,7 +1359,29 @@ function AdminDashboard({ user, onLogout }) {
           </div>
         )}
         
+        {activeTab === 'search' && (
+          <GlobalSearchTab apiCall={apiCall} />
+        )}
+        
+        {activeTab === 'transactions' && (
+          <TransactionSearchTab apiCall={apiCall} />
+        )}
+        
+        {activeTab === 'broadcast' && (
+          <BroadcastTab apiCall={apiCall} />
+        )}
+        
         {activeTab === 'funding' && (
+          <FundAllocationTab 
+            apiCall={apiCall} 
+            vcseOrgs={vcseOrgs} 
+            schools={schools}
+            loadVcseOrgs={loadVcseOrgs}
+            loadSchools={loadSchools}
+          />
+        )}
+        
+        {activeTab === 'funding_old' && (
           <div>
             <h2>💰 {t('admin.fundAllocation')}</h2>
             {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
