@@ -374,6 +374,15 @@ function LoginPage({ onLogin, onNavigate }) {
           <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>Forgot Password?</button></p>
           <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
         </div>
+        
+        <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
+          <p style={{margin: '0 0 8px 0', fontSize: '0.9em', lineHeight: '1.5', color: '#333'}}>
+            <strong>🌿 About BAK UP CIC</strong>
+          </p>
+          <p style={{margin: 0, fontSize: '0.85em', lineHeight: '1.5', color: '#555'}}>
+            BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families through flexible vouchers that respect cultural preferences and strengthen local economies.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -922,6 +931,15 @@ function RegisterPage({ onRegister, onNavigate }) {
         <div style={{textAlign: 'center'}}>
           <p>Already have an account? <button onClick={() => onNavigate('login')} style={styles.linkButton}>Sign in here</button></p>
           <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+        </div>
+        
+        <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
+          <p style={{margin: '0 0 8px 0', fontSize: '0.9em', lineHeight: '1.5', color: '#333'}}>
+            <strong>🤝 Join the Northamptonshire Community E-Voucher Scheme</strong>
+          </p>
+          <p style={{margin: 0, fontSize: '0.85em', lineHeight: '1.5', color: '#555'}}>
+            Led by BAK UP CIC, our scheme provides dignified support through flexible vouchers, respects cultural preferences, and strengthens local economies. Together, we're building a more inclusive and sustainable community.
+          </p>
         </div>
       </div>
     </div>
