@@ -3543,7 +3543,9 @@ function VCSEDashboard({ user, onLogout }) {
           recipient_address: voucherForm.recipientAddress,
           value: parseFloat(voucherForm.value),
           expiry_days: parseInt(voucherForm.expiryDays),
-          selected_shops: selectedShops === 'all' ? 'all' : selectedShops
+          selected_shops: selectedShops === 'all' ? 'all' : selectedShops,
+          assign_shop_method: voucherForm.assignShopMethod || 'none',
+          specific_shop_id: voucherForm.assignShopMethod === 'specific_shop' ? parseInt(voucherForm.specificShopId) : null
         })
       })
       setMessage('Voucher issued successfully!')
@@ -4182,6 +4184,43 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
+              </div>
+              
+              <div style={{marginBottom: '15px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '10px'}}>
+                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#1976d2'}}>
+                  🎁 Food To Go at a Discount - Shop Assignment
+                </label>
+                <select
+                  value={voucherForm.assignShopMethod || 'none'}
+                  onChange={(e) => setVoucherForm({...voucherForm, assignShopMethod: e.target.value})}
+                  style={styles.input}
+                >
+                  <option value="none">No shop assignment (regular voucher)</option>
+                  <option value="recipient_choice">Recipient to choose shop</option>
+                  <option value="specific_shop">Assign specific shop</option>
+                </select>
+                <small style={{color: '#666', display: 'block', marginTop: '5px'}}>
+                  Choose how the shop will be assigned for discounted food items
+                </small>
+                
+                {voucherForm.assignShopMethod === 'specific_shop' && (
+                  <div style={{marginTop: '10px'}}>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Select Shop</label>
+                    <select
+                      value={voucherForm.specificShopId || ''}
+                      onChange={(e) => setVoucherForm({...voucherForm, specificShopId: e.target.value})}
+                      style={styles.input}
+                      required
+                    >
+                      <option value="">-- Select a shop --</option>
+                      {vendorShops.map(shop => (
+                        <option key={shop.id} value={shop.id}>
+                          {shop.shop_name} - {shop.city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
               
               <button type="submit" style={styles.primaryButton}>Issue Voucher</button>
@@ -5329,12 +5368,16 @@ function RecipientDashboard({ user, onLogout }) {
   const [voucherHistorySearch, setVoucherHistorySearch] = useState('')
   const [voucherHistoryFilter, setVoucherHistoryFilter] = useState('all')
   const [townFilter, setTownFilter] = useState('all')
+  const [showShopSelection, setShowShopSelection] = useState(false)
+  const [shopSelectionVoucherCode, setShopSelectionVoucherCode] = useState(null)
+  const [discountedItems, setDiscountedItems] = useState([])
 
   useEffect(() => {
     loadVouchers()
     // loadShops() removed - townFilter useEffect handles this
     loadToGoItems()
     loadCart()
+    checkShopSelectionRequired()
   }, [])
 
   // Watch townFilter and reload shops when it changes
@@ -5350,6 +5393,34 @@ function RecipientDashboard({ user, onLogout }) {
       setVoucherSummary(data.summary || null)
     } catch (error) {
       console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const checkShopSelectionRequired = async () => {
+    try {
+      const data = await apiCall('/recipient/vouchers')
+      const activeVouchers = data.vouchers?.filter(v => v.status === 'active') || []
+      
+      // Check if any active voucher requires shop selection
+      for (const voucher of activeVouchers) {
+        const statusData = await apiCall(`/recipient/voucher-shop-status/${voucher.code}`)
+        if (statusData.requires_selection) {
+          setShopSelectionVoucherCode(voucher.code)
+          setShowShopSelection(true)
+          break
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check shop selection requirement:', error)
+    }
+  }
+
+  const loadDiscountedItems = async () => {
+    try {
+      const data = await apiCall('/recipient/discounted-items')
+      setDiscountedItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load discounted items:', error)
     }
   }
 
@@ -5461,9 +5532,10 @@ function RecipientDashboard({ user, onLogout }) {
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.myVouchers')}</button>
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.participatingShops')}</button>
+          <button onClick={() => setActiveTab('discounted')} style={activeTab === 'discounted' ? styles.activeTab : styles.tab}>🎁 Discounted Items</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.browseToGo')}</button>
           <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('dashboard.voucherHistory')}</button>
           <button onClick={() => setActiveTab('cart')} style={{...(activeTab === 'cart' ? styles.activeTab : styles.tab), position: 'relative'}}>
@@ -6005,6 +6077,94 @@ function RecipientDashboard({ user, onLogout }) {
           </div>
         )}
         
+        {activeTab === 'discounted' && (
+          <div>
+            <h2>🎁 Food To Go at a Discount</h2>
+            
+            {discountedItems.length === 0 ? (
+              <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', textAlign: 'center'}}>
+                <p style={{color: '#666', marginBottom: '20px'}}>
+                  {user.preferred_shop_id ? 
+                    'No discounted items available at your selected shop right now. Check back later!' :
+                    'Please select a shop first to view discounted items.'}
+                </p>
+                {!user.preferred_shop_id && (
+                  <button
+                    onClick={() => setActiveTab('shops')}
+                    style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}
+                  >
+                    Browse Shops
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div>
+                <p style={{marginBottom: '20px', color: '#666'}}>
+                  Browse discounted food items from your selected shop. These items are offered at reduced prices!
+                </p>
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
+                  {discountedItems.map(item => (
+                    <div key={item.id} style={{
+                      backgroundColor: 'white',
+                      padding: '20px',
+                      borderRadius: '10px',
+                      border: '2px solid #4CAF50',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}>
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+                        <h3 style={{margin: 0, color: '#333', fontSize: '18px'}}>{item.item_name}</h3>
+                        <span style={{
+                          backgroundColor: '#4CAF50',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 'bold'
+                        }}>
+                          SAVE £{item.savings.toFixed(2)}
+                        </span>
+                      </div>
+                      
+                      {item.description && (
+                        <p style={{margin: '10px 0', color: '#666', fontSize: '14px'}}>{item.description}</p>
+                      )}
+                      
+                      <div style={{marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #e0e0e0'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+                          <div>
+                            <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
+                              £{item.price.toFixed(2)}
+                            </div>
+                            <div style={{fontSize: '14px', color: '#999', textDecoration: 'line-through'}}>
+                              Was £{item.original_price.toFixed(2)}
+                            </div>
+                          </div>
+                          <div style={{textAlign: 'right'}}>
+                            <div style={{fontSize: '14px', color: '#666'}}>
+                              Qty: {item.quantity} {item.unit}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
+                          🏪 {item.shop_name}<br/>
+                          📍 {item.shop_town}
+                        </div>
+                        
+                        {item.available_until && (
+                          <div style={{marginTop: '10px', padding: '8px', backgroundColor: '#fff3cd', borderRadius: '5px', fontSize: '12px', color: '#856404'}}>
+                            ⏰ Available until {new Date(item.available_until).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
         {activeTab === 'history' && (
           <div>
             <h2>📜 {t('dashboard.voucherHistory')}</h2>
@@ -6086,6 +6246,98 @@ function RecipientDashboard({ user, onLogout }) {
           </div>
         )}
       </div>
+      
+      {/* Shop Selection Modal */}
+      {showShopSelection && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '40px',
+            borderRadius: '20px',
+            maxWidth: '800px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto'
+          }}>
+            <h2 style={{marginBottom: '10px', color: '#4CAF50'}}>🏪 Select Your Preferred Shop</h2>
+            <p style={{marginBottom: '30px', color: '#666'}}>
+              Please select a shop where you'd like to use your voucher for discounted food items.
+            </p>
+            
+            <div style={{display: 'grid', gap: '15px'}}>
+              {shops.map(shop => (
+                <div
+                  key={shop.id}
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/recipient/select-shop', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                          voucher_code: shopSelectionVoucherCode,
+                          shop_id: shop.id
+                        })
+                      })
+                      const data = await response.json()
+                      if (!response.ok) throw new Error(data.error || 'Failed to select shop')
+                      
+                      alert(`✅ Shop selected successfully! You can now browse discounted items from ${shop.shop_name}.`)
+                      setShowShopSelection(false)
+                      loadDiscountedItems()
+                    } catch (error) {
+                      alert('Failed to select shop: ' + error.message)
+                    }
+                  }}
+                  style={{
+                    padding: '20px',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    border: '2px solid transparent',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#e8f5e9'
+                    e.currentTarget.style.borderColor = '#4CAF50'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f5f5f5'
+                    e.currentTarget.style.borderColor = 'transparent'
+                  }}
+                >
+                  <h3 style={{margin: '0 0 10px 0', color: '#333'}}>{shop.shop_name}</h3>
+                  <p style={{margin: '5px 0', color: '#666', fontSize: '14px'}}>
+                    📍 {shop.address}, {shop.town} {shop.postcode}
+                  </p>
+                  {shop.phone && (
+                    <p style={{margin: '5px 0', color: '#666', fontSize: '14px'}}>
+                      📞 {shop.phone}
+                    </p>
+                  )}
+                  {shop.category && (
+                    <p style={{margin: '5px 0', color: '#4CAF50', fontSize: '14px', fontWeight: 'bold'}}>
+                      🏷️ {shop.category}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -6108,6 +6360,8 @@ function SchoolDashboard({ user, onLogout }) {
   const [voucherAmount, setVoucherAmount] = useState('')
   const [message, setMessage] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [assignShopMethod, setAssignShopMethod] = useState('none')
+  const [specificShopId, setSpecificShopId] = useState('')
 
   useEffect(() => {
     loadBalance()
@@ -6163,7 +6417,9 @@ function SchoolDashboard({ user, onLogout }) {
           recipient_last_name: recipientLastName,
           recipient_phone: recipientPhone,
           recipient_address: recipientAddress,
-          amount: parseFloat(voucherAmount)
+          amount: parseFloat(voucherAmount),
+          assign_shop_method: assignShopMethod || 'none',
+          specific_shop_id: assignShopMethod === 'specific_shop' ? parseInt(specificShopId) : null
         })
       })
       
@@ -6418,6 +6674,46 @@ function SchoolDashboard({ user, onLogout }) {
                     style={{...styles.input, marginTop: '10px'}}
                     required
                   />
+                )}
+              </div>
+              
+              <div style={{marginBottom: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '10px'}}>
+                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#1976d2'}}>
+                  🎁 Food To Go at a Discount - Shop Assignment
+                </label>
+                <select
+                  value={assignShopMethod}
+                  onChange={(e) => setAssignShopMethod(e.target.value)}
+                  style={styles.input}
+                >
+                  <option value="none">No shop assignment (regular voucher)</option>
+                  <option value="recipient_choice">Recipient to choose shop</option>
+                  <option value="specific_shop">Assign specific shop</option>
+                </select>
+                <small style={{color: '#666', display: 'block', marginTop: '5px'}}>
+                  Choose how the shop will be assigned for discounted food items
+                </small>
+                
+                {assignShopMethod === 'specific_shop' && (
+                  <div style={{marginTop: '10px'}}>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Select Shop</label>
+                    <select
+                      value={specificShopId}
+                      onChange={(e) => setSpecificShopId(e.target.value)}
+                      style={styles.input}
+                      required
+                    >
+                      <option value="">-- Select a shop --</option>
+                      {toGoItems.length > 0 && [...new Set(toGoItems.map(item => JSON.stringify({id: item.shop_id, name: item.shop_name, town: item.shop_town})))].map(shopStr => {
+                        const shop = JSON.parse(shopStr)
+                        return (
+                          <option key={shop.id} value={shop.id}>
+                            {shop.name} - {shop.town}
+                          </option>
+                        )
+                      })}
+                    </select>
+                  </div>
                 )}
               </div>
 

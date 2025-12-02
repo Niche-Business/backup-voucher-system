@@ -82,6 +82,9 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     balance = db.Column(db.Float, default=0.0)  # For VCSE organizations to load money
     allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCSE
+    
+    # Food To Go preferred shop for recipients
+    preferred_shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'))  # Recipient's preferred shop
 
 class VendorShop(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -113,6 +116,10 @@ class Voucher(db.Model):
     reassignment_count = db.Column(db.Integer, default=0)  # Track number of reassignments
     reassignment_history = db.Column(db.Text)  # JSON array of reassignment records
     original_recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Original recipient
+    
+    # Food To Go shop assignment fields
+    assign_shop_method = db.Column(db.String(50), default='specific_shop')  # 'specific_shop' or 'recipient_to_choose'
+    recipient_selected_shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'))  # Shop selected by recipient
     
     recipient = db.relationship('User', foreign_keys=[recipient_id], backref='received_vouchers')
     issuer = db.relationship('User', foreign_keys=[issued_by], backref='issued_vouchers')
@@ -1255,6 +1262,7 @@ def vcse_issue_voucher():
         value = data.get('value')
         expiry_days = data.get('expiry_days', 30)
         selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
+        assign_shop_method = data.get('assign_shop_method', 'specific_shop')  # 'specific_shop' or 'recipient_to_choose'
         
         if not all([recipient_first_name, recipient_last_name, recipient_email, recipient_phone, value]):
             return jsonify({'error': 'All recipient details and value are required'}), 400
@@ -1310,7 +1318,8 @@ def vcse_issue_voucher():
             status='active',
             vendor_restrictions=vendor_restrictions,
             original_recipient_id=recipient.id,
-            reassignment_count=0
+            reassignment_count=0,
+            assign_shop_method=assign_shop_method
         )
         
         # Deduct from VCSE allocated balance
@@ -4145,6 +4154,8 @@ def school_issue_voucher():
                 return jsonify({'error': f'Missing required field: {field}'}), 400
         
         amount = float(data['amount'])
+        assign_shop_method = data.get('assign_shop_method', 'specific_shop')  # 'specific_shop' or 'recipient_to_choose'
+        selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
         
         # Check if school has sufficient balance
         if user.allocated_balance < amount:
@@ -4180,13 +4191,23 @@ def school_issue_voucher():
         
         # Create voucher
         from datetime import datetime, timedelta
+        import json
+        
+        vendor_restrictions = None
+        if selected_shops and selected_shops != 'all':
+            vendor_restrictions = json.dumps(selected_shops)  # Store as JSON array
+        
         voucher = Voucher(
             code=voucher_code,
             value=amount,
-            issued_by_id=user_id,
+            issued_by=user_id,
             recipient_id=recipient.id,
             status='active',
-            expiry_date=datetime.utcnow() + timedelta(days=90)
+            expiry_date=datetime.utcnow() + timedelta(days=90),
+            vendor_restrictions=vendor_restrictions,
+            assign_shop_method=assign_shop_method,
+            original_recipient_id=recipient.id,
+            reassignment_count=0
         )
         
         # Deduct from school balance
@@ -5873,6 +5894,192 @@ def update_user_type(user_id):
         'old_type': old_type,
         'new_type': new_user_type
     })
+
+# ============================================
+# Food To Go - Shop Selection Endpoints
+# ============================================
+
+@app.route('/api/recipient/voucher-shop-status/<code>', methods=['GET'])
+def get_voucher_shop_status(code):
+    """Check if voucher requires shop selection and return shop assignment status"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        voucher = Voucher.query.filter_by(code=code).first()
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Check if this voucher belongs to the logged-in user
+        if voucher.recipient_id != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        response_data = {
+            'assign_shop_method': voucher.assign_shop_method or 'specific_shop',
+            'requires_selection': voucher.assign_shop_method == 'recipient_to_choose' and not voucher.recipient_selected_shop_id,
+            'assigned_shop': None,
+            'recipient_selected_shop': None
+        }
+        
+        # If shop was preselected by VCSE/School (specific_shop method)
+        if voucher.assign_shop_method == 'specific_shop':
+            # Get shop from vendor_restrictions (legacy) or assigned shop
+            if voucher.vendor_restrictions:
+                import json
+                try:
+                    vendor_ids = json.loads(voucher.vendor_restrictions)
+                    if vendor_ids and len(vendor_ids) > 0:
+                        # Get the first shop from the first vendor
+                        shop = VendorShop.query.filter_by(vendor_id=vendor_ids[0], is_active=True).first()
+                        if shop:
+                            response_data['assigned_shop'] = {
+                                'id': shop.id,
+                                'shop_name': shop.shop_name,
+                                'address': shop.address,
+                                'town': shop.town,
+                                'phone': shop.phone
+                            }
+                except:
+                    pass
+        
+        # If recipient has selected a shop
+        if voucher.recipient_selected_shop_id:
+            shop = VendorShop.query.get(voucher.recipient_selected_shop_id)
+            if shop:
+                response_data['recipient_selected_shop'] = {
+                    'id': shop.id,
+                    'shop_name': shop.shop_name,
+                    'address': shop.address,
+                    'town': shop.town,
+                    'phone': shop.phone
+                }
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/recipient/select-shop', methods=['POST'])
+def select_shop_for_voucher():
+    """Save recipient's shop selection and link it to their voucher"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        data = request.get_json()
+        voucher_code = data.get('voucher_code')
+        shop_id = data.get('shop_id')
+        
+        if not voucher_code or not shop_id:
+            return jsonify({'error': 'Voucher code and shop ID are required'}), 400
+        
+        # Get the voucher
+        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Check if this voucher belongs to the logged-in user
+        if voucher.recipient_id != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        # Check if voucher allows recipient to choose
+        if voucher.assign_shop_method != 'recipient_to_choose':
+            return jsonify({'error': 'This voucher does not allow shop selection'}), 400
+        
+        # Check if shop has already been selected
+        if voucher.recipient_selected_shop_id:
+            return jsonify({'error': 'Shop has already been selected for this voucher'}), 400
+        
+        # Verify shop exists and is active
+        shop = VendorShop.query.get(shop_id)
+        if not shop or not shop.is_active:
+            return jsonify({'error': 'Shop not found or inactive'}), 404
+        
+        # Save shop selection to voucher
+        voucher.recipient_selected_shop_id = shop_id
+        
+        # Also save to recipient's preferred shop
+        user = User.query.get(user_id)
+        user.preferred_shop_id = shop_id
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Shop selected successfully',
+            'shop': {
+                'id': shop.id,
+                'shop_name': shop.shop_name,
+                'address': shop.address,
+                'town': shop.town,
+                'phone': shop.phone
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/recipient/discounted-items', methods=['GET'])
+def get_discounted_items_for_recipient():
+    """Get discounted items from recipient's assigned/selected shop"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get recipient's shop (from preferred_shop_id or from their voucher)
+        shop_id = user.preferred_shop_id
+        
+        # If no preferred shop, try to get from their active voucher
+        if not shop_id:
+            voucher = Voucher.query.filter_by(recipient_id=user_id, status='active').first()
+            if voucher and voucher.recipient_selected_shop_id:
+                shop_id = voucher.recipient_selected_shop_id
+        
+        if not shop_id:
+            return jsonify({
+                'items': [],
+                'message': 'No shop assigned yet. Please select a shop first.'
+            }), 200
+        
+        # Get all discounted items from the shop
+        items = SurplusItem.query.filter_by(
+            shop_id=shop_id,
+            status='available',
+            item_type='discount'
+        ).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'description': item.description,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'price': float(item.price) if item.price else 0,
+                'original_price': float(item.original_price) if item.original_price else 0,
+                'savings': float(item.original_price - item.price) if (item.original_price and item.price) else 0,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else '',
+                'shop_town': shop.town if shop else '',
+                'available_until': item.available_until.isoformat() if item.available_until else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Add Food To Go migration endpoint
 from add_food_to_go_endpoint import create_food_to_go_migration_endpoint
