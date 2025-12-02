@@ -4190,9 +4190,9 @@ def school_issue_voucher():
         assign_shop_method = data.get('assign_shop_method', 'specific_shop')  # 'specific_shop' or 'recipient_to_choose'
         selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
         
-        # Check if school has sufficient balance
-        if user.allocated_balance < amount:
-            return jsonify({'error': 'Insufficient balance'}), 400
+        # Check if school has sufficient wallet balance
+        if user.balance < amount:
+            return jsonify({'error': f'Insufficient wallet balance. Current balance: £{user.balance:.2f}, Required: £{amount:.2f}'}), 400
         
         # Find or create recipient
         recipient = User.query.filter_by(email=data['recipient_email']).first()
@@ -4243,8 +4243,29 @@ def school_issue_voucher():
             reassignment_count=0
         )
         
-        # Deduct from school balance
-        user.allocated_balance -= amount
+        # Deduct from school wallet balance
+        balance_before = user.balance
+        user.balance -= amount
+        
+        # Create wallet transaction record
+        from wallet_routes import WalletTransaction
+        wallet_transaction = WalletTransaction(
+            user_id=user_id,
+            transaction_type='debit',
+            amount=amount,
+            balance_before=balance_before,
+            balance_after=user.balance,
+            description=f'Voucher issued to {recipient.first_name} {recipient.last_name}',
+            reference=voucher_code,
+            status='completed'
+        )
+        db.session.add(wallet_transaction)
+        db.session.flush()
+        
+        # Link voucher to wallet transaction
+        voucher.issued_by_user_id = user_id
+        voucher.deducted_from_wallet = True
+        voucher.wallet_transaction_id = wallet_transaction.id
         
         db.session.add(voucher)
         db.session.commit()
