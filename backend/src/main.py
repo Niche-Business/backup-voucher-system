@@ -335,6 +335,55 @@ class PaymentTransaction(db.Model):
     # Relationship
     vcse = db.relationship('User', backref='payment_transactions')
 
+# Notification Models
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), nullable=False)  # 'discounted_item' or 'free_item'
+    shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'), nullable=False)
+    item_id = db.Column(db.Integer)  # Reference to SurplusItem
+    target_group = db.Column(db.String(50), nullable=False)  # 'recipient', 'vcse', 'school', 'all'
+    message = db.Column(db.Text, nullable=False)
+    item_name = db.Column(db.String(200))
+    shop_name = db.Column(db.String(200))
+    quantity = db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # For user-specific notifications
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            'shop_id': self.shop_id,
+            'item_id': self.item_id,
+            'target_group': self.target_group,
+            'message': self.message,
+            'item_name': self.item_name,
+            'shop_name': self.shop_name,
+            'quantity': self.quantity,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'is_read': self.is_read
+        }
+
+class NotificationPreference(db.Model):
+    __tablename__ = 'notification_preferences'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
+    sound_enabled = db.Column(db.Boolean, default=True)
+    email_enabled = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'user_id': self.user_id,
+            'sound_enabled': self.sound_enabled,
+            'email_enabled': self.email_enabled
+        }
+
 # Initialize and register wallet blueprint
 init_wallet_blueprint(db, User, Voucher, WalletTransaction)
 app.register_blueprint(wallet_bp)
@@ -344,7 +393,8 @@ app.register_blueprint(wallet_bp)
 init_admin_enhancements(app, db, User, VendorShop, Voucher, None, email_service)
 
 # Initialize notifications system
-from notifications_system import notifications_bp, init_socketio, Notification, NotificationPreference
+from notifications_system import notifications_bp, init_socketio, init_notifications_system
+init_notifications_system(db, Notification, NotificationPreference, User, socketio)
 app.register_blueprint(notifications_bp)
 init_socketio(socketio)
 

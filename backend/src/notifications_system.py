@@ -4,64 +4,28 @@ Handles real-time notifications for new items posted by shops
 """
 
 from flask import Blueprint, jsonify, request, session
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import emit, join_room, leave_room
 from datetime import datetime
-from models import db
-
-# Notification Model
-class Notification(db.Model):
-    __tablename__ = 'notifications'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(50), nullable=False)  # 'discounted_item' or 'free_item'
-    shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shops.id'), nullable=False)
-    item_id = db.Column(db.Integer, nullable=True)  # Reference to SurplusItem
-    target_group = db.Column(db.String(50), nullable=False)  # 'recipient', 'vcse', 'school', 'all'
-    message = db.Column(db.Text, nullable=False)
-    item_name = db.Column(db.String(200))
-    shop_name = db.Column(db.String(200))
-    quantity = db.Column(db.String(50))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    is_read = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # For user-specific notifications
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'type': self.type,
-            'shop_id': self.shop_id,
-            'item_id': self.item_id,
-            'target_group': self.target_group,
-            'message': self.message,
-            'item_name': self.item_name,
-            'shop_name': self.shop_name,
-            'quantity': self.quantity,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'is_read': self.is_read
-        }
-
-
-# User Notification Preferences Model
-class NotificationPreference(db.Model):
-    __tablename__ = 'notification_preferences'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
-    sound_enabled = db.Column(db.Boolean, default=True)
-    email_enabled = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    def to_dict(self):
-        return {
-            'user_id': self.user_id,
-            'sound_enabled': self.sound_enabled,
-            'email_enabled': self.email_enabled
-        }
-
 
 # Blueprint for notifications API
 notifications_bp = Blueprint('notifications', __name__)
+
+# Global references (will be set during initialization)
+_db = None
+_Notification = None
+_NotificationPreference = None
+_User = None
+_socketio = None
+
+
+def init_notifications_system(db, Notification, NotificationPreference, User, socketio):
+    """Initialize the notifications system with database models"""
+    global _db, _Notification, _NotificationPreference, _User, _socketio
+    _db = db
+    _Notification = Notification
+    _NotificationPreference = NotificationPreference
+    _User = User
+    _socketio = socketio
 
 
 def create_notification(notification_type, shop_id, item_id, target_group, message, item_name, shop_name, quantity):
@@ -79,7 +43,7 @@ def create_notification(notification_type, shop_id, item_id, target_group, messa
         quantity: Quantity available
     """
     try:
-        notification = Notification(
+        notification = _Notification(
             type=notification_type,
             shop_id=shop_id,
             item_id=item_id,
@@ -89,12 +53,12 @@ def create_notification(notification_type, shop_id, item_id, target_group, messa
             shop_name=shop_name,
             quantity=quantity
         )
-        db.session.add(notification)
-        db.session.commit()
+        _db.session.add(notification)
+        _db.session.commit()
         
         return notification
     except Exception as e:
-        db.session.rollback()
+        _db.session.rollback()
         print(f"Error creating notification: {str(e)}")
         return None
 
@@ -107,32 +71,31 @@ def get_user_notifications():
         if not user_id:
             return jsonify({'error': 'Unauthorized'}), 401
         
-        from models import User
-        user = User.query.get(user_id)
+        user = _User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
         # Determine target group based on user type
         if user.user_type == 'vcse':
             # VCSEs see both discounted and free items
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'vcse') | 
-                (Notification.target_group == 'all')
-            ).order_by(Notification.created_at.desc()).limit(50).all()
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'vcse') | 
+                (_Notification.target_group == 'all')
+            ).order_by(_Notification.created_at.desc()).limit(50).all()
         elif user.user_type == 'school':
             # Schools see only discounted items
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'school') | 
-                (Notification.target_group == 'all'),
-                Notification.type == 'discounted_item'
-            ).order_by(Notification.created_at.desc()).limit(50).all()
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'school') | 
+                (_Notification.target_group == 'all'),
+                _Notification.type == 'discounted_item'
+            ).order_by(_Notification.created_at.desc()).limit(50).all()
         elif user.user_type == 'recipient':
             # Recipients see only discounted items
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'recipient') | 
-                (Notification.target_group == 'all'),
-                Notification.type == 'discounted_item'
-            ).order_by(Notification.created_at.desc()).limit(50).all()
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'recipient') | 
+                (_Notification.target_group == 'all'),
+                _Notification.type == 'discounted_item'
+            ).order_by(_Notification.created_at.desc()).limit(50).all()
         else:
             notifications = []
         
@@ -153,17 +116,17 @@ def mark_notification_read(notification_id):
         if not user_id:
             return jsonify({'error': 'Unauthorized'}), 401
         
-        notification = Notification.query.get(notification_id)
+        notification = _Notification.query.get(notification_id)
         if not notification:
             return jsonify({'error': 'Notification not found'}), 404
         
         notification.is_read = True
-        db.session.commit()
+        _db.session.commit()
         
         return jsonify({'message': 'Notification marked as read'}), 200
         
     except Exception as e:
-        db.session.rollback()
+        _db.session.rollback()
         return jsonify({'error': f'Failed to mark notification as read: {str(e)}'}), 500
 
 
@@ -175,31 +138,30 @@ def mark_all_notifications_read():
         if not user_id:
             return jsonify({'error': 'Unauthorized'}), 401
         
-        from models import User
-        user = User.query.get(user_id)
+        user = _User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
         # Determine target group based on user type
         if user.user_type == 'vcse':
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'vcse') | 
-                (Notification.target_group == 'all'),
-                Notification.is_read == False
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'vcse') | 
+                (_Notification.target_group == 'all'),
+                _Notification.is_read == False
             ).all()
         elif user.user_type == 'school':
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'school') | 
-                (Notification.target_group == 'all'),
-                Notification.type == 'discounted_item',
-                Notification.is_read == False
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'school') | 
+                (_Notification.target_group == 'all'),
+                _Notification.type == 'discounted_item',
+                _Notification.is_read == False
             ).all()
         elif user.user_type == 'recipient':
-            notifications = Notification.query.filter(
-                (Notification.target_group == 'recipient') | 
-                (Notification.target_group == 'all'),
-                Notification.type == 'discounted_item',
-                Notification.is_read == False
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'recipient') | 
+                (_Notification.target_group == 'all'),
+                _Notification.type == 'discounted_item',
+                _Notification.is_read == False
             ).all()
         else:
             notifications = []
@@ -207,12 +169,12 @@ def mark_all_notifications_read():
         for notification in notifications:
             notification.is_read = True
         
-        db.session.commit()
+        _db.session.commit()
         
         return jsonify({'message': f'Marked {len(notifications)} notifications as read'}), 200
         
     except Exception as e:
-        db.session.rollback()
+        _db.session.rollback()
         return jsonify({'error': f'Failed to mark notifications as read: {str(e)}'}), 500
 
 
@@ -224,17 +186,17 @@ def get_notification_preferences():
         if not user_id:
             return jsonify({'error': 'Unauthorized'}), 401
         
-        preferences = NotificationPreference.query.filter_by(user_id=user_id).first()
+        preferences = _NotificationPreference.query.filter_by(user_id=user_id).first()
         
         if not preferences:
             # Create default preferences
-            preferences = NotificationPreference(
+            preferences = _NotificationPreference(
                 user_id=user_id,
                 sound_enabled=True,
                 email_enabled=True
             )
-            db.session.add(preferences)
-            db.session.commit()
+            _db.session.add(preferences)
+            _db.session.commit()
         
         return jsonify(preferences.to_dict()), 200
         
@@ -252,11 +214,11 @@ def update_notification_preferences():
         
         data = request.get_json()
         
-        preferences = NotificationPreference.query.filter_by(user_id=user_id).first()
+        preferences = _NotificationPreference.query.filter_by(user_id=user_id).first()
         
         if not preferences:
-            preferences = NotificationPreference(user_id=user_id)
-            db.session.add(preferences)
+            preferences = _NotificationPreference(user_id=user_id)
+            _db.session.add(preferences)
         
         if 'sound_enabled' in data:
             preferences.sound_enabled = data['sound_enabled']
@@ -264,7 +226,7 @@ def update_notification_preferences():
             preferences.email_enabled = data['email_enabled']
         
         preferences.updated_at = datetime.utcnow()
-        db.session.commit()
+        _db.session.commit()
         
         return jsonify({
             'message': 'Preferences updated successfully',
@@ -272,7 +234,7 @@ def update_notification_preferences():
         }), 200
         
     except Exception as e:
-        db.session.rollback()
+        _db.session.rollback()
         return jsonify({'error': f'Failed to update preferences: {str(e)}'}), 500
 
 
@@ -284,8 +246,7 @@ def init_socketio(socketio_instance):
         """Handle client connection"""
         user_id = session.get('user_id')
         if user_id:
-            from models import User
-            user = User.query.get(user_id)
+            user = _User.query.get(user_id)
             if user:
                 # Join room based on user type
                 room = f"{user.user_type}_room"
@@ -297,8 +258,7 @@ def init_socketio(socketio_instance):
         """Handle client disconnection"""
         user_id = session.get('user_id')
         if user_id:
-            from models import User
-            user = User.query.get(user_id)
+            user = _User.query.get(user_id)
             if user:
                 room = f"{user.user_type}_room"
                 leave_room(room)
