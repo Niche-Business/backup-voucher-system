@@ -3109,10 +3109,10 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
       <div style={{marginBottom: '10px'}}>
         <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>{item.item_name || item.title}</h3>
         <div style={{fontSize: '14px', color: '#666'}}>
-          <div><strong>Shop:</strong> {item.shop_name}</div>
-          <div><strong>Category:</strong> {item.category}</div>
-          <div><strong>Available:</strong> {item.quantity}</div>
-          {item.expiry_date && <div><strong>Expiry:</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
+          <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
+          <div><strong>{t('product.category')}</strong> {item.category}</div>
+          <div><strong>{t('product.available')}</strong> {item.quantity}</div>
+          {item.expiry_date && <div><strong>{t('product.expiry')}</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
           {item.description && <div style={{marginTop: '8px'}}>{item.description}</div>}
         </div>
       </div>
@@ -3122,7 +3122,7 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
           onClick={() => setShowOrderForm(true)} 
           style={{...styles.primaryButton, width: '100%', backgroundColor: '#4CAF50'}}
         >
-          📝 Order for Client
+          📏 {t('buttons.orderForClient')}
         </button>
       ) : (
         <form onSubmit={handlePlaceOrder} style={{marginTop: '15px'}}>
@@ -3726,9 +3726,9 @@ function VCSEDashboard({ user, onLogout }) {
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
           <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
-          <button onClick={() => setActiveTab('payment')} style={activeTab === 'payment' ? styles.activeTab : styles.tab}>💳 Load Funds</button>
-          <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 Voucher Orders</button>
-          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 Reports</button>
+          <button onClick={() => setActiveTab('payment')} style={activeTab === 'payment' ? styles.activeTab : styles.tab}>💳 {t('tabs.loadFunds')}</button>
+          <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 {t('tabs.voucherOrders')}</button>
+          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 {t('tabs.reports')}</button>
           <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
@@ -3778,7 +3778,7 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'orders' && (
           <div>
-            <h2>📋 Voucher Orders</h2>
+            <h2>📋 {t('tabs.voucherOrders')}</h2>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
               <div style={{display: 'flex', gap: '15px', marginBottom: '20px', flexWrap: 'wrap'}}>
@@ -3897,7 +3897,7 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'reports' && (
           <div>
-            <h2>📈 Reports & Analytics</h2>
+            <h2>📈 {t('tabs.reports')} & {t('dashboard.tabs.analytics', 'Analytics')}</h2>
             <p style={{marginBottom: '20px', color: '#666'}}>Visual insights into your voucher distribution and impact</p>
             
             {!analytics ? (
@@ -4350,8 +4350,8 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🛍️ Available Food to Go Items - Order for Clients</h2>
-            <p style={{marginBottom: '20px', color: '#666'}}>Browse available Food to Go Items from local shops and order them on behalf of your clients by providing their contact details.</p>
+            <h2>🛒️ {t('pages.foodToGoOrderTitle')}</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>{t('pages.foodToGoOrderDesc')}</p>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
@@ -6617,7 +6617,7 @@ function SchoolDashboard({ user, onLogout }) {
       
       // Handle both single and multiple voucher responses
       if (data.num_vouchers && data.num_vouchers > 1) {
-        setMessage(`✅ ${data.num_vouchers} vouchers issued successfully! Total: £${data.total_amount.toFixed(2)} (split into vouchers of £50 or less)`)
+        setMessage(`✅ ${data.num_vouchers} ${t('messages.vouchersIssuedSuccess')} ${t('messages.totalValue', 'Total')}: £${data.total_amount.toFixed(2)} (split into vouchers of £50 or less)`)
       } else if (data.voucher_codes && data.voucher_codes.length > 0) {
         setMessage(`✅ Voucher issued successfully! Code: ${data.voucher_codes[0]}`)
       } else if (data.voucher_code) {
@@ -6681,7 +6681,7 @@ function SchoolDashboard({ user, onLogout }) {
             onClick={() => setActiveTab('togo')} 
             style={activeTab === 'togo' ? styles.activeTab : styles.tab}
           >
-            🛍️ Food to Go Items
+            🛒️ {t('tabs.foodToGo')}
           </button>
           <button 
             onClick={() => setActiveTab('wallet')} 
@@ -6693,19 +6693,19 @@ function SchoolDashboard({ user, onLogout }) {
             onClick={() => setActiveTab('payment')} 
             style={activeTab === 'payment' ? styles.activeTab : styles.tab}
           >
-            💳 Load Funds
+            💳 {t('tabs.loadFunds')}
           </button>
           <button 
             onClick={() => setActiveTab('orders')} 
             style={activeTab === 'orders' ? styles.activeTab : styles.tab}
           >
-            📋 Voucher Orders
+            📋 {t('tabs.voucherOrders')}
           </button>
           <button 
             onClick={() => setActiveTab('reports')} 
             style={activeTab === 'reports' ? styles.activeTab : styles.tab}
           >
-            📈 Reports
+            📈 {t('tabs.reports')}
           </button>
         </div>
 
@@ -7128,7 +7128,7 @@ function SchoolDashboard({ user, onLogout }) {
               <h3 style={{marginTop: 0, color: '#9C27B0'}}>📜 Transaction History</h3>
               {transactions.length === 0 ? (
                 <p style={{textAlign: 'center', color: '#999', padding: '40px 0'}}>
-                  No transactions yet. Add funds to get started!
+                  {t('messages.noTransactionsYet')}
                 </p>
               ) : (
                 <div style={{overflowX: 'auto'}}>
@@ -7208,7 +7208,7 @@ function SchoolDashboard({ user, onLogout }) {
         {/* Voucher Orders Tab */}
         {activeTab === 'orders' && (
           <div>
-            <h2>📋 Voucher Orders</h2>
+            <h2>📋 {t('tabs.voucherOrders')}</h2>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
               <div style={{display: 'flex', gap: '15px', marginBottom: '20px', flexWrap: 'wrap'}}>
@@ -7317,7 +7317,7 @@ function SchoolDashboard({ user, onLogout }) {
         {/* Reports & Analytics Tab */}
         {activeTab === 'reports' && (
           <div>
-            <h2>📈 Reports & Analytics</h2>
+            <h2>📈 {t('tabs.reports')} & {t('dashboard.tabs.analytics', 'Analytics')}</h2>
             <p style={{marginBottom: '20px', color: '#666'}}>Visual insights into your voucher distribution and impact</p>
             
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
@@ -7500,10 +7500,10 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
       <div style={{marginBottom: '10px'}}>
         <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>{item.item_name || item.title}</h3>
         <div style={{fontSize: '14px', color: '#666'}}>
-          <div><strong>Shop:</strong> {item.shop_name}</div>
-          <div><strong>Category:</strong> {item.category}</div>
-          <div><strong>Available:</strong> {item.quantity}</div>
-          {item.expiry_date && <div><strong>Expiry:</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
+          <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
+          <div><strong>{t('product.category')}</strong> {item.category}</div>
+          <div><strong>{t('product.available')}</strong> {item.quantity}</div>
+          {item.expiry_date && <div><strong>{t('product.expiry')}</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
           {item.description && <div style={{marginTop: '8px'}}>{item.description}</div>}
         </div>
       </div>
