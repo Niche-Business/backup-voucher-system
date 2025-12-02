@@ -13,6 +13,7 @@ import secrets
 from email_service import email_service
 from sms_service import sms_service
 import stripe_payment
+from wallet_blueprint import wallet_bp, init_wallet_blueprint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
@@ -330,6 +331,10 @@ class PaymentTransaction(db.Model):
     
     # Relationship
     vcse = db.relationship('User', backref='payment_transactions')
+
+# Initialize and register wallet blueprint
+init_wallet_blueprint(db, User, Voucher, WalletTransaction)
+app.register_blueprint(wallet_bp)
 
 # Helper Functions
 def send_verification_email(user):
