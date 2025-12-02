@@ -5874,6 +5874,10 @@ def update_user_type(user_id):
         'new_type': new_user_type
     })
 
+# Add Food To Go migration endpoint
+from add_food_to_go_endpoint import create_food_to_go_migration_endpoint
+create_food_to_go_migration_endpoint(app, db)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
