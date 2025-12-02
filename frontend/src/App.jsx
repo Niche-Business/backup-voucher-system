@@ -6615,7 +6615,16 @@ function SchoolDashboard({ user, onLogout }) {
         })
       })
       
-      setMessage(`✅ Voucher issued successfully! Code: ${data.voucher_code}`)
+      // Handle both single and multiple voucher responses
+      if (data.num_vouchers && data.num_vouchers > 1) {
+        setMessage(`✅ ${data.num_vouchers} vouchers issued successfully! Total: £${data.total_amount.toFixed(2)} (split into vouchers of £50 or less)`)
+      } else if (data.voucher_codes && data.voucher_codes.length > 0) {
+        setMessage(`✅ Voucher issued successfully! Code: ${data.voucher_codes[0]}`)
+      } else if (data.voucher_code) {
+        setMessage(`✅ Voucher issued successfully! Code: ${data.voucher_code}`)
+      } else {
+        setMessage(`✅ Voucher(s) issued successfully!`)
+      }
       setRecipientEmail('')
       setRecipientFirstName('')
       setRecipientLastName('')

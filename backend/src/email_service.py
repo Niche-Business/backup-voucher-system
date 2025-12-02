@@ -285,6 +285,132 @@ class EmailService:
             html_content=html_content
         )
 
+    def send_batch_vouchers_email(self, recipient_email, recipient_name, voucher_codes, voucher_amounts, total_amount, issuer_name):
+        """Send email when multiple vouchers are issued (for amounts > £50)"""
+        
+        # Build voucher codes table
+        voucher_rows = ""
+        for i, (code, amount) in enumerate(zip(voucher_codes, voucher_amounts), 1):
+            voucher_rows += f"""
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">{i}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; font-family: monospace; font-weight: bold; color: #4CAF50;">{code}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;">£{amount:.2f}</td>
+            </tr>
+            """
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .summary {{ 
+                    background-color: #fff; 
+                    border: 2px solid #4CAF50; 
+                    padding: 20px; 
+                    text-align: center; 
+                    margin: 20px 0;
+                    border-radius: 10px;
+                }}
+                .total-amount {{ font-size: 32px; color: #FF9800; font-weight: bold; }}
+                .voucher-table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                    background-color: #fff;
+                }}
+                .voucher-table th {{
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 12px;
+                    text-align: left;
+                }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+                .button {{
+                    display: inline-block;
+                    padding: 12px 24px;
+                    background-color: #4CAF50;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }}
+                .info-box {{
+                    background-color: #E3F2FD;
+                    border-left: 4px solid #2196F3;
+                    padding: 15px;
+                    margin: 20px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎉 Your BAK UP Vouchers are Ready!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <p>You have received <strong>{len(voucher_codes)} vouchers</strong> from <strong>{issuer_name}</strong>.</p>
+                    
+                    <div class="summary">
+                        <div style="font-size: 18px; color: #666; margin-bottom: 10px;">Total Value</div>
+                        <div class="total-amount">£{total_amount:.2f}</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 10px;">Split into {len(voucher_codes)} vouchers (max £50 each)</div>
+                    </div>
+                    
+                    <h3>Your Voucher Codes:</h3>
+                    <table class="voucher-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">#</th>
+                                <th>Voucher Code</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {voucher_rows}
+                        </tbody>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>💡 Why multiple vouchers?</strong><br>
+                        To make it easier to manage and redeem, your total amount has been split into multiple vouchers of £50 or less. You can use each voucher separately at participating shops.
+                    </div>
+                    
+                    <h3>How to Use Your Vouchers:</h3>
+                    <ol>
+                        <li>Visit any participating local food shop</li>
+                        <li>Select the items you need</li>
+                        <li>Show one of your voucher codes at checkout</li>
+                        <li>The amount will be deducted from that voucher</li>
+                        <li>Use your other vouchers on future visits</li>
+                    </ol>
+                    
+                    <p style="text-align: center;">
+                        <a href="{self.app_url}" class="button">View All Your Vouchers</a>
+                    </p>
+                    
+                    <p><strong>Important:</strong> Keep these codes safe and only share them with authorized vendors. Each code can be used independently.</p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP E-Voucher System - Connecting surplus food with those who need it most</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=recipient_email,
+            subject=f"Your {len(voucher_codes)} BAK UP Vouchers (£{total_amount:.2f} Total)",
+            html_content=html_content
+        )
+
     def send_redemption_receipt_email(self, recipient_email, recipient_name, voucher_code, amount_spent, remaining_balance, vendor_name):
         """Send email when voucher is redeemed"""
         html_content = f"""
