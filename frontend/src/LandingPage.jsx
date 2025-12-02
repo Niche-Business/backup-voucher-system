@@ -249,12 +249,51 @@ const LandingPage = ({ onNavigate }) => {
       {/* About the Scheme Section */}
       <div style={{ backgroundColor: '#f0f7f0', padding: '80px 20px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '30px', color: '#2e7d32' }}>
-            🌿 About the Northamptonshire Community E-Voucher Scheme
+          <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: '#2e7d32', fontWeight: 'bold' }}>
+            About the Northamptonshire Community E-Voucher Scheme
           </h2>
           
+          {/* Mission Statement */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.8em', color: '#4CAF50', marginBottom: '20px' }}>🏯 About BAK UP CIC</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Mission Statement</h3>
+            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+              To create inclusive, resilient, and empowered communities by addressing the root causes of hardship and inequality through partnership, compassion, and community-driven innovation.
+            </p>
+          </div>
+
+          {/* Our Vision */}
+          <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Our Vision</h3>
+            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+              A fairer, healthier, and more connected society where everyone has the opportunity to reach their full potential.
+            </p>
+          </div>
+
+          {/* Our Values */}
+          <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>Our Values</h3>
+            <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '2' }}>
+              <li style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#2e7d32' }}>Compassion</strong> – We care deeply about people and their stories.
+              </li>
+              <li style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#2e7d32' }}>Equity</strong> – We champion fairness and inclusion for all.
+              </li>
+              <li style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#2e7d32' }}>Empowerment</strong> – We invest in people to become agents of change.
+              </li>
+              <li style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#2e7d32' }}>Collaboration</strong> – We build partnerships that strengthen collective impact.
+              </li>
+              <li style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#2e7d32' }}>Integrity</strong> – We are accountable, transparent, and community-centred in all we do.
+              </li>
+            </ul>
+          </div>
+
+          {/* About BAK UP CIC */}
+          <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>About BAK UP CIC</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '20px' }}>
               BAK UP CIC is proud to lead the <strong>Northamptonshire Community E-Voucher Scheme</strong>, an innovative, community-led solution that ensures families and individuals facing hardship can access culturally appropriate essential goods and services with dignity, flexibility, and fairness.
             </p>
@@ -264,40 +303,30 @@ const LandingPage = ({ onNavigate }) => {
           </div>
 
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.8em', color: '#4CAF50', marginBottom: '20px' }}>🎯 Our Mission</h3>
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
-              BAK UP CIC exists to reduce inequalities and improve life chances by tackling the social, economic, and structural barriers that prevent people from thriving. We work collaboratively across Northamptonshire to create inclusive, equitable systems that empower residents to lead healthier, more resilient, and self-determined lives.
-            </p>
-          </div>
-
-          <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.8em', color: '#4CAF50', marginBottom: '25px' }}>🌟 Objectives of the E-Voucher Scheme</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>Key Work Areas</h3>
             <div style={{ display: 'grid', gap: '20px' }}>
-              <div style={{ borderLeft: '4px solid #4CAF50', paddingLeft: '20px' }}>
-                <h4 style={{ fontSize: '1.3em', color: '#2e7d32', marginBottom: '10px' }}>1. Promote Dignity and Choice</h4>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>Enable families to select the food and essentials they truly need, respecting cultural and dietary preferences.</p>
-              </div>
-              <div style={{ borderLeft: '4px solid #4CAF50', paddingLeft: '20px' }}>
-                <h4 style={{ fontSize: '1.3em', color: '#2e7d32', marginBottom: '10px' }}>2. Support Local Economies</h4>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>Partner with local shops, independent retailers, and social enterprises to keep funding circulating within communities.</p>
-              </div>
-              <div style={{ borderLeft: '4px solid #4CAF50', paddingLeft: '20px' }}>
-                <h4 style={{ fontSize: '1.3em', color: '#2e7d32', marginBottom: '10px' }}>3. Enhance Accessibility</h4>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>Ensure that individuals with No Recourse to Public Funds (NRPF), those facing digital exclusion, or people with mobility challenges are not left behind.</p>
-              </div>
-              <div style={{ borderLeft: '4px solid #4CAF50', paddingLeft: '20px' }}>
-                <h4 style={{ fontSize: '1.3em', color: '#2e7d32', marginBottom: '10px' }}>4. Improve Data and Impact Measurement</h4>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>Use anonymised data to map needs, target support, and influence local policy on food and financial insecurity.</p>
-              </div>
-              <div style={{ borderLeft: '4px solid #4CAF50', paddingLeft: '20px' }}>
-                <h4 style={{ fontSize: '1.3em', color: '#2e7d32', marginBottom: '10px' }}>5. Foster Collaboration</h4>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>Work with councils, health partners, and VCSE organisations to deliver integrated, wrap-around support.</p>
-              </div>
+              <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '1.8' }}>
+                <li style={{ marginBottom: '15px' }}>
+                  <strong style={{ color: '#2e7d32' }}>Food Security & Household Support</strong> – Mobile food services, E-Voucher schemes, white goods provision, and partnerships with local retailers to ensure families can access culturally appropriate and nutritious food.
+                </li>
+                <li style={{ marginBottom: '15px' }}>
+                  <strong style={{ color: '#2e7d32' }}>Youth Empowerment</strong> – Through the East Northamptonshire Youth Ambassadors (EYA) and other leadership programmes, we equip young people with the confidence, skills, and voice to become positive changemakers in their communities.
+                </li>
+                <li style={{ marginBottom: '15px' }}>
+                  <strong style={{ color: '#2e7d32' }}>Health & Wellbeing</strong> – Community-based interventions tackling health inequalities, loneliness, and social isolation, while promoting physical activity, mental health awareness, and trusted-adult relationships.
+                </li>
+                <li style={{ marginBottom: '15px' }}>
+                  <strong style={{ color: '#2e7d32' }}>Social Determinants of Health</strong> – A holistic focus on improving access to education, employment, and healthcare, empowering people to thrive rather than survive.
+                </li>
+                <li style={{ marginBottom: '15px' }}>
+                  <strong style={{ color: '#2e7d32' }}>Community Cohesion & Cultural Heritage</strong> – Celebrating diversity through initiatives such as the Windrush Generation Celebration, storytelling projects, and intergenerational community events that honour identity and belonging.
+                </li>
+              </ul>
             </div>
           </div>
 
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.8em', color: '#4CAF50', marginBottom: '20px' }}>♻️ Creating a Circular and Sustainable Community Economy</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Creating a Circular and Sustainable Community Economy</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '15px' }}>
               The E-Voucher Scheme also creates a unique opportunity for local shops and retailers to play an active role in reducing waste and promoting sustainability.
             </p>
@@ -307,7 +336,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
 
           <div style={{ backgroundColor: '#e8f5e9', padding: '40px', borderRadius: '15px', border: '2px solid #4CAF50' }}>
-            <h3 style={{ fontSize: '1.8em', color: '#2e7d32', marginBottom: '20px', textAlign: 'center' }}>💰 Why Funders Should Invest</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', textAlign: 'center', fontWeight: 'bold' }}>Why Funders Should Invest</h3>
             <p style={{ fontSize: '1.2em', lineHeight: '1.8', color: '#333', textAlign: 'center', fontWeight: '500' }}>
               Funding the E-Voucher Scheme means investing in a smarter, fairer, and greener approach to tackling poverty and inequality. Every pound directly benefits both households facing hardship and local small businesses, creating a positive cycle of community wealth and wellbeing.
             </p>
@@ -418,8 +447,8 @@ const LandingPage = ({ onNavigate }) => {
                 <strong>BAK UP CIC</strong><br />
                 Northamptonshire, UK<br />
                 <br />
-                <strong>Email:</strong> info@bakup.org.uk<br />
-                <strong>Phone:</strong> Coming soon<br />
+                <strong>Email:</strong> admin@bakupcic.co.uk<br />
+                <strong>Phone:</strong> 01933698347<br />
                 <br />
                 <strong>Hours:</strong><br />
                 Monday - Friday: 9am - 5pm
@@ -435,7 +464,7 @@ const LandingPage = ({ onNavigate }) => {
             color: '#c8e6c9',
             fontSize: '0.9em'
           }}>
-            <p>&copy; 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme</p>
+            <p>&copy; 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme<br />Charity Company Registration Number: 12994374</p>
           </div>
         </div>
       </div>
