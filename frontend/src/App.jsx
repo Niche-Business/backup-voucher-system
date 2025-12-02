@@ -4,6 +4,7 @@ import './i18n'
 import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
 import { GlobalSearchTab, TransactionSearchTab, BroadcastTab, FundAllocationTab } from './AdminEnhancements'
+import VCSEVerificationAdmin from './VCSEVerificationAdmin'
 import { NotificationBell } from './NotificationSystem'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
@@ -693,6 +694,7 @@ function RegisterPage({ onRegister, onNavigate }) {
     phone: '',
     userType: 'recipient',
     organizationName: '',
+    charityCommissionNumber: '',
     shopName: '',
     shopCategory: '',
     address: '',
@@ -845,16 +847,19 @@ function RegisterPage({ onRegister, onNavigate }) {
                     <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
                   </div>
                   <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Charity Commission Number</label>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Charity Commission Number <span style={{color: '#f44336'}}>*</span></label>
                     <input 
                       type="text" 
                       name="charityCommissionNumber" 
                       value={formData.charityCommissionNumber || ''} 
                       onChange={handleChange} 
-                      placeholder="e.g., 123456" 
+                      placeholder="e.g., 1234567" 
                       style={styles.input} 
                       required 
                     />
+                    <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                      ⚠️ Your registration will be verified against the Charity Commission database before approval.
+                    </small>
                   </div>
                 </>
               )}
@@ -1274,6 +1279,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('transactions')} style={activeTab === 'transactions' ? styles.activeTab : styles.tab}>📊 Transactions</button>
           <button onClick={() => setActiveTab('broadcast')} style={activeTab === 'broadcast' ? styles.activeTab : styles.tab}>📢 Broadcast</button>
           <button onClick={() => setActiveTab('funding')} style={activeTab === 'funding' ? styles.activeTab : styles.tab}>💰 Fund Allocation</button>
+          <button onClick={() => setActiveTab('vcse-verification')} style={activeTab === 'vcse-verification' ? styles.activeTab : styles.tab}>🔍 VCSE Verification</button>
           <button onClick={() => setActiveTab('vcse')} style={activeTab === 'vcse' ? styles.activeTab : styles.tab}>🤝 VCSE Organisations</button>
           <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients</button>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.voucherManagement')}</button>
@@ -1380,6 +1386,10 @@ function AdminDashboard({ user, onLogout }) {
             loadVcseOrgs={loadVcseOrgs}
             loadSchools={loadSchools}
           />
+        )}
+        
+        {activeTab === 'vcse-verification' && (
+          <VCSEVerificationAdmin apiCall={apiCall} />
         )}
         
         {activeTab === 'funding_old' && (

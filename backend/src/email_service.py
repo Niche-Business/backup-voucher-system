@@ -710,3 +710,185 @@ email_service = EmailService()
             subject=f"Funds Allocated - £{amount:.2f}",
             html_content=html_content
         )
+
+    def send_vcse_verification_pending_email(self, user_email, user_name, organization_name, charity_number):
+        """Send email to VCSE organization when registration is pending verification"""
+        subject = "VCSE Registration – Verification in Progress"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .info-box {{ background-color: #e8f5e9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }}
+                .button {{ display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🌿 BAK UP CIC</h1>
+                    <p>Northamptonshire Community E-Voucher Scheme</p>
+                </div>
+                <div class="content">
+                    <h2>Thank you for registering, {user_name}!</h2>
+                    
+                    <p>We have received your VCSE organization registration for the Community E-Voucher Scheme.</p>
+                    
+                    <div class="info-box">
+                        <strong>Organization Details Submitted:</strong><br>
+                        <strong>Name:</strong> {organization_name}<br>
+                        <strong>Charity Commission Number:</strong> {charity_number}
+                    </div>
+                    
+                    <h3>What happens next?</h3>
+                    <p>We are currently reviewing your Charity Commission Registration Number and organization details to confirm eligibility.</p>
+                    
+                    <ul>
+                        <li><strong>Verification Time:</strong> Typically 1–2 hours during business hours</li>
+                        <li><strong>Verification Process:</strong> We will check your details against the Charity Commission database</li>
+                        <li><strong>Next Steps:</strong> Once verified, you will receive an email with your login activation link</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <strong>⚠️ Important:</strong> If the information provided does not match the Charity Commission database, access cannot be granted. Please ensure all details are accurate.
+                    </div>
+                    
+                    <p>If you have any questions, please contact us:</p>
+                    <ul>
+                        <li><strong>Email:</strong> admin@bakupcic.co.uk</li>
+                        <li><strong>Phone:</strong> 01933698347</li>
+                    </ul>
+                </div>
+                <div class="footer">
+                    <p>BAK UP CIC - Charity Company Registration Number: 12994374</p>
+                    <p>This is an automated email. Please do not reply directly to this message.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(user_email, subject, html_content)
+    
+    def send_vcse_approval_email(self, user_email, user_name, organization_name, login_url):
+        """Send email to VCSE organization when account is approved"""
+        subject = "✅ VCSE Account Approved – Welcome to BAK UP E-Voucher Scheme"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .success-box {{ background-color: #e8f5e9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0; text-align: center; }}
+                .footer {{ text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }}
+                .button {{ display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎉 Welcome to BAK UP!</h1>
+                    <p>Northamptonshire Community E-Voucher Scheme</p>
+                </div>
+                <div class="content">
+                    <div class="success-box">
+                        <h2 style="color: #4CAF50; margin: 0;">✅ Your Account Has Been Approved!</h2>
+                    </div>
+                    
+                    <p>Dear {user_name},</p>
+                    
+                    <p>Congratulations! Your VCSE organization <strong>{organization_name}</strong> has been successfully verified and approved to join the Community E-Voucher Scheme.</p>
+                    
+                    <p>You can now access your VCSE portal to:</p>
+                    <ul>
+                        <li>Issue vouchers to families in need</li>
+                        <li>Manage your organization's voucher allocation</li>
+                        <li>Access free food items from local shops</li>
+                        <li>Track voucher usage and impact</li>
+                        <li>Collaborate with other VCSE organizations</li>
+                    </ul>
+                    
+                    <div style="text-align: center;">
+                        <a href="{login_url}" class="button">Login to Your Account</a>
+                    </div>
+                    
+                    <p>If you need any assistance getting started, please don't hesitate to contact us:</p>
+                    <ul>
+                        <li><strong>Email:</strong> admin@bakupcic.co.uk</li>
+                        <li><strong>Phone:</strong> 01933698347</li>
+                    </ul>
+                    
+                    <p>Thank you for joining us in supporting families across Northamptonshire!</p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP CIC - Charity Company Registration Number: 12994374</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(user_email, subject, html_content)
+    
+    def send_vcse_rejection_email(self, user_email, user_name, organization_name, rejection_reason):
+        """Send email to VCSE organization when account is rejected"""
+        subject = "VCSE Registration Update"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #f44336; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .warning-box {{ background-color: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>BAK UP CIC</h1>
+                    <p>VCSE Registration Update</p>
+                </div>
+                <div class="content">
+                    <p>Dear {user_name},</p>
+                    
+                    <p>Thank you for your interest in joining the Community E-Voucher Scheme as a VCSE organization.</p>
+                    
+                    <div class="warning-box">
+                        <strong>Application Status:</strong> Unfortunately, we are unable to approve your registration at this time.
+                    </div>
+                    
+                    <p><strong>Reason:</strong></p>
+                    <p>{rejection_reason}</p>
+                    
+                    <p>If you believe this is an error or would like to discuss this further, please contact us:</p>
+                    <ul>
+                        <li><strong>Email:</strong> admin@bakupcic.co.uk</li>
+                        <li><strong>Phone:</strong> 01933698347</li>
+                    </ul>
+                    
+                    <p>We appreciate your understanding.</p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP CIC - Charity Company Registration Number: 12994374</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(user_email, subject, html_content)

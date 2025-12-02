@@ -16,6 +16,7 @@ from sms_service import sms_service
 import stripe_payment
 from wallet_blueprint import wallet_bp, init_wallet_blueprint
 from admin_enhancements import init_admin_enhancements
+from vcse_verification import init_vcse_verification
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')
@@ -84,6 +85,10 @@ class User(db.Model):
     last_login = db.Column(db.DateTime)
     login_count = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True)
+    account_status = db.Column(db.String(30), default='ACTIVE')  # ACTIVE, PENDING_VERIFICATION, REJECTED
+    rejection_reason = db.Column(db.Text)  # Reason for rejection (if rejected)
+    verified_at = db.Column(db.DateTime)  # When account was verified by admin
+    verified_by_admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Admin who verified
     balance = db.Column(db.Float, default=0.0)  # For VCSE organizations to load money
     allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCSE
     
@@ -392,7 +397,10 @@ app.register_blueprint(wallet_bp)
 # Note: Transaction model doesn't exist yet, so we pass None for now
 init_admin_enhancements(app, db, User, VendorShop, Voucher, None, email_service)
 
-# Initialize notifications system
+# Initialize VCSE Verification System
+init_vcse_verification(app, db, User, email_service)
+
+# Initialize Notifications System
 from notifications_system import notifications_bp, init_socketio, init_notifications_system
 init_notifications_system(db, Notification, NotificationPreference, User, socketio)
 app.register_blueprint(notifications_bp)
@@ -593,6 +601,13 @@ def register():
             if not data.get(field):
                 return jsonify({'error': f'{field} is required'}), 400
         
+        # VCSE-specific validation: Charity Commission number is mandatory
+        if data['user_type'] == 'vcse':
+            if not data.get('charity_commission_number'):
+                return jsonify({'error': 'Charity Commission Registration Number is required for VCSE organizations'}), 400
+            if not data.get('organization_name'):
+                return jsonify({'error': 'Organization name is required for VCSE organizations'}), 400
+        
         # Check if user already exists
         if User.query.filter_by(email=data['email']).first():
             return jsonify({'error': 'Email already registered'}), 400
@@ -607,6 +622,9 @@ def register():
         
         # Create verification token
         verification_token = secrets.token_urlsafe(32)
+        
+        # Determine account status: VCSE organizations need admin verification
+        account_status = 'PENDING_VERIFICATION' if data['user_type'] == 'vcse' else 'ACTIVE'
         
         # Create new user
         user = User(
@@ -623,7 +641,8 @@ def register():
             city=data.get('city', ''),
             charity_commission_number=data.get('charity_commission_number', ''),
             shop_category=data.get('shop_category', ''),
-            verification_token=verification_token
+            verification_token=verification_token,
+            account_status=account_status
         )
         
         db.session.add(user)
@@ -643,15 +662,25 @@ def register():
             db.session.add(vendor_shop)
             db.session.commit()
         
-        # Send welcome email using SendGrid
+        # Send appropriate email based on account status
         try:
-            email_service.send_welcome_email(
-                user_email=user.email,
-                user_name=f"{user.first_name} {user.last_name}",
-                user_type=user.user_type
-            )
+            if user.account_status == 'PENDING_VERIFICATION':
+                # Send VCSE verification pending email
+                email_service.send_vcse_verification_pending_email(
+                    user_email=user.email,
+                    user_name=f"{user.first_name} {user.last_name}",
+                    organization_name=user.organization_name,
+                    charity_number=user.charity_commission_number
+                )
+            else:
+                # Send regular welcome email
+                email_service.send_welcome_email(
+                    user_email=user.email,
+                    user_name=f"{user.first_name} {user.last_name}",
+                    user_type=user.user_type
+                )
         except Exception as email_error:
-            print(f"Warning: Could not send welcome email: {email_error}")
+            print(f"Warning: Could not send email: {email_error}")
         
         # For demo purposes, auto-verify
         user.is_verified = True
@@ -675,10 +704,19 @@ def register():
             'success'
         )
         
-        return jsonify({
-            'message': 'Registration successful! Welcome email sent to ' + user.email,
-            'user_id': user.id
-        }), 201
+        # Return appropriate message based on account status
+        if user.account_status == 'PENDING_VERIFICATION':
+            return jsonify({
+                'message': 'Registration submitted! Your VCSE organization is pending verification. You will receive an email once your account is approved.',
+                'user_id': user.id,
+                'account_status': 'PENDING_VERIFICATION'
+            }), 201
+        else:
+            return jsonify({
+                'message': 'Registration successful! Welcome email sent to ' + user.email,
+                'user_id': user.id,
+                'account_status': 'ACTIVE'
+            }), 201
         
     except Exception as e:
         db.session.rollback()
@@ -697,6 +735,19 @@ def login():
         
         if not user or not check_password_hash(user.password_hash, data['password']):
             return jsonify({'error': 'Invalid email or password'}), 401
+        
+        # Check account status for VCSE organizations
+        if user.account_status == 'PENDING_VERIFICATION':
+            return jsonify({
+                'error': 'Your account is pending verification. You will receive an email once your VCSE organization has been approved by our administrators.',
+                'account_status': 'PENDING_VERIFICATION'
+            }), 403
+        
+        if user.account_status == 'REJECTED':
+            return jsonify({
+                'error': f'Your account application was rejected. Reason: {user.rejection_reason or "Please contact admin@bakupcic.co.uk for more information."}',
+                'account_status': 'REJECTED'
+            }), 403
         
         if not user.is_verified:
             return jsonify({'error': 'Please verify your email before logging in'}), 401
@@ -3458,8 +3509,12 @@ def post_surplus_item():
         # Validate required fields
         required_fields = ['item_name', 'quantity', 'category', 'shop_name', 'shop_address']
         for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
+            if field not in data or not data[field]:
+                return jsonify({'error': f'Please complete your shop profile before posting items. Missing: {field}'}), 400
+        
+        # Validate shop_name is not just whitespace
+        if not data['shop_name'].strip() or not data['shop_address'].strip():
+            return jsonify({'error': 'Please set up your shop profile with valid shop name and address before posting items.'}), 400
         
         # Find or create shop for this vendor
         shop = VendorShop.query.filter_by(
@@ -3469,17 +3524,21 @@ def post_surplus_item():
         
         if not shop:
             # Create new shop
-            shop = VendorShop(
-                vendor_id=user_id,
-                shop_name=data['shop_name'],
-                address=data['shop_address'],
-                postcode='',
-                city='',
-                phone='',
-                is_active=True
-            )
-            db.session.add(shop)
-            db.session.flush()  # Get the shop ID
+            try:
+                shop = VendorShop(
+                    vendor_id=user_id,
+                    shop_name=data['shop_name'].strip(),
+                    address=data['shop_address'].strip(),
+                    postcode='',
+                    city='',
+                    phone='',
+                    is_active=True
+                )
+                db.session.add(shop)
+                db.session.flush()  # Get the shop ID
+            except Exception as shop_error:
+                db.session.rollback()
+                return jsonify({'error': f'Failed to create shop profile: {str(shop_error)}'}), 500
         
         # Parse expiry date if provided
         expiry_date = None
