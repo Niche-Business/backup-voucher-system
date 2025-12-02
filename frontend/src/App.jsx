@@ -6351,6 +6351,24 @@ function SchoolDashboard({ user, onLogout }) {
   const [organizationName, setOrganizationName] = useState('')
   const [toGoItems, setToGoItems] = useState([])
   
+  // Wallet state
+  const [walletBalance, setWalletBalance] = useState(0)
+  const [allocatedBalance, setAllocatedBalance] = useState(0)
+  const [transactions, setTransactions] = useState([])
+  const [walletStats, setWalletStats] = useState({
+    total_credits: 0,
+    total_debits: 0,
+    voucher_stats: {
+      total_issued: 0,
+      total_value: 0,
+      active_value: 0,
+      redeemed_value: 0
+    }
+  })
+  const [addFundsAmount, setAddFundsAmount] = useState('')
+  const [paymentReference, setPaymentReference] = useState('')
+  const [fundsDescription, setFundsDescription] = useState('')
+  
   // Issue voucher form state
   const [recipientEmail, setRecipientEmail] = useState('')
   const [recipientFirstName, setRecipientFirstName] = useState('')
@@ -6367,6 +6385,8 @@ function SchoolDashboard({ user, onLogout }) {
     loadBalance()
     loadVouchers()
     loadToGoItems()
+    loadWalletBalance()
+    loadTransactions()
   }, [])
 
   const loadBalance = async () => {
@@ -6401,6 +6421,54 @@ function SchoolDashboard({ user, onLogout }) {
       } catch (fallbackError) {
         console.error('Fallback also failed:', fallbackError)
       }
+    }
+  }
+
+  const loadWalletBalance = async () => {
+    try {
+      const data = await apiCall('/school/wallet/balance')
+      setWalletBalance(data.current_balance || 0)
+      setAllocatedBalance(data.allocated_balance || 0)
+      setWalletStats(data)
+    } catch (error) {
+      console.error('Failed to load wallet balance:', error)
+    }
+  }
+
+  const loadTransactions = async () => {
+    try {
+      const data = await apiCall('/school/wallet/transactions?limit=50')
+      setTransactions(data.transactions || [])
+    } catch (error) {
+      console.error('Failed to load transactions:', error)
+    }
+  }
+
+  const handleAddFunds = async (e) => {
+    e.preventDefault()
+    setMessage('')
+    
+    try {
+      const data = await apiCall('/school/wallet/add-funds', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: parseFloat(addFundsAmount),
+          payment_method: 'manual',
+          payment_reference: paymentReference,
+          description: fundsDescription || 'Funds added to wallet'
+        })
+      })
+      
+      setMessage(`✅ ${data.message}! New balance: £${data.new_balance.toFixed(2)}`)
+      setAddFundsAmount('')
+      setPaymentReference('')
+      setFundsDescription('')
+      
+      // Reload wallet data
+      loadWalletBalance()
+      loadTransactions()
+    } catch (error) {
+      setMessage(`❌ Error: ${error.message}`)
     }
   }
 
@@ -6481,6 +6549,12 @@ function SchoolDashboard({ user, onLogout }) {
             style={activeTab === 'togo' ? styles.activeTab : styles.tab}
           >
             🛍️ Food to Go Items
+          </button>
+          <button 
+            onClick={() => setActiveTab('wallet')} 
+            style={activeTab === 'wallet' ? styles.activeTab : styles.tab}
+          >
+            💰 Wallet Management
           </button>
         </div>
 
@@ -6798,6 +6872,177 @@ function SchoolDashboard({ user, onLogout }) {
                   {toGoItems.map(item => (
                     <SchoolToGoOrderCard key={item.id} item={item} onOrderPlaced={loadToGoItems} />
                   ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Wallet Management Tab */}
+        {activeTab === 'wallet' && (
+          <div>
+            {/* Wallet Overview Cards */}
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>💰 Current Wallet Balance</div>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
+                  £{walletBalance.toFixed(2)}
+                </div>
+                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                  Available for voucher issuance
+                </div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>📊 Total Credits</div>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
+                  £{walletStats.total_credits.toFixed(2)}
+                </div>
+                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                  Funds added to wallet
+                </div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>💸 Total Debits</div>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
+                  £{walletStats.total_debits.toFixed(2)}
+                </div>
+                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                  Spent on vouchers
+                </div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>🎫 Vouchers Issued</div>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#9C27B0'}}>
+                  {walletStats.voucher_stats.total_issued}
+                </div>
+                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                  £{walletStats.voucher_stats.total_value.toFixed(2)} total value
+                </div>
+              </div>
+            </div>
+
+            {/* Add Funds Section */}
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0, color: '#9C27B0'}}>💰 Add Funds to Wallet</h3>
+              <form onSubmit={handleAddFunds}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Amount (£)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="1"
+                      max="10000"
+                      value={addFundsAmount}
+                      onChange={(e) => setAddFundsAmount(e.target.value)}
+                      required
+                      style={styles.input}
+                      placeholder="Enter amount"
+                    />
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Payment Reference</label>
+                    <input
+                      type="text"
+                      value={paymentReference}
+                      onChange={(e) => setPaymentReference(e.target.value)}
+                      style={styles.input}
+                      placeholder="e.g., Invoice #12345"
+                    />
+                  </div>
+                </div>
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Description (Optional)</label>
+                  <textarea
+                    value={fundsDescription}
+                    onChange={(e) => setFundsDescription(e.target.value)}
+                    style={{...styles.input, minHeight: '80px'}}
+                    placeholder="Add notes about this transaction"
+                  />
+                </div>
+                <button type="submit" style={styles.primaryButton}>
+                  ➕ Add Funds to Wallet
+                </button>
+              </form>
+              <div style={{marginTop: '15px', padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '14px'}}>
+                💡 <strong>Note:</strong> Funds added to your wallet can be used to issue vouchers to families. Maximum £10,000 per transaction.
+              </div>
+            </div>
+
+            {/* Transaction History */}
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0, color: '#9C27B0'}}>📜 Transaction History</h3>
+              {transactions.length === 0 ? (
+                <p style={{textAlign: 'center', color: '#999', padding: '40px 0'}}>
+                  No transactions yet. Add funds to get started!
+                </p>
+              ) : (
+                <div style={{overflowX: 'auto'}}>
+                  <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                    <thead>
+                      <tr style={{backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd'}}>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Date</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Type</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Description</th>
+                        <th style={{padding: '12px', textAlign: 'right'}}>Amount</th>
+                        <th style={{padding: '12px', textAlign: 'right'}}>Balance After</th>
+                        <th style={{padding: '12px', textAlign: 'center'}}>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions.map((txn) => (
+                        <tr key={txn.id} style={{borderBottom: '1px solid #eee'}}>
+                          <td style={{padding: '12px'}}>
+                            {new Date(txn.created_at).toLocaleDateString('en-GB')}
+                            <br />
+                            <span style={{fontSize: '12px', color: '#999'}}>
+                              {new Date(txn.created_at).toLocaleTimeString('en-GB')}
+                            </span>
+                          </td>
+                          <td style={{padding: '12px'}}>
+                            <span style={{
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              backgroundColor: txn.transaction_type === 'credit' ? '#E8F5E9' : txn.transaction_type === 'debit' ? '#FFEBEE' : '#E3F2FD',
+                              color: txn.transaction_type === 'credit' ? '#4CAF50' : txn.transaction_type === 'debit' ? '#F44336' : '#2196F3'
+                            }}>
+                              {txn.transaction_type.toUpperCase()}
+                            </span>
+                          </td>
+                          <td style={{padding: '12px'}}>
+                            {txn.description}
+                            {txn.reference && (
+                              <div style={{fontSize: '12px', color: '#999'}}>
+                                Ref: {txn.reference}
+                              </div>
+                            )}
+                          </td>
+                          <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: txn.transaction_type === 'credit' ? '#4CAF50' : '#F44336'}}>
+                            {txn.transaction_type === 'credit' ? '+' : '-'}£{txn.amount.toFixed(2)}
+                          </td>
+                          <td style={{padding: '12px', textAlign: 'right'}}>
+                            £{txn.balance_after.toFixed(2)}
+                          </td>
+                          <td style={{padding: '12px', textAlign: 'center'}}>
+                            <span style={{
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              backgroundColor: txn.status === 'completed' ? '#E8F5E9' : '#FFF3E0',
+                              color: txn.status === 'completed' ? '#4CAF50' : '#FF9800'
+                            }}>
+                              {txn.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
