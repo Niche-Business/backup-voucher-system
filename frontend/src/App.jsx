@@ -290,6 +290,7 @@ function FeatureCard({ icon, title, description }) {
 function LoginPage({ onLogin, onNavigate }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -334,14 +335,33 @@ function LoginPage({ onLogin, onNavigate }) {
           
           <div style={{marginBottom: '20px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              style={styles.input}
-            />
+            <div style={{position: 'relative'}}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  color: '#666'
+                }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
@@ -363,6 +383,7 @@ function LoginPage({ onLogin, onNavigate }) {
 function AdminLoginPage({ onLogin, onNavigate }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -410,14 +431,33 @@ function AdminLoginPage({ onLogin, onNavigate }) {
           
           <div style={{marginBottom: '20px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter admin password"
-              required
-              style={styles.input}
-            />
+            <div style={{position: 'relative'}}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter admin password"
+                required
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  color: '#666'
+                }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px', backgroundColor: '#1976d2'}}>
@@ -506,6 +546,8 @@ function ForgotPasswordPage({ onNavigate }) {
 function ResetPasswordPage({ token, onNavigate }) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -560,27 +602,65 @@ function ResetPasswordPage({ token, onNavigate }) {
         <form onSubmit={handleSubmit}>
           <div style={{marginBottom: '20px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>New Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter new password"
-              style={styles.input}
-              required
-            />
+            <div style={{position: 'relative'}}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter new password"
+                style={styles.input}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  color: '#666'
+                }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           
           <div style={{marginBottom: '20px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+            <div style={{position: 'relative'}}>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
               style={styles.input}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '18px',
+                color: '#666'
+              }}
+            >
+              {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+            </button>
           </div>
+        </div>
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', opacity: loading ? 0.6 : 1}}>
             {loading ? 'Resetting...' : 'Reset Password'}
@@ -609,6 +689,8 @@ function RegisterPage({ onRegister, onNavigate }) {
     city: '',
     town: ''
   })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
@@ -697,11 +779,49 @@ function RegisterPage({ onRegister, onNavigate }) {
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
             <div>
               <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
-              <input type="password" name="password" value={formData.password} onChange={handleChange} style={styles.input} required />
+              <div style={{position: 'relative'}}>
+                <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} style={styles.input} required />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#666'
+                  }}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
             </div>
             <div>
               <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Confirm Password</label>
-              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} style={styles.input} required />
+              <div style={{position: 'relative'}}>
+                <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} style={styles.input} required />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#666'
+                  }}
+                >
+                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
             </div>
           </div>
           
@@ -767,8 +887,8 @@ function RegisterPage({ onRegister, onNavigate }) {
                   <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} required />
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
+                  <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder="Leave empty if registering in a town" />
                 </div>
               </div>
               
