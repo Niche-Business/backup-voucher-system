@@ -3773,6 +3773,19 @@ function VCSEDashboard({ user, onLogout }) {
             <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
               <p style={{margin: 0, color: '#1565c0'}}>ℹ️ <strong>Note:</strong> You can load funds directly using a credit/debit card, or receive allocated funds from the administrator.</p>
             </div>
+            
+            <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '12px', marginTop: '20px', border: '2px solid #4CAF50'}}>
+              <h3 style={{marginTop: 0, color: '#2e7d32'}}>🤝 Welcome to the Northamptonshire Community E-Voucher Scheme</h3>
+              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
+                Thank you for partnering with <strong>BAK UP CIC</strong> to support families and individuals facing hardship across Northamptonshire. As a VCSE organization, you are at the heart of our community-led approach to tackling food insecurity.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
+                Our E-Voucher system replaces traditional food parcels with <strong>flexible, dignified support</strong> that respects cultural preferences and gives families real choice. Every voucher you issue helps strengthen local economies by supporting participating shops and retailers.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', color: '#555'}}>
+                🌟 Together, we're building a more inclusive, sustainable, and resilient community where everyone can thrive.
+              </p>
+            </div>
           </div>
         )}
         
@@ -4751,6 +4764,19 @@ function VendorDashboard({ user, onLogout }) {
                 <div style={{fontSize: '48px', fontWeight: 'bold', color: '#2196F3'}}>{shops.length}</div>
                 <div>{t('shop.shopsRegistered')}</div>
               </div>
+            </div>
+            
+            <div style={{backgroundColor: '#fff3e0', padding: '25px', borderRadius: '12px', marginBottom: '25px', border: '2px solid #FF9800'}}>
+              <h3 style={{marginTop: 0, color: '#e65100'}}>🏪 Welcome to the Northamptonshire Community E-Voucher Scheme</h3>
+              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
+                Thank you for joining <strong>BAK UP CIC</strong> as a participating shop or vendor! You are a vital partner in our community-led approach to supporting families facing hardship.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
+                By accepting e-vouchers, you provide families with <strong>dignity, choice, and access</strong> to culturally appropriate food and essentials. At the same time, you benefit from increased footfall and support for your local business.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', color: '#555'}}>
+                ♻️ You can also help reduce waste by notifying us about surplus food and goods for redistribution, strengthening our circular economy.
+              </p>
             </div>
             
             <h3>{t('shop.yourShops')}</h3>
@@ -6799,10 +6825,13 @@ function SchoolDashboard({ user, onLogout }) {
             <div style={{backgroundColor: '#E1BEE7', padding: '20px', borderRadius: '10px', marginTop: '20px'}}>
               <h3 style={{marginTop: 0, color: '#6A1B9A'}}>🎓 Supporting Families Through Education & Care</h3>
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities who need assistance.
+                Welcome to the <strong>Northamptonshire Community E-Voucher Scheme</strong>, led by BAK UP CIC. As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities who need assistance.
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                Use your allocated balance to issue e-vouchers directly to families, giving them dignity and choice in accessing food from local food shops.
+                Use your allocated balance to issue e-vouchers directly to families, giving them <strong>dignity and choice</strong> in accessing culturally appropriate food and essentials from local participating shops. Every voucher you issue supports both families in need and strengthens our local economy.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', opacity: 0.9}}>
+                💡 Our scheme replaces traditional food parcels with flexible vouchers, respecting dietary preferences and ensuring families can choose what they truly need.
               </p>
             </div>
           </div>
