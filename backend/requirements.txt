@@ -18,3 +18,5 @@ stripe==7.0.0
 
 flask-limiter==3.5.0
 flask-compress==1.14
+flask-socketio==5.3.5
+python-socketio==5.10.0

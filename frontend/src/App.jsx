@@ -4,6 +4,7 @@ import './i18n'
 import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
 import { GlobalSearchTab, TransactionSearchTab, BroadcastTab, FundAllocationTab } from './AdminEnhancements'
+import { NotificationBell } from './NotificationSystem'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
@@ -3760,6 +3761,7 @@ function VCSEDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <NotificationBell apiCall={apiCall} userType="vcse" />
           <LanguageSelector />
           <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#FF9800'}}>🔒 Password</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
@@ -5714,6 +5716,7 @@ function RecipientDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <NotificationBell apiCall={apiCall} userType="recipient" />
           <LanguageSelector />
           <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 {t('common.password')}</button>
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
@@ -6718,6 +6721,7 @@ function SchoolDashboard({ user, onLogout }) {
             <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
           </div>
           <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <NotificationBell apiCall={apiCall} userType="school" />
             <select 
               value={i18n.language} 
               onChange={(e) => i18n.changeLanguage(e.target.value)}

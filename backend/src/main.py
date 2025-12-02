@@ -6,6 +6,7 @@ from flask_mail import Mail, Message
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_compress import Compress
+from flask_socketio import SocketIO
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
@@ -46,8 +47,9 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'BAK U
 app.config['MAIL_SUPPRESS_SEND'] = os.environ.get('MAIL_SUPPRESS_SEND', 'True') == 'True'  # Set to True to disable emails in dev (default: True)
 
 db = SQLAlchemy(app)
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=['*'])
 mail = Mail(app)
+socketio = SocketIO(app, cors_allowed_origins='*', manage_session=False)
 
 # Initialize Flask-Compress for Gzip compression
 Compress(app)
@@ -340,6 +342,11 @@ app.register_blueprint(wallet_bp)
 # Initialize admin enhancement endpoints
 # Note: Transaction model doesn't exist yet, so we pass None for now
 init_admin_enhancements(app, db, User, VendorShop, Voucher, None, email_service)
+
+# Initialize notifications system
+from notifications_system import notifications_bp, init_socketio, Notification, NotificationPreference
+app.register_blueprint(notifications_bp)
+init_socketio(socketio)
 
 # Helper Functions
 def send_verification_email(user):
@@ -3448,42 +3455,17 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
-        # Notify all VCSE organizations about new FREE surplus food (not discounted items)
-        if data.get('item_type', 'free') == 'free':
-            vcse_users = User.query.filter_by(user_type='vcse', is_active=True).all()
-            for vcse in vcse_users:
-                # Create in-app notification
-                create_notification(
-                    vcse.id,
-                    'New Surplus Food Available',
-                    f'{data["item_name"]} ({data["quantity"]}) available at {shop.shop_name}',
-                    'info'
-                )
-                
-                # Send SMS notification if phone number is available
-                if vcse.phone:
-                    sms_result = sms_service.send_surplus_alert(
-                        vcse.phone,
-                        vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
-                        shop.shop_name,
-                        data['item_name'],
-                        data['quantity']
-                    )
-                    if not sms_result.get('success'):
-                        print(f"Failed to send SMS to {vcse.email}: {sms_result.get('error')}")
-                
-                # Send email notification
-                if vcse.email:
-                    email_result = email_service.send_surplus_food_alert_email(
-                        vcse.email,
-                        vcse.organization_name or f"{vcse.first_name} {vcse.last_name}",
-                        data['item_name'],
-                        data['quantity'],
-                        shop.shop_name,
-                        data['shop_address']
-                    )
-                    if not email_result:
-                        print(f"Failed to send email to {vcse.email}")
+        # Broadcast real-time notification via WebSocket
+        from notifications_system import broadcast_new_item_notification
+        broadcast_new_item_notification(
+            socketio,
+            item_type=data.get('item_type', 'free'),
+            shop_id=shop.id,
+            item_id=new_item.id,
+            item_name=data['item_name'],
+            shop_name=shop.shop_name,
+            quantity=data['quantity']
+        )
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         
@@ -4396,8 +4378,8 @@ def get_school_to_go_items():
         if not user or user.user_type != 'school':
             return jsonify({'error': 'School/Care Organization access required'}), 403
         
-        # Get all available surplus items
-        items = SurplusItem.query.filter_by(status='available').order_by(SurplusItem.posted_at.desc()).all()
+        # Schools should only see discounted items, not free items
+        items = SurplusItem.query.filter_by(status='available', item_type='discount').order_by(SurplusItem.posted_at.desc()).all()
         
         items_data = []
         for item in items:
@@ -4696,9 +4678,10 @@ def get_recipient_shops():
 
 @app.route('/api/recipient/to-go-items', methods=['GET'])
 def get_recipient_to_go_items():
-    """Get all available to-go items from all shops"""
+    """Get all available discounted to-go items from all shops (no free items)"""
     try:
-        items = SurplusItem.query.filter_by(status='available').all()
+        # Recipients should only see discounted items, not free items
+        items = SurplusItem.query.filter_by(status='available', item_type='discount').all()
         items_data = []
         
         for item in items:
@@ -6322,5 +6305,5 @@ def run_wallet_migration():
         }), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
 
