@@ -6500,6 +6500,10 @@ function SchoolDashboard({ user, onLogout }) {
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [assignShopMethod, setAssignShopMethod] = useState('none')
   const [specificShopId, setSpecificShopId] = useState('')
+  
+  // Voucher orders tab state
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     loadBalance()
@@ -6675,6 +6679,24 @@ function SchoolDashboard({ user, onLogout }) {
             style={activeTab === 'wallet' ? styles.activeTab : styles.tab}
           >
             💰 Wallet Management
+          </button>
+          <button 
+            onClick={() => setActiveTab('payment')} 
+            style={activeTab === 'payment' ? styles.activeTab : styles.tab}
+          >
+            💳 Load Funds
+          </button>
+          <button 
+            onClick={() => setActiveTab('orders')} 
+            style={activeTab === 'orders' ? styles.activeTab : styles.tab}
+          >
+            📋 Voucher Orders
+          </button>
+          <button 
+            onClick={() => setActiveTab('reports')} 
+            style={activeTab === 'reports' ? styles.activeTab : styles.tab}
+          >
+            📈 Reports
           </button>
         </div>
 
@@ -7165,6 +7187,217 @@ function SchoolDashboard({ user, onLogout }) {
                   </table>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+        
+        {/* Payment/Load Funds Tab */}
+        {activeTab === 'payment' && (
+          <PaymentTab user={user} onBalanceUpdate={loadBalance} />
+        )}
+        
+        {/* Voucher Orders Tab */}
+        {activeTab === 'orders' && (
+          <div>
+            <h2>📋 Voucher Orders</h2>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
+              <div style={{display: 'flex', gap: '15px', marginBottom: '20px', flexWrap: 'wrap'}}>
+                <div style={{flex: '1', minWidth: '200px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Filter by Status</label>
+                  <select 
+                    value={statusFilter} 
+                    onChange={(e) => setStatusFilter(e.target.value)} 
+                    style={styles.input}
+                  >
+                    <option value="all">All Vouchers</option>
+                    <option value="active">Active</option>
+                    <option value="redeemed">Redeemed</option>
+                    <option value="expired">Expired</option>
+                  </select>
+                </div>
+                <div style={{flex: '2', minWidth: '300px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Search</label>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by code, recipient name, or email..."
+                    style={styles.input}
+                  />
+                </div>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                <strong>Total Vouchers: {vouchers.length}</strong>
+                <a 
+                  href="/api/school/export-vouchers" 
+                  download
+                  style={{...styles.primaryButton, textDecoration: 'none', display: 'inline-block', backgroundColor: '#2e7d32'}}
+                >
+                  📄 Export to Excel
+                </a>
+              </div>
+              
+              {vouchers.length === 0 ? (
+                <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                  <p>No vouchers found matching your criteria</p>
+                </div>
+              ) : (
+                <div style={{overflowX: 'auto'}}>
+                  <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                    <thead>
+                      <tr style={{backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd'}}>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Code</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Recipient</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Email</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Phone</th>
+                        <th style={{padding: '12px', textAlign: 'right'}}>Value</th>
+                        <th style={{padding: '12px', textAlign: 'center'}}>Status</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Issued</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Expiry</th>
+                        <th style={{padding: '12px', textAlign: 'left'}}>Redeemed</th>
+                        <th style={{padding: '12px', textAlign: 'center'}}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vouchers.map(voucher => (
+                        <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
+                          <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>{voucher.code}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient.name}</td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient.email}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient.phone}</td>
+                          <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: '#4CAF50'}}>£{voucher.value.toFixed(2)}</td>
+                          <td style={{padding: '12px', textAlign: 'center'}}>
+                            <span style={{
+                              padding: '4px 12px',
+                              borderRadius: '12px',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              backgroundColor: voucher.status === 'active' ? '#e8f5e9' : voucher.status === 'redeemed' ? '#e3f2fd' : '#ffebee',
+                              color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#1565c0' : '#c62828'
+                            }}>
+                              {voucher.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
+                          <td style={{padding: '12px', textAlign: 'center'}}>
+                            <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
+                              <a 
+                                href={`/api/school/voucher-pdf/${voucher.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
+                              >
+                                📝 PDF
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* Reports & Analytics Tab */}
+        {activeTab === 'reports' && (
+          <div>
+            <h2>📈 Reports & Analytics</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Visual insights into your voucher distribution and impact</p>
+            
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Total Vouchers Issued</h3>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>{vouchers.length}</div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Total Value Distributed</h3>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#2196F3'}}>
+                  £{vouchers.reduce((sum, v) => sum + v.value, 0).toFixed(2)}
+                </div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Active Vouchers</h3>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>
+                  {vouchers.filter(v => v.status === 'active').length}
+                </div>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Redeemed Vouchers</h3>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#9C27B0'}}>
+                  {vouchers.filter(v => v.status === 'redeemed').length}
+                </div>
+              </div>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0}}>Voucher Status Breakdown</h3>
+              <div style={{marginTop: '20px'}}>
+                <div style={{marginBottom: '15px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                    <span>🟢 Active</span>
+                    <strong>{vouchers.filter(v => v.status === 'active').length} ({vouchers.length > 0 ? ((vouchers.filter(v => v.status === 'active').length / vouchers.length) * 100).toFixed(0) : 0}%)</strong>
+                  </div>
+                  <div style={{backgroundColor: '#f5f5f5', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                    <div style={{backgroundColor: '#4CAF50', height: '100%', width: `${vouchers.length > 0 ? (vouchers.filter(v => v.status === 'active').length / vouchers.length) * 100 : 0}%`}} />
+                  </div>
+                </div>
+                
+                <div style={{marginBottom: '15px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                    <span>🔵 Redeemed</span>
+                    <strong>{vouchers.filter(v => v.status === 'redeemed').length} ({vouchers.length > 0 ? ((vouchers.filter(v => v.status === 'redeemed').length / vouchers.length) * 100).toFixed(0) : 0}%)</strong>
+                  </div>
+                  <div style={{backgroundColor: '#f5f5f5', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                    <div style={{backgroundColor: '#2196F3', height: '100%', width: `${vouchers.length > 0 ? (vouchers.filter(v => v.status === 'redeemed').length / vouchers.length) * 100 : 0}%`}} />
+                  </div>
+                </div>
+                
+                <div style={{marginBottom: '15px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                    <span>🔴 Expired</span>
+                    <strong>{vouchers.filter(v => v.status === 'expired').length} ({vouchers.length > 0 ? ((vouchers.filter(v => v.status === 'expired').length / vouchers.length) * 100).toFixed(0) : 0}%)</strong>
+                  </div>
+                  <div style={{backgroundColor: '#f5f5f5', height: '20px', borderRadius: '10px', overflow: 'hidden'}}>
+                    <div style={{backgroundColor: '#F44336', height: '100%', width: `${vouchers.length > 0 ? (vouchers.filter(v => v.status === 'expired').length / vouchers.length) * 100 : 0}%`}} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0}}>Value by Status</h3>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '20px'}}>
+                <div style={{padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px'}}>
+                  <div style={{fontSize: '14px', color: '#2e7d32', marginBottom: '5px'}}>🟢 Active Value</div>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
+                    £{vouchers.filter(v => v.status === 'active').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
+                  </div>
+                </div>
+                
+                <div style={{padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
+                  <div style={{fontSize: '14px', color: '#1565c0', marginBottom: '5px'}}>🔵 Redeemed Value</div>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#2196F3'}}>
+                    £{vouchers.filter(v => v.status === 'redeemed').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
+                  </div>
+                </div>
+                
+                <div style={{padding: '15px', backgroundColor: '#ffebee', borderRadius: '8px'}}>
+                  <div style={{fontSize: '14px', color: '#c62828', marginBottom: '5px'}}>🔴 Expired Value</div>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#F44336'}}>
+                    £{vouchers.filter(v => v.status === 'expired').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
