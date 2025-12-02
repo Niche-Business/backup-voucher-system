@@ -6195,7 +6195,7 @@ def run_wallet_migration():
             db.session.execute(text("""
                 ALTER TABLE voucher 
                 ADD CONSTRAINT fk_voucher_issued_by_user 
-                FOREIGN KEY (issued_by_user_id) REFERENCES `user`(id) ON DELETE SET NULL
+                FOREIGN KEY (issued_by_user_id) REFERENCES "user"(id) ON DELETE SET NULL
             """))
             results.append("✓ Foreign key fk_voucher_issued_by_user added")
         except Exception as e:
@@ -6219,7 +6219,7 @@ def run_wallet_migration():
         
         # 4. Add indexes
         try:
-            db.session.execute(text("ALTER TABLE voucher ADD INDEX idx_issued_by_user_id (issued_by_user_id)"))
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_issued_by_user_id ON voucher (issued_by_user_id)"))
             results.append("✓ Index idx_issued_by_user_id added")
         except Exception as e:
             if "Duplicate key name" in str(e):
@@ -6228,7 +6228,7 @@ def run_wallet_migration():
                 results.append(f"⚠ Index idx_issued_by_user_id: {str(e)}")
         
         try:
-            db.session.execute(text("ALTER TABLE voucher ADD INDEX idx_wallet_transaction_id (wallet_transaction_id)"))
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_wallet_transaction_id ON voucher (wallet_transaction_id)"))
             results.append("✓ Index idx_wallet_transaction_id added")
         except Exception as e:
             if "Duplicate key name" in str(e):
@@ -6237,7 +6237,7 @@ def run_wallet_migration():
                 results.append(f"⚠ Index idx_wallet_transaction_id: {str(e)}")
         
         try:
-            db.session.execute(text("ALTER TABLE voucher ADD INDEX idx_deducted_from_wallet (deducted_from_wallet)"))
+            db.session.execute(text("CREATE INDEX IF NOT EXISTS idx_deducted_from_wallet ON voucher (deducted_from_wallet)"))
             results.append("✓ Index idx_deducted_from_wallet added")
         except Exception as e:
             if "Duplicate key name" in str(e):
