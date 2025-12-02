@@ -6647,7 +6647,25 @@ function SchoolDashboard({ user, onLogout }) {
             <h1 style={{margin: '0 0 5px 0'}}>School/Care Organization Portal</h1>
             <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
           </div>
-          <div style={{display: 'flex', gap: '10px'}}>
+          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <select 
+              value={i18n.language} 
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '5px',
+                border: '2px solid white',
+                backgroundColor: 'transparent',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              <option value="en">🇬🇧 English</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="ro">🇷🇴 Română</option>
+              <option value="pl">🇵🇱 Polski</option>
+            </select>
             <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white'}}>🔒 Password</button>
             <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white'}}>Logout</button>
           </div>
