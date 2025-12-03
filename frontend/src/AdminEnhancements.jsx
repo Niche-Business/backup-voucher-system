@@ -657,12 +657,27 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
   const [notes, setNotes] = useState('');
   const [isAllocating, setIsAllocating] = useState(false);
   const [allocationHistory, setAllocationHistory] = useState([]);
-  
-  // Prevent form state from being affected by parent re-renders
-  const [formKey, setFormKey] = useState(Date.now());
 
   React.useEffect(() => {
     loadAllocationHistory();
+  }, []);
+  
+  // Stable event handlers using useCallback
+  const handleOrgTypeChange = React.useCallback((e) => {
+    setOrganizationType(e.target.value);
+    setSelectedOrg(''); // Reset selection when type changes
+  }, []);
+  
+  const handleOrgChange = React.useCallback((e) => {
+    setSelectedOrg(e.target.value);
+  }, []);
+  
+  const handleAmountChange = React.useCallback((e) => {
+    setAmount(e.target.value);
+  }, []);
+  
+  const handleNotesChange = React.useCallback((e) => {
+    setNotes(e.target.value);
   }, []);
 
   const loadAllocationHistory = async () => {
@@ -745,10 +760,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Organization Type</label>
             <select
               value={organizationType}
-              onChange={(e) => {
-                setOrganizationType(e.target.value);
-                setSelectedOrg('');
-              }}
+              onChange={handleOrgTypeChange}
               style={{
                 width: '100%',
                 padding: '10px',
@@ -767,10 +779,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <select
               key={`org-select-${organizationType}`}
               value={selectedOrg}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setSelectedOrg(newValue);
-              }}
+              onChange={handleOrgChange}
               style={{
                 width: '100%',
                 padding: '10px',
@@ -805,10 +814,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <input
               type="number"
               value={amount}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setAmount(newValue);
-              }}
+              onChange={handleAmountChange}
               placeholder="0.00"
               step="0.01"
               min="0"
@@ -840,10 +846,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Notes (Optional)</label>
             <textarea
               value={notes}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setNotes(newValue);
-              }}
+              onChange={handleNotesChange}
               placeholder="Add any notes about this allocation..."
               rows="3"
               style={{
