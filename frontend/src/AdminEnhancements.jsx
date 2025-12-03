@@ -675,9 +675,8 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
   
   const handleAmountChange = React.useCallback((e) => {
     console.log('[FundAllocation] handleAmountChange called, new value:', e.target.value);
-    console.log('[FundAllocation] Current selectedOrg before amount change:', selectedOrg);
     setAmount(e.target.value);
-  }, [selectedOrg]);
+  }, []);
   
   const handleNotesChange = React.useCallback((e) => {
     setNotes(e.target.value);
