@@ -3121,6 +3121,7 @@ function AdminSettingsTab({ user }) {
 
 // FOOD TO GO ORDER CARD COMPONENT FOR VCSE
 function ToGoOrderCard({ item, onOrderPlaced }) {
+  const { t } = useTranslation()
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [orderForm, setOrderForm] = useState({
     client_name: '',
