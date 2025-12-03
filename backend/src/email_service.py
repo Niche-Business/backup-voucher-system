@@ -604,9 +604,6 @@ class EmailService:
             html_content=html_content
         )
 
-# Create global instance
-email_service = EmailService()
-
     def send_broadcast_message(self, recipient_email, recipient_name, title, body):
         """Send broadcast message from admin to users"""
         html_content = f"""
@@ -892,3 +889,7 @@ email_service = EmailService()
         """
         
         return self.send_email(user_email, subject, html_content)
+
+
+# Create global instance
+email_service = EmailService()
