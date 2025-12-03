@@ -657,6 +657,9 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
   const [notes, setNotes] = useState('');
   const [isAllocating, setIsAllocating] = useState(false);
   const [allocationHistory, setAllocationHistory] = useState([]);
+  
+  // Prevent form state from being affected by parent re-renders
+  const [formKey, setFormKey] = useState(Date.now());
 
   React.useEffect(() => {
     loadAllocationHistory();
@@ -762,8 +765,12 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Select Organization</label>
             <select
+              key={`org-select-${organizationType}`}
               value={selectedOrg}
-              onChange={(e) => setSelectedOrg(e.target.value)}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setSelectedOrg(newValue);
+              }}
               style={{
                 width: '100%',
                 padding: '10px',
@@ -798,7 +805,10 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setAmount(newValue);
+              }}
               placeholder="0.00"
               step="0.01"
               min="0"
@@ -830,7 +840,10 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Notes (Optional)</label>
             <textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setNotes(newValue);
+              }}
               placeholder="Add any notes about this allocation..."
               rows="3"
               style={{
