@@ -233,6 +233,9 @@ function App() {
       console.log('[REGISTER] API response:', data)
       if (data.message) {
         return { success: true, message: data.message }
+      } else {
+        // If no message but no error, consider it a success
+        return { success: true, message: 'Registration successful!' }
       }
     } catch (error) {
       console.error('[REGISTER] Error:', error)
