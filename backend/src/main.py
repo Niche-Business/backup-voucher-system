@@ -171,7 +171,9 @@ class Item(db.Model):
     vendor = db.relationship('User', foreign_keys=[vendor_id], backref='listed_items')
     claimer = db.relationship('User', foreign_keys=[claimed_by], backref='claimed_items')
 
-class Notification(db.Model):
+class UserNotification(db.Model):
+    __tablename__ = 'user_notifications'
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
@@ -180,7 +182,7 @@ class Notification(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    user = db.relationship('User', backref='notifications')
+    user = db.relationship('User', backref='user_notifications')
 
 class LoginSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -539,7 +541,7 @@ BAK UP CIC - Northamptonshire Community E-Voucher Scheme
         return False
 
 def create_notification(user_id, title, message, notification_type='info'):
-    notification = Notification(
+    notification = UserNotification(
         user_id=user_id,
         title=title,
         message=message,
