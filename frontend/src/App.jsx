@@ -206,6 +206,7 @@ function App() {
 
   const handleRegister = async (formData) => {
     try {
+      console.log('[REGISTER] Starting registration...', formData)
       // Convert camelCase to snake_case for backend
       const backendData = {
         email: formData.email,
@@ -223,15 +224,18 @@ function App() {
         town: formData.town || ''
       }
       
+      console.log('[REGISTER] Calling API with data:', backendData)
       const data = await apiCall('/register', {
         method: 'POST',
         body: JSON.stringify(backendData)
       })
       
+      console.log('[REGISTER] API response:', data)
       if (data.message) {
         return { success: true, message: data.message }
       }
     } catch (error) {
+      console.error('[REGISTER] Error:', error)
       return { success: false, error: error.message }
     }
   }

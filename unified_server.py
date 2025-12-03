@@ -12,7 +12,7 @@ from pathlib import Path
 backend_path = Path(__file__).parent / 'backend' / 'src'
 sys.path.insert(0, str(backend_path))
 
-from flask import send_from_directory, Response
+from flask import send_from_directory, Response, abort
 import mimetypes
 from main import app, db, Category, User
 from werkzeug.security import generate_password_hash
@@ -20,6 +20,8 @@ from werkzeug.security import generate_password_hash
 # Configure frontend serving
 frontend_build = Path(__file__).parent / 'frontend' / 'dist'
 
+# Note: This catch-all route is registered AFTER all API routes from main.py
+# Flask will match more specific routes first, so /api/* routes will work correctly
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_frontend(path):
