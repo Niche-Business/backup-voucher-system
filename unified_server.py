@@ -116,6 +116,30 @@ if __name__ == '__main__':
         else:
             print("Database already initialized")
         
+        # Add missing columns to user table (VCSE verification system)
+        try:
+            from sqlalchemy import text, inspect
+            inspector = inspect(db.engine)
+            user_columns = [col['name'] for col in inspector.get_columns('user')]
+            
+            columns_to_add = [
+                ('account_status', "VARCHAR(30) DEFAULT 'ACTIVE'"),
+                ('rejection_reason', "TEXT"),
+                ('verified_at', "TIMESTAMP"),
+                ('verified_by_admin_id', "INTEGER REFERENCES \"user\"(id)")
+            ]
+            
+            for col_name, col_def in columns_to_add:
+                if col_name not in user_columns:
+                    db.session.execute(text(f"ALTER TABLE \"user\" ADD COLUMN {col_name} {col_def}"))
+                    db.session.commit()
+                    print(f"✓ Added column '{col_name}' to user table")
+            
+            print("✓ User table schema updated")
+        except Exception as e:
+            print(f"Note: User table migration: {e}")
+            db.session.rollback()
+        
         # Create cart_notification table if it doesn't exist
         try:
             from sqlalchemy import text
