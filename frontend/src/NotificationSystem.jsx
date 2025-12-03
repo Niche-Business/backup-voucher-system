@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+import logger from './utils/logger';
 
 // Notification Bell Component
 export function NotificationBell({ apiCall, userType }) {
@@ -20,11 +21,11 @@ export function NotificationBell({ apiCall, userType }) {
     });
 
     socket.on('connect', () => {
-      console.log('Connected to notification server');
+      logger.info('Connected to notification server');
     });
 
     socket.on('new_item_notification', (notification) => {
-      console.log('New notification received:', notification);
+      logger.debug('NOTIFICATION', 'New notification received:', notification);
       
       // Add notification to list
       setNotifications(prev => [notification, ...prev]);
@@ -32,7 +33,7 @@ export function NotificationBell({ apiCall, userType }) {
       
       // Play sound if enabled
       if (soundEnabled && audioRef.current) {
-        audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+        audioRef.current.play().catch(err => logger.warn('Audio play failed:', err));
       }
       
       // Show browser notification if permitted
@@ -46,7 +47,7 @@ export function NotificationBell({ apiCall, userType }) {
     });
 
     socket.on('disconnect', () => {
-      console.log('Disconnected from notification server');
+      logger.info('Disconnected from notification server');
     });
 
     socketRef.current = socket;

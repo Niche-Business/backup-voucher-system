@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from './utils/logger';
 
 // ============================================
 // 1. GLOBAL SEARCH COMPONENT
@@ -669,12 +670,12 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
   }, []);
   
   const handleOrgChange = React.useCallback((e) => {
-    console.log('[FundAllocation] handleOrgChange called, new value:', e.target.value);
+    logger.debug('FundAllocation', 'handleOrgChange called, new value:', e.target.value);
     setSelectedOrg(e.target.value);
   }, []);
   
   const handleAmountChange = React.useCallback((e) => {
-    console.log('[FundAllocation] handleAmountChange called, new value:', e.target.value);
+    logger.debug('FundAllocation', 'handleAmountChange called, new value:', e.target.value);
     setAmount(e.target.value);
   }, []);
   
