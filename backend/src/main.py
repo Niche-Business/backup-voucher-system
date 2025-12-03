@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, g
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flask_cors import CORS
@@ -17,6 +17,26 @@ import stripe_payment
 from wallet_blueprint import wallet_bp, init_wallet_blueprint
 from admin_enhancements import init_admin_enhancements
 from vcse_verification import init_vcse_verification
+
+# Initialize Sentry for error tracking
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    
+    SENTRY_DSN = os.environ.get('SENTRY_DSN')
+    if SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=SENTRY_DSN,
+            integrations=[FlaskIntegration()],
+            environment=os.environ.get('FLASK_ENV', 'production'),
+            traces_sample_rate=0.1,  # 10% of transactions for performance monitoring
+            profiles_sample_rate=0.1,  # 10% for profiling
+        )
+        print('Sentry initialized for error tracking')
+    else:
+        print('Sentry DSN not provided - error tracking disabled')
+except ImportError:
+    print('Sentry SDK not installed - error tracking disabled')cation
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vcse-charity-platform-secret-key-2024')

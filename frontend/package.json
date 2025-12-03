@@ -21,6 +21,7 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
+    "@sentry/react": "^10.28.0",
     "@stripe/react-stripe-js": "^3.2.0",
     "@stripe/stripe-js": "^5.5.0",
     "chart.js": "^4.5.1",
