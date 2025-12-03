@@ -17,6 +17,9 @@ services:
       ls -lah dist/
       ls -lah dist/assets/
       echo "=== Build complete ==="
+      echo "=== Running database migrations ==="
+      cd .. && python3 backend/migrate_db.py
+      echo "=== Migrations complete ==="
     startCommand: python3 unified_server.py
     envVars:
       - key: PYTHON_VERSION
