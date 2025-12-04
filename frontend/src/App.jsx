@@ -846,107 +846,105 @@ function RegisterPage({ onRegister, onNavigate }) {
             </div>
           </div>
           
-          {/* DEBUG: userType = {formData.userType} */}
-          {console.log('[RegisterPage RENDER] formData.userType:', formData.userType)}
-          {console.log('[RegisterPage RENDER] Checking condition:', formData.userType === 'vcse' || formData.userType === 'vendor' || formData.userType === 'recipient' || formData.userType === 'school')}
-          {(formData.userType === 'vcse' || formData.userType === 'vendor' || formData.userType === 'recipient' || formData.userType === 'school') && (
+          {/* VCSE Organization Fields */}
+          {formData.userType === 'vcse' && (
             <>
-              {formData.userType === 'vcse' && (
-                <>
-                  <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Organization Name</label>
-                    <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
-                  </div>
-                  <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Charity Commission Number <span style={{color: '#f44336'}}>*</span></label>
-                    <input 
-                      type="text" 
-                      name="charityCommissionNumber" 
-                      value={formData.charityCommissionNumber || ''} 
-                      onChange={handleChange} 
-                      placeholder="e.g., 1234567" 
-                      style={styles.input} 
-                      required 
-                    />
-                    <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
-                      ⚠️ Your registration will be verified against the Charity Commission database before approval.
-                    </small>
-                  </div>
-                </>
-              )}
-              
-              {formData.userType === 'school' && (
-                <div style={{marginBottom: '15px'}}>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>School/Organization Name</label>
-                  <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
-                </div>
-              )}
-              
-              {formData.userType === 'vendor' && (
-                <>
-                  <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
-                    <input type="text" name="shopName" value={formData.shopName} onChange={handleChange} style={styles.input} required />
-                  </div>
-                  <div style={{marginBottom: '15px'}}>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Category</label>
-                    <select name="shopCategory" value={formData.shopCategory} onChange={handleChange} style={styles.input} required>
-                      <option value="">Select a category</option>
-                      <option value="African">African</option>
-                      <option value="Caribbean">Caribbean</option>
-                      <option value="Mixed African & Caribbean">Mixed African & Caribbean</option>
-                      <option value="Indian/South Asian">Indian/South Asian</option>
-                      <option value="Eastern European">Eastern European</option>
-                      <option value="Middle Eastern">Middle Eastern</option>
-                    </select>
-                  </div>
-                </>
-              )}
-              
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} required />
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Organization Name</label>
+                <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
               </div>
-              
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
-                <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
-                  <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
-                </div>
-                <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder="Leave empty if registering in a town" />
-                </div>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Charity Commission Number <span style={{color: '#f44336'}}>*</span></label>
+                <input 
+                  type="text" 
+                  name="charityCommissionNumber" 
+                  value={formData.charityCommissionNumber || ''} 
+                  onChange={handleChange} 
+                  placeholder="e.g., 1234567" 
+                  style={styles.input} 
+                  required 
+                />
+                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                  ⚠️ Your registration will be verified against the Charity Commission database before approval.
+                </small>
               </div>
-              
-              {formData.userType === 'vendor' && (
-                <div style={{marginBottom: '15px'}}>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Town</label>
-                  <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
-                    <option value="">Select your town</option>
-                    <optgroup label="North Northamptonshire">
-                      <option value="Wellingborough">Wellingborough</option>
-                      <option value="Kettering">Kettering</option>
-                      <option value="Corby">Corby</option>
-                    </optgroup>
-                    <optgroup label="East Northamptonshire">
-                      <option value="Rushden">Rushden</option>
-                      <option value="Higham Ferrers">Higham Ferrers</option>
-                      <option value="Raunds">Raunds</option>
-                      <option value="Irthlingborough">Irthlingborough</option>
-                      <option value="Oundle">Oundle</option>
-                      <option value="Thrapston">Thrapston</option>
-                    </optgroup>
-                    <optgroup label="West Northamptonshire">
-                      <option value="Northampton">Northampton</option>
-                      <option value="Daventry">Daventry</option>
-                      <option value="Brackley">Brackley</option>
-                      <option value="Towcester">Towcester</option>
-                    </optgroup>
-                  </select>
-                </div>
-              )}
             </>
+          )}
+          
+          {/* School/Care Organization Fields */}
+          {formData.userType === 'school' && (
+            <div style={{marginBottom: '15px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>School/Organization Name</label>
+              <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
+            </div>
+          )}
+          
+          {/* Vendor Fields */}
+          {formData.userType === 'vendor' && (
+            <>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                <input type="text" name="shopName" value={formData.shopName} onChange={handleChange} style={styles.input} required />
+              </div>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Category</label>
+                <select name="shopCategory" value={formData.shopCategory} onChange={handleChange} style={styles.input} required>
+                  <option value="">Select a category</option>
+                  <option value="African">African</option>
+                  <option value="Caribbean">Caribbean</option>
+                  <option value="Mixed African & Caribbean">Mixed African & Caribbean</option>
+                  <option value="Indian/South Asian">Indian/South Asian</option>
+                  <option value="Eastern European">Eastern European</option>
+                  <option value="Middle Eastern">Middle Eastern</option>
+                </select>
+              </div>
+            </>
+          )}
+          
+          {/* Common Address Fields */}
+          <div style={{marginBottom: '15px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+            <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} required />
+          </div>
+          
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+              <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
+              <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder="Leave empty if registering in a town" />
+            </div>
+          </div>
+          
+          {/* Vendor Town Dropdown */}
+          {formData.userType === 'vendor' && (
+            <div style={{marginBottom: '15px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Town</label>
+              <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
+                <option value="">Select your town</option>
+                <optgroup label="North Northamptonshire">
+                  <option value="Wellingborough">Wellingborough</option>
+                  <option value="Kettering">Kettering</option>
+                  <option value="Corby">Corby</option>
+                </optgroup>
+                <optgroup label="East Northamptonshire">
+                  <option value="Rushden">Rushden</option>
+                  <option value="Higham Ferrers">Higham Ferrers</option>
+                  <option value="Raunds">Raunds</option>
+                  <option value="Irthlingborough">Irthlingborough</option>
+                  <option value="Oundle">Oundle</option>
+                  <option value="Thrapston">Thrapston</option>
+                </optgroup>
+                <optgroup label="West Northamptonshire">
+                  <option value="Northampton">Northampton</option>
+                  <option value="Daventry">Daventry</option>
+                  <option value="Brackley">Brackley</option>
+                  <option value="Towcester">Towcester</option>
+                </optgroup>
+              </select>
+            </div>
           )}
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
