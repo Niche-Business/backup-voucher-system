@@ -216,6 +216,7 @@ function App() {
         phone: formData.phone,
         user_type: formData.userType,
         organization_name: formData.organizationName || '',
+        charity_commission_number: formData.charityCommissionNumber || '',
         shop_name: formData.shopName || '',
         shop_category: formData.shopCategory || '',
         address: formData.address || '',
