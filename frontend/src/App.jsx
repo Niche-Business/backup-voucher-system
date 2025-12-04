@@ -14,7 +14,6 @@ import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { QRCodeSVG } from 'qrcode.react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import logger from './utils/logger'
 
 // Error Boundary Component
 class ErrorBoundary extends Component {
@@ -166,7 +165,7 @@ function App() {
         setCurrentView('dashboard')
       }
     } catch (error) {
-      logger.debug('AUTH', 'Not authenticated')
+      console.log('Not authenticated')
     } finally {
       setLoading(false)
     }
@@ -207,7 +206,7 @@ function App() {
 
   const handleRegister = async (formData) => {
     try {
-      logger.debug('REGISTER', 'Starting registration...', formData)
+      console.log('[REGISTER] Starting registration...', formData)
       // Convert camelCase to snake_case for backend
       const backendData = {
         email: formData.email,
@@ -225,13 +224,13 @@ function App() {
         town: formData.town || ''
       }
       
-      logger.debug('REGISTER', 'Calling API with data:', backendData)
+      console.log('[REGISTER] Calling API with data:', backendData)
       const data = await apiCall('/register', {
         method: 'POST',
         body: JSON.stringify(backendData)
       })
       
-      logger.debug('REGISTER', 'API response:', data)
+      console.log('[REGISTER] API response:', data)
       if (data.message) {
         return { success: true, message: data.message }
       } else {
@@ -719,12 +718,12 @@ function RegisterPage({ onRegister, onNavigate }) {
   // Registration userType dropdown - simple onChange handler (no polling needed)
 
   const handleChange = (e) => {
-    logger.debug('RegisterPage', 'Field changed:', e.target.name, '=', e.target.value)
+    console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
     if (e.target.name === 'userType') {
-      logger.debug('RegisterPage', '⚠️ USER TYPE CHANGED FROM', formData.userType, 'TO', e.target.value)
+      console.log('[RegisterPage] ⚠️ USER TYPE CHANGED FROM', formData.userType, 'TO', e.target.value)
     }
     const newFormData = { ...formData, [e.target.name]: e.target.value }
-    logger.debug('RegisterPage', 'New formData.userType:', newFormData.userType)
+    console.log('[RegisterPage] New formData.userType:', newFormData.userType)
     setFormData(newFormData)
   }
 
@@ -963,7 +962,8 @@ function RegisterPage({ onRegister, onNavigate }) {
 
 // Dashboard Router Component
 function Dashboard({ user, onLogout }) {
-  logger.debug('Dashboard', 'Received user:', user, 'Type:', user.userType)
+  console.log('Dashboard received user:', user)
+  console.log('User type:', user.userType)
   if (user.userType === 'admin') return <AdminDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vcse') return <VCSEDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vendor') return <VendorDashboard user={user} onLogout={onLogout} />
@@ -2417,7 +2417,7 @@ function AdminDashboard({ user, onLogout }) {
                       if (response.ok) {
                         const data = await response.json()
                         alert('Report generated successfully!')
-                        logger.debug('ADMIN', 'Report Data:', data)
+                        console.log('Admin Report Data:', data)
                       } else {
                         alert('Failed to generate report')
                       }
@@ -2531,7 +2531,7 @@ function AdminDashboard({ user, onLogout }) {
                     if (response.ok) {
                       const data = await response.json()
                       alert(`Expired Vouchers Report:\n\nTotal Expired: ${data.total_expired}\nTotal Value Lost: £${data.total_value_lost}\n\nCheck console for details.`)
-                      logger.debug('ADMIN', 'Expired Vouchers Report:', data)
+                      console.log('Expired Vouchers Report:', data)
                     } else {
                       alert('Failed to generate expired vouchers report')
                     }
@@ -4145,7 +4145,7 @@ function VCSEDashboard({ user, onLogout }) {
                           if (response.ok) {
                             const data = await response.json()
                             alert('Report generated successfully! Check the console for details.')
-                            logger.debug('VCSE', 'Report Data:', data)
+                            console.log('Report Data:', data)
                           } else {
                             alert('Failed to generate report')
                           }
@@ -4629,7 +4629,10 @@ function VendorDashboard({ user, onLogout }) {
 
   const handlePayoutRequest = async (e) => {
     e.preventDefault()
-    logger.debug('PAYOUT', 'Form submission', { payoutForm, shop_id: payoutForm.shop_id, type: typeof payoutForm.shop_id });
+    console.log('=== PAYOUT FORM SUBMISSION ==');
+    console.log('payoutForm state:', payoutForm);
+    console.log('shop_id:', payoutForm.shop_id, typeof payoutForm.shop_id);
+    console.log('=============================');
     try {
       await apiCall('/vendor/payout/request', {
         method: 'POST',
@@ -5376,7 +5379,7 @@ function VendorDashboard({ user, onLogout }) {
                         value={payoutForm.shop_id}
                         onChange={(e) => {
                           const shopId = parseInt(e.target.value) || '';
-                          logger.debug('PAYOUT', 'Shop selected:', shopId, typeof shopId);
+                          console.log('Shop selected:', shopId, typeof shopId);
                           setPayoutForm({...payoutForm, shop_id: shopId});
                         }}
                         style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
@@ -5589,7 +5592,7 @@ function RecipientDashboard({ user, onLogout }) {
 
   // Watch townFilter and reload shops when it changes
   useEffect(() => {
-    logger.debug('TOWN_FILTER', 'useEffect triggered with townFilter:', townFilter);
+    console.log('[TOWN FILTER] useEffect triggered with townFilter:', townFilter);
     loadRecipientShops(townFilter);
   }, [townFilter])
 
@@ -5672,7 +5675,7 @@ function RecipientDashboard({ user, onLogout }) {
   }
 
   const loadRecipientShops = async (town = 'all') => {
-    logger.debug('TOWN_FILTER', 'loadRecipientShops called with town:', town);
+    console.log('[TOWN FILTER] loadRecipientShops called with town:', town);
     try {
       const url = town && town !== 'all' ? `/recipient/shops?town=${encodeURIComponent(town)}` : '/recipient/shops'
       const data = await apiCall(url)
@@ -6062,8 +6065,9 @@ function RecipientDashboard({ user, onLogout }) {
               <select 
                 value={townFilter} 
                 onChange={(e) => {
-                  logger.debug('TOWN_FILTER', 'Dropdown changed to:', e.target.value);
+                  console.log('[TOWN FILTER] Dropdown changed to:', e.target.value);
                   setTownFilter(e.target.value);
+                  console.log('[TOWN FILTER] setTownFilter called with:', e.target.value);
                 }}
                 style={{
                   padding: '10px 15px',
