@@ -921,6 +921,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                   <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
                     <option value="">Select your town</option>
                     <optgroup label="North Northamptonshire">
+                      <option value="East Northamptonshire">East Northamptonshire</option>
                       <option value="Wellingborough">Wellingborough</option>
                       <option value="Kettering">Kettering</option>
                       <option value="Corby">Corby</option>
@@ -2048,6 +2049,7 @@ function AdminDashboard({ user, onLogout }) {
                             >
                               <option value="">Select town</option>
                               <optgroup label="North Northamptonshire">
+                                <option value="East Northamptonshire">East Northamptonshire</option>
                                 <option value="Wellingborough">Wellingborough</option>
                                 <option value="Kettering">Kettering</option>
                                 <option value="Corby">Corby</option>
@@ -4673,7 +4675,7 @@ function VendorDashboard({ user, onLogout }) {
           original_price: toGoForm.item_type === 'discount' ? toGoForm.original_price : null
         })
       })
-      setMessage('Food to Go Item posted successfully!')
+      setMessage('Food to Go Items posted successfully!')
       setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '', item_type: 'free', price: '', original_price: '' })
       loadToGoItems()
       setTimeout(() => setMessage(''), 3000)
@@ -5207,7 +5209,7 @@ function VendorDashboard({ user, onLogout }) {
                 />
               </div>
               
-              <button type="submit" style={styles.primaryButton}>Post Food to Go Item</button>
+              <button type="submit" style={styles.primaryButton}>Post Food to Go Items Item</button>
             </form>
             
             <h3>Your Food to Go Items ({toGoCount})</h3>
@@ -6082,6 +6084,7 @@ function RecipientDashboard({ user, onLogout }) {
               >
                 <option value="all">All Towns</option>
                 <optgroup label="North Northamptonshire">
+                  <option value="East Northamptonshire">East Northamptonshire</option>
                   <option value="Wellingborough">Wellingborough</option>
                   <option value="Kettering">Kettering</option>
                   <option value="Corby">Corby</option>
@@ -6891,7 +6894,7 @@ function SchoolDashboard({ user, onLogout }) {
             <div style={{backgroundColor: '#E1BEE7', padding: '20px', borderRadius: '10px', marginTop: '20px'}}>
               <h3 style={{marginTop: 0, color: '#6A1B9A'}}>🎓 Supporting Families Through Education & Care</h3>
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                Welcome to the <strong>Northamptonshire Community E-Voucher Scheme</strong>, led by BAK UP CIC. As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities who need assistance.
+                Welcome to the <strong>Northamptonshire Community E-Voucher Scheme</strong>, led by BAK UP CIC. As a school or care organisation, you play a vital role in identifying and supporting families from underrepresented communities.
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
                 Use your allocated balance to issue e-vouchers directly to families, giving them <strong>dignity and choice</strong> in accessing culturally appropriate food and essentials from local participating shops. Every voucher you issue supports both families in need and strengthens our local economy.
