@@ -846,6 +846,9 @@ function RegisterPage({ onRegister, onNavigate }) {
             </div>
           </div>
           
+          {/* DEBUG: userType = {formData.userType} */}
+          {console.log('[RegisterPage RENDER] formData.userType:', formData.userType)}
+          {console.log('[RegisterPage RENDER] Checking condition:', formData.userType === 'vcse' || formData.userType === 'vendor' || formData.userType === 'recipient' || formData.userType === 'school')}
           {(formData.userType === 'vcse' || formData.userType === 'vendor' || formData.userType === 'recipient' || formData.userType === 'school') && (
             <>
               {formData.userType === 'vcse' && (
