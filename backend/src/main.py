@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 import os
 import secrets
 from email_service import email_service
+from charity_verification import verify_charity_number
 from sms_service import sms_service
 import stripe_payment
 from wallet_blueprint import wallet_bp, init_wallet_blueprint
@@ -609,6 +610,15 @@ def register():
                 return jsonify({'error': 'Charity Commission Registration Number is required for VCSE organizations'}), 400
             if not data.get('organization_name'):
                 return jsonify({'error': 'Organization name is required for VCSE organizations'}), 400
+            
+            # Verify charity number with UK Charity Commission
+            verification_result = verify_charity_number(data['charity_commission_number'])
+            
+            if not verification_result['valid']:
+                return jsonify({
+                    'error': verification_result['message'],
+                    'charity_number': data['charity_commission_number']
+                }), 400
         
         # Check if user already exists
         if User.query.filter_by(email=data['email']).first():

@@ -15,6 +15,8 @@ psycopg2-binary==2.9.9
 psycopg2==2.9.9
 twilio==8.10.0
 stripe==7.0.0
+beautifulsoup4==4.12.2
+requests==2.31.0
 
 flask-limiter==3.5.0
 flask-compress==1.14
