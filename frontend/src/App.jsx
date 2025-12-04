@@ -921,10 +921,17 @@ function RegisterPage({ onRegister, onNavigate }) {
                   <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
                     <option value="">Select your town</option>
                     <optgroup label="North Northamptonshire">
-                      <option value="East Northamptonshire">East Northamptonshire</option>
                       <option value="Wellingborough">Wellingborough</option>
                       <option value="Kettering">Kettering</option>
                       <option value="Corby">Corby</option>
+                    </optgroup>
+                    <optgroup label="East Northamptonshire">
+                      <option value="Rushden">Rushden</option>
+                      <option value="Higham Ferrers">Higham Ferrers</option>
+                      <option value="Raunds">Raunds</option>
+                      <option value="Irthlingborough">Irthlingborough</option>
+                      <option value="Oundle">Oundle</option>
+                      <option value="Thrapston">Thrapston</option>
                     </optgroup>
                     <optgroup label="West Northamptonshire">
                       <option value="Northampton">Northampton</option>
@@ -2049,10 +2056,17 @@ function AdminDashboard({ user, onLogout }) {
                             >
                               <option value="">Select town</option>
                               <optgroup label="North Northamptonshire">
-                                <option value="East Northamptonshire">East Northamptonshire</option>
                                 <option value="Wellingborough">Wellingborough</option>
                                 <option value="Kettering">Kettering</option>
                                 <option value="Corby">Corby</option>
+                              </optgroup>
+                              <optgroup label="East Northamptonshire">
+                                <option value="Rushden">Rushden</option>
+                                <option value="Higham Ferrers">Higham Ferrers</option>
+                                <option value="Raunds">Raunds</option>
+                                <option value="Irthlingborough">Irthlingborough</option>
+                                <option value="Oundle">Oundle</option>
+                                <option value="Thrapston">Thrapston</option>
                               </optgroup>
                               <optgroup label="West Northamptonshire">
                                 <option value="Northampton">Northampton</option>
@@ -6084,10 +6098,17 @@ function RecipientDashboard({ user, onLogout }) {
               >
                 <option value="all">All Towns</option>
                 <optgroup label="North Northamptonshire">
-                  <option value="East Northamptonshire">East Northamptonshire</option>
                   <option value="Wellingborough">Wellingborough</option>
                   <option value="Kettering">Kettering</option>
                   <option value="Corby">Corby</option>
+                </optgroup>
+                <optgroup label="East Northamptonshire">
+                  <option value="Rushden">Rushden</option>
+                  <option value="Higham Ferrers">Higham Ferrers</option>
+                  <option value="Raunds">Raunds</option>
+                  <option value="Irthlingborough">Irthlingborough</option>
+                  <option value="Oundle">Oundle</option>
+                  <option value="Thrapston">Thrapston</option>
                 </optgroup>
                 <optgroup label="West Northamptonshire">
                   <option value="Northampton">Northampton</option>
