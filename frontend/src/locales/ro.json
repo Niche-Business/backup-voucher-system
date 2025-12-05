@@ -26,6 +26,22 @@
     "submit": "Trimite",
     "welcome": "Bun venit"
   },
+  "login": {
+    "title": "Autentificare în BAK UP",
+    "emailLabel": "Adresă de Email",
+    "emailPlaceholder": "Introduceți adresa de email",
+    "passwordLabel": "Parolă",
+    "passwordPlaceholder": "Introduceți parola",
+    "signInButton": "Autentificare",
+    "signingIn": "Se autentifică...",
+    "noAccount": "Nu aveți un cont?",
+    "registerLink": "Înregistrați-vă aici",
+    "forgotPassword": "Ați uitat parola?",
+    "backToHome": "Înapoi la Pagină Principală",
+    "aboutTitle": "Despre BAK UP CIC",
+    "aboutText": "BAK UP CIC conduce Schema de Vouchere Electronice Comunitare Northamptonshire, oferind sprijin demn familiilor prin vouchere flexibile care respectă preferințele culturale și întăresc economiile locale.",
+    "loginFailed": "Autentificare eșuată. Vă rugăm să încercați din nou."
+  },
   "admin": {
     "fundAllocation": "Alocare Fonduri",
     "organizationType": "Tipul Organizației",
@@ -583,5 +599,52 @@
     "invalidAmount": "Sumă nevalidă",
     "noTransactionsYet": "Încă nu există tranzacții. Adaugă fonduri pentru a începe!",
     "totalValue": "valoare totală"
+  },
+  "register": {
+    "title": "Înregistrare pentru BAK UP",
+    "userTypeLabel": "Tipul Utilizatorului",
+    "userTypes": {
+      "recipient": "Beneficiar",
+      "vendor": "Magazin Alimentar Local",
+      "vcse": "Organizație VCSE",
+      "school": "Școală / Organizație de Îngrijire"
+    },
+    "firstNameLabel": "Prenume",
+    "lastNameLabel": "Nume",
+    "emailLabel": "Email",
+    "phoneLabel": "Telefon",
+    "passwordLabel": "Parolă",
+    "confirmPasswordLabel": "Confirmă Parola",
+    "passwordMismatch": "Parolele nu se potrivesc",
+    "organizationNameLabel": "Numele Organizației",
+    "charityNumberLabel": "Număr Comisie de Caritate",
+    "charityNumberPlaceholder": "ex., 1234567",
+    "charityWarning": "Înregistrarea dvs. va fi verificată în baza de date a Comisiei de Caritate înainte de aprobare.",
+    "schoolNameLabel": "Numele Școlii / Organizației",
+    "shopNameLabel": "Numele Magazinului",
+    "shopCategoryLabel": "Categoria Magazinului",
+    "shopCategories": {
+      "grocery": "Magazin Alimentar",
+      "supermarket": "Supermarket",
+      "convenience": "Magazin de Cartier",
+      "butcher": "Măcelărie",
+      "bakery": "Brutărie",
+      "halal": "Magazin Halal",
+      "asian": "Magazin Asiatic",
+      "african": "Magazin African/Caraibe",
+      "other": "Altele"
+    },
+    "addressLabel": "Adresă",
+    "postcodeLabel": "Cod Poștal",
+    "cityLabel": "Oraș",
+    "townLabel": "Localitate",
+    "townPlaceholder": "Lăsați gol dacă vă înregistrați într-o localitate",
+    "registerButton": "Înregistrare",
+    "registering": "Se înregistrează...",
+    "haveAccount": "Aveți deja un cont?",
+    "signInLink": "Autentificați-vă aici",
+    "backToHome": "Înapoi la Pagină Principală",
+    "registrationSuccess": "Înregistrare reușită! Vă rugăm să vă autentificați.",
+    "registrationFailed": "Înregistrare eșuată"
   }
 }

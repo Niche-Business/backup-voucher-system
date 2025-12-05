@@ -26,6 +26,22 @@
     "submit": "إرسال",
     "welcome": "مرحبا"
   },
+  "login": {
+    "title": "تسجيل الدخول إلى BAK UP",
+    "emailLabel": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "signInButton": "تسجيل الدخول",
+    "signingIn": "جاري تسجيل الدخول...",
+    "noAccount": "ليس لديك حساب؟",
+    "registerLink": "سجل هنا",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "backToHome": "العودة إلى الصفحة الرئيسية",
+    "aboutTitle": "حول BAK UP CIC",
+    "aboutText": "تقود BAK UP CIC مخطط القسائم الإلكترونية المجتمعية في نورثهامبتونشاير، وتوفر دعمًا كريمًا للعائلات من خلال قسائم مرنة تحترم التفضيلات الثقافية وتعزز الاقتصادات المحلية.",
+    "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى."
+  },
   "admin": {
     "fundAllocation": "تخصيص الأموال",
     "organizationType": "نوع المنظمة",
@@ -583,5 +599,52 @@
     "invalidAmount": "مبلغ غير صالح",
     "noTransactionsYet": "لا توجد معاملات حتى الآن. أضف أموالاً للبدء!",
     "totalValue": "القيمة الإجمالية"
+  },
+  "register": {
+    "title": "التسجيل في BAK UP",
+    "userTypeLabel": "نوع المستخدم",
+    "userTypes": {
+      "recipient": "مستفيد",
+      "vendor": "متجر أغذية محلي",
+      "vcse": "منظمة VCSE",
+      "school": "مدرسة / منظمة رعاية"
+    },
+    "firstNameLabel": "الاسم الأول",
+    "lastNameLabel": "اسم العائلة",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "الهاتف",
+    "passwordLabel": "كلمة المرور",
+    "confirmPasswordLabel": "تأكيد كلمة المرور",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "organizationNameLabel": "اسم المنظمة",
+    "charityNumberLabel": "رقم لجنة الخيرية",
+    "charityNumberPlaceholder": "مثال: 1234567",
+    "charityWarning": "سيتم التحقق من تسجيلك مقابل قاعدة بيانات لجنة الخيرية قبل الموافقة.",
+    "schoolNameLabel": "اسم المدرسة / المنظمة",
+    "shopNameLabel": "اسم المتجر",
+    "shopCategoryLabel": "فئة المتجر",
+    "shopCategories": {
+      "grocery": "متجر بقالة",
+      "supermarket": "سوبر ماركت",
+      "convenience": "متجر صغير",
+      "butcher": "جزار",
+      "bakery": "مخبز",
+      "halal": "متجر حلال",
+      "asian": "بقالة آسيوية",
+      "african": "متجر أفريقي / كاريبي",
+      "other": "أخرى"
+    },
+    "addressLabel": "العنوان",
+    "postcodeLabel": "الرمز البريدي",
+    "cityLabel": "المدينة",
+    "townLabel": "البلدة",
+    "townPlaceholder": "اتركه فارغًا إذا كنت تسجل في بلدة",
+    "registerButton": "تسجيل",
+    "registering": "جاري التسجيل...",
+    "haveAccount": "هل لديك حساب بالفعل؟",
+    "signInLink": "سجل الدخول هنا",
+    "backToHome": "العودة إلى الصفحة الرئيسية",
+    "registrationSuccess": "تم التسجيل بنجاح! الرجاء تسجيل الدخول.",
+    "registrationFailed": "فشل التسجيل"
   }
 }

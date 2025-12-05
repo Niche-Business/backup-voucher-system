@@ -299,6 +299,7 @@ function FeatureCard({ icon, title, description }) {
 
 // Login Page Component
 function LoginPage({ onLogin, onNavigate }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -319,7 +320,7 @@ function LoginPage({ onLogin, onNavigate }) {
       }
       // If successful, loading will stop when dashboard loads
     } catch (error) {
-      setError('Login failed. Please try again.')
+      setError(t('login.loginFailed'))
       setLoading(false)
     }
   }
@@ -327,31 +328,31 @@ function LoginPage({ onLogin, onNavigate }) {
   return (
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50'}}>
       <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
-        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>Sign In to BAK UP</h2>
+        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>{t('login.title')}</h2>
         
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
           <div style={{marginBottom: '20px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email Address</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('login.emailLabel')}</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={t('login.emailPlaceholder')}
               required
               style={styles.input}
             />
           </div>
           
           <div style={{marginBottom: '20px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('login.passwordLabel')}</label>
             <div style={{position: 'relative'}}>
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder={t('login.passwordPlaceholder')}
                 required
                 style={styles.input}
               />
@@ -376,22 +377,22 @@ function LoginPage({ onLogin, onNavigate }) {
           </div>
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('login.signingIn') : t('login.signInButton')}
           </button>
         </form>
         
         <div style={{textAlign: 'center'}}>
-          <p>Don't have an account? <button onClick={() => onNavigate('register')} style={styles.linkButton}>Register here</button></p>
-          <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>Forgot Password?</button></p>
-          <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+          <p>{t('login.noAccount')} <button onClick={() => onNavigate('register')} style={styles.linkButton}>{t('login.registerLink')}</button></p>
+          <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>{t('login.forgotPassword')}</button></p>
+          <button onClick={() => onNavigate('home')} style={styles.linkButton}>{t('login.backToHome')}</button>
         </div>
         
         <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
           <p style={{margin: '0 0 8px 0', fontSize: '0.9em', lineHeight: '1.5', color: '#333'}}>
-            <strong>🌿 About BAK UP CIC</strong>
+            <strong>🌿 {t('login.aboutTitle')}</strong>
           </p>
           <p style={{margin: 0, fontSize: '0.85em', lineHeight: '1.5', color: '#555'}}>
-            BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families through flexible vouchers that respect cultural preferences and strengthen local economies.
+            {t('login.aboutText')}
           </p>
         </div>
       </div>
@@ -420,7 +421,7 @@ function AdminLoginPage({ onLogin, onNavigate }) {
         setLoading(false)
       }
     } catch (error) {
-      setError('Login failed. Please try again.')
+      setError(t('login.loginFailed'))
       setLoading(false)
     }
   }
@@ -693,6 +694,7 @@ function ResetPasswordPage({ token, onNavigate }) {
 
 // Register Page Component  
 function RegisterPage({ onRegister, onNavigate }) {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -731,7 +733,7 @@ function RegisterPage({ onRegister, onNavigate }) {
     setSuccess('')
     
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
+      setError(t('register.passwordMismatch'))
       return
     }
     
@@ -739,10 +741,10 @@ function RegisterPage({ onRegister, onNavigate }) {
     const result = await onRegister(formData)
     
     if (result.success) {
-      setSuccess(result.message || 'Registration successful! Please sign in.')
+      setSuccess(result.message || t('register.registrationSuccess'))
       setTimeout(() => onNavigate('login'), 2000)
     } else {
-      setError(result.error || 'Registration failed')
+      setError(result.error || t('register.registrationFailed'))
     }
     setLoading(false)
   }
@@ -750,14 +752,14 @@ function RegisterPage({ onRegister, onNavigate }) {
   return (
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50', padding: '20px'}}>
       <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '500px', maxWidth: '100%', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
-        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>Register for BAK UP</h2>
+        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>{t('register.title')}</h2>
         
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
         {success && <div style={{backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{success}</div>}
         
         <form onSubmit={handleSubmit}>
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.userTypeLabel')}</label>
             <select 
               id="register-usertype-select"
               name="userType" 
@@ -766,37 +768,37 @@ function RegisterPage({ onRegister, onNavigate }) {
               style={styles.input} 
               required
             >
-              <option value="recipient">Recipient</option>
-                <option value="vendor">Local Food Shop</option>
-              <option value="vcse">VCSE Organization</option>
-              <option value="school">School/Care Organization</option>
+              <option value="recipient">{t('register.userTypes.recipient')}</option>
+                <option value="vendor">{t('register.userTypes.vendor')}</option>
+              <option value="vcse">{t('register.userTypes.vcse')}</option>
+              <option value="school">{t('register.userTypes.school')}</option>
             </select>
           </div>
           
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>First Name</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.firstNameLabel')}</label>
               <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={styles.input} required />
             </div>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Last Name</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.lastNameLabel')}</label>
               <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={styles.input} required />
             </div>
           </div>
           
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.emailLabel')}</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} required />
           </div>
           
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Phone</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.phoneLabel')}</label>
             <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} required />
           </div>
           
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.passwordLabel')}</label>
               <div style={{position: 'relative'}}>
                 <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} style={styles.input} required />
                 <button
@@ -819,7 +821,7 @@ function RegisterPage({ onRegister, onNavigate }) {
               </div>
             </div>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Confirm Password</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.confirmPasswordLabel')}</label>
               <div style={{position: 'relative'}}>
                 <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} style={styles.input} required />
                 <button
@@ -847,22 +849,22 @@ function RegisterPage({ onRegister, onNavigate }) {
           {formData.userType === 'vcse' && (
             <>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Organization Name</label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.organizationNameLabel')}</label>
                 <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
               </div>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Charity Commission Number <span style={{color: '#f44336'}}>*</span></label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.charityNumberLabel')} <span style={{color: '#f44336'}}>*</span></label>
                 <input 
                   type="text" 
                   name="charityCommissionNumber" 
                   value={formData.charityCommissionNumber || ''} 
                   onChange={handleChange} 
-                  placeholder="e.g., 1234567" 
+                  placeholder={t('register.charityNumberPlaceholder')} 
                   style={styles.input} 
                   required 
                 />
                 <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
-                  ⚠️ Your registration will be verified against the Charity Commission database before approval.
+                  ⚠️ {t('register.charityWarning')}
                 </small>
               </div>
             </>
@@ -871,7 +873,7 @@ function RegisterPage({ onRegister, onNavigate }) {
           {/* School/Care Organization Fields */}
           {formData.userType === 'school' && (
             <div style={{marginBottom: '15px'}}>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>School/Organization Name</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.schoolNameLabel')}</label>
               <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
             </div>
           )}
@@ -880,11 +882,11 @@ function RegisterPage({ onRegister, onNavigate }) {
           {formData.userType === 'vendor' && (
             <>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.shopNameLabel')}</label>
                 <input type="text" name="shopName" value={formData.shopName} onChange={handleChange} style={styles.input} required />
               </div>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Category</label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.shopCategoryLabel')}</label>
                 <select name="shopCategory" value={formData.shopCategory} onChange={handleChange} style={styles.input} required>
                   <option value="">Select a category</option>
                   <option value="African">African</option>
@@ -900,25 +902,25 @@ function RegisterPage({ onRegister, onNavigate }) {
           
           {/* Common Address Fields */}
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.addressLabel')}</label>
             <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} required />
           </div>
           
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.postcodeLabel')}</label>
               <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
             </div>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
-              <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder="Leave empty if registering in a town" />
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.cityLabel')} <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
+              <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder={t('register.townPlaceholder')} />
             </div>
           </div>
           
           {/* Vendor Town Dropdown */}
           {formData.userType === 'vendor' && (
             <div style={{marginBottom: '15px'}}>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Town</label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.townLabel')}</label>
               <select name="town" value={formData.town || ''} onChange={handleChange} style={styles.input} required>
                 <option value="">Select your town</option>
                 <optgroup label="North Northamptonshire">
@@ -945,13 +947,13 @@ function RegisterPage({ onRegister, onNavigate }) {
           )}
           
           <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? t('register.registering') : t('register.registerButton')}
           </button>
         </form>
         
         <div style={{textAlign: 'center'}}>
-          <p>Already have an account? <button onClick={() => onNavigate('login')} style={styles.linkButton}>Sign in here</button></p>
-          <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+          <p>{t('register.haveAccount')} <button onClick={() => onNavigate('login')} style={styles.linkButton}>{t('register.signInLink')}</button></p>
+          <button onClick={() => onNavigate('home')} style={styles.linkButton}>{t('register.backToHome')}</button>
         </div>
         
         <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>

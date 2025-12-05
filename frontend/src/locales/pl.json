@@ -26,6 +26,22 @@
     "submit": "Wyślij",
     "welcome": "Witaj"
   },
+  "login": {
+    "title": "Zaloguj się do BAK UP",
+    "emailLabel": "Adres Email",
+    "emailPlaceholder": "Wprowadź swój email",
+    "passwordLabel": "Hasło",
+    "passwordPlaceholder": "Wprowadź hasło",
+    "signInButton": "Zaloguj się",
+    "signingIn": "Logowanie...",
+    "noAccount": "Nie masz konta?",
+    "registerLink": "Zarejestruj się tutaj",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "backToHome": "Powrót do Strony Głównej",
+    "aboutTitle": "O BAK UP CIC",
+    "aboutText": "BAK UP CIC prowadzi Program Voucherów Elektronicznych Społeczności Northamptonshire, zapewniając godnewsparcie rodzinom poprzez elastyczne vouchery, które szanują preferencje kulturowe i wzmacniają lokalne gospodarki.",
+    "loginFailed": "Logowanie nie powiodło się. Spróbuj ponownie."
+  },
   "admin": {
     "fundAllocation": "Alokacja Funduszy",
     "organizationType": "Typ Organizacji",
@@ -583,5 +599,52 @@
     "invalidAmount": "Nieprawidłowa kwota",
     "noTransactionsYet": "Brak transakcji. Dodaj środki, aby rozpocząć!",
     "totalValue": "łączna wartość"
+  },
+  "register": {
+    "title": "Rejestracja w BAK UP",
+    "userTypeLabel": "Typ Użytkownika",
+    "userTypes": {
+      "recipient": "Odbiorca",
+      "vendor": "Lokalny Sklep Spożywczy",
+      "vcse": "Organizacja VCSE",
+      "school": "Szkoła / Organizacja Opieki"
+    },
+    "firstNameLabel": "Imię",
+    "lastNameLabel": "Nazwisko",
+    "emailLabel": "Email",
+    "phoneLabel": "Telefon",
+    "passwordLabel": "Hasło",
+    "confirmPasswordLabel": "Potwierdź Hasło",
+    "passwordMismatch": "Hasła nie pasują do siebie",
+    "organizationNameLabel": "Nazwa Organizacji",
+    "charityNumberLabel": "Numer Komisji Charytatywnej",
+    "charityNumberPlaceholder": "np. 1234567",
+    "charityWarning": "Twoja rejestracja zostanie zweryfikowana w bazie danych Komisji Charytatywnej przed zatwierdzeniem.",
+    "schoolNameLabel": "Nazwa Szkoły / Organizacji",
+    "shopNameLabel": "Nazwa Sklepu",
+    "shopCategoryLabel": "Kategoria Sklepu",
+    "shopCategories": {
+      "grocery": "Sklep Spożywczy",
+      "supermarket": "Supermarket",
+      "convenience": "Sklep Osiedlowy",
+      "butcher": "Sklep Mięsny",
+      "bakery": "Piekarnia",
+      "halal": "Sklep Halal",
+      "asian": "Sklep Azjatycki",
+      "african": "Sklep Afrykański/Karaibski",
+      "other": "Inne"
+    },
+    "addressLabel": "Adres",
+    "postcodeLabel": "Kod Pocztowy",
+    "cityLabel": "Miasto",
+    "townLabel": "Miejscowość",
+    "townPlaceholder": "Zostaw puste, jeśli rejestrujesz się w miejscowości",
+    "registerButton": "Zarejestruj",
+    "registering": "Rejestrowanie...",
+    "haveAccount": "Masz już konto?",
+    "signInLink": "Zaloguj się tutaj",
+    "backToHome": "Powrót do Strony Głównej",
+    "registrationSuccess": "Rejestracja udana! Proszę się zalogować.",
+    "registrationFailed": "Rejestracja nie powiodła się"
   }
 }

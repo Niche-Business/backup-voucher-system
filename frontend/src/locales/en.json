@@ -26,6 +26,22 @@
     "submit": "Submit",
     "welcome": "Welcome"
   },
+  "login": {
+    "title": "Sign In to BAK UP",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signInButton": "Sign In",
+    "signingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register here",
+    "forgotPassword": "Forgot Password?",
+    "backToHome": "Back to Home",
+    "aboutTitle": "About BAK UP CIC",
+    "aboutText": "BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families through flexible vouchers that respect cultural preferences and strengthen local economies.",
+    "loginFailed": "Login failed. Please try again."
+  },
   "admin": {
     "fundAllocation": "Fund Allocation",
     "organizationType": "Organization Type",
@@ -583,5 +599,52 @@
     "invalidAmount": "Invalid amount",
     "noTransactionsYet": "No transactions yet. Add funds to get started!",
     "totalValue": "total value"
+  },
+  "register": {
+    "title": "Register for BAK UP",
+    "userTypeLabel": "User Type",
+    "userTypes": {
+      "recipient": "Recipient",
+      "vendor": "Local Food Shop",
+      "vcse": "VCSE Organization",
+      "school": "School/Care Organization"
+    },
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "passwordMismatch": "Passwords do not match",
+    "organizationNameLabel": "Organization Name",
+    "charityNumberLabel": "Charity Commission Number",
+    "charityNumberPlaceholder": "e.g., 1234567",
+    "charityWarning": "Your registration will be verified against the Charity Commission database before approval.",
+    "schoolNameLabel": "School/Organization Name",
+    "shopNameLabel": "Shop Name",
+    "shopCategoryLabel": "Shop Category",
+    "shopCategories": {
+      "grocery": "Grocery Store",
+      "supermarket": "Supermarket",
+      "convenience": "Convenience Store",
+      "butcher": "Butcher",
+      "bakery": "Bakery",
+      "halal": "Halal Shop",
+      "asian": "Asian Grocery",
+      "african": "African/Caribbean Store",
+      "other": "Other"
+    },
+    "addressLabel": "Address",
+    "postcodeLabel": "Postcode",
+    "cityLabel": "City",
+    "townLabel": "Town",
+    "townPlaceholder": "Leave empty if registering in a town",
+    "registerButton": "Register",
+    "registering": "Registering...",
+    "haveAccount": "Already have an account?",
+    "signInLink": "Sign in here",
+    "backToHome": "Back to Home",
+    "registrationSuccess": "Registration successful! Please sign in.",
+    "registrationFailed": "Registration failed"
   }
 }
