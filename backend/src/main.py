@@ -635,8 +635,9 @@ def register():
         # Create verification token
         verification_token = secrets.token_urlsafe(32)
         
-        # Determine account status: VCSE organizations need admin verification
-        account_status = 'PENDING_VERIFICATION' if data['user_type'] == 'vcse' else 'ACTIVE'
+        # Determine account status: VCSE organizations are auto-approved if charity verified
+        # Since we already verified the charity number above (line 615), VCSE is approved
+        account_status = 'ACTIVE'
         
         # Create new user
         user = User(
@@ -674,23 +675,35 @@ def register():
             db.session.add(vendor_shop)
             db.session.commit()
         
-        # Send appropriate email based on account status
+        # Send welcome email (all users are now auto-approved)
         try:
-            if user.account_status == 'PENDING_VERIFICATION':
-                # Send VCSE verification pending email
-                email_service.send_vcse_verification_pending_email(
-                    user_email=user.email,
-                    user_name=f"{user.first_name} {user.last_name}",
-                    organization_name=user.organization_name,
-                    charity_number=user.charity_commission_number
-                )
-            else:
-                # Send regular welcome email
-                email_service.send_welcome_email(
-                    user_email=user.email,
-                    user_name=f"{user.first_name} {user.last_name}",
-                    user_type=user.user_type
-                )
+            email_service.send_welcome_email(
+                user_email=user.email,
+                user_name=f"{user.first_name} {user.last_name}",
+                user_type=user.user_type
+            )
+            
+            # Notify admin when VCSE registers (informational only)
+            if user.user_type == 'vcse':
+                admin_users = User.query.filter_by(user_type='admin').all()
+                for admin in admin_users:
+                    try:
+                        email_service.send_email(
+                            to_email=admin.email,
+                            subject=f"New VCSE Registration: {user.organization_name}",
+                            html_content=f"""
+                            <h3>New VCSE Organization Registered</h3>
+                            <p><strong>Organization:</strong> {user.organization_name}</p>
+                            <p><strong>Charity Number:</strong> {user.charity_commission_number}</p>
+                            <p><strong>Contact:</strong> {user.first_name} {user.last_name}</p>
+                            <p><strong>Email:</strong> {user.email}</p>
+                            <p><strong>Status:</strong> Auto-approved (charity verified)</p>
+                            <p>The organization has been automatically approved and can now access the platform.</p>
+                            """
+                        )
+                    except:
+                        pass  # Don't fail registration if admin notification fails
+                        
         except Exception as email_error:
             print(f"Warning: Could not send email: {email_error}")
         
