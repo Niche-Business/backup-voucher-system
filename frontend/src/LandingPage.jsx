@@ -295,10 +295,10 @@ const LandingPage = ({ onNavigate }) => {
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
             {t('landing.about.bakup.title')}
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '20px' }}>
-              BAK UP CIC is proud to lead the <strong>Northamptonshire Community E-Voucher Scheme</strong>, an innovative, community-led solution that ensures families and individuals facing hardship can access culturally appropriate essential goods and services with dignity, flexibility, and fairness.
+              {t('landing.about.bakup.paragraph1')}
             </p>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
-              Our E-Voucher model replaces traditional food parcels with digital, text-based, and paper-based vouchers that can be redeemed at local participating shops, markets, and community suppliers. This approach not only supports households in crisis but also reinvests spending back into the local economy, strengthening small businesses and community networks.
+              {t('landing.about.bakup.paragraph2')}
             </p>
           </div>
 
@@ -307,19 +307,19 @@ const LandingPage = ({ onNavigate }) => {
             <div style={{ display: 'grid', gap: '20px' }}>
               <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '1.8' }}>
                 <li style={{ marginBottom: '15px' }}>
-                  <strong style={{ color: '#2e7d32' }}>Food Security & Household Support</strong> – Mobile food services, E-Voucher schemes, white goods provision, and partnerships with local retailers to ensure families can access culturally appropriate and nutritious food.
+                  <strong style={{ color: '#2e7d32' }}>{t('landing.about.keyAreas.foodSecurity')}</strong> – {t('landing.about.keyAreas.foodSecurityDesc')}
                 </li>
                 <li style={{ marginBottom: '15px' }}>
-                  <strong style={{ color: '#2e7d32' }}>Youth Empowerment</strong> – Through the East Northamptonshire Youth Ambassadors (EYA) and other leadership programmes, we equip young people with the confidence, skills, and voice to become positive changemakers in their communities.
+                  <strong style={{ color: '#2e7d32' }}>{t('landing.about.keyAreas.youthEmpowerment')}</strong> – {t('landing.about.keyAreas.youthEmpowermentDesc')}
                 </li>
                 <li style={{ marginBottom: '15px' }}>
-                  <strong style={{ color: '#2e7d32' }}>Health & Wellbeing</strong> – Community-based interventions tackling health inequalities, loneliness, and social isolation, while promoting physical activity, mental health awareness, and trusted-adult relationships.
+                  <strong style={{ color: '#2e7d32' }}>{t('landing.about.keyAreas.healthWellbeing')}</strong> – {t('landing.about.keyAreas.healthWellbeingDesc')}
                 </li>
                 <li style={{ marginBottom: '15px' }}>
-                  <strong style={{ color: '#2e7d32' }}>Social Determinants of Health</strong> – A holistic focus on improving access to education, employment, and healthcare, empowering people to thrive rather than survive.
+                  <strong style={{ color: '#2e7d32' }}>{t('landing.about.keyAreas.socialDeterminants')}</strong> – {t('landing.about.keyAreas.socialDeterminantsDesc')}
                 </li>
                 <li style={{ marginBottom: '15px' }}>
-                  <strong style={{ color: '#2e7d32' }}>Community Cohesion & Cultural Heritage</strong> – Celebrating diversity through initiatives such as the Windrush Generation Celebration, storytelling projects, and intergenerational community events that honour identity and belonging.
+                  <strong style={{ color: '#2e7d32' }}>{t('landing.about.keyAreas.communityCohesion')}</strong> – {t('landing.about.keyAreas.communityCohesionDesc')}
                 </li>
               </ul>
             </div>
@@ -328,17 +328,17 @@ const LandingPage = ({ onNavigate }) => {
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
             {t('landing.about.circular.title')}
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '15px' }}>
-              The E-Voucher Scheme also creates a unique opportunity for local shops and retailers to play an active role in reducing waste and promoting sustainability.
+              {t('landing.about.circular.paragraph1')}
             </p>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
-              Participating outlets will be able to notify BAK UP CIC and partner charities about surplus food and essential goods, enabling these items to be collected and redistributed to families in need rather than going to waste. This simple yet powerful system strengthens the local circular economy – ensuring that valuable resources are used efficiently, environmental impact is reduced, and communities become more resilient, sustainable, and self-supporting.
+              {t('landing.about.circular.paragraph2')}
             </p>
           </div>
 
           <div style={{ backgroundColor: '#e8f5e9', padding: '40px', borderRadius: '15px', border: '2px solid #4CAF50' }}>
             {t('landing.about.funders.title')}
             <p style={{ fontSize: '1.2em', lineHeight: '1.8', color: '#333', textAlign: 'center', fontWeight: '500' }}>
-              Funding the E-Voucher Scheme means investing in a smarter, fairer, and greener approach to tackling poverty and inequality. Every pound directly benefits both households facing hardship and local small businesses, creating a positive cycle of community wealth and wellbeing.
+              {t('landing.about.funders.text')}
             </p>
           </div>
 
@@ -357,7 +357,7 @@ const LandingPage = ({ onNavigate }) => {
                 boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
               }}
             >
-              Join the Scheme Today
+              {t('landing.about.joinScheme')}
             </button>
           </div>
         </div>
@@ -407,7 +407,7 @@ const LandingPage = ({ onNavigate }) => {
             <div>
               {t('landing.about.footerAbout.title')}
               <p style={{ lineHeight: '1.6', color: '#e8f5e9', marginBottom: '15px' }}>
-                BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families and strengthening local economies.
+                {t('landing.about.footerAbout.description')}
               </p>
               <button
                 onClick={() => onNavigate('register')}
@@ -422,7 +422,7 @@ const LandingPage = ({ onNavigate }) => {
                   fontSize: '0.95em'
                 }}
               >
-                Learn More
+                {t('landing.about.footerAbout.learnMore')}
               </button>
             </div>
 
@@ -430,13 +430,13 @@ const LandingPage = ({ onNavigate }) => {
             <div>
               {t('landing.about.footerFunders.title')}
               <p style={{ lineHeight: '1.6', color: '#e8f5e9', marginBottom: '10px' }}>
-                Invest in a smarter, fairer approach to tackling poverty and inequality.
+                {t('landing.about.footerFunders.description')}
               </p>
               <ul style={{ listStyle: 'none', padding: 0, color: '#e8f5e9', lineHeight: '1.8' }}>
-                <li>✓ Direct community impact</li>
-                <li>✓ Support local businesses</li>
-                <li>✓ Measurable outcomes</li>
-                <li>✓ Sustainable circular economy</li>
+                <li>✓ {t('landing.about.footerFunders.item1')}</li>
+                <li>✓ {t('landing.about.footerFunders.item2')}</li>
+                <li>✓ {t('landing.about.footerFunders.item3')}</li>
+                <li>✓ {t('landing.about.footerFunders.item4')}</li>
               </ul>
             </div>
 
@@ -444,14 +444,14 @@ const LandingPage = ({ onNavigate }) => {
             <div>
               {t('landing.about.footerContact.title')}
               <p style={{ lineHeight: '1.8', color: '#e8f5e9' }}>
-                <strong>BAK UP CIC</strong><br />
-                Northamptonshire, UK<br />
+                <strong>{t('landing.about.footerContact.company')}</strong><br />
+                {t('landing.about.footerContact.location')}<br />
                 <br />
-                <strong>Email:</strong> admin@bakupcic.co.uk<br />
-                <strong>Phone:</strong> 01933698347<br />
+                <strong>{t('landing.about.footerContact.email')}</strong> admin@bakupcic.co.uk<br />
+                <strong>{t('landing.about.footerContact.phone')}</strong> 01933698347<br />
                 <br />
-                <strong>Hours:</strong><br />
-                Monday - Friday: 9am - 5pm
+                <strong>{t('landing.about.footerContact.hours')}</strong><br />
+                {t('landing.about.footerContact.hoursText')}
               </p>
             </div>
           </div>
@@ -464,7 +464,7 @@ const LandingPage = ({ onNavigate }) => {
             color: '#c8e6c9',
             fontSize: '0.9em'
           }}>
-            <p>&copy; 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme<br />Charity Company Registration Number: 12994374</p>
+            <p>{t('landing.about.copyright')}<br />{t('landing.about.charityNumber')}</p>
           </div>
         </div>
       </div>
