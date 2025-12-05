@@ -717,6 +717,10 @@ function RegisterPage({ onRegister, onNavigate }) {
   const [loading, setLoading] = useState(false)
 
   // Registration userType dropdown - simple onChange handler (no polling needed)
+  
+  useEffect(() => {
+    console.log('[RegisterPage useEffect] formData.userType changed to:', formData.userType)
+  }, [formData.userType])
 
   const handleChange = (e) => {
     console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
@@ -758,7 +762,7 @@ function RegisterPage({ onRegister, onNavigate }) {
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
         {success && <div style={{backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{success}</div>}
         
-        <form key={formData.userType} onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div style={{marginBottom: '15px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
             <select 
