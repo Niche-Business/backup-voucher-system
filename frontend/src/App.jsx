@@ -716,25 +716,13 @@ function RegisterPage({ onRegister, onNavigate }) {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Registration userType dropdown - simple onChange handler (no polling needed)
-  
-  useEffect(() => {
-    console.log('[RegisterPage useEffect] formData.userType changed to:', formData.userType)
-  }, [formData.userType])
-
   const handleChange = (e) => {
     const { name, value } = e.target
-    console.log('[RegisterPage] Field changed:', name, '=', value)
-    if (name === 'userType') {
-      console.log('[RegisterPage] ⚠️ USER TYPE CHANGING TO:', value)
-    }
-    
     // Use functional update to ensure we have the latest state
-    setFormData(prevFormData => {
-      const newFormData = { ...prevFormData, [name]: value }
-      console.log('[RegisterPage] New formData.userType:', newFormData.userType)
-      return newFormData
-    })
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }))
   }
 
   const handleSubmit = async (e) => {
@@ -853,11 +841,6 @@ function RegisterPage({ onRegister, onNavigate }) {
                 </button>
               </div>
             </div>
-          </div>
-          
-          {/* DEBUG: Show current userType */}
-          <div style={{padding: '10px', backgroundColor: '#ffeb3b', marginBottom: '10px', borderRadius: '5px'}}>
-            <strong>DEBUG - Current User Type:</strong> {formData.userType || 'undefined'}
           </div>
           
           {/* VCSE Organization Fields */}
