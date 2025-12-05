@@ -846,6 +846,11 @@ function RegisterPage({ onRegister, onNavigate }) {
             </div>
           </div>
           
+          {/* DEBUG: Show current userType */}
+          <div style={{padding: '10px', backgroundColor: '#ffeb3b', marginBottom: '10px', borderRadius: '5px'}}>
+            <strong>DEBUG - Current User Type:</strong> {formData.userType || 'undefined'}
+          </div>
+          
           {/* VCSE Organization Fields */}
           {formData.userType === 'vcse' && (
             <>
