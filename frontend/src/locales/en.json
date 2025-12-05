@@ -202,6 +202,98 @@
     },
     "footer": {
       "adminAccess": "Administrator Access"
+    },
+    "about": {
+      "sectionTitle": "About the Northamptonshire Community E-Voucher Scheme",
+      "mission": {
+        "title": "Mission Statement",
+        "text": "To create inclusive, resilient, and empowered communities by addressing the root causes of hardship and inequality through partnership, compassion, and community-driven innovation."
+      },
+      "vision": {
+        "title": "Our Vision",
+        "text": "A fairer, healthier, and more connected society where everyone has the opportunity to reach their full potential."
+      },
+      "values": {
+        "title": "Our Values",
+        "compassion": "Compassion",
+        "compassionDesc": "We care deeply about people and their stories.",
+        "equity": "Equity",
+        "equityDesc": "We champion fairness and inclusion for all.",
+        "empowerment": "Empowerment",
+        "empowermentDesc": "We invest in people to become agents of change.",
+        "collaboration": "Collaboration",
+        "collaborationDesc": "We build partnerships that strengthen collective impact.",
+        "integrity": "Integrity",
+        "integrityDesc": "We are accountable, transparent, and community-centred in all we do."
+      },
+      "bakup": {
+        "title": "About BAK UP CIC",
+        "paragraph1": "BAK UP CIC is proud to lead the Northamptonshire Community E-Voucher Scheme, an innovative, community-led solution that ensures families and individuals facing hardship can access culturally appropriate essential goods and services with dignity, flexibility, and fairness.",
+        "paragraph2": "Our E-Voucher model replaces traditional food parcels with digital, text-based, and paper-based vouchers that can be redeemed at local participating shops, markets, and community suppliers. This approach not only supports households in crisis but also reinvests spending back into the local economy, strengthening small businesses and community networks."
+      },
+      "keyAreas": {
+        "title": "Key Work Areas",
+        "foodSecurity": "Food Security & Household Support",
+        "foodSecurityDesc": "Mobile food services, E-Voucher schemes, white goods provision, and partnerships with local retailers to ensure families can access culturally appropriate and nutritious food.",
+        "youthEmpowerment": "Youth Empowerment",
+        "youthEmpowermentDesc": "Through the East Northamptonshire Youth Ambassadors (EYA) and other leadership programmes, we equip young people with the confidence, skills, and voice to become positive changemakers in their communities.",
+        "healthWellbeing": "Health & Wellbeing",
+        "healthWellbeingDesc": "Community-based interventions tackling health inequalities, loneliness, and social isolation, while promoting physical activity, mental health awareness, and trusted-adult relationships.",
+        "socialDeterminants": "Social Determinants of Health",
+        "socialDeterminantsDesc": "A holistic focus on improving access to education, employment, and healthcare, empowering people to thrive rather than survive.",
+        "communityCohesion": "Community Cohesion & Cultural Heritage",
+        "communityCohesionDesc": "Celebrating diversity through initiatives such as the Windrush Generation Celebration, storytelling projects, and intergenerational community events that honour identity and belonging."
+      },
+      "circular": {
+        "title": "Creating a Circular and Sustainable Community Economy",
+        "paragraph1": "The E-Voucher Scheme also creates a unique opportunity for local shops and retailers to play an active role in reducing waste and promoting sustainability.",
+        "paragraph2": "Participating outlets will be able to notify BAK UP CIC and partner charities about surplus food and essential goods, enabling these items to be collected and redistributed to families in need rather than going to waste. This simple yet powerful system strengthens the local circular economy – ensuring that valuable resources are used efficiently, environmental impact is reduced, and communities become more resilient, sustainable, and self-supporting."
+      },
+      "funders": {
+        "title": "Why Funders Should Invest",
+        "text": "Funding the E-Voucher Scheme means investing in a smarter, fairer, and greener approach to tackling poverty and inequality. Every pound directly benefits both households facing hardship and local small businesses, creating a positive cycle of community wealth and wellbeing."
+      },
+      "footerAbout": {
+        "title": "About Us",
+        "description": "BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families and strengthening local economies.",
+        "learnMore": "Learn More"
+      },
+      "footerFunders": {
+        "title": "For Funders",
+        "description": "Invest in a smarter, fairer approach to tackling poverty and inequality.",
+        "item1": "Direct community impact",
+        "item2": "Support local businesses",
+        "item3": "Measurable outcomes",
+        "item4": "Sustainable circular economy"
+      },
+      "footerContact": {
+        "title": "Contact Us",
+        "company": "BAK UP CIC",
+        "location": "Northamptonshire, UK",
+        "email": "Email:",
+        "phone": "Phone:",
+        "hours": "Hours:",
+        "hoursText": "Monday - Friday: 9am - 5pm"
+      },
+      "copyright": "© 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme",
+      "charityNumber": "Charity Company Registration Number: 12994374"
+    },
+    "pwa": {
+      "install": "Install BAK UP",
+      "addToHomeScreen": "Add to Home Screen",
+      "iosInstructions": "To install this app on your iPhone:",
+      "androidInstructions": "To install this app on your Android:",
+      "iosStep1": "Tap the Share button ⬆️ at the bottom of Safari",
+      "iosStep2": "Scroll down and tap \"Add to Home Screen\" ➕",
+      "iosStep3": "Tap \"Add\" in the top right corner",
+      "iosNote": "💡 The Share button is in Safari's toolbar, not in this popup",
+      "androidStep1": "Tap the green \"Install\" button below",
+      "androidStep2": "A system dialog will ask \"Add to Home screen?\"",
+      "androidStep3": "Tap \"Add\" to confirm",
+      "notNow": "Not Now",
+      "installButton": "Install",
+      "iphoneTab": "🍎 iPhone",
+      "androidTab": "🤖 Android"
     }
   },
   "auth": {

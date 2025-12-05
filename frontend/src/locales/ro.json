@@ -202,6 +202,98 @@
     },
     "footer": {
       "adminAccess": "Acces Administrator"
+    },
+    "about": {
+      "sectionTitle": "Despre Schema de Vouchere Electronice Comunitare Northamptonshire",
+      "mission": {
+        "title": "Declarația de Misiune",
+        "text": "Să creăm comunități incluzive, reziliente și împuternicite prin abordarea cauzelor fundamentale ale dificultăților și inegalității prin parteneriat, compasiune și inovație condusă de comunitate."
+      },
+      "vision": {
+        "title": "Viziunea Noastră",
+        "text": "O societate mai echitabilă, mai sănătoasă și mai conectată în care toată lumea are oportunitatea de a-și atinge întregul potențial."
+      },
+      "values": {
+        "title": "Valorile Noastre",
+        "compassion": "Compasiune",
+        "compassionDesc": "Ne pasă profund de oameni și poveștile lor.",
+        "equity": "Echitate",
+        "equityDesc": "Susținem corectitudinea și incluziunea pentru toți.",
+        "empowerment": "Împuternicire",
+        "empowermentDesc": "Investim în oameni pentru a deveni agenți ai schimbării.",
+        "collaboration": "Colaborare",
+        "collaborationDesc": "Construim parteneriate care întăresc impactul colectiv.",
+        "integrity": "Integritate",
+        "integrityDesc": "Suntem responsabili, transparenți și centrați pe comunitate în tot ce facem."
+      },
+      "bakup": {
+        "title": "Despre BAK UP CIC",
+        "paragraph1": "BAK UP CIC este mândră să conducă Schema de Vouchere Electronice Comunitare Northamptonshire, o soluție inovatoare, condusă de comunitate, care asigură că familiile și indivizii care se confruntă cu dificultăți pot accesa bunuri și servicii esențiale adecvate din punct de vedere cultural cu demnitate, flexibilitate și corectitudine.",
+        "paragraph2": "Modelul nostru de Voucher Electronic înlocuiește pachetele alimentare tradiționale cu vouchere digitale, bazate pe text și pe hârtie care pot fi răscumpărate la magazine locale participante, piețe și furnizori comunitari. Această abordare nu numai că sprijină gospodăriile în criză, dar reinvestește și cheltuielile înapoi în economia locală, întărind afacerile mici și rețelele comunitare."
+      },
+      "keyAreas": {
+        "title": "Domenii Cheie de Lucru",
+        "foodSecurity": "Securitate Alimentară și Sprijin pentru Gospodării",
+        "foodSecurityDesc": "Servicii mobile de alimente, scheme de Vouchere Electronice, furnizare de bunuri albe și parteneriate cu comercianții locali pentru a asigura că familiile pot accesa alimente adecvate din punct de vedere cultural și nutritive.",
+        "youthEmpowerment": "Împuternicirea Tinerilor",
+        "youthEmpowermentDesc": "Prin Ambasadorii Tineri din East Northamptonshire (EYA) și alte programe de leadership, echipăm tinerii cu încrederea, abilitățile și vocea pentru a deveni factori de schimbare pozitivă în comunitățile lor.",
+        "healthWellbeing": "Sănătate și Bunăstare",
+        "healthWellbeingDesc": "Intervenții bazate pe comunitate care abordează inegalitățile în sănătate, singurătatea și izolarea socială, promovând în același timp activitatea fizică, conștientizarea sănătății mentale și relațiile de încredere cu adulții.",
+        "socialDeterminants": "Determinanți Sociali ai Sănătății",
+        "socialDeterminantsDesc": "O abordare holistică pentru îmbunătățirea accesului la educație, ocuparea forței de muncă și asistență medicală, împuternicind oamenii să prospere mai degrabă decât să supraviețuiască.",
+        "communityCohesion": "Coeziune Comunitară și Patrimoniu Cultural",
+        "communityCohesionDesc": "Sărbătorirea diversității prin inițiative precum Celebrarea Generației Windrush, proiecte de povestire și evenimente comunitare intergeneraționale care onorează identitatea și apartenența."
+      },
+      "circular": {
+        "title": "Crearea unei Economii Comunitare Circulare și Durabile",
+        "paragraph1": "Schema de Vouchere Electronice creează, de asemenea, o oportunitate unică pentru magazinele și comercianții locali de a juca un rol activ în reducerea deșeurilor și promovarea durabilității.",
+        "paragraph2": "Punctele de vânzare participante vor putea notifica BAK UP CIC și organizațiile caritabile partenere despre alimentele excedentare și bunurile esențiale, permițând colectarea și redistribuirea acestor articole către familiile nevoiașe, mai degrabă decât să fie irosite. Acest sistem simplu, dar puternic, întărește economia circulară locală - asigurând că resursele valoroase sunt utilizate eficient, impactul asupra mediului este redus și comunitățile devin mai reziliente, durabile și auto-susținătoare."
+      },
+      "funders": {
+        "title": "De Ce Ar Trebui Finanțatorii să Investească",
+        "text": "Finanțarea Schemei de Vouchere Electronice înseamnă investiția într-o abordare mai inteligentă, mai echitabilă și mai ecologică pentru combaterea sărăciei și inegalității. Fiecare liră beneficiază direct atât gospodăriile care se confruntă cu dificultăți, cât și afacerile mici locale, creând un ciclu pozitiv de bogăție comunitară și bunăstare."
+      },
+      "footerAbout": {
+        "title": "Despre Noi",
+        "description": "BAK UP CIC conduce Schema de Vouchere Electronice Comunitare Northamptonshire, oferind sprijin demn familiilor și întărind economiile locale.",
+        "learnMore": "Află Mai Multe"
+      },
+      "footerFunders": {
+        "title": "Pentru Finanțatori",
+        "description": "Investiți într-o abordare mai inteligentă și mai echitabilă pentru combaterea sărăciei și inegalității.",
+        "item1": "Impact comunitar direct",
+        "item2": "Sprijin pentru afacerile locale",
+        "item3": "Rezultate măsurabile",
+        "item4": "Economie circulară durabilă"
+      },
+      "footerContact": {
+        "title": "Contactați-ne",
+        "company": "BAK UP CIC",
+        "location": "Northamptonshire, Regatul Unit",
+        "email": "Email:",
+        "phone": "Telefon:",
+        "hours": "Program:",
+        "hoursText": "Luni - Vineri: 9:00 - 17:00"
+      },
+      "copyright": "© 2024 BAK UP CIC. Toate drepturile rezervate. | Schema de Vouchere Electronice Comunitare Northamptonshire",
+      "charityNumber": "Număr de Înregistrare a Companiei Caritabile: 12994374"
+    },
+    "pwa": {
+      "install": "Instalează BAK UP",
+      "addToHomeScreen": "Adaugă pe Ecranul Principal",
+      "iosInstructions": "Pentru a instala această aplicație pe iPhone-ul dvs.:",
+      "androidInstructions": "Pentru a instala această aplicație pe Android-ul dvs.:",
+      "iosStep1": "Apăsați butonul de Partajare ⬆️ din partea de jos a Safari",
+      "iosStep2": "Derulați în jos și apăsați \"Adăugați pe ecranul principal\" ➕",
+      "iosStep3": "Apăsați \"Adăugați\" în colțul din dreapta sus",
+      "iosNote": "💡 Butonul de Partajare este în bara de instrumente Safari, nu în acest pop-up",
+      "androidStep1": "Apăsați butonul verde \"Instalare\" de mai jos",
+      "androidStep2": "Un dialog de sistem va întreba \"Adăugați pe ecranul principal?\"",
+      "androidStep3": "Apăsați \"Adăugați\" pentru a confirma",
+      "notNow": "Nu Acum",
+      "installButton": "Instalare",
+      "iphoneTab": "🍎 iPhone",
+      "androidTab": "🤖 Android"
     }
   },
   "auth": {

@@ -250,50 +250,50 @@ const LandingPage = ({ onNavigate }) => {
       <div style={{ backgroundColor: '#f0f7f0', padding: '80px 20px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: '#2e7d32', fontWeight: 'bold' }}>
-            {t('landing.about.sectionTitle')}
+            About the Northamptonshire Community E-Voucher Scheme
           </h2>
           
           {/* Mission Statement */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.mission.title')}</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Mission Statement</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
-              {t('landing.about.mission.text')}
+              To create inclusive, resilient, and empowered communities by addressing the root causes of hardship and inequality through partnership, compassion, and community-driven innovation.
             </p>
           </div>
 
           {/* Our Vision */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.vision.title')}</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Our Vision</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
-              {t('landing.about.vision.text')}
+              A fairer, healthier, and more connected society where everyone has the opportunity to reach their full potential.
             </p>
           </div>
 
           {/* Our Values */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>{t('landing.about.values.title')}</h3>
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>Our Values</h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '2' }}>
               <li style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.compassion')}</strong> – {t('landing.about.values.compassionDesc')}
+                <strong style={{ color: '#2e7d32' }}>Compassion</strong> – We care deeply about people and their stories.
               </li>
               <li style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.equity')}</strong> – {t('landing.about.values.equityDesc')}
+                <strong style={{ color: '#2e7d32' }}>Equity</strong> – We champion fairness and inclusion for all.
               </li>
               <li style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.empowerment')}</strong> – {t('landing.about.values.empowermentDesc')}
+                <strong style={{ color: '#2e7d32' }}>Empowerment</strong> – We invest in people to become agents of change.
               </li>
               <li style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.collaboration')}</strong> – {t('landing.about.values.collaborationDesc')}
+                <strong style={{ color: '#2e7d32' }}>Collaboration</strong> – We build partnerships that strengthen collective impact.
               </li>
               <li style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.integrity')}</strong> – {t('landing.about.values.integrityDesc')}
+                <strong style={{ color: '#2e7d32' }}>Integrity</strong> – We are accountable, transparent, and community-centred in all we do.
               </li>
             </ul>
           </div>
 
           {/* About BAK UP CIC */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            {t('landing.about.bakup.title')}
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>About BAK UP CIC</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '20px' }}>
               BAK UP CIC is proud to lead the <strong>Northamptonshire Community E-Voucher Scheme</strong>, an innovative, community-led solution that ensures families and individuals facing hardship can access culturally appropriate essential goods and services with dignity, flexibility, and fairness.
             </p>
@@ -303,7 +303,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
 
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            {t('landing.about.keyAreas.title')}
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>Key Work Areas</h3>
             <div style={{ display: 'grid', gap: '20px' }}>
               <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '1.8' }}>
                 <li style={{ marginBottom: '15px' }}>
@@ -326,7 +326,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
 
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            {t('landing.about.circular.title')}
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>Creating a Circular and Sustainable Community Economy</h3>
             <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '15px' }}>
               The E-Voucher Scheme also creates a unique opportunity for local shops and retailers to play an active role in reducing waste and promoting sustainability.
             </p>
@@ -336,7 +336,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
 
           <div style={{ backgroundColor: '#e8f5e9', padding: '40px', borderRadius: '15px', border: '2px solid #4CAF50' }}>
-            {t('landing.about.funders.title')}
+            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', textAlign: 'center', fontWeight: 'bold' }}>Why Funders Should Invest</h3>
             <p style={{ fontSize: '1.2em', lineHeight: '1.8', color: '#333', textAlign: 'center', fontWeight: '500' }}>
               Funding the E-Voucher Scheme means investing in a smarter, fairer, and greener approach to tackling poverty and inequality. Every pound directly benefits both households facing hardship and local small businesses, creating a positive cycle of community wealth and wellbeing.
             </p>
@@ -405,7 +405,7 @@ const LandingPage = ({ onNavigate }) => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px', marginBottom: '30px' }}>
             {/* About Us Column */}
             <div>
-              {t('landing.about.footerAbout.title')}
+              <h3 style={{ fontSize: '1.3em', marginBottom: '15px', fontWeight: 'bold' }}>About Us</h3>
               <p style={{ lineHeight: '1.6', color: '#e8f5e9', marginBottom: '15px' }}>
                 BAK UP CIC leads the Northamptonshire Community E-Voucher Scheme, providing dignified support to families and strengthening local economies.
               </p>
@@ -428,7 +428,7 @@ const LandingPage = ({ onNavigate }) => {
 
             {/* For Funders Column */}
             <div>
-              {t('landing.about.footerFunders.title')}
+              <h3 style={{ fontSize: '1.3em', marginBottom: '15px', fontWeight: 'bold' }}>For Funders</h3>
               <p style={{ lineHeight: '1.6', color: '#e8f5e9', marginBottom: '10px' }}>
                 Invest in a smarter, fairer approach to tackling poverty and inequality.
               </p>
@@ -442,7 +442,7 @@ const LandingPage = ({ onNavigate }) => {
 
             {/* Contact Us Column */}
             <div>
-              {t('landing.about.footerContact.title')}
+              <h3 style={{ fontSize: '1.3em', marginBottom: '15px', fontWeight: 'bold' }}>Contact Us</h3>
               <p style={{ lineHeight: '1.8', color: '#e8f5e9' }}>
                 <strong>BAK UP CIC</strong><br />
                 Northamptonshire, UK<br />

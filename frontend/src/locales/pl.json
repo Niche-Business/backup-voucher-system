@@ -202,6 +202,98 @@
     },
     "footer": {
       "adminAccess": "Dostęp Administratora"
+    },
+    "about": {
+      "sectionTitle": "O Programie Bonów Elektronicznych Społeczności Northamptonshire",
+      "mission": {
+        "title": "Misja",
+        "text": "Tworzyć inkluzywne, odporne i wzmocnione społeczności poprzez rozwiązywanie podstawowych przyczyn trudności i nierówności poprzez partnerstwo, współczucie i innowacje napędzane przez społeczność."
+      },
+      "vision": {
+        "title": "Nasza Wizja",
+        "text": "Bardziej sprawiedliwe, zdrowsze i bardziej połączone społeczeństwo, w którym każdy ma szansę osiągnąć swój pełny potencjał."
+      },
+      "values": {
+        "title": "Nasze Wartości",
+        "compassion": "Współczucie",
+        "compassionDesc": "Głęboko troszczymy się o ludzi i ich historie.",
+        "equity": "Sprawiedliwość",
+        "equityDesc": "Wspieramy uczciwość i włączenie dla wszystkich.",
+        "empowerment": "Wzmocnienie",
+        "empowermentDesc": "Inwestujemy w ludzi, aby stali się czynnikami zmian.",
+        "collaboration": "Współpraca",
+        "collaborationDesc": "Budujemy partnerstwa, które wzmacniają zbiorowy wpływ.",
+        "integrity": "Uczciwość",
+        "integrityDesc": "Jesteśmy odpowiedzialni, przejrzyści i skoncentrowani na społeczności we wszystkim, co robimy."
+      },
+      "bakup": {
+        "title": "O BAK UP CIC",
+        "paragraph1": "BAK UP CIC jest dumna z prowadzenia Programu Bonów Elektronicznych Społeczności Northamptonshire, innowacyjnego rozwiązania kierowanego przez społeczność, które zapewnia rodzinom i osobom borykającym się z trudnościami dostęp do kulturowo odpowiednich podstawowych towarów i usług z godnością, elastycznością i sprawiedliwością.",
+        "paragraph2": "Nasz model Bonu Elektronicznego zastępuje tradycyjne paczki żywnościowe bonami cyfrowymi, tekstowymi i papierowymi, które można wykorzystać w lokalnych uczestniczących sklepach, na rynkach i u dostawców społecznościowych. To podejście nie tylko wspiera gospodarstwa domowe w kryzysie, ale także reinwestuje wydatki z powrotem w lokalną gospodarkę, wzmacniając małe firmy i sieci społecznościowe."
+      },
+      "keyAreas": {
+        "title": "Kluczowe Obszary Pracy",
+        "foodSecurity": "Bezpieczeństwo Żywnościowe i Wsparcie Gospodarstw Domowych",
+        "foodSecurityDesc": "Mobilne usługi żywnościowe, programy Bonów Elektronicznych, dostarczanie sprzętu AGD oraz partnerstwa z lokalnymi detalistami, aby zapewnić rodzinom dostęp do kulturowo odpowiedniej i pożywnej żywności.",
+        "youthEmpowerment": "Wzmocnienie Młodzieży",
+        "youthEmpowermentDesc": "Poprzez Ambasadorów Młodzieży East Northamptonshire (EYA) i inne programy przywódcze wyposażamy młodych ludzi w pewność siebie, umiejętności i głos, aby stali się pozytywnymi czynnikami zmian w swoich społecznościach.",
+        "healthWellbeing": "Zdrowie i Dobrostan",
+        "healthWellbeingDesc": "Interwencje oparte na społeczności zajmujące się nierównościami zdrowotnymi, samotnością i izolacją społeczną, jednocześnie promujące aktywność fizyczną, świadomość zdrowia psychicznego i zaufane relacje z dorosłymi.",
+        "socialDeterminants": "Społeczne Determinanty Zdrowia",
+        "socialDeterminantsDesc": "Holistyczne podejście do poprawy dostępu do edukacji, zatrudnienia i opieki zdrowotnej, wzmacniające ludzi, aby prosperowali, a nie tylko przetrwali.",
+        "communityCohesion": "Spójność Społeczności i Dziedzictwo Kulturowe",
+        "communityCohesionDesc": "Świętowanie różnorodności poprzez inicjatywy takie jak Celebracja Pokolenia Windrush, projekty opowiadania historii i międzypokoleniowe wydarzenia społecznościowe, które honorują tożsamość i przynależność."
+      },
+      "circular": {
+        "title": "Tworzenie Cyrkularnej i Zrównoważonej Gospodarki Społeczności",
+        "paragraph1": "Program Bonów Elektronicznych tworzy również wyjątkową okazję dla lokalnych sklepów i detalistów do odgrywania aktywnej roli w redukcji odpadów i promowaniu zrównoważonego rozwoju.",
+        "paragraph2": "Uczestniczące punkty sprzedaży będą mogły powiadamiać BAK UP CIC i organizacje charytatywne partnerskie o nadwyżkach żywności i podstawowych towarach, umożliwiając zbieranie i redystrybucję tych przedmiotów do potrzebujących rodzin, zamiast ich marnowania. Ten prosty, ale potężny system wzmacnia lokalną gospodarkę cyrkularną - zapewniając, że cenne zasoby są wykorzystywane efektywnie, wpływ na środowisko jest zmniejszany, a społeczności stają się bardziej odporne, zrównoważone i samowystarczalne."
+      },
+      "funders": {
+        "title": "Dlaczego Fundatorzy Powinni Inwestować",
+        "text": "Finansowanie Programu Bonów Elektronicznych oznacza inwestowanie w mądrzejsze, bardziej sprawiedliwe i bardziej ekologiczne podejście do walki z ubóstwem i nierównością. Każdy funt bezpośrednio przynosi korzyści zarówno gospodarstwom domowym borykającym się z trudnościami, jak i lokalnym małym firmom, tworząc pozytywny cykl dobrobytu społeczności i dobrostanu."
+      },
+      "footerAbout": {
+        "title": "O Nas",
+        "description": "BAK UP CIC prowadzi Program Bonów Elektronicznych Społeczności Northamptonshire, zapewniając godne wsparcie rodzinom i wzmacniając lokalne gospodarki.",
+        "learnMore": "Dowiedz Się Więcej"
+      },
+      "footerFunders": {
+        "title": "Dla Fundatorów",
+        "description": "Inwestuj w mądrzejsze, bardziej sprawiedliwe podejście do walki z ubóstwem i nierównością.",
+        "item1": "Bezpośredni wpływ na społeczność",
+        "item2": "Wsparcie lokalnych firm",
+        "item3": "Mierzalne wyniki",
+        "item4": "Zrównoważona gospodarka cyrkularna"
+      },
+      "footerContact": {
+        "title": "Skontaktuj Się z Nami",
+        "company": "BAK UP CIC",
+        "location": "Northamptonshire, Wielka Brytania",
+        "email": "Email:",
+        "phone": "Telefon:",
+        "hours": "Godziny:",
+        "hoursText": "Poniedziałek - Piątek: 9:00 - 17:00"
+      },
+      "copyright": "© 2024 BAK UP CIC. Wszelkie prawa zastrzeżone. | Program Bonów Elektronicznych Społeczności Northamptonshire",
+      "charityNumber": "Numer Rejestracyjny Firmy Charytatywnej: 12994374"
+    },
+    "pwa": {
+      "install": "Zainstaluj BAK UP",
+      "addToHomeScreen": "Dodaj do Ekranu Głównego",
+      "iosInstructions": "Aby zainstalować tę aplikację na swoim iPhonie:",
+      "androidInstructions": "Aby zainstalować tę aplikację na swoim Androidzie:",
+      "iosStep1": "Dotknij przycisku Udostępnij ⬆️ u dołu Safari",
+      "iosStep2": "Przewiń w dół i dotknij \"Dodaj do ekranu głównego\" ➕",
+      "iosStep3": "Dotknij \"Dodaj\" w prawym górnym rogu",
+      "iosNote": "💡 Przycisk Udostępnij znajduje się na pasku narzędzi Safari, a nie w tym okienku",
+      "androidStep1": "Dotknij zielonego przycisku \"Zainstaluj\" poniżej",
+      "androidStep2": "Okno dialogowe systemowe zapyta \"Dodać do ekranu głównego?\"",
+      "androidStep3": "Dotknij \"Dodaj\", aby potwierdzić",
+      "notNow": "Nie Teraz",
+      "installButton": "Zainstaluj",
+      "iphoneTab": "🍎 iPhone",
+      "androidTab": "🤖 Android"
     }
   },
   "auth": {
