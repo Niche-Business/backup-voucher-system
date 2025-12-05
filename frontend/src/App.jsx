@@ -758,7 +758,7 @@ function RegisterPage({ onRegister, onNavigate }) {
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
         {success && <div style={{backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{success}</div>}
         
-        <form onSubmit={handleSubmit}>
+        <form key={formData.userType} onSubmit={handleSubmit}>
           <div style={{marginBottom: '15px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
             <select 
