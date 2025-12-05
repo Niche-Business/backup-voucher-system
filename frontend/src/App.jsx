@@ -723,13 +723,18 @@ function RegisterPage({ onRegister, onNavigate }) {
   }, [formData.userType])
 
   const handleChange = (e) => {
-    console.log('[RegisterPage] Field changed:', e.target.name, '=', e.target.value)
-    if (e.target.name === 'userType') {
-      console.log('[RegisterPage] ⚠️ USER TYPE CHANGED FROM', formData.userType, 'TO', e.target.value)
+    const { name, value } = e.target
+    console.log('[RegisterPage] Field changed:', name, '=', value)
+    if (name === 'userType') {
+      console.log('[RegisterPage] ⚠️ USER TYPE CHANGING TO:', value)
     }
-    const newFormData = { ...formData, [e.target.name]: e.target.value }
-    console.log('[RegisterPage] New formData.userType:', newFormData.userType)
-    setFormData(newFormData)
+    
+    // Use functional update to ensure we have the latest state
+    setFormData(prevFormData => {
+      const newFormData = { ...prevFormData, [name]: value }
+      console.log('[RegisterPage] New formData.userType:', newFormData.userType)
+      return newFormData
+    })
   }
 
   const handleSubmit = async (e) => {
