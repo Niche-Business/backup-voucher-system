@@ -280,8 +280,8 @@ function HomePage({ onNavigate }) {
       <div style={{marginTop: '80px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px', maxWidth: '1200px', margin: '80px auto 0'}}>
         <FeatureCard icon="🎫" title="Digital Vouchers" description="Recipients receive digital vouchers via text or email to redeem at local shops" />
         <FeatureCard icon="🏪" title="Local Shops" description="Partner shops accept vouchers and notify about Food to Go Items available for collection" />
-        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect Food to Go Items to support communities" />
-        <FeatureCard icon="📊" title="Impact Tracking" description="Comprehensive reporting for admins and VCSE organizations to measure community impact" />
+        <FeatureCard icon="🤝" title="VCFSE Organizations" description="Charities issue vouchers and collect Food to Go Items to support communities" />
+        <FeatureCard icon="📊" title="Impact Tracking" description="Comprehensive reporting for admins and VCFSE organizations to measure community impact" />
       </div>
     </div>
   )
@@ -845,7 +845,7 @@ function RegisterPage({ onRegister, onNavigate }) {
             </div>
           </div>
           
-          {/* VCSE Organization Fields */}
+          {/* VCFSE Organization Fields */}
           {formData.userType === 'vcse' && (
             <>
               <div style={{marginBottom: '15px'}}>
@@ -1030,7 +1030,7 @@ function AdminDashboard({ user, onLogout }) {
       const data = await apiCall('/admin/vcse-organizations')
       setVcseOrgs(data)
     } catch (error) {
-      console.error('Failed to load VCSE organizations:', error)
+      console.error('Failed to load VCFSE organizations:', error)
     }
   }
 
@@ -1200,12 +1200,12 @@ function AdminDashboard({ user, onLogout }) {
         method: 'PUT',
         body: JSON.stringify(editFormData)
       })
-      alert('VCSE organization updated successfully')
+      alert('VCFSE organization updated successfully')
       setEditingVcse(null)
       setEditFormData({})
       loadVcseOrgs()
     } catch (error) {
-      alert('Error updating VCSE organization: ' + error.message)
+      alert('Error updating VCFSE organization: ' + error.message)
     }
   }
 
@@ -1343,7 +1343,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '36px', marginBottom: '10px'}}>🤝</div>
                 <div style={{fontSize: '28px', fontWeight: 'bold', color: '#9C27B0'}}>{vcseOrgs.length}</div>
-                <div style={{color: '#666'}}>VCSE Organizations</div>
+                <div style={{color: '#666'}}>VCFSE Organizations</div>
               </div>
               
               <div 
@@ -1554,10 +1554,10 @@ function AdminDashboard({ user, onLogout }) {
                             if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
                               try {
                                 await apiCall(`/admin/vcse/${org.id}`, { method: 'DELETE' })
-                                alert('VCSE organization deleted successfully')
+                                alert('VCFSE organization deleted successfully')
                                 loadVcseOrgs()
                               } catch (error) {
-                                alert('Error deleting VCSE organization: ' + error.message)
+                                alert('Error deleting VCFSE organization: ' + error.message)
                               }
                             }
                           }}
@@ -3858,7 +3858,7 @@ function VCSEDashboard({ user, onLogout }) {
             <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '12px', marginTop: '20px', border: '2px solid #4CAF50'}}>
               <h3 style={{marginTop: 0, color: '#2e7d32'}}>🤝 Welcome to the Northamptonshire Community E-Voucher Scheme</h3>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                Thank you for partnering with <strong>BAK UP CIC</strong> to support families and individuals facing hardship across Northamptonshire. As a VCSE organization, you are at the heart of our community-led approach to tackling food insecurity.
+                Thank you for partnering with <strong>BAK UP CIC</strong> to support families and individuals facing hardship across Northamptonshire. As a VCFSE organization, you are at the heart of our community-led approach to tackling food insecurity.
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
                 Our E-Voucher system replaces traditional food parcels with <strong>flexible, dignified support</strong> that respects cultural preferences and gives families real choice. Every voucher you issue helps strengthen local economies by supporting participating shops and retailers.
@@ -4226,7 +4226,7 @@ function VCSEDashboard({ user, onLogout }) {
                             const report = data.report
                             
                             // Create CSV content
-                            let csv = 'VCSE Organization Report\n\n'
+                            let csv = 'VCFSE Organization Report\n\n'
                             csv += `Organization,${report.organization_name}\n`
                             csv += `Period,${report.date_from} to ${report.date_to}\n\n`
                             csv += 'Metric,Value\n'
@@ -4958,6 +4958,22 @@ function VendorDashboard({ user, onLogout }) {
           <div>
             <h2>🎫 {t('shop.redeemVouchers')}</h2>
             
+            {/* Redemption Instructions */}
+            <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px', maxWidth: '800px', margin: '0 auto 20px'}}>
+              <h3 style={{marginTop: 0, color: '#1976d2', fontSize: '18px'}}>📝 How to Redeem Vouchers</h3>
+              <ol style={{marginBottom: 0, paddingLeft: '20px', lineHeight: '1.8'}}>
+                <li><strong>Ask the customer for their voucher code</strong> - They should have received it via email or text message</li>
+                <li><strong>Enter the voucher code</strong> in the field below (or scan the QR code if available)</li>
+                <li><strong>Click "Validate"</strong> to check if the voucher is valid and see its value</li>
+                <li><strong>Complete the transaction</strong> - Let the customer select items up to the voucher value</li>
+                <li><strong>Click "Redeem"</strong> to complete the redemption - The voucher amount will be credited to your shop balance</li>
+                <li><strong>Request payout</strong> - Once you have accumulated balance, you can request a payout to your bank account</li>
+              </ol>
+              <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px', fontSize: '14px'}}>
+                💡 <strong>Tip:</strong> Always validate the voucher before completing the transaction to ensure it's active and has sufficient value.
+              </div>
+            </div>
+            
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', maxWidth: '600px', margin: '0 auto'}}>
               <div style={{marginBottom: '20px'}}>
                 <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>{t('shop.enterVoucherCode')}</label>
@@ -5152,7 +5168,7 @@ function VendorDashboard({ user, onLogout }) {
                       onChange={(e) => setToGoForm({...toGoForm, item_type: e.target.value, price: '', original_price: ''})}
                       style={{marginRight: '8px'}}
                     />
-                    <span>🆓 Free for VCSE Collection</span>
+                    <span>🆓 Free for VCFSE Collection</span>
                   </label>
                   <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
                     <input
@@ -5166,7 +5182,7 @@ function VendorDashboard({ user, onLogout }) {
                   </label>
                 </div>
                 <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
-                  Free items can be collected by VCSE organizations. Discounted items can be purchased by recipients.
+                  Free items can be collected by VCFSE organizations. Discounted items can be purchased by recipients.
                 </small>
               </div>
               
@@ -7213,51 +7229,45 @@ function SchoolDashboard({ user, onLogout }) {
               </div>
             </div>
 
-            {/* Add Funds Section */}
+            {/* Add Funds Section - Payment Integration */}
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-              <h3 style={{marginTop: 0, color: '#9C27B0'}}>💰 Add Funds to Wallet</h3>
-              <form onSubmit={handleAddFunds}>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+              <h3 style={{marginTop: 0, color: '#9C27B0'}}>💰 Load Funds to Wallet</h3>
+              <p style={{color: '#666', marginBottom: '20px'}}>
+                Add funds to your wallet using a debit or credit card. Funds will be available immediately after payment.
+              </p>
+              
+              <div style={{padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', marginBottom: '20px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px'}}>
+                  <div style={{fontSize: '48px'}}>💳</div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Amount (£)</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="1"
-                      max="10000"
-                      value={addFundsAmount}
-                      onChange={(e) => setAddFundsAmount(e.target.value)}
-                      required
-                      style={styles.input}
-                      placeholder="Enter amount"
-                    />
-                  </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Payment Reference</label>
-                    <input
-                      type="text"
-                      value={paymentReference}
-                      onChange={(e) => setPaymentReference(e.target.value)}
-                      style={styles.input}
-                      placeholder="e.g., Invoice #12345"
-                    />
+                    <div style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '5px'}}>Secure Payment Required</div>
+                    <div style={{fontSize: '14px', color: '#666'}}>All funds must be paid for via debit/credit card before being credited to your wallet</div>
                   </div>
                 </div>
-                <div style={{marginBottom: '20px'}}>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Description (Optional)</label>
-                  <textarea
-                    value={fundsDescription}
-                    onChange={(e) => setFundsDescription(e.target.value)}
-                    style={{...styles.input, minHeight: '80px'}}
-                    placeholder="Add notes about this transaction"
-                  />
-                </div>
-                <button type="submit" style={styles.primaryButton}>
-                  ➕ Add Funds to Wallet
+                
+                <button 
+                  onClick={() => setActiveTab('payment')}
+                  style={{
+                    ...styles.primaryButton,
+                    width: '100%',
+                    backgroundColor: '#4CAF50',
+                    fontSize: '16px',
+                    padding: '15px'
+                  }}
+                >
+                  💳 Go to Payment Page
                 </button>
-              </form>
-              <div style={{marginTop: '15px', padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '14px'}}>
-                💡 <strong>Note:</strong> Funds added to your wallet can be used to issue vouchers to families. Maximum £10,000 per transaction.
+              </div>
+              
+              <div style={{padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '14px'}}>
+                💡 <strong>How it works:</strong>
+                <ul style={{marginTop: '10px', marginBottom: '0', paddingLeft: '20px'}}>
+                  <li>Click "Go to Payment Page" above</li>
+                  <li>Enter the amount you want to load (£1 - £10,000)</li>
+                  <li>Complete payment with your debit or credit card</li>
+                  <li>Funds will be credited to your wallet immediately</li>
+                  <li>Use your wallet balance to issue vouchers to families</li>
+                </ul>
               </div>
             </div>
 

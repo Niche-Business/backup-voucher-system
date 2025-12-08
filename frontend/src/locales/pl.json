@@ -147,7 +147,7 @@
   "landing": {
     "hero": {
       "title": "System Voucherów Elektronicznych BAK UP",
-      "subtitle": "Łączenie sprzedawców żywności, organizacji VCSE i rodzin w trudnej sytuacji poprzez ujednolicone rozwiązanie cyfrowe",
+      "subtitle": "Łączenie sprzedawców żywności, organizacji VCFSE i rodzin w trudnej sytuacji poprzez ujednolicone rozwiązanie cyfrowe",
       "getStarted": "Rozpocznij",
       "signIn": "Zaloguj się"
     },
@@ -172,14 +172,14 @@
     "whoWeServe": {
       "title": "Komu Służymy",
       "recipients": {
-        "title": "Dla Odbiorców",
+        "title": "Osoby i Rodziny",
         "item1": "Otrzymuj cyfrowe vouchery żywnościowe z godnością",
         "item2": "Wybieraj to, czego potrzebujesz od lokalnych sprzedawców",
         "item3": "Jedzenie To Go w promocji - Kupuj zniżkową żywność od uczestniczących sprzedawców",
         "item4": "Łatwo śledź saldo swojego vouchera"
       },
       "vendors": {
-        "title": "Dla Sprzedawców",
+        "title": "Sprzedawcy/Lokalne Sklepy",
         "item1": "Akceptuj cyfrowe vouchery bezproblemowo",
         "item2": "Publikuj zniżkowe artykuły spożywcze dla odbiorców",
         "item3": "Publikuj darmowe nadwyżki żywności do odbioru przez VCSE",
@@ -187,7 +187,7 @@
         "item5": "Zarządzaj wieloma lokalizacjami sklepów"
       },
       "vcse": {
-        "title": "Dla Organizacji VCSE",
+        "title": "Organizacje VCFSE",
         "item1": "Wydawaj i zarządzaj voucherami efektywnie",
         "item2": "Finansuj rodziny cyfrowo",
         "item3": "Zbieraj darmowe nadwyżki żywności do dystrybucji rodzinom, którym służysz",
@@ -195,7 +195,7 @@
         "item5": "Generuj szczegółowe raporty"
       },
       "schools": {
-        "title": "Dla Szkół i Organizacji Opieki",
+        "title": "Szkoły i Organizacje Opieki",
         "item1": "Otrzymuj e-vouchery od BAK UP, aby wspierać rodziny",
         "item2": "Dystrybuuj vouchery rodzinom ze społeczności niedostatecznie reprezentowanych",
         "item3": "Śledź dystrybucję voucherów i wpływ",

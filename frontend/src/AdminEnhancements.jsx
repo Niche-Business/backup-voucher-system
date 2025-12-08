@@ -38,7 +38,7 @@ export function GlobalSearchTab({ apiCall }) {
       
       <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px' }}>
         <p style={{ marginBottom: '15px', color: '#666' }}>
-          Search across VCSE Organizations, Schools/Care Organizations, and Local Shops by name, email, town, ID, or registration number.
+          Search across VCFSE Organizations, Schools/Care Organizations, and Local Shops by name, email, town, ID, or registration number.
         </p>
         
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -81,11 +81,11 @@ export function GlobalSearchTab({ apiCall }) {
             Search Results ({searchResults.total_count} found)
           </h3>
 
-          {/* VCSE Organizations */}
+          {/* VCFSE Organizations */}
           {searchResults.results.vcse.length > 0 && (
             <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px' }}>
               <h4 style={{ color: '#4CAF50', marginBottom: '15px' }}>
-                🤝 VCSE Organizations ({searchResults.results.vcse.length})
+                🤝 VCFSE Organizations ({searchResults.results.vcse.length})
               </h4>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -594,7 +594,7 @@ export function BroadcastTab({ apiCall }) {
           <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>Select Audience</label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
             {[
-              { id: 'vcse', label: '🤝 VCSE Organizations', color: '#4CAF50' },
+              { id: 'vcse', label: '🤝 VCFSE Organizations', color: '#4CAF50' },
               { id: 'school', label: '🎓 Schools/Care Orgs', color: '#2196F3' },
               { id: 'vendor', label: '🏪 Local Shops', color: '#FF9800' },
               { id: 'recipient', label: '👥 Recipients', color: '#9C27B0' }
@@ -771,7 +771,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
                 borderRadius: '5px'
               }}
             >
-              <option value="vcse">VCSE Organization</option>
+              <option value="vcse">VCFSE Organization</option>
               <option value="school">School/Care Organization</option>
             </select>
           </div>
@@ -908,7 +908,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
                     </span>
                   </div>
                   <div style={{ fontSize: '14px', color: '#666' }}>
-                    <div>Type: {item.type === 'vcse' ? 'VCSE' : 'School'}</div>
+                    <div>Type: {item.type === 'vcse' ? 'VCFSE' : 'School'}</div>
                     <div>Current Balance: £{item.current_balance.toFixed(2)}</div>
                     <div>Email: {item.email}</div>
                   </div>

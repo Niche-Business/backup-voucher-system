@@ -20,7 +20,7 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
     @app.route('/api/admin/global-search', methods=['GET'])
     def admin_global_search():
         """
-        Universal search across VCSE, Schools, and Local Shops
+        Universal search across VCFSE, Schools, and Local Shops
         Supports search by: name, email, town, ID, registration number
         """
         try:
@@ -37,7 +37,7 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
             if not query or len(query) < 2:
                 return jsonify({'results': [], 'message': 'Search query too short'}), 200
             
-            # Search across VCSE Organizations
+            # Search across VCFSE Organizations
             vcse_results = User.query.filter(
                 and_(
                     User.user_type == 'vcse',
@@ -290,7 +290,7 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
     def admin_broadcast_message():
         """
         Send broadcast messages to selected user groups
-        Supports: VCSE, Schools, Shops, Recipients (optional)
+        Supports: VCFSE, Schools, Shops, Recipients (optional)
         """
         try:
             user_id = session.get('user_id')

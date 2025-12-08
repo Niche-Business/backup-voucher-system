@@ -45,14 +45,14 @@
   "admin": {
     "fundAllocation": "Fund Allocation",
     "organizationType": "Organization Type",
-    "selectVCSE": "Select VCSE Organization",
+    "selectVCSE": "Select VCFSE Organization",
     "amount": "Amount (£)",
     "notes": "Notes (Optional)",
     "allocateFunds": "Allocate Funds",
-    "vcseOrganizations": "VCSE Organizations",
+    "vcseOrganizations": "VCFSE Organizations",
     "allocatedBalance": "Allocated Balance",
-    "chooseOrganization": "Choose a VCSE organization...",
-    "vcseOrganization": "VCSE Organization",
+    "chooseOrganization": "Choose a VCFSE organization...",
+    "vcseOrganization": "VCFSE Organization",
     "schoolOrganization": "School/Care Organization",
     "selectSchool": "Select School/Care Organization",
     "organizationName": "Organization Name",
@@ -147,7 +147,7 @@
   "landing": {
     "hero": {
       "title": "BAK UP E-Voucher System",
-      "subtitle": "Connecting food vendors, VCSE organizations, and vulnerable families through a unified digital solution",
+      "subtitle": "Connecting food vendors, VCFSE organizations, and vulnerable families through a unified digital solution",
       "getStarted": "Get Started",
       "signIn": "Sign In"
     },
@@ -157,7 +157,7 @@
         "description": "Digital food vouchers promoting dignity and choice for vulnerable families"
       },
       "vcse": {
-        "title": "VCSE Partnership",
+        "title": "VCFSE Partnership",
         "description": "Charitable organizations can fund and manage voucher distributions efficiently"
       },
       "vendors": {
@@ -166,28 +166,28 @@
       },
       "surplus": {
         "title": "Surplus Food Sharing",
-        "description": "Vendors can post surplus food items for families as discount and free food surplus to VCSE partners to support the families they serve, reducing food waste"
+        "description": "Vendors can post surplus food items for families as discount and free food surplus to VCFSE partners to support the families they serve, reducing food waste"
       }
     },
     "whoWeServe": {
       "title": "Who We Serve",
       "recipients": {
-        "title": "For Recipients",
+        "title": "Individual and Family",
         "item1": "Receive digital food vouchers with dignity",
         "item2": "Choose what you need from local vendors",
         "item3": "Food to Go Items at a discount - Buy discounted Food to Go Items from participating vendors",
         "item4": "Track your voucher balance easily"
       },
       "vendors": {
-        "title": "For Vendors",
+        "title": "Vendors/Local shops",
         "item1": "Accept digital vouchers seamlessly",
         "item2": "Post discounted food items for recipients",
-        "item3": "Post free surplus food for VCSE collection",
+        "item3": "Post free surplus food for VCFSE collection",
         "item4": "Support your local community",
         "item5": "Manage multiple shop locations"
       },
       "vcse": {
-        "title": "For VCSE Organizations",
+        "title": "VCFSE Organisation",
         "item1": "Issue and manage vouchers efficiently",
         "item2": "Fund families digitally",
         "item3": "Collect free surplus Food to Go Items to distribute to families you serve",
@@ -195,7 +195,7 @@
         "item5": "Generate detailed reports"
       },
       "schools": {
-        "title": "For Schools & Care Organizations",
+        "title": "Schools and Care Organisations",
         "item1": "Receive e-vouchers from BAK UP to support families",
         "item2": "Distribute vouchers to families from underrepresented communities",
         "item3": "Track voucher distribution and impact",
@@ -316,7 +316,7 @@
   "auth": {
     "selectRole": "Select Your Role",
     "vendor": "Food Vendor / Shop",
-    "vcse": "VCSE Organization",
+    "vcse": "VCFSE Organization",
     "recipient": "Voucher Recipient",
     "vendorDesc": "Donate surplus food and accept vouchers",
     "vcseDesc": "Manage vouchers for vulnerable families",
@@ -496,7 +496,7 @@
     "description": "As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities."
   },
   "vcse": {
-    "portal": "VCSE Organization Portal",
+    "portal": "VCFSE Organization Portal",
     "description": "Manage vouchers and support vulnerable families in your community"
   },
   "wallet": {
@@ -606,7 +606,7 @@
     "userTypes": {
       "recipient": "Recipient",
       "vendor": "Local Food Shop",
-      "vcse": "VCSE Organization",
+      "vcse": "VCFSE Organization",
       "school": "School/Care Organization"
     },
     "firstNameLabel": "First Name",

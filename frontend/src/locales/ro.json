@@ -147,7 +147,7 @@
   "landing": {
     "hero": {
       "title": "Sistemul de Vouchere Electronice BAK UP",
-      "subtitle": "Conectând vânzătorii de alimente, organizațiile VCSE și familiile vulnerabile printr-o soluție digitală unificată",
+      "subtitle": "Conectând vânzătorii de alimente, organizațiile VCFSE și familiile vulnerabile printr-o soluție digitală unificată",
       "getStarted": "Începe",
       "signIn": "Autentificare"
     },
@@ -166,20 +166,20 @@
       },
       "surplus": {
         "title": "Partajarea Alimentelor Excedentare",
-        "description": "Vânzătorii pot posta articole alimentare excedentare pentru familii la prețuri reduse și alimente excedentare gratuite pentru partenerii VCSE pentru a sprijini familiile pe care le servesc, reducând risipa alimentară"
+        "description": "Vânzătorii pot posta articole alimentare excedentare pentru familii la prețuri reduse și alimente excedentare gratuite pentru partenerii VCFSE pentru a sprijini familiile pe care le servesc, reducând risipa alimentară"
       }
     },
     "whoWeServe": {
       "title": "Pe Cine Servim",
       "recipients": {
-        "title": "Pentru Beneficiari",
+        "title": "Indivizi și Familii",
         "item1": "Primiți vouchere digitale pentru alimente cu demnitate",
         "item2": "Alegeți ce aveți nevoie de la vânzătorii locali",
         "item3": "Alimente To Go la reducere - Cumpărați alimente reduse de la vânzătorii participanți",
         "item4": "Urmăriți cu ușurință soldul voucherului"
       },
       "vendors": {
-        "title": "Pentru Vânzători",
+        "title": "Vânzători/Magazine Locale",
         "item1": "Acceptați vouchere digitale fără probleme",
         "item2": "Postați articole alimentare reduse pentru beneficiari",
         "item3": "Postați alimente excedentare gratuite pentru colectarea VCSE",
@@ -187,7 +187,7 @@
         "item5": "Gestionați mai multe locații de magazine"
       },
       "vcse": {
-        "title": "Pentru Organizațiile VCSE",
+        "title": "Organizații VCFSE",
         "item1": "Emiteți și gestionați vouchere eficient",
         "item2": "Finanțați familii digital",
         "item3": "Colectați alimente excedentare gratuite pentru a le distribui familiilor pe care le serviți",
@@ -195,7 +195,7 @@
         "item5": "Generați rapoarte detaliate"
       },
       "schools": {
-        "title": "Pentru Școli și Organizații de Îngrijire",
+        "title": "Școli și Organizații de Îngrijire",
         "item1": "Primiți e-vouchere de la BAK UP pentru a sprijini familiile",
         "item2": "Distribuiți vouchere familiilor din comunitățile subreprezentate",
         "item3": "Urmăriți distribuția voucherelor și impactul",

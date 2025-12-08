@@ -115,64 +115,16 @@ def get_school_wallet_transactions():
 
 @app.route('/api/school/wallet/add-funds', methods=['POST'])
 def school_add_funds():
-    """Add funds to school/care organization wallet (manual for now)"""
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'error': 'Not authenticated'}), 401
-    
-    user = User.query.get(user_id)
-    if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
-    
-    try:
-        data = request.json
-        amount = float(data.get('amount', 0))
-        payment_method = data.get('payment_method', 'manual')
-        payment_reference = data.get('payment_reference', '')
-        description = data.get('description', 'Funds added to wallet')
-        
-        # Validation
-        if amount <= 0:
-            return jsonify({'error': 'Amount must be greater than 0'}), 400
-        
-        if amount > 10000:
-            return jsonify({'error': 'Maximum amount per transaction is £10,000'}), 400
-        
-        # Create wallet transaction
-        balance_before = user.balance
-        balance_after = balance_before + amount
-        
-        transaction = WalletTransaction(
-            user_id=user_id,
-            transaction_type='credit',
-            amount=amount,
-            balance_before=balance_before,
-            balance_after=balance_after,
-            description=description,
-            payment_method=payment_method,
-            payment_reference=payment_reference,
-            status='completed',
-            created_by=user_id
-        )
-        
-        # Update user balance
-        user.balance = balance_after
-        
-        db.session.add(transaction)
-        db.session.commit()
-        
-        # TODO: Send notification email
-        
-        return jsonify({
-            'message': 'Funds added successfully',
-            'transaction_id': transaction.id,
-            'new_balance': float(balance_after),
-            'amount_added': float(amount)
-        }), 200
-        
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+    """
+    DEPRECATED: This endpoint is no longer available.
+    Schools and Care Organizations must use Stripe payment integration to load funds.
+    Use /api/payment/create-checkout-session instead.
+    """
+    return jsonify({
+        'error': 'Manual fund loading is not allowed',
+        'message': 'Schools and Care Organizations must load funds via debit/credit card payment',
+        'redirect': '/api/payment/create-checkout-session'
+    }), 403
 
 
 @app.route('/api/school/vouchers/issue', methods=['POST'])

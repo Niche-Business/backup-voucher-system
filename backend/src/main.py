@@ -90,7 +90,7 @@ class User(db.Model):
     rejection_reason = db.Column(db.Text)  # Reason for rejection (if rejected)
     verified_at = db.Column(db.DateTime)  # When account was verified by admin
     verified_by_admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Admin who verified
-    balance = db.Column(db.Float, default=0.0)  # For VCSE organizations to load money
+    balance = db.Column(db.Float, default=0.0)  # For VCFSE organizations to load money
     allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCSE
     
     # Food To Go preferred shop for recipients
@@ -115,7 +115,7 @@ class Voucher(db.Model):
     code = db.Column(db.String(20), unique=True, nullable=False)
     value = db.Column(db.Float, nullable=False)
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    issued_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Admin or VCSE
+    issued_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Admin or VCFSE
     vendor_restrictions = db.Column(db.Text)  # JSON list of allowed vendor IDs
     expiry_date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(20), default='active')  # active, redeemed, expired, reassigned
@@ -132,7 +132,7 @@ class Voucher(db.Model):
     recipient_selected_shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'))  # Shop selected by recipient
     
     # Wallet integration fields
-    issued_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # School/VCSE who issued the voucher
+    issued_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # School/VCFSE who issued the voucher
     deducted_from_wallet = db.Column(db.Boolean, default=False)  # Whether voucher value was deducted from issuer's wallet
     wallet_transaction_id = db.Column(db.Integer, db.ForeignKey('wallet_transaction.id'))  # Link to wallet transaction
     
@@ -256,7 +256,7 @@ class ShoppingCart(db.Model):
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
-    vcse_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # VCSE organization placing order
+    vcse_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # VCFSE organization placing order
     surplus_item_id = db.Column(db.Integer, db.ForeignKey('surplus_item.id'), nullable=False)
     client_name = db.Column(db.String(200), nullable=False)  # Client receiving the order
     client_mobile = db.Column(db.String(20), nullable=False)
@@ -291,7 +291,7 @@ class PayoutRequest(db.Model):
     reviewer = db.relationship('User', foreign_keys=[reviewed_by], backref='reviewed_payouts')
 
 class WalletTransaction(db.Model):
-    """Wallet transactions for schools and VCSEs"""
+    """Wallet transactions for schools and VCFSEs"""
     __tablename__ = 'wallet_transaction'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -446,7 +446,7 @@ def send_welcome_email(user):
         user_type_names = {
             'recipient': 'Voucher Recipient',
             'vendor': 'Shop Vendor',
-            'vcse': 'VCSE Organization',
+            'vcse': 'VCFSE Organization',
             'admin': 'System Administrator'
         }
         
@@ -577,7 +577,7 @@ def health_check():
         'features': [
             'User Registration with Password Security',
             'Multi-Shop Vendor Support',
-            'VCSE Money Loading & Voucher Issuing',
+            'VCFSE Money Loading & Voucher Issuing',
             'Login Frequency Tracking',
             'Voucher Reassignment',
             'Comprehensive Reporting System',
@@ -607,9 +607,9 @@ def register():
         # VCSE-specific validation: Charity Commission number is mandatory
         if data['user_type'] == 'vcse':
             if not data.get('charity_commission_number'):
-                return jsonify({'error': 'Charity Commission Registration Number is required for VCSE organizations'}), 400
+                return jsonify({'error': 'Charity Commission Registration Number is required for VCFSE organizations'}), 400
             if not data.get('organization_name'):
-                return jsonify({'error': 'Organization name is required for VCSE organizations'}), 400
+                return jsonify({'error': 'Organization name is required for VCFSE organizations'}), 400
             
             # Verify charity number with UK Charity Commission
             verification_result = verify_charity_number(data['charity_commission_number'])
@@ -635,7 +635,7 @@ def register():
         # Create verification token
         verification_token = secrets.token_urlsafe(32)
         
-        # Determine account status: VCSE organizations are auto-approved if charity verified
+        # Determine account status: VCFSE organizations are auto-approved if charity verified
         # Since we already verified the charity number above (line 615), VCSE is approved
         account_status = 'ACTIVE'
         
@@ -692,7 +692,7 @@ def register():
                             to_email=admin.email,
                             subject=f"New VCSE Registration: {user.organization_name}",
                             html_content=f"""
-                            <h3>New VCSE Organization Registered</h3>
+                            <h3>New VCFSE Organization Registered</h3>
                             <p><strong>Organization:</strong> {user.organization_name}</p>
                             <p><strong>Charity Number:</strong> {user.charity_commission_number}</p>
                             <p><strong>Contact:</strong> {user.first_name} {user.last_name}</p>
@@ -715,7 +715,7 @@ def register():
         user_type_names = {
             'recipient': 'Voucher Recipient',
             'vendor': 'Food Vendor',
-            'vcse': 'VCSE Organization',
+            'vcse': 'VCFSE Organization',
             'admin': 'System Administrator'
         }
         user_type_name = user_type_names.get(user.user_type, 'User')
@@ -732,7 +732,7 @@ def register():
         # Return appropriate message based on account status
         if user.account_status == 'PENDING_VERIFICATION':
             return jsonify({
-                'message': 'Registration submitted! Your VCSE organization is pending verification. You will receive an email once your account is approved.',
+                'message': 'Registration submitted! Your VCFSE organization is pending verification. You will receive an email once your account is approved.',
                 'user_id': user.id,
                 'account_status': 'PENDING_VERIFICATION'
             }), 201
@@ -761,10 +761,10 @@ def login():
         if not user or not check_password_hash(user.password_hash, data['password']):
             return jsonify({'error': 'Invalid email or password'}), 401
         
-        # Check account status for VCSE organizations
+        # Check account status for VCFSE organizations
         if user.account_status == 'PENDING_VERIFICATION':
             return jsonify({
-                'error': 'Your account is pending verification. You will receive an email once your VCSE organization has been approved by our administrators.',
+                'error': 'Your account is pending verification. You will receive an email once your VCFSE organization has been approved by our administrators.',
                 'account_status': 'PENDING_VERIFICATION'
             }), 403
         
@@ -933,12 +933,12 @@ def init_db():
             print("Database initialized with default categories")
 
 # ============================================
-# VCSE Money Loading and Voucher Issuing Routes
+# VCFSE Money Loading and Voucher Issuing Routes
 # ============================================
 
 @app.route('/api/vcse/load-money', methods=['POST'])
 def vcse_load_money():
-    """VCSE organizations can load money onto their account"""
+    """VCFSE organizations can load money onto their account"""
     try:
         data = request.get_json()
         user_id = session.get('user_id')
@@ -948,7 +948,7 @@ def vcse_load_money():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can load money'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can load money'}), 403
         
         amount = data.get('amount')
         if not amount or amount <= 0:
@@ -989,7 +989,7 @@ def vcse_analytics():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can view analytics'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can view analytics'}), 403
         
         # Get all vouchers for this VCSE
         vouchers = Voucher.query.filter_by(issued_by=user_id).all()
@@ -1050,7 +1050,7 @@ def vcse_analytics():
 
 @app.route('/api/vcse/vouchers', methods=['GET'])
 def vcse_get_vouchers():
-    """Get all vouchers issued by this VCSE organization"""
+    """Get all vouchers issued by this VCFSE organization"""
     try:
         user_id = session.get('user_id')
         
@@ -1059,7 +1059,7 @@ def vcse_get_vouchers():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can access this'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can access this'}), 403
         
         # Get query parameters for filtering
         status_filter = request.args.get('status', 'all')  # all, active, redeemed, expired
@@ -1129,7 +1129,7 @@ def vcse_voucher_pdf(voucher_id):
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can download vouchers'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can download vouchers'}), 403
         
         # Get voucher
         voucher = Voucher.query.get(voucher_id)
@@ -1208,7 +1208,7 @@ def vcse_voucher_pdf(voucher_id):
             '3. The voucher cannot be exchanged for cash.',
             '4. The voucher is valid until the expiry date shown above.',
             '5. Any unused balance will be forfeited after expiry.',
-            '6. For assistance, contact your VCSE organization or visit backup-voucher-system.onrender.com'
+            '6. For assistance, contact your VCFSE organization or visit backup-voucher-system.onrender.com'
         ]
         y_pos = y_position - 0.2*inch
         for term in terms:
@@ -1250,7 +1250,7 @@ def vcse_export_vouchers():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can export vouchers'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can export vouchers'}), 403
         
         # Get all vouchers issued by this VCSE
         vouchers = Voucher.query.filter_by(issued_by=user_id).order_by(Voucher.created_at.desc()).all()
@@ -1352,7 +1352,7 @@ def school_place_order():
 
 @app.route('/api/vcse/place-order', methods=['POST'])
 def vcse_place_order():
-    """VCSE organizations can place orders for To Go items on behalf of clients"""
+    """VCFSE organizations can place orders for To Go items on behalf of clients"""
     try:
         data = request.get_json()
         user_id = session.get('user_id')
@@ -1362,7 +1362,7 @@ def vcse_place_order():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can place orders'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can place orders'}), 403
         
         # Validate required fields
         surplus_item_id = data.get('surplus_item_id')
@@ -1400,7 +1400,7 @@ def vcse_place_order():
         create_notification(
             item.vendor_id,
             'New Order Received',
-            f'VCSE organization has ordered {quantity}x {item.item_name} for client {client_name}',
+            f'VCFSE organization has ordered {quantity}x {item.item_name} for client {client_name}',
             'info'
         )
         
@@ -1415,7 +1415,7 @@ def vcse_place_order():
 
 @app.route('/api/vcse/issue-voucher', methods=['POST'])
 def vcse_issue_voucher():
-    """VCSE organizations can issue vouchers to recipients"""
+    """VCFSE organizations can issue vouchers to recipients"""
     try:
         data = request.get_json()
         user_id = session.get('user_id')
@@ -1425,7 +1425,7 @@ def vcse_issue_voucher():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can issue vouchers'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can issue vouchers'}), 403
         
         # Validate required fields
         recipient_first_name = data.get('recipient_first_name')
@@ -1553,7 +1553,7 @@ def vcse_issue_voucher():
 
 @app.route('/api/vcse/issue-vouchers-bulk', methods=['POST'])
 def vcse_issue_vouchers_bulk():
-    """VCSE organizations can issue vouchers in bulk via CSV upload"""
+    """VCFSE organizations can issue vouchers in bulk via CSV upload"""
     try:
         user_id = session.get('user_id')
         
@@ -1562,7 +1562,7 @@ def vcse_issue_vouchers_bulk():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can issue vouchers'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can issue vouchers'}), 403
         
         # Check if file was uploaded
         if 'file' not in request.files:
@@ -1970,7 +1970,7 @@ def admin_export_impact_report():
 
 @app.route('/api/admin/check-low-balances', methods=['GET'])
 def admin_check_low_balances():
-    """Check for VCSE organizations with low balances"""
+    """Check for VCFSE organizations with low balances"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -2039,7 +2039,7 @@ def admin_send_balance_alerts():
 
 @app.route('/api/admin/balance-summary', methods=['GET'])
 def admin_get_balance_summary():
-    """Get balance summary for all VCSE organizations"""
+    """Get balance summary for all VCFSE organizations"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -2071,7 +2071,7 @@ def vcse_get_balance():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can view balance'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can view balance'}), 403
         
         return jsonify({
             'balance': user.balance,
@@ -2105,7 +2105,7 @@ def create_payment_intent():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can load funds'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can load funds'}), 403
         
         data = request.get_json()
         amount = data.get('amount')
@@ -2171,7 +2171,7 @@ def verify_payment():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can load funds'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can load funds'}), 403
         
         data = request.get_json()
         payment_intent_id = data.get('payment_intent_id')
@@ -2257,7 +2257,7 @@ def get_payment_history():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can view payment history'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can view payment history'}), 403
         
         # Get query parameters
         limit = request.args.get('limit', 50, type=int)
@@ -2987,7 +2987,7 @@ def admin_reassign_voucher(voucher_id):
 
 @app.route('/api/items/claim', methods=['POST'])
 def claim_surplus_item():
-    """VCSE organization claims a surplus food item"""
+    """VCFSE organization claims a surplus food item"""
     try:
         data = request.get_json()
         user_id = session.get('user_id')
@@ -2997,7 +2997,7 @@ def claim_surplus_item():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can claim items'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can claim items'}), 403
         
         item_id = data.get('item_id')
         if not item_id:
@@ -3262,7 +3262,7 @@ def vcse_generate_report():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCSE organizations can generate reports'}), 403
+            return jsonify({'error': 'Only VCFSE organizations can generate reports'}), 403
         
         # Get date range
         date_from = datetime.strptime(data.get('date_from', '2024-01-01'), '%Y-%m-%d').date()
@@ -3750,7 +3750,7 @@ def delete_surplus_item(item_id):
 
 @app.route('/api/admin/vcse-organizations', methods=['GET'])
 def get_vcse_organizations():
-    """Get all VCSE organizations with their balances"""
+    """Get all VCFSE organizations with their balances"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -3760,7 +3760,7 @@ def get_vcse_organizations():
         if not user or user.user_type != 'admin':
             return jsonify({'error': 'Admin access required'}), 403
         
-        # Get all VCSE organizations
+        # Get all VCFSE organizations
         vcse_orgs = User.query.filter_by(user_type='vcse').all()
         
         result = []
@@ -3778,7 +3778,7 @@ def get_vcse_organizations():
         return jsonify(result), 200
         
     except Exception as e:
-        return jsonify({'error': f'Failed to get VCSE organizations: {str(e)}'}), 500
+        return jsonify({'error': f'Failed to get VCFSE organizations: {str(e)}'}), 500
 
 
 @app.route('/api/admin/schools', methods=['GET'])
@@ -3863,7 +3863,7 @@ def get_recipients():
 
 @app.route('/api/admin/allocate-funds', methods=['POST'])
 def allocate_funds():
-    """Admin allocates funds to a VCSE organization or School"""
+    """Admin allocates funds to a VCFSE organization or School"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -3962,7 +3962,7 @@ def get_fund_allocations():
 
 @app.route('/api/vcse/balance', methods=['GET'])
 def get_vcse_balance():
-    """Get current VCSE organization balance"""
+    """Get current VCFSE organization balance"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -5235,7 +5235,7 @@ def delete_school(school_id):
 
 @app.route('/api/admin/vcse/<int:vcse_id>', methods=['PUT'])
 def edit_vcse(vcse_id):
-    """Admin edits a VCSE organization"""
+    """Admin edits a VCFSE organization"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -5245,10 +5245,10 @@ def edit_vcse(vcse_id):
         if not user or user.user_type != 'admin':
             return jsonify({'error': 'Admin access required'}), 403
         
-        # Get the VCSE organization
+        # Get the VCFSE organization
         vcse = User.query.get(vcse_id)
         if not vcse or vcse.user_type != 'vcse':
-            return jsonify({'error': 'VCSE organization not found'}), 404
+            return jsonify({'error': 'VCFSE organization not found'}), 404
         
         # Get update data
         data = request.get_json()
@@ -5273,7 +5273,7 @@ def edit_vcse(vcse_id):
         db.session.commit()
         
         return jsonify({
-            'message': 'VCSE organization updated successfully',
+            'message': 'VCFSE organization updated successfully',
             'vcse': {
                 'id': vcse.id,
                 'name': vcse.organization_name,
@@ -5285,12 +5285,12 @@ def edit_vcse(vcse_id):
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': f'Failed to update VCSE organization: {str(e)}'}), 500
+        return jsonify({'error': f'Failed to update VCFSE organization: {str(e)}'}), 500
 
 
 @app.route('/api/admin/vcse/<int:vcse_id>', methods=['DELETE'])
 def delete_vcse(vcse_id):
-    """Admin deletes a VCSE organization"""
+    """Admin deletes a VCFSE organization"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -5300,16 +5300,16 @@ def delete_vcse(vcse_id):
         if not user or user.user_type != 'admin':
             return jsonify({'error': 'Admin access required'}), 403
         
-        # Get the VCSE organization
+        # Get the VCFSE organization
         vcse = User.query.get(vcse_id)
         if not vcse or vcse.user_type != 'vcse':
-            return jsonify({'error': 'VCSE organization not found'}), 404
+            return jsonify({'error': 'VCFSE organization not found'}), 404
         
         # Check if VCSE has issued any vouchers
         vouchers_count = Voucher.query.filter_by(issued_by=vcse_id).count()
         if vouchers_count > 0:
             return jsonify({
-                'error': f'Cannot delete VCSE organization. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
+                'error': f'Cannot delete VCFSE organization. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
             }), 400
         
         # Delete associated records first to avoid foreign key constraints
@@ -5319,18 +5319,18 @@ def delete_vcse(vcse_id):
         # Delete notifications
         Notification.query.filter_by(user_id=vcse_id).delete()
         
-        # Delete the VCSE organization
+        # Delete the VCFSE organization
         db.session.delete(vcse)
         db.session.commit()
         
         return jsonify({
-            'message': 'VCSE organization deleted successfully',
+            'message': 'VCFSE organization deleted successfully',
             'organization_name': vcse.organization_name or vcse.first_name
         }), 200
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': f'Failed to delete VCSE organization: {str(e)}'}), 500
+        return jsonify({'error': f'Failed to delete VCFSE organization: {str(e)}'}), 500
 
 
 @app.route('/api/admin/shops/<int:shop_id>', methods=['PUT'])
