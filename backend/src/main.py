@@ -409,6 +409,39 @@ init_notifications_system(db, Notification, NotificationPreference, User, socket
 app.register_blueprint(notifications_bp)
 init_socketio(socketio)
 
+# Initialize Analytics Dashboard
+from analytics_dashboard import analytics_bp
+app.register_blueprint(analytics_bp)
+
+# Initialize Expiration Reminders System
+from expiration_reminders import expiration_bp, init_expiration_reminders
+init_expiration_reminders(db, Voucher, User, email_service)
+app.register_blueprint(expiration_bp)
+
+# Initialize Export System
+from export_reports import export_bp, init_export_system
+init_export_system(db, User, Voucher, ToGoItem, Transaction)
+app.register_blueprint(export_bp)
+
+# Initialize Audit Log System
+from audit_log import audit_bp, init_audit_system, log_activity
+init_audit_system(db, User)
+app.register_blueprint(audit_bp)
+
+# Initialize Security Enhancements
+from security_enhancements import init_security_enhancements, rate_limit, csrf_protect
+init_security_enhancements(app)
+
+# Initialize Bulk Import System
+from bulk_import import bulk_import_bp, init_bulk_import
+init_bulk_import(db, User, Voucher, email_service)
+app.register_blueprint(bulk_import_bp)
+
+# Initialize Vendor Metrics System
+from vendor_metrics import vendor_metrics_bp, init_vendor_metrics
+init_vendor_metrics(db, User, Voucher, SurplusItem, WalletTransaction, VendorShop)
+app.register_blueprint(vendor_metrics_bp)
+
 # Initialize notifications migration endpoint
 from migrate_notifications import create_notifications_migration_endpoint
 create_notifications_migration_endpoint(app, db)

@@ -5,6 +5,7 @@ import LandingPage from './LandingPage'
 import LanguageSelector from './components/LanguageSelector'
 import { GlobalSearchTab, TransactionSearchTab, BroadcastTab, FundAllocationTab } from './AdminEnhancements'
 import VCSEVerificationAdmin from './VCSEVerificationAdmin'
+import AnalyticsDashboard from './AnalyticsDashboard'
 import { NotificationBell } from './NotificationSystem'
 import PasswordChangeModal from './components/PasswordChangeModal'
 import QRScanner from './components/QRScanner'
@@ -1303,6 +1304,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.localShops')}</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.allToGo')}</button>
           <button onClick={() => setActiveTab('payouts')} style={activeTab === 'payouts' ? styles.activeTab : styles.tab}>💰 {t('payout.managePayout')}</button>
+          <button onClick={() => setActiveTab('analytics')} style={activeTab === 'analytics' ? styles.activeTab : styles.tab}>📈 Analytics</button>
           <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📊 Reports</button>
           <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ {t('dashboard.tabs.settings')}</button>
         </div>
@@ -2385,6 +2387,10 @@ function AdminDashboard({ user, onLogout }) {
               )}
             </div>
           </div>
+        )}
+        
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard apiCall={apiCall} />
         )}
         
         {activeTab === 'reports' && (
