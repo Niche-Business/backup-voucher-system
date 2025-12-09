@@ -6534,7 +6534,9 @@ def check_and_migrate_database():
             # Don't crash the app if migration fails
             pass
 
+# Run migration automatically when module is imported (for Gunicorn/production)
+check_and_migrate_database()
+
 if __name__ == '__main__':
-    check_and_migrate_database()
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
 
