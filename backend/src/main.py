@@ -421,7 +421,7 @@ app.register_blueprint(expiration_bp)
 
 # Initialize Export System
 from export_reports import export_bp, init_export_system
-init_export_system(db, User, Voucher, ToGoItem, Transaction)
+init_export_system(db, User, Voucher, SurplusItem, Transaction)
 app.register_blueprint(export_bp)
 
 # Initialize Audit Log System
@@ -5436,7 +5436,7 @@ def admin_delete_shop(shop_id):
             return jsonify({'error': 'Shop not found'}), 404
         
         # Check if shop has to-go items
-        togo_count = ToGoItem.query.filter_by(shop_id=shop_id).count()
+        togo_count = SurplusItem.query.filter_by(shop_id=shop_id).count()
         if togo_count > 0:
             return jsonify({
                 'error': f'Cannot delete shop. It has {togo_count} to-go item(s). Please remove items first.'
