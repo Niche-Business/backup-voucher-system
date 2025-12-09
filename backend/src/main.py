@@ -2207,20 +2207,29 @@ def email_diagnostic():
         if not user or user.user_type != 'admin':
             return jsonify({'error': 'Admin access required'}), 403
         
-        gmail_user = os.getenv('GMAIL_USER', '')
-        gmail_password = os.getenv('GMAIL_APP_PASSWORD', '')
-        from_email = os.getenv('FROM_EMAIL', gmail_user)
+        gmail_user_raw = os.getenv('GMAIL_USER', '')
+        gmail_password_raw = os.getenv('GMAIL_APP_PASSWORD', '')
+        from_email_raw = os.getenv('FROM_EMAIL', gmail_user_raw)
+        
+        # Show both raw and sanitized values
+        gmail_user_sanitized = gmail_user_raw.strip() if gmail_user_raw else ''
+        gmail_password_sanitized = gmail_password_raw.strip() if gmail_password_raw else ''
         
         diagnostic = {
             'email_service_enabled': email_service.enabled,
-            'gmail_user_configured': bool(gmail_user),
-            'gmail_user': gmail_user if gmail_user else 'Not set',
-            'gmail_app_password_configured': bool(gmail_password),
-            'gmail_app_password_length': len(gmail_password) if gmail_password else 0,
-            'from_email': from_email if from_email else 'Not set',
+            'gmail_user_raw': repr(gmail_user_raw) if gmail_user_raw else 'Not set',
+            'gmail_user_sanitized': gmail_user_sanitized if gmail_user_sanitized else 'Not set',
+            'gmail_user_has_whitespace': gmail_user_raw != gmail_user_sanitized if gmail_user_raw else False,
+            'gmail_app_password_configured': bool(gmail_password_raw),
+            'gmail_app_password_length_raw': len(gmail_password_raw) if gmail_password_raw else 0,
+            'gmail_app_password_length_sanitized': len(gmail_password_sanitized) if gmail_password_sanitized else 0,
+            'gmail_app_password_has_whitespace': gmail_password_raw != gmail_password_sanitized if gmail_password_raw else False,
+            'from_email': from_email_raw.strip() if from_email_raw else 'Not set',
             'smtp_server': email_service.smtp_server,
             'smtp_port': email_service.smtp_port,
-            'app_url': email_service.app_url
+            'app_url': email_service.app_url,
+            'smtp_user_in_service': email_service.smtp_user,
+            'smtp_password_length_in_service': len(email_service.smtp_password) if email_service.smtp_password else 0
         }
         
         return jsonify(diagnostic), 200
