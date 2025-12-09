@@ -847,6 +847,38 @@ def logout():
     except Exception as e:
         return jsonify({'error': f'Logout failed: {str(e)}'}), 500
 
+@app.route('/api/check-auth', methods=['GET'])
+def check_auth():
+    """Check if user is authenticated and return user data"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'authenticated': False}), 200
+        
+        user = User.query.get(user_id)
+        
+        if not user:
+            session.clear()
+            return jsonify({'authenticated': False}), 200
+        
+        return jsonify({
+            'authenticated': True,
+            'user': {
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'user_type': user.user_type,
+                'organization_name': user.organization_name,
+                'shop_name': user.shop_name,
+                'balance': user.balance
+            }
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'authenticated': False, 'error': str(e)}), 200
+
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     """Request password reset link"""
