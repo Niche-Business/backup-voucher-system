@@ -443,6 +443,10 @@ from vendor_metrics import vendor_metrics_bp, init_vendor_metrics
 init_vendor_metrics(db, User, Voucher, SurplusItem, WalletTransaction, VendorShop)
 app.register_blueprint(vendor_metrics_bp)
 
+# Initialize Bulk Upload System for VCFSE/Schools
+from bulk_upload import bulk_upload_bp
+app.register_blueprint(bulk_upload_bp)
+
 # Initialize notifications migration endpoint
 from migrate_notifications import create_notifications_migration_endpoint
 create_notifications_migration_endpoint(app, db)

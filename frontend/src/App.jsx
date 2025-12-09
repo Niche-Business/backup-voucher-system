@@ -4280,8 +4280,108 @@ function VCSEDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0 0'}}>Use these funds to issue vouchers to recipients</p>
             </div>
             
+            {/* Bulk Upload Section */}
+            <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', marginBottom: '30px', border: '2px solid #ff9800'}}>
+              <h3 style={{marginTop: 0, color: '#e65100'}}>📤 Bulk Upload Recipients</h3>
+              <p style={{marginBottom: '15px', color: '#666'}}>Upload multiple recipients at once using a CSV file. Download the template below to get started.</p>
+              
+              <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '15px'}}>
+                <a 
+                  href="/api/vcse/download-recipient-template"
+                  download
+                  style={{...styles.primaryButton, textDecoration: 'none', backgroundColor: '#4CAF50'}}
+                >
+                  📥 Download CSV Template
+                </a>
+                
+                <label style={{...styles.primaryButton, backgroundColor: '#ff9800', cursor: 'pointer'}}>
+                  📁 Choose CSV File
+                  <input 
+                    type="file" 
+                    accept=".csv"
+                    style={{display: 'none'}}
+                    onChange={async (e) => {
+                      const file = e.target.files[0]
+                      if (!file) return
+                      
+                      const formData = new FormData()
+                      formData.append('file', file)
+                      
+                      try {
+                        const response = await fetch('/api/vcse/bulk-upload-recipients', {
+                          method: 'POST',
+                          credentials: 'include',
+                          body: formData
+                        })
+                        
+                        const data = await response.json()
+                        
+                        if (response.ok) {
+                          const summary = data.summary
+                          let message = `✅ Bulk upload completed!\n\n`
+                          message += `Created: ${summary.created} recipients\n`
+                          if (summary.duplicates > 0) message += `Skipped (duplicates): ${summary.duplicates}\n`
+                          if (summary.failed > 0) message += `Failed: ${summary.failed}\n`
+                          
+                          if (data.created.length > 0) {
+                            message += `\nNew recipients:\n`
+                            data.created.slice(0, 5).forEach(r => {
+                              message += `- ${r.name} (${r.email})\n`
+                            })
+                            if (data.created.length > 5) {
+                              message += `... and ${data.created.length - 5} more\n`
+                            }
+                          }
+                          
+                          alert(message)
+                          e.target.value = '' // Reset file input
+                        } else {
+                          let errorMsg = `❌ Upload failed: ${data.error}\n\n`
+                          
+                          if (data.validation_errors && data.validation_errors.length > 0) {
+                            errorMsg += `Validation errors found in ${data.validation_errors.length} rows:\n\n`
+                            data.validation_errors.slice(0, 5).forEach(err => {
+                              errorMsg += `Row ${err.row}: ${err.errors.join(', ')}\n`
+                            })
+                            if (data.validation_errors.length > 5) {
+                              errorMsg += `... and ${data.validation_errors.length - 5} more errors\n`
+                            }
+                          }
+                          
+                          if (data.duplicates && data.duplicates.length > 0) {
+                            errorMsg += `\nDuplicate emails (${data.duplicates.length}):\n`
+                            data.duplicates.slice(0, 3).forEach(dup => {
+                              errorMsg += `- ${dup.email}\n`
+                            })
+                          }
+                          
+                          alert(errorMsg)
+                          e.target.value = '' // Reset file input
+                        }
+                      } catch (error) {
+                        alert(`Error uploading file: ${error.message}`)
+                        e.target.value = '' // Reset file input
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+              
+              <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '8px'}}>
+                <strong style={{display: 'block', marginBottom: '10px'}}>📋 CSV Format Requirements:</strong>
+                <ul style={{margin: '5px 0', paddingLeft: '20px', color: '#666'}}>
+                  <li><strong>Required columns:</strong> email, first_name, last_name</li>
+                  <li><strong>Optional columns:</strong> phone, address, city, postcode</li>
+                  <li>First row must be the header with column names</li>
+                  <li>Each recipient will receive a welcome email with login credentials</li>
+                  <li>Duplicate emails will be automatically skipped</li>
+                </ul>
+              </div>
+            </div>
+            
             {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
             
+            <h3 style={{marginTop: '20px', marginBottom: '15px'}}>📝 Issue Single Voucher</h3>
             <form onSubmit={handleIssueVoucher} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
                 <div>
