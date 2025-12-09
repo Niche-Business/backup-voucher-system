@@ -2195,6 +2195,39 @@ def stripe_diagnostic():
     except Exception as e:
         return jsonify({'error': f'Diagnostic failed: {str(e)}'}), 500
 
+@app.route('/api/admin/email-diagnostic', methods=['GET'])
+def email_diagnostic():
+    """Admin-only endpoint to diagnose email configuration issues"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        gmail_user = os.getenv('GMAIL_USER', '')
+        gmail_password = os.getenv('GMAIL_APP_PASSWORD', '')
+        from_email = os.getenv('FROM_EMAIL', gmail_user)
+        
+        diagnostic = {
+            'email_service_enabled': email_service.enabled,
+            'gmail_user_configured': bool(gmail_user),
+            'gmail_user': gmail_user if gmail_user else 'Not set',
+            'gmail_app_password_configured': bool(gmail_password),
+            'gmail_app_password_length': len(gmail_password) if gmail_password else 0,
+            'from_email': from_email if from_email else 'Not set',
+            'smtp_server': email_service.smtp_server,
+            'smtp_port': email_service.smtp_port,
+            'app_url': email_service.app_url
+        }
+        
+        return jsonify(diagnostic), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Email diagnostic failed: {str(e)}'}), 500
+
 @app.route('/api/payment/create-intent', methods=['POST'])
 def create_payment_intent():
     """Create a Stripe Payment Intent for VCFSE fund loading"""
