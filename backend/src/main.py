@@ -6476,6 +6476,33 @@ def run_wallet_migration():
             'details': results
         }), 500
 
+# Auto-migration on startup
+def check_and_migrate_database():
+    """Check and add missing database columns on startup"""
+    with app.app_context():
+        try:
+            from sqlalchemy import inspect
+            inspector = inspect(db.engine)
+            
+            # Check if redeemed_at_shop_id column exists in voucher table
+            voucher_columns = [col['name'] for col in inspector.get_columns('voucher')]
+            
+            if 'redeemed_at_shop_id' not in voucher_columns:
+                print("⚠ Missing column 'redeemed_at_shop_id' - adding now...")
+                db.session.execute(text(
+                    "ALTER TABLE voucher ADD COLUMN redeemed_at_shop_id INTEGER"
+                ))
+                db.session.commit()
+                print("✓ Successfully added 'redeemed_at_shop_id' column")
+            else:
+                print("✓ Database schema is up to date")
+                
+        except Exception as e:
+            print(f"⚠ Migration check failed: {str(e)}")
+            # Don't crash the app if migration fails
+            pass
+
 if __name__ == '__main__':
+    check_and_migrate_database()
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
 
