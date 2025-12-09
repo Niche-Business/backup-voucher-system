@@ -421,7 +421,7 @@ app.register_blueprint(expiration_bp)
 
 # Initialize Export System
 from export_reports import export_bp, init_export_system
-init_export_system(db, User, Voucher, SurplusItem, Transaction)
+init_export_system(db, User, Voucher, SurplusItem, WalletTransaction)
 app.register_blueprint(export_bp)
 
 # Initialize Audit Log System
