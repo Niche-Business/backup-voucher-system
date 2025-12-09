@@ -2237,6 +2237,86 @@ def email_diagnostic():
     except Exception as e:
         return jsonify({'error': f'Email diagnostic failed: {str(e)}'}), 500
 
+@app.route('/api/admin/test-email', methods=['POST'])
+def test_email():
+    """Admin-only endpoint to test email sending"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        data = request.get_json()
+        test_email_address = data.get('email', user.email)
+        
+        # Try to send a test email
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        
+        try:
+            # Get sanitized credentials
+            gmail_user = os.getenv('GMAIL_USER', '').strip()
+            gmail_password = os.getenv('GMAIL_APP_PASSWORD', '').strip()
+            
+            if not gmail_user or not gmail_password:
+                return jsonify({
+                    'success': False,
+                    'error': 'Gmail credentials not configured'
+                }), 500
+            
+            # Create test message
+            message = MIMEMultipart('alternative')
+            message['From'] = f"BAK UP Test <{gmail_user}>"
+            message['To'] = test_email_address
+            message['Subject'] = "🧪 BAK UP Email Test"
+            
+            html_content = """
+            <html>
+            <body>
+                <h2>✅ Email Service is Working!</h2>
+                <p>This is a test email from the BAK UP E-Voucher System.</p>
+                <p>If you received this, email sending is configured correctly.</p>
+            </body>
+            </html>
+            """
+            
+            html_part = MIMEText(html_content, 'html')
+            message.attach(html_part)
+            
+            # Try to send
+            with smtplib.SMTP('smtp.gmail.com', 587, timeout=10) as server:
+                server.starttls()
+                server.login(gmail_user, gmail_password)
+                server.send_message(message)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Test email sent successfully to {test_email_address}',
+                'smtp_user': gmail_user
+            }), 200
+            
+        except smtplib.SMTPAuthenticationError as e:
+            return jsonify({
+                'success': False,
+                'error': 'SMTP Authentication Failed',
+                'details': str(e),
+                'suggestion': 'Check if Gmail App Password is correct and not expired'
+            }), 500
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'error': 'Email sending failed',
+                'details': str(e)
+            }), 500
+        
+    except Exception as e:
+        return jsonify({'error': f'Test email failed: {str(e)}'}), 500
+
 @app.route('/api/payment/create-intent', methods=['POST'])
 def create_payment_intent():
     """Create a Stripe Payment Intent for VCFSE fund loading"""
