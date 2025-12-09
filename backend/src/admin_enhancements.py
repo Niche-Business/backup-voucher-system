@@ -376,7 +376,7 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
     @app.route('/api/admin/allocate-funds', methods=['POST'])
     def admin_allocate_funds():
         """
-        Allocate funds to VCSE Organizations or Schools
+        Allocate funds to VCFSE Organizations or Schools
         """
         try:
             user_id = session.get('user_id')

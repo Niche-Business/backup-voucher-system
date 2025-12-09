@@ -77,7 +77,7 @@ def get_user_notifications():
         
         # Determine target group based on user type
         if user.user_type == 'vcse':
-            # VCSEs see both discounted and free items
+            # VCFSEs see both discounted and free items
             notifications = _Notification.query.filter(
                 (_Notification.target_group == 'vcse') | 
                 (_Notification.target_group == 'all')
@@ -281,12 +281,12 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
     """
     try:
         if item_type == 'discount':
-            # Discounted items go to recipients, schools, and VCSEs
+            # Discounted items go to recipients, schools, and VCFSEs
             notification_type = 'discounted_item'
             target_groups = ['recipient', 'school', 'vcse']
             message = f"New discounted item available: {item_name} at {shop_name}"
         else:  # free
-            # Free items go only to VCSEs
+            # Free items go only to VCFSEs
             notification_type = 'free_item'
             target_groups = ['vcse']
             message = f"New free item available for collection: {item_name} at {shop_name}"

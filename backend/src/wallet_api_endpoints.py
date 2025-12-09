@@ -16,7 +16,7 @@ def get_school_wallet_balance():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         # Get transaction summary
@@ -65,7 +65,7 @@ def get_school_wallet_transactions():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         # Get query parameters for filtering
@@ -136,7 +136,7 @@ def school_issue_voucher():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         data = request.json
@@ -247,7 +247,7 @@ def get_school_vouchers():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         # Get query parameters
@@ -303,7 +303,7 @@ def get_school_funds_summary():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         from datetime import timedelta
@@ -358,7 +358,7 @@ def get_school_voucher_spend():
     
     user = User.query.get(user_id)
     if not user or user.user_type not in ['school', 'vcse']:
-        return jsonify({'error': 'Unauthorized - School/VCSE access only'}), 403
+        return jsonify({'error': 'Unauthorized - School/VCFSE access only'}), 403
     
     try:
         from datetime import timedelta
@@ -433,7 +433,7 @@ def admin_allocate_funds_to_school():
         # Get school user
         school_user = User.query.get(school_id)
         if not school_user or school_user.user_type not in ['school', 'vcse']:
-            return jsonify({'error': 'School/VCSE not found'}), 404
+            return jsonify({'error': 'School/VCFSE not found'}), 404
         
         # Create wallet transaction
         balance_before = school_user.balance

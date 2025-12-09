@@ -1,6 +1,6 @@
 """
 Bulk Voucher Issuance Handler
-Handles CSV upload and bulk voucher creation for VCSE organizations
+Handles CSV upload and bulk voucher creation for VCFSE organizations
 """
 
 import csv

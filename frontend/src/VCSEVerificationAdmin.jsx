@@ -36,7 +36,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
   };
 
   const handleApprove = async (vcse) => {
-    if (!confirm(`Approve ${vcse.organization_name}?\n\nThis will grant them access to the VCSE portal.`)) {
+    if (!confirm(`Approve ${vcse.organization_name}?\n\nThis will grant them access to the VCFSE portal.`)) {
       return;
     }
 
@@ -49,7 +49,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('Error approving VCSE: ' + error.message);
+      setMessage('Error approving VCFSE: ' + error.message);
     }
   };
 
@@ -78,7 +78,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('Error rejecting VCSE: ' + error.message);
+      setMessage('Error rejecting VCFSE: ' + error.message);
     }
   };
 
@@ -242,8 +242,8 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1>🔍 VCSE Verification Queue</h1>
-        <p style={{color: '#666'}}>Review and approve VCSE organization registrations</p>
+        <h1>🔍 VCFSE Verification Queue</h1>
+        <p style={{color: '#666'}}>Review and approve VCFSE organization registrations</p>
       </div>
 
       {message && <div style={styles.message}>{message}</div>}
@@ -274,7 +274,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       ) : pendingVCSEs.length === 0 ? (
         <div style={{...styles.vcseCard, textAlign: 'center', padding: '40px'}}>
           <h3>✅ No Pending Verifications</h3>
-          <p style={{color: '#666'}}>All VCSE registrations have been processed</p>
+          <p style={{color: '#666'}}>All VCFSE registrations have been processed</p>
         </div>
       ) : (
         pendingVCSEs.map(vcse => (
@@ -367,7 +367,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       {showRejectModal && (
         <div style={styles.modal} onClick={() => setShowRejectModal(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h2>Reject VCSE Application</h2>
+            <h2>Reject VCFSE Application</h2>
             <p><strong>Organization:</strong> {selectedVCSE?.organization_name}</p>
             <p><strong>Charity Number:</strong> {selectedVCSE?.charity_commission_number}</p>
             

@@ -187,7 +187,7 @@ const LandingPage = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* For VCSE Organizations */}
+          {/* For VCFSE Organizations */}
           <div style={{
             backgroundColor: '#f9f9f9',
             padding: '30px',

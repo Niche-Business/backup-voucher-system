@@ -82,7 +82,7 @@ class EmailService:
         user_type_names = {
             'recipient': 'Voucher Recipient',
             'vendor': 'Food Vendor',
-            'vcse': 'VCSE Organization',
+            'vcse': 'VCFSE Organization',
             'school': 'School/Care Organization',
             'admin': 'Administrator'
         }
@@ -709,8 +709,8 @@ class EmailService:
         )
 
     def send_vcse_verification_pending_email(self, user_email, user_name, organization_name, charity_number):
-        """Send email to VCSE organization when registration is pending verification"""
-        subject = "VCSE Registration – Verification in Progress"
+        """Send email to VCFSE organization when registration is pending verification"""
+        subject = "VCFSE Registration – Verification in Progress"
         
         html_content = f"""
         <!DOCTYPE html>
@@ -735,7 +735,7 @@ class EmailService:
                 <div class="content">
                     <h2>Thank you for registering, {user_name}!</h2>
                     
-                    <p>We have received your VCSE organization registration for the Community E-Voucher Scheme.</p>
+                    <p>We have received your VCFSE organization registration for the Community E-Voucher Scheme.</p>
                     
                     <div class="info-box">
                         <strong>Organization Details Submitted:</strong><br>
@@ -774,8 +774,8 @@ class EmailService:
         return self.send_email(user_email, subject, html_content)
     
     def send_vcse_approval_email(self, user_email, user_name, organization_name, login_url):
-        """Send email to VCSE organization when account is approved"""
-        subject = "✅ VCSE Account Approved – Welcome to BAK UP E-Voucher Scheme"
+        """Send email to VCFSE organization when account is approved"""
+        subject = "✅ VCFSE Account Approved – Welcome to BAK UP E-Voucher Scheme"
         
         html_content = f"""
         <!DOCTYPE html>
@@ -804,15 +804,15 @@ class EmailService:
                     
                     <p>Dear {user_name},</p>
                     
-                    <p>Congratulations! Your VCSE organization <strong>{organization_name}</strong> has been successfully verified and approved to join the Community E-Voucher Scheme.</p>
+                    <p>Congratulations! Your VCFSE organization <strong>{organization_name}</strong> has been successfully verified and approved to join the Community E-Voucher Scheme.</p>
                     
-                    <p>You can now access your VCSE portal to:</p>
+                    <p>You can now access your VCFSE portal to:</p>
                     <ul>
                         <li>Issue vouchers to families in need</li>
                         <li>Manage your organization's voucher allocation</li>
                         <li>Access free food items from local shops</li>
                         <li>Track voucher usage and impact</li>
-                        <li>Collaborate with other VCSE organizations</li>
+                        <li>Collaborate with other VCFSE organizations</li>
                     </ul>
                     
                     <div style="text-align: center;">
@@ -838,8 +838,8 @@ class EmailService:
         return self.send_email(user_email, subject, html_content)
     
     def send_vcse_rejection_email(self, user_email, user_name, organization_name, rejection_reason):
-        """Send email to VCSE organization when account is rejected"""
-        subject = "VCSE Registration Update"
+        """Send email to VCFSE organization when account is rejected"""
+        subject = "VCFSE Registration Update"
         
         html_content = f"""
         <!DOCTYPE html>
@@ -858,12 +858,12 @@ class EmailService:
             <div class="container">
                 <div class="header">
                     <h1>BAK UP CIC</h1>
-                    <p>VCSE Registration Update</p>
+                    <p>VCFSE Registration Update</p>
                 </div>
                 <div class="content">
                     <p>Dear {user_name},</p>
                     
-                    <p>Thank you for your interest in joining the Community E-Voucher Scheme as a VCSE organization.</p>
+                    <p>Thank you for your interest in joining the Community E-Voucher Scheme as a VCFSE organization.</p>
                     
                     <div class="warning-box">
                         <strong>Application Status:</strong> Unfortunately, we are unable to approve your registration at this time.

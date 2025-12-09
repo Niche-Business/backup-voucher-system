@@ -91,7 +91,7 @@ class User(db.Model):
     verified_at = db.Column(db.DateTime)  # When account was verified by admin
     verified_by_admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Admin who verified
     balance = db.Column(db.Float, default=0.0)  # For VCFSE organizations to load money
-    allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCSE
+    allocated_balance = db.Column(db.Float, default=0.0)  # Funds allocated by admin to VCFSE
     
     # Food To Go preferred shop for recipients
     preferred_shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'))  # Recipient's preferred shop
@@ -121,6 +121,7 @@ class Voucher(db.Model):
     status = db.Column(db.String(20), default='active')  # active, redeemed, expired, reassigned
     redeemed_at = db.Column(db.DateTime)
     redeemed_by_vendor = db.Column(db.Integer, db.ForeignKey('user.id'))
+    redeemed_at_shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'))  # Shop where voucher was redeemed
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     reassignment_count = db.Column(db.Integer, default=0)  # Track number of reassignments
@@ -312,7 +313,7 @@ class WalletTransaction(db.Model):
     creator = db.relationship('User', foreign_keys=[created_by])
 
 class PaymentTransaction(db.Model):
-    """Stripe payment transactions for VCSE fund loading"""
+    """Stripe payment transactions for VCFSE fund loading"""
     __tablename__ = 'payment_transaction'
     id = db.Column(db.Integer, primary_key=True)
     
@@ -400,7 +401,7 @@ app.register_blueprint(wallet_bp)
 # Note: Transaction model doesn't exist yet, so we pass None for now
 init_admin_enhancements(app, db, User, VendorShop, Voucher, None, email_service)
 
-# Initialize VCSE Verification System
+# Initialize VCFSE Verification System
 init_vcse_verification(app, db, User, email_service)
 
 # Initialize Notifications System
@@ -637,7 +638,7 @@ def register():
             if not data.get(field):
                 return jsonify({'error': f'{field} is required'}), 400
         
-        # VCSE-specific validation: Charity Commission number is mandatory
+        # VCFSE-specific validation: Charity Commission number is mandatory
         if data['user_type'] == 'vcse':
             if not data.get('charity_commission_number'):
                 return jsonify({'error': 'Charity Commission Registration Number is required for VCFSE organizations'}), 400
@@ -669,7 +670,7 @@ def register():
         verification_token = secrets.token_urlsafe(32)
         
         # Determine account status: VCFSE organizations are auto-approved if charity verified
-        # Since we already verified the charity number above (line 615), VCSE is approved
+        # Since we already verified the charity number above (line 615), VCFSE is approved
         account_status = 'ACTIVE'
         
         # Create new user
@@ -716,14 +717,14 @@ def register():
                 user_type=user.user_type
             )
             
-            # Notify admin when VCSE registers (informational only)
+            # Notify admin when VCFSE registers (informational only)
             if user.user_type == 'vcse':
                 admin_users = User.query.filter_by(user_type='admin').all()
                 for admin in admin_users:
                     try:
                         email_service.send_email(
                             to_email=admin.email,
-                            subject=f"New VCSE Registration: {user.organization_name}",
+                            subject=f"New VCFSE Registration: {user.organization_name}",
                             html_content=f"""
                             <h3>New VCFSE Organization Registered</h3>
                             <p><strong>Organization:</strong> {user.organization_name}</p>
@@ -1010,7 +1011,7 @@ def vcse_load_money():
 
 @app.route('/api/vcse/analytics', methods=['GET'])
 def vcse_analytics():
-    """Get analytics data for VCSE dashboard"""
+    """Get analytics data for VCFSE dashboard"""
     try:
         from sqlalchemy import func
         from datetime import datetime, timedelta
@@ -1024,7 +1025,7 @@ def vcse_analytics():
         if not user or user.user_type != 'vcse':
             return jsonify({'error': 'Only VCFSE organizations can view analytics'}), 403
         
-        # Get all vouchers for this VCSE
+        # Get all vouchers for this VCFSE
         vouchers = Voucher.query.filter_by(issued_by=user_id).all()
         
         # Total metrics
@@ -1098,7 +1099,7 @@ def vcse_get_vouchers():
         status_filter = request.args.get('status', 'all')  # all, active, redeemed, expired
         search_query = request.args.get('search', '').lower()
         
-        # Query vouchers issued by this VCSE
+        # Query vouchers issued by this VCFSE
         query = Voucher.query.filter_by(issued_by=user_id)
         
         # Apply status filter
@@ -1270,7 +1271,7 @@ def vcse_voucher_pdf(voucher_id):
 
 @app.route('/api/vcse/export-vouchers', methods=['GET'])
 def vcse_export_vouchers():
-    """Export all vouchers issued by VCSE to Excel"""
+    """Export all vouchers issued by VCFSE to Excel"""
     try:
         from openpyxl import Workbook
         from openpyxl.styles import Font, PatternFill, Alignment
@@ -1285,7 +1286,7 @@ def vcse_export_vouchers():
         if not user or user.user_type != 'vcse':
             return jsonify({'error': 'Only VCFSE organizations can export vouchers'}), 403
         
-        # Get all vouchers issued by this VCSE
+        # Get all vouchers issued by this VCFSE
         vouchers = Voucher.query.filter_by(issued_by=user_id).order_by(Voucher.created_at.desc()).all()
         
         # Create Excel workbook
@@ -1478,7 +1479,7 @@ def vcse_issue_voucher():
         if value <= 0:
             return jsonify({'error': 'Voucher value must be positive'}), 400
         
-        # Check if VCSE has sufficient allocated balance from admin
+        # Check if VCFSE has sufficient allocated balance from admin
         if user.allocated_balance < value:
             return jsonify({'error': f'Insufficient allocated funds. Current allocated balance: £{user.allocated_balance:.2f}'}), 400
         
@@ -1530,7 +1531,7 @@ def vcse_issue_voucher():
             assign_shop_method=assign_shop_method
         )
         
-        # Deduct from VCSE allocated balance
+        # Deduct from VCFSE allocated balance
         user.allocated_balance -= value
         
         db.session.add(voucher)
@@ -2095,7 +2096,7 @@ def admin_get_balance_summary():
 
 @app.route('/api/vcse/balance', methods=['GET'])
 def vcse_get_balance():
-    """Get current VCSE balance"""
+    """Get current VCFSE balance"""
     try:
         user_id = session.get('user_id')
         
@@ -2130,7 +2131,7 @@ def get_stripe_config():
 
 @app.route('/api/payment/create-intent', methods=['POST'])
 def create_payment_intent():
-    """Create a Stripe Payment Intent for VCSE fund loading"""
+    """Create a Stripe Payment Intent for VCFSE fund loading"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -2282,7 +2283,7 @@ def verify_payment():
 
 @app.route('/api/payment/history', methods=['GET'])
 def get_payment_history():
-    """Get payment transaction history for VCSE user"""
+    """Get payment transaction history for VCFSE user"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -3091,7 +3092,7 @@ def claim_surplus_item():
             if not email_result:
                 print(f"Failed to send email to vendor: {vendor.email}")
         
-        # Notify VCSE
+        # Notify VCFSE
         create_notification(
             user_id,
             'Item Claimed Successfully',
@@ -3123,7 +3124,7 @@ def mark_item_collected(item_id):
         
         user = User.query.get(user_id)
         
-        # Either vendor or VCSE can mark as collected
+        # Either vendor or VCFSE can mark as collected
         if user.user_type not in ['vendor', 'vcse']:
             return jsonify({'error': 'Unauthorized'}), 403
         
@@ -3285,7 +3286,7 @@ def admin_generate_report():
 
 @app.route('/api/vcse/reports/generate', methods=['POST'])
 def vcse_generate_report():
-    """Generate VCSE-specific report for funders"""
+    """Generate VCFSE-specific report for funders"""
     try:
         data = request.get_json()
         user_id = session.get('user_id')
@@ -3301,7 +3302,7 @@ def vcse_generate_report():
         date_from = datetime.strptime(data.get('date_from', '2024-01-01'), '%Y-%m-%d').date()
         date_to = datetime.strptime(data.get('date_to', datetime.utcnow().strftime('%Y-%m-%d')), '%Y-%m-%d').date()
         
-        # Calculate VCSE-specific statistics
+        # Calculate VCFSE-specific statistics
         vouchers_issued = Voucher.query.filter(
             Voucher.issued_by == user_id,
             Voucher.created_at >= datetime.combine(date_from, datetime.min.time()),
@@ -3921,7 +3922,7 @@ def allocate_funds():
         except ValueError:
             return jsonify({'error': 'Invalid amount'}), 400
         
-        # Get recipient organization (VCSE or School)
+        # Get recipient organization (VCFSE or School)
         recipient = User.query.get(recipient_id)
         if not recipient or recipient.user_type not in ['vcse', 'school']:
             return jsonify({'error': 'Organization not found'}), 404
@@ -4003,7 +4004,7 @@ def get_vcse_balance():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'VCSE access required'}), 403
+            return jsonify({'error': 'VCFSE access required'}), 403
         
         balance = float(user.balance) if user.balance else 0.0
         allocated_balance = float(user.allocated_balance) if user.allocated_balance else 0.0
@@ -4161,7 +4162,7 @@ def admin_get_to_go_items():
 
 @app.route('/api/vcse/to-go-items', methods=['GET'])
 def vcse_get_to_go_items():
-    """VCSE endpoint to view free surplus items available for collection"""
+    """VCFSE endpoint to view free surplus items available for collection"""
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -4169,7 +4170,7 @@ def vcse_get_to_go_items():
         
         user = User.query.get(user_id)
         if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'VCSE access required'}), 403
+            return jsonify({'error': 'VCFSE access required'}), 403
         
         # Get only FREE surplus items that are available
         items = SurplusItem.query.filter_by(
@@ -5146,7 +5147,7 @@ def get_cart_notifications():
 
 
 # ============================================
-# Admin Edit and Delete Routes for Schools and VCSE
+# Admin Edit and Delete Routes for Schools and VCFSE
 # ============================================
 
 @app.route('/api/admin/schools/<int:school_id>', methods=['PUT'])
@@ -5338,7 +5339,7 @@ def delete_vcse(vcse_id):
         if not vcse or vcse.user_type != 'vcse':
             return jsonify({'error': 'VCFSE organization not found'}), 404
         
-        # Check if VCSE has issued any vouchers
+        # Check if VCFSE has issued any vouchers
         vouchers_count = Voucher.query.filter_by(issued_by=vcse_id).count()
         if vouchers_count > 0:
             return jsonify({
@@ -6165,7 +6166,7 @@ def get_voucher_shop_status(code):
             'recipient_selected_shop': None
         }
         
-        # If shop was preselected by VCSE/School (specific_shop method)
+        # If shop was preselected by VCFSE/School (specific_shop method)
         if voucher.assign_shop_method == 'specific_shop':
             # Get shop from vendor_restrictions (legacy) or assigned shop
             if voucher.vendor_restrictions:

@@ -1,16 +1,16 @@
 """
-VCSE Verification System for Admin Portal
-Handles approval/rejection of VCSE organization registrations
+VCFSE Verification System for Admin Portal
+Handles approval/rejection of VCFSE organization registrations
 """
 from flask import Blueprint, request, jsonify, session
 from datetime import datetime
 
 def init_vcse_verification(app, db, User, email_service):
-    """Initialize VCSE verification endpoints"""
+    """Initialize VCFSE verification endpoints"""
     
     @app.route('/api/admin/vcse-verifications/pending', methods=['GET'])
     def get_pending_vcse_verifications():
-        """Get all VCSE registrations pending verification"""
+        """Get all VCFSE registrations pending verification"""
         try:
             user_id = session.get('user_id')
             if not user_id:
@@ -20,7 +20,7 @@ def init_vcse_verification(app, db, User, email_service):
             if not admin or admin.user_type != 'admin':
                 return jsonify({'error': 'Unauthorized - Admin access required'}), 403
             
-            # Get all VCSE users with PENDING_VERIFICATION status
+            # Get all VCFSE users with PENDING_VERIFICATION status
             pending_vcses = User.query.filter_by(
                 user_type='vcse',
                 account_status='PENDING_VERIFICATION'
@@ -53,7 +53,7 @@ def init_vcse_verification(app, db, User, email_service):
     
     @app.route('/api/admin/vcse-verifications/<int:vcse_id>/approve', methods=['POST'])
     def approve_vcse_verification(vcse_id):
-        """Approve a VCSE organization registration"""
+        """Approve a VCFSE organization registration"""
         try:
             user_id = session.get('user_id')
             if not user_id:
@@ -63,18 +63,18 @@ def init_vcse_verification(app, db, User, email_service):
             if not admin or admin.user_type != 'admin':
                 return jsonify({'error': 'Unauthorized - Admin access required'}), 403
             
-            # Get the VCSE user
+            # Get the VCFSE user
             vcse = User.query.get(vcse_id)
             if not vcse:
-                return jsonify({'error': 'VCSE user not found'}), 404
+                return jsonify({'error': 'VCFSE user not found'}), 404
             
             if vcse.user_type != 'vcse':
-                return jsonify({'error': 'User is not a VCSE organization'}), 400
+                return jsonify({'error': 'User is not a VCFSE organization'}), 400
             
             if vcse.account_status != 'PENDING_VERIFICATION':
-                return jsonify({'error': f'VCSE account is not pending verification (current status: {vcse.account_status})'}), 400
+                return jsonify({'error': f'VCFSE account is not pending verification (current status: {vcse.account_status})'}), 400
             
-            # Update VCSE account status
+            # Update VCFSE account status
             vcse.account_status = 'ACTIVE'
             vcse.verified_at = datetime.utcnow()
             vcse.verified_by_admin_id = user_id
@@ -95,7 +95,7 @@ def init_vcse_verification(app, db, User, email_service):
                 print(f"Warning: Could not send approval email: {email_error}")
             
             return jsonify({
-                'message': f'VCSE organization {vcse.organization_name} has been approved',
+                'message': f'VCFSE organization {vcse.organization_name} has been approved',
                 'vcse_id': vcse.id,
                 'organization_name': vcse.organization_name,
                 'email': vcse.email,
@@ -104,11 +104,11 @@ def init_vcse_verification(app, db, User, email_service):
             
         except Exception as e:
             db.session.rollback()
-            return jsonify({'error': f'Failed to approve VCSE: {str(e)}'}), 500
+            return jsonify({'error': f'Failed to approve VCFSE: {str(e)}'}), 500
     
     @app.route('/api/admin/vcse-verifications/<int:vcse_id>/reject', methods=['POST'])
     def reject_vcse_verification(vcse_id):
-        """Reject a VCSE organization registration"""
+        """Reject a VCFSE organization registration"""
         try:
             user_id = session.get('user_id')
             if not user_id:
@@ -121,18 +121,18 @@ def init_vcse_verification(app, db, User, email_service):
             data = request.get_json()
             rejection_reason = data.get('rejection_reason', 'Details do not match Charity Commission records')
             
-            # Get the VCSE user
+            # Get the VCFSE user
             vcse = User.query.get(vcse_id)
             if not vcse:
-                return jsonify({'error': 'VCSE user not found'}), 404
+                return jsonify({'error': 'VCFSE user not found'}), 404
             
             if vcse.user_type != 'vcse':
-                return jsonify({'error': 'User is not a VCSE organization'}), 400
+                return jsonify({'error': 'User is not a VCFSE organization'}), 400
             
             if vcse.account_status != 'PENDING_VERIFICATION':
-                return jsonify({'error': f'VCSE account is not pending verification (current status: {vcse.account_status})'}), 400
+                return jsonify({'error': f'VCFSE account is not pending verification (current status: {vcse.account_status})'}), 400
             
-            # Update VCSE account status
+            # Update VCFSE account status
             vcse.account_status = 'REJECTED'
             vcse.rejection_reason = rejection_reason
             vcse.verified_at = datetime.utcnow()
@@ -152,7 +152,7 @@ def init_vcse_verification(app, db, User, email_service):
                 print(f"Warning: Could not send rejection email: {email_error}")
             
             return jsonify({
-                'message': f'VCSE organization {vcse.organization_name} has been rejected',
+                'message': f'VCFSE organization {vcse.organization_name} has been rejected',
                 'vcse_id': vcse.id,
                 'organization_name': vcse.organization_name,
                 'email': vcse.email,
@@ -162,11 +162,11 @@ def init_vcse_verification(app, db, User, email_service):
             
         except Exception as e:
             db.session.rollback()
-            return jsonify({'error': f'Failed to reject VCSE: {str(e)}'}), 500
+            return jsonify({'error': f'Failed to reject VCFSE: {str(e)}'}), 500
     
     @app.route('/api/admin/vcse-verifications/stats', methods=['GET'])
     def get_vcse_verification_stats():
-        """Get statistics about VCSE verifications"""
+        """Get statistics about VCFSE verifications"""
         try:
             user_id = session.get('user_id')
             if not user_id:
@@ -201,4 +201,4 @@ def init_vcse_verification(app, db, User, email_service):
         except Exception as e:
             return jsonify({'error': f'Failed to fetch stats: {str(e)}'}), 500
     
-    print("✓ VCSE Verification endpoints initialized")
+    print("✓ VCFSE Verification endpoints initialized")

@@ -1,11 +1,11 @@
 """
 Balance Alert System
-Monitors VCSE organization balances and sends alerts when low
+Monitors VCFSE organization balances and sends alerts when low
 """
 
 def check_low_balances(User, threshold=50.0):
     """
-    Check all VCSE organizations for low balances
+    Check all VCFSE organizations for low balances
     Returns list of organizations below threshold
     """
     try:
@@ -41,7 +41,7 @@ def check_low_balances(User, threshold=50.0):
 
 def send_low_balance_alerts(organizations, sms_service, email_service, admin_email=None):
     """
-    Send alerts to VCSE organizations and admin about low balances
+    Send alerts to VCFSE organizations and admin about low balances
     """
     sent_count = 0
     failed_count = 0
@@ -96,7 +96,7 @@ Please add funds to this organization's account."""
 
 def get_balance_summary(User):
     """
-    Get balance summary for all VCSE organizations
+    Get balance summary for all VCFSE organizations
     """
     try:
         vcse_orgs = User.query.filter_by(user_type='vcse').all()

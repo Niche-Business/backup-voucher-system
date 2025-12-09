@@ -1,4 +1,4 @@
-# Stripe Payment Integration for VCSE Self-Service Fund Loading
+# Stripe Payment Integration for VCFSE Self-Service Fund Loading
 import stripe
 import os
 from datetime import datetime
@@ -17,12 +17,12 @@ def get_publishable_key():
 
 def create_payment_intent(amount, vcse_id, vcse_email, description="Fund Loading"):
     """
-    Create a Stripe Payment Intent for VCSE fund loading
+    Create a Stripe Payment Intent for VCFSE fund loading
     
     Args:
         amount: Amount in pounds (will be converted to pence)
-        vcse_id: ID of the VCSE organization
-        vcse_email: Email of the VCSE organization
+        vcse_id: ID of the VCFSE organization
+        vcse_email: Email of the VCFSE organization
         description: Payment description
     
     Returns:

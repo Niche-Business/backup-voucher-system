@@ -52,7 +52,7 @@ def create_missing_users(existing_users):
         'vcse': {
             'email': 'vcse.test@bakup.org',
             'password': 'vcse123',
-            'first_name': 'VCSE',
+            'first_name': 'VCFSE',
             'last_name': 'Test',
             'phone': '07700900001',
             'user_type': 'vcse',
@@ -214,7 +214,7 @@ def add_surplus_items(vendor_user, shop):
         print("✓ Surplus items already exist")
 
 def allocate_funds(admin_user, vcse_user):
-    """Allocate funds from admin to VCSE"""
+    """Allocate funds from admin to VCFSE"""
     print("\n" + "="*60)
     print("ALLOCATING FUNDS")
     print("="*60)
@@ -222,9 +222,9 @@ def allocate_funds(admin_user, vcse_user):
     if vcse_user.allocated_balance < 1000:
         vcse_user.allocated_balance = 1000.00
         db.session.commit()
-        print(f"✓ Allocated £1000.00 to VCSE: {vcse_user.email}")
+        print(f"✓ Allocated £1000.00 to VCFSE: {vcse_user.email}")
     else:
-        print(f"✓ VCSE already has £{vcse_user.allocated_balance:.2f} allocated")
+        print(f"✓ VCFSE already has £{vcse_user.allocated_balance:.2f} allocated")
 
 def create_vouchers(vcse_user, recipient_user):
     """Create sample vouchers"""
@@ -267,13 +267,13 @@ def create_vouchers(vcse_user, recipient_user):
         status = "USED" if voucher_data['used'] else "ACTIVE"
         print(f"✓ Created voucher: £{voucher_data['amount']:.2f} - {status}")
     
-    # Deduct from VCSE allocated balance
+    # Deduct from VCFSE allocated balance
     total_amount = sum(v['amount'] for v in vouchers_data)
     vcse_user.allocated_balance -= total_amount
     
     db.session.commit()
     print(f"\n✓ Created {len(vouchers_data)} vouchers (Total: £{total_amount:.2f})")
-    print(f"✓ VCSE remaining balance: £{vcse_user.allocated_balance:.2f}")
+    print(f"✓ VCFSE remaining balance: £{vcse_user.allocated_balance:.2f}")
 
 def main():
     print("\n" + "="*60)
@@ -314,7 +314,7 @@ def main():
             print("\nAdmin Account:")
             print("  Email: admin.test@bakup.org")
             print("  Password: admin123")
-            print("\nVCSE Account:")
+            print("\nVCFSE Account:")
             print("  Email: vcse.test@bakup.org")
             print("  Password: vcse123")
             print(f"  Allocated Balance: £{users['vcse'].allocated_balance:.2f}")

@@ -1296,8 +1296,8 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('transactions')} style={activeTab === 'transactions' ? styles.activeTab : styles.tab}>📊 Transactions</button>
           <button onClick={() => setActiveTab('broadcast')} style={activeTab === 'broadcast' ? styles.activeTab : styles.tab}>📢 Broadcast</button>
           <button onClick={() => setActiveTab('funding')} style={activeTab === 'funding' ? styles.activeTab : styles.tab}>💰 Fund Allocation</button>
-          <button onClick={() => setActiveTab('vcse-verification')} style={activeTab === 'vcse-verification' ? styles.activeTab : styles.tab}>🔍 VCSE Verification</button>
-          <button onClick={() => setActiveTab('vcse')} style={activeTab === 'vcse' ? styles.activeTab : styles.tab}>🤝 VCSE Organisations</button>
+          <button onClick={() => setActiveTab('vcse-verification')} style={activeTab === 'vcse-verification' ? styles.activeTab : styles.tab}>🔍 VCFSE Verification</button>
+          <button onClick={() => setActiveTab('vcse')} style={activeTab === 'vcse' ? styles.activeTab : styles.tab}>🤝 VCFSE Organisations</button>
           <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients</button>
           <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.voucherManagement')}</button>
           <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.schoolsOrgs')}</button>
@@ -3149,7 +3149,7 @@ function AdminSettingsTab({ user }) {
   )
 }
 
-// FOOD TO GO ORDER CARD COMPONENT FOR VCSE
+// FOOD TO GO ORDER CARD COMPONENT FOR VCFSE
 function ToGoOrderCard({ item, onOrderPlaced }) {
   const { t } = useTranslation()
   const [showOrderForm, setShowOrderForm] = useState(false)
@@ -3645,7 +3645,7 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
   )
 }
 
-// VCSE DASHBOARD
+// VCFSE DASHBOARD
 function VCSEDashboard({ user, onLogout }) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('overview')

@@ -40,7 +40,7 @@ class EmailService:
         user_type_names = {
             'recipient': 'Voucher Recipient',
             'vendor': 'Food Vendor',
-            'vcse': 'VCSE Organization',
+            'vcse': 'VCFSE Organization',
             'school': 'School/Care Organization',
             'admin': 'Administrator'
         }
@@ -296,7 +296,7 @@ class EmailService:
                         <a href="{self.app_url}/vcse" class="button">Claim This Item</a>
                     </p>
                     
-                    <p>Log in to your VCSE portal to claim this item and arrange collection.</p>
+                    <p>Log in to your VCFSE portal to claim this item and arrange collection.</p>
                 </div>
                 <div class="footer">
                     <p>This is an automated message from BAK UP Voucher System</p>
@@ -310,7 +310,7 @@ class EmailService:
         return self.send_email(vcse_email, subject, html_content)
     
     def send_collection_confirmation_email(self, vendor_email, vendor_name, item_name, vcse_name, vcse_contact):
-        """Send email to vendor when VCSE claims surplus item"""
+        """Send email to vendor when VCFSE claims surplus item"""
         subject = f"✅ Surplus Item Claimed: {item_name}"
         
         html_content = f"""
@@ -339,7 +339,7 @@ class EmailService:
                 <div class="content">
                     <p>Dear {vendor_name},</p>
                     
-                    <p>Great news! Your surplus food item has been claimed by a VCSE organization.</p>
+                    <p>Great news! Your surplus food item has been claimed by a VCFSE organization.</p>
                     
                     <div class="info-box">
                         <h3>{item_name}</h3>
@@ -350,7 +350,7 @@ class EmailService:
                     <p><strong>Next Steps:</strong></p>
                     <ol>
                         <li>Prepare the item for collection</li>
-                        <li>Wait for the VCSE representative to arrive</li>
+                        <li>Wait for the VCFSE representative to arrive</li>
                         <li>Verify their identity and organization</li>
                         <li>Hand over the surplus food</li>
                     </ol>

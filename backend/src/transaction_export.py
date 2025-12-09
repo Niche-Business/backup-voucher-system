@@ -275,7 +275,7 @@ def export_impact_report_csv(Voucher, SurplusItem, User):
     vendors = User.query.filter_by(user_type='vendor').count()
     schools = User.query.filter_by(user_type='school').count()
     
-    writer.writerow(['VCSE Organizations:', vcse_orgs])
+    writer.writerow(['VCFSE Organizations:', vcse_orgs])
     writer.writerow(['Local Food Shops:', vendors])
     writer.writerow(['Schools:', schools])
     

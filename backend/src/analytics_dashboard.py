@@ -239,7 +239,7 @@ def get_geographic_distribution():
     try:
         from main import db, User, VendorShop
         
-        # Get distribution of VCSEs by city
+        # Get distribution of VCFSEs by city
         vcse_by_city = db.session.query(
             User.city,
             func.count(User.id).label('count')

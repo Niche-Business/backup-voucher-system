@@ -123,11 +123,11 @@ BAK UP Team"""
     
     def send_surplus_alert(self, phone_number, vcse_name, vendor_name, item_name, quantity):
         """
-        Send surplus food alert to VCSE
+        Send surplus food alert to VCFSE
         
         Args:
-            phone_number (str): VCSE contact phone number
-            vcse_name (str): VCSE organization name
+            phone_number (str): VCFSE contact phone number
+            vcse_name (str): VCFSE organization name
             vendor_name (str): Vendor shop name
             item_name (str): Surplus item name
             quantity (int): Available quantity
@@ -149,12 +149,12 @@ BAK UP Team"""
     
     def send_collection_notification(self, phone_number, vendor_name, vcse_name, item_name, quantity):
         """
-        Send collection notification to vendor when VCSE claims surplus
+        Send collection notification to vendor when VCFSE claims surplus
         
         Args:
             phone_number (str): Vendor contact phone number
             vendor_name (str): Vendor shop name
-            vcse_name (str): VCSE organization name
+            vcse_name (str): VCFSE organization name
             item_name (str): Surplus item name
             quantity (int): Claimed quantity
         """

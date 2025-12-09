@@ -56,7 +56,7 @@ class EmailService:
         user_type_names = {
             'recipient': 'Voucher Recipient',
             'vendor': 'Food Vendor',
-            'vcse': 'VCSE Organization',
+            'vcse': 'VCFSE Organization',
             'school': 'School/Care Organization',
             'admin': 'Administrator'
         }
