@@ -7792,7 +7792,7 @@ const styles = {
 
 // Initialize Stripe with publishable key
 // Note: Publishable keys (pk_test_...) are safe to expose in client-side code
-const stripePromise = loadStripe('pk_test_51SVbPxPYZpaK67VwPalMz7tJDdpgmg0BtqU04wbBHBtvvjAP6TOv8XNq8wKfaWGNqHo45pozfP7m9JKh9TZVYuyd00IjE9gJDX')
+const stripePromise = loadStripe('pk_test_51Sc7h13gtZiQWbc7jQPqwV5mEw0XYMyhxF3HfHz9JzaTGj1lmjvuRoy33hBpXjyh7YhHBcrQyECEqWiqr9kcB7Hk00glI6iIFx')
 
 // Wrap App with Stripe Elements and ErrorBoundary
 const AppWithErrorBoundary = () => (
