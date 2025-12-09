@@ -3943,9 +3943,9 @@ function VCSEDashboard({ user, onLogout }) {
                       {vouchers.map(voucher => (
                         <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
                           <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>{voucher.code}</td>
-                          <td style={{padding: '12px'}}>{voucher.recipient_name}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient_email}</td>
-                          <td style={{padding: '12px'}}>{voucher.recipient_phone}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient?.name || 'Unknown'}</td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient?.email || ''}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient?.phone || ''}</td>
                           <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: '#4CAF50'}}>£{voucher.value.toFixed(2)}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <span style={{
@@ -7427,9 +7427,9 @@ function SchoolDashboard({ user, onLogout }) {
                       {vouchers.map(voucher => (
                         <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
                           <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>{voucher.code}</td>
-                          <td style={{padding: '12px'}}>{voucher.recipient_name}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient_email}</td>
-                          <td style={{padding: '12px'}}>{voucher.recipient_phone}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient?.name || 'Unknown'}</td>
+                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient?.email || ''}</td>
+                          <td style={{padding: '12px'}}>{voucher.recipient?.phone || ''}</td>
                           <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: '#4CAF50'}}>£{voucher.value.toFixed(2)}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <span style={{

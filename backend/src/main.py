@@ -1176,6 +1176,46 @@ def vcse_get_vouchers():
     except Exception as e:
         return jsonify({'error': f'Failed to get vouchers: {str(e)}'}), 500
 
+@app.route('/api/vcse/recipients', methods=['GET'])
+def vcse_get_recipients():
+    """Get all recipients that this VCFSE has issued vouchers to"""
+    try:
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCFSE organizations can access this'}), 403
+        
+        # Get all unique recipients from vouchers issued by this VCFSE
+        vouchers = Voucher.query.filter_by(issued_by=user_id).all()
+        recipient_ids = set(v.recipient_id for v in vouchers if v.recipient_id)
+        
+        recipients_data = []
+        for recipient_id in recipient_ids:
+            recipient = User.query.get(recipient_id)
+            if recipient:
+                recipients_data.append({
+                    'id': recipient.id,
+                    'name': f"{recipient.first_name} {recipient.last_name}",
+                    'email': recipient.email,
+                    'phone': recipient.phone or '',
+                    'address': recipient.address or ''
+                })
+        
+        # Sort by name
+        recipients_data.sort(key=lambda x: x['name'])
+        
+        return jsonify({
+            'recipients': recipients_data,
+            'total_count': len(recipients_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get recipients: {str(e)}'}), 500
+
 @app.route('/api/vcse/voucher-pdf/<int:voucher_id>', methods=['GET'])
 def vcse_voucher_pdf(voucher_id):
     """Generate PDF for a specific voucher with QR code"""
@@ -1447,6 +1487,17 @@ def vcse_place_order():
         
         if item.status != 'available':
             return jsonify({'error': 'Item is no longer available'}), 400
+        
+        # Check if sufficient quantity available
+        if item.quantity < quantity:
+            return jsonify({'error': f'Insufficient quantity. Only {item.quantity} available'}), 400
+        
+        # Reduce item quantity
+        item.quantity -= quantity
+        
+        # If quantity reaches 0, mark as unavailable
+        if item.quantity == 0:
+            item.status = 'unavailable'
         
         # Create order
         order = Order(
