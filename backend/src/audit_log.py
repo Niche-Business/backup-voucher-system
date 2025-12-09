@@ -49,7 +49,7 @@ class AuditLog(db.Model if db else object):
         }
 
 
-def init_audit_system(app_db, user_model):
+def init_audit_system(flask_app, app_db, user_model):
     """Initialize the audit log system"""
     global db, User, AuditLog
     db = app_db
@@ -60,7 +60,7 @@ def init_audit_system(app_db, user_model):
         __tablename__ = 'audit_logs'
         
         id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
         user_email = db.Column(db.String(255), nullable=True)
         user_type = db.Column(db.String(50), nullable=True)
         action = db.Column(db.String(100), nullable=False)
@@ -90,10 +90,11 @@ def init_audit_system(app_db, user_model):
     globals()['AuditLog'] = AuditLog
     
     # Create table if it doesn't exist
-    try:
-        db.create_all()
-    except Exception as e:
-        logger.warning(f"Could not create audit_logs table: {e}")
+    with flask_app.app_context():
+        try:
+            db.create_all()
+        except Exception as e:
+            logger.warning(f"Could not create audit_logs table: {e}")
     
     logger.info("Audit log system initialized")
 

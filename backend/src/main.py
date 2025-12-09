@@ -426,7 +426,7 @@ app.register_blueprint(export_bp)
 
 # Initialize Audit Log System
 from audit_log import audit_bp, init_audit_system, log_activity
-init_audit_system(db, User)
+init_audit_system(app, db, User)
 app.register_blueprint(audit_bp)
 
 # Initialize Security Enhancements
