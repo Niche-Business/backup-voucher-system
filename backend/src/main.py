@@ -78,6 +78,7 @@ class User(db.Model):
     address = db.Column(db.Text)
     postcode = db.Column(db.String(10))
     city = db.Column(db.String(50))
+    date_of_birth = db.Column(db.Date)  # Recipient date of birth
     charity_commission_number = db.Column(db.String(50))
     shop_category = db.Column(db.String(50))  # African, Caribbean, Mixed African & Caribbean, Indian/South Asian, Eastern European, Middle Eastern
     is_verified = db.Column(db.Boolean, default=False)
@@ -1156,7 +1157,8 @@ def vcse_get_vouchers():
                 'status': voucher.status,
                 'created_at': voucher.created_at.isoformat() if voucher.created_at else None,
                 'expiry_date': voucher.expiry_date.isoformat() if voucher.expiry_date else None,
-                'redeemed_date': voucher.redeemed_date.isoformat() if voucher.redeemed_date else None,
+                'redeemed_date': voucher.redeemed_at.isoformat() if voucher.redeemed_at else None,
+                'reassignment_count': voucher.reassignment_count or 0,
                 'recipient': {
                     'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'Unknown',
                     'email': recipient.email if recipient else '',
@@ -1718,6 +1720,8 @@ def vcse_issue_voucher():
         recipient_date_of_birth = data.get('recipient_date_of_birth')
         recipient_phone = data.get('recipient_phone')
         recipient_address = data.get('recipient_address')
+        recipient_city = data.get('recipient_city', '')  # Town/City field
+        recipient_postcode = data.get('recipient_postcode', '')
         value = data.get('value')
         expiry_days = data.get('expiry_days', 30)
         selected_shops = data.get('selected_shops')  # List of shop IDs or 'all'
@@ -1739,6 +1743,15 @@ def vcse_issue_voucher():
             # Auto-create recipient account with provided details
             import secrets
             temp_password = secrets.token_urlsafe(12)
+            # Parse date of birth if provided
+            dob = None
+            if recipient_date_of_birth:
+                try:
+                    from datetime import datetime
+                    dob = datetime.strptime(recipient_date_of_birth, '%Y-%m-%d').date()
+                except:
+                    pass
+            
             recipient = User(
                 email=recipient_email,
                 password_hash=generate_password_hash(temp_password),
@@ -1746,6 +1759,9 @@ def vcse_issue_voucher():
                 last_name=recipient_last_name,
                 phone=recipient_phone,
                 address=recipient_address,
+                city=recipient_city,
+                postcode=recipient_postcode,
+                date_of_birth=dob,
                 user_type='recipient',
                 is_verified=True,
                 is_active=True
@@ -1801,6 +1817,16 @@ def vcse_issue_voucher():
             f'Voucher {voucher_code} for £{value:.2f} issued to {recipient.first_name} {recipient.last_name}',
             'success'
         )
+        
+        # Notify all admins about voucher issuance
+        admins = User.query.filter_by(user_type='admin', is_active=True).all()
+        for admin in admins:
+            create_notification(
+                admin.id,
+                'Voucher Issued by VCFSE',
+                f'{user.organization_name} issued voucher {voucher_code} for £{value:.2f} to {recipient.first_name} {recipient.last_name} ({recipient.email})',
+                'info'
+            )
         
         # Send SMS notification to recipient with voucher code
         if recipient.phone:
@@ -6886,6 +6912,14 @@ def get_discounted_items_for_recipient():
 # Add Food To Go migration endpoint
 from add_food_to_go_endpoint import create_food_to_go_migration_endpoint
 create_food_to_go_migration_endpoint(app, db)
+
+# Add Admin Password Reset endpoint
+from admin_password_reset import create_admin_password_reset_endpoint
+create_admin_password_reset_endpoint(app, db, User, generate_password_hash, session, request, jsonify)
+
+# Add date_of_birth field migration
+from add_date_of_birth_field import create_date_of_birth_migration_endpoint
+create_date_of_birth_migration_endpoint(app, db)
 
 @app.route('/api/admin/run-wallet-migration', methods=['POST'])
 def run_wallet_migration():

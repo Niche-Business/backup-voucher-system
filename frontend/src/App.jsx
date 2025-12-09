@@ -3657,6 +3657,8 @@ function VCSEDashboard({ user, onLogout }) {
     recipientDateOfBirth: '',
     recipientPhone: '',
     recipientAddress: '',
+    recipientCity: '',
+    recipientPostcode: '',
     value: '',
     expiryDays: '30'
   })
@@ -3747,6 +3749,8 @@ function VCSEDashboard({ user, onLogout }) {
           recipient_date_of_birth: voucherForm.recipientDateOfBirth,
           recipient_phone: voucherForm.recipientPhone,
           recipient_address: voucherForm.recipientAddress,
+          recipient_city: voucherForm.recipientCity,
+          recipient_postcode: voucherForm.recipientPostcode,
           value: parseFloat(voucherForm.value),
           expiry_days: parseInt(voucherForm.expiryDays),
           selected_shops: selectedShops === 'all' ? 'all' : selectedShops,
@@ -3762,6 +3766,8 @@ function VCSEDashboard({ user, onLogout }) {
         recipientDateOfBirth: '',
         recipientPhone: '',
         recipientAddress: '',
+        recipientCity: '',
+        recipientPostcode: '',
         value: '',
         expiryDays: '30'
       })
@@ -4280,6 +4286,34 @@ function VCSEDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0 0'}}>Use these funds to issue vouchers to recipients</p>
             </div>
             
+            {/* Instructions Banner */}
+            <div style={{backgroundColor: '#f3e5f5', border: '2px solid #9C27B0', borderRadius: '10px', padding: '20px', marginBottom: '20px'}}>
+              <h3 style={{color: '#7B1FA2', marginTop: 0, marginBottom: '15px', fontSize: '18px'}}>ℹ️ How to Issue Vouchers</h3>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px'}}>
+                <div>
+                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '15px'}}>👥 Single Recipient</h4>
+                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '14px', lineHeight: '1.8'}}>
+                    <li>Fill in recipient details in the form below</li>
+                    <li>Enter voucher value and expiry days</li>
+                    <li>Select which shops can accept the voucher</li>
+                    <li>Click "Issue Voucher"</li>
+                  </ol>
+                </div>
+                <div>
+                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '15px'}}>📄 Bulk Upload</h4>
+                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '14px', lineHeight: '1.8'}}>
+                    <li>Download the CSV template</li>
+                    <li>Fill in recipient details in Excel/Sheets</li>
+                    <li>Upload the completed CSV file</li>
+                    <li>Recipients will be created automatically</li>
+                  </ol>
+                </div>
+              </div>
+              <p style={{margin: '15px 0 0 0', fontSize: '13px', color: '#666', backgroundColor: '#fff', padding: '10px', borderRadius: '5px'}}>
+                💡 <strong>Tips:</strong> Recipients receive email & SMS notifications automatically. If an email already exists, the existing account will be used.
+              </p>
+            </div>
+            
             {/* Bulk Upload Section */}
             <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', marginBottom: '30px', border: '2px solid #ff9800'}}>
               <h3 style={{marginTop: 0, color: '#e65100'}}>📤 Bulk Upload Recipients</h3>
@@ -4418,6 +4452,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
+                <small style={{color: '#666', fontSize: '12px'}}>The recipient will receive voucher details at this email</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -4437,10 +4472,11 @@ function VCSEDashboard({ user, onLogout }) {
                   type="tel"
                   value={voucherForm.recipientPhone}
                   onChange={(e) => setVoucherForm({...voucherForm, recipientPhone: e.target.value})}
-                  placeholder="07700900000"
+                  placeholder="+44 7XXX XXXXXX"
                   style={styles.input}
                   required
                 />
+                <small style={{color: '#666', fontSize: '12px'}}>Used for SMS notifications with voucher code</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -4449,10 +4485,35 @@ function VCSEDashboard({ user, onLogout }) {
                   type="text"
                   value={voucherForm.recipientAddress}
                   onChange={(e) => setVoucherForm({...voucherForm, recipientAddress: e.target.value})}
-                  placeholder="Full address including postcode"
+                  placeholder="Street address"
                   style={styles.input}
                   required
                 />
+              </div>
+              
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Town/City</label>
+                  <input
+                    type="text"
+                    value={voucherForm.recipientCity}
+                    onChange={(e) => setVoucherForm({...voucherForm, recipientCity: e.target.value})}
+                    placeholder="e.g., Northampton"
+                    style={styles.input}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+                  <input
+                    type="text"
+                    value={voucherForm.recipientPostcode}
+                    onChange={(e) => setVoucherForm({...voucherForm, recipientPostcode: e.target.value})}
+                    placeholder="e.g., NN1 1AA"
+                    style={styles.input}
+                    required
+                  />
+                </div>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -4462,10 +4523,11 @@ function VCSEDashboard({ user, onLogout }) {
                   step="0.01"
                   value={voucherForm.value}
                   onChange={(e) => setVoucherForm({...voucherForm, value: e.target.value})}
-                  placeholder="Enter amount"
+                  placeholder="20.00"
                   style={styles.input}
                   required
                 />
+                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your allocated balance (£{allocatedBalance.toFixed(2)} available)</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
