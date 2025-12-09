@@ -389,8 +389,8 @@ def add_security_headers(response):
     if request.is_secure or request.headers.get('X-Forwarded-Proto') == 'https':
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     
-    # Content Security Policy
-    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+    # Content Security Policy - Allow Stripe and other necessary external resources
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com; style-src 'self' 'unsafe-inline'; frame-src https://js.stripe.com; connect-src 'self' https://api.stripe.com;"
     
     # Referrer policy
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
