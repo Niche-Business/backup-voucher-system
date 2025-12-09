@@ -650,13 +650,23 @@ def register():
             if not data.get('organization_name'):
                 return jsonify({'error': 'Organization name is required for VCFSE organizations'}), 400
             
-            # Verify charity number with UK Charity Commission
-            verification_result = verify_charity_number(data['charity_commission_number'])
+            # Verify charity number AND organization name with UK Charity Commission
+            verification_result = verify_charity_number(
+                data['charity_commission_number'],
+                data['organization_name']  # Pass organization name for matching
+            )
             
             if not verification_result['valid']:
+                error_message = verification_result['message']
+                
+                # If name mismatch, provide the registered name
+                if verification_result.get('name_match') == False:
+                    error_message += f"\n\nThe registered charity name is: '{verification_result.get('charity_name')}'\nPlease use this exact name when registering."
+                
                 return jsonify({
-                    'error': verification_result['message'],
-                    'charity_number': data['charity_commission_number']
+                    'error': error_message,
+                    'charity_number': data['charity_commission_number'],
+                    'registered_name': verification_result.get('charity_name')
                 }), 400
         
         # Check if user already exists

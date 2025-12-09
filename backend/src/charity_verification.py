@@ -16,19 +16,57 @@ class CharityVerificationService:
     SEARCH_URL = f"{BASE_URL}/en/charity-search/-/results/page/1/delta/20/keywords/"
     
     @staticmethod
-    def verify_charity_number(charity_number):
+    def _names_match(input_name, registered_name):
+        """
+        Check if input name matches registered name with fuzzy matching
+        Allows for common variations like "The", "Ltd", etc.
+        """
+        from difflib import SequenceMatcher
+        
+        # Remove common prefixes/suffixes
+        remove_words = ['the', 'ltd', 'limited', 'charity', 'foundation', 'trust', 'cio', 'uk']
+        
+        def clean_name(name):
+            name = name.lower().strip()
+            for word in remove_words:
+                name = name.replace(f' {word} ', ' ')
+                name = name.replace(f'{word} ', '')
+                name = name.replace(f' {word}', '')
+            return ' '.join(name.split())  # Remove extra spaces
+        
+        input_clean = clean_name(input_name)
+        registered_clean = clean_name(registered_name)
+        
+        # Exact match after cleaning
+        if input_clean == registered_clean:
+            return True
+        
+        # Check if one contains the other (for abbreviated names)
+        if input_clean in registered_clean or registered_clean in input_clean:
+            if len(input_clean) > 5:  # Avoid matching very short names
+                return True
+        
+        # Check similarity ratio (at least 85% similar)
+        similarity = SequenceMatcher(None, input_clean, registered_clean).ratio()
+        return similarity >= 0.85
+    
+    @staticmethod
+    def verify_charity_number(charity_number, organization_name=None):
         """
         Verify a charity registration number against the UK Charity Commission database
+        Optionally verify that the organization name matches the registered charity name
         
         Args:
             charity_number (str): The charity registration number to verify
+            organization_name (str, optional): The organization name to match against registered name
             
         Returns:
             dict: {
                 'valid': bool,
                 'charity_name': str or None,
                 'status': str or None,
-                'message': str
+                'message': str,
+                'name_match': bool (if organization_name provided)
             }
         """
         try:
@@ -97,10 +135,28 @@ class CharityVerificationService:
                         # Check if charity is registered (not removed)
                         if status.lower() == 'registered':
                             logger.info(f"Charity {charity_number} verified: {charity_name}")
+                            
+                            # If organization name provided, verify it matches
+                            if organization_name:
+                                name_matches = CharityVerificationService._names_match(
+                                    organization_name, charity_name
+                                )
+                                
+                                if not name_matches:
+                                    logger.warning(f"Name mismatch: '{organization_name}' vs '{charity_name}'")
+                                    return {
+                                        'valid': False,
+                                        'charity_name': charity_name,
+                                        'status': status,
+                                        'name_match': False,
+                                        'message': f'Organization name "{organization_name}" does not match the registered charity name "{charity_name}" for charity number {charity_number}. Please use the exact registered name.'
+                                    }
+                            
                             return {
                                 'valid': True,
                                 'charity_name': charity_name,
                                 'status': status,
+                                'name_match': True if organization_name else None,
                                 'message': f'Charity verified: {charity_name}'
                             }
                         else:

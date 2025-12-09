@@ -850,8 +850,19 @@ function RegisterPage({ onRegister, onNavigate }) {
           {formData.userType === 'vcse' && (
             <>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.organizationNameLabel')}</label>
-                <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.organizationNameLabel')} <span style={{color: '#f44336'}}>*</span></label>
+                <input 
+                  type="text" 
+                  name="organizationName" 
+                  value={formData.organizationName} 
+                  onChange={handleChange} 
+                  placeholder="Enter EXACT registered charity name" 
+                  style={styles.input} 
+                  required 
+                />
+                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                  💡 <strong>Important:</strong> Use the exact name as registered with the Charity Commission
+                </small>
               </div>
               <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.charityNumberLabel')} <span style={{color: '#f44336'}}>*</span></label>
@@ -860,13 +871,19 @@ function RegisterPage({ onRegister, onNavigate }) {
                   name="charityCommissionNumber" 
                   value={formData.charityCommissionNumber || ''} 
                   onChange={handleChange} 
-                  placeholder={t('register.charityNumberPlaceholder')} 
+                  placeholder="e.g., 1234567" 
                   style={styles.input} 
                   required 
                 />
-                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
-                  ⚠️ {t('register.charityWarning')}
-                </small>
+                <div style={{backgroundColor: '#fff3e0', border: '1px solid #ff9800', borderRadius: '5px', padding: '10px', marginTop: '8px'}}>
+                  <small style={{color: '#e65100', fontSize: '12px', display: 'block', lineHeight: '1.5'}}>
+                    <strong>🔒 Security Verification:</strong><br/>
+                    • Your charity number will be verified with the UK Charity Commission<br/>
+                    • The organization name you enter MUST match the registered charity name<br/>
+                    • Registration will be rejected if there's a mismatch<br/>
+                    • Find your charity number at: <a href="https://register-of-charities.charitycommission.gov.uk" target="_blank" style={{color: '#1976d2'}}>Charity Commission Register</a>
+                  </small>
+                </div>
               </div>
             </>
           )}
@@ -3823,6 +3840,7 @@ function VCSEDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 {t('tabs.voucherOrders')}</button>
           <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 {t('tabs.reports')}</button>
           <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
+          <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients & Vouchers</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
         </div>
         
@@ -4626,6 +4644,191 @@ function VCSEDashboard({ user, onLogout }) {
                   {toGoItems.map(item => (
                     <ToGoOrderCard key={item.id} item={item} onOrderPlaced={loadToGoItems} />
                   ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'recipients' && (
+          <div>
+            <h2 style={{marginBottom: '20px'}}>👥 Recipients & Voucher Management</h2>
+            
+            {/* Summary Cards */}
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '30px'}}>
+              <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
+                <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
+              </div>
+              <div style={{backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>
+                  {vouchers.filter(v => v.status === 'active').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
+              </div>
+              <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>
+                  {vouchers.filter(v => v.status === 'redeemed').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
+              </div>
+              <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>
+                  {vouchers.filter(v => {
+                    if (v.status !== 'active') return false
+                    const daysUntilExpiry = Math.ceil((new Date(v.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
+                    return daysUntilExpiry <= 7 && daysUntilExpiry > 0
+                  }).length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Expiring Soon (7 days)</div>
+              </div>
+            </div>
+            
+            {/* Filter Tabs */}
+            <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
+              <button 
+                onClick={() => setStatusFilter('all')}
+                style={{
+                  ...styles.tab,
+                  ...(statusFilter === 'all' ? styles.activeTab : {})
+                }}
+              >
+                All Vouchers ({vouchers.length})
+              </button>
+              <button 
+                onClick={() => setStatusFilter('active')}
+                style={{
+                  ...styles.tab,
+                  ...(statusFilter === 'active' ? styles.activeTab : {}),
+                  backgroundColor: statusFilter === 'active' ? '#4CAF50' : undefined
+                }}
+              >
+                🟢 Active ({vouchers.filter(v => v.status === 'active').length})
+              </button>
+              <button 
+                onClick={() => setStatusFilter('redeemed')}
+                style={{
+                  ...styles.tab,
+                  ...(statusFilter === 'redeemed' ? styles.activeTab : {}),
+                  backgroundColor: statusFilter === 'redeemed' ? '#2196F3' : undefined
+                }}
+              >
+                🔵 Redeemed ({vouchers.filter(v => v.status === 'redeemed').length})
+              </button>
+              <button 
+                onClick={() => setStatusFilter('expired')}
+                style={{
+                  ...styles.tab,
+                  ...(statusFilter === 'expired' ? styles.activeTab : {}),
+                  backgroundColor: statusFilter === 'expired' ? '#f44336' : undefined
+                }}
+              >
+                🔴 Expired ({vouchers.filter(v => v.status === 'expired').length})
+              </button>
+              <button 
+                onClick={() => setStatusFilter('expiring')}
+                style={{
+                  ...styles.tab,
+                  ...(statusFilter === 'expiring' ? styles.activeTab : {}),
+                  backgroundColor: statusFilter === 'expiring' ? '#FF9800' : undefined
+                }}
+              >
+                ⚠️ Expiring Soon ({vouchers.filter(v => {
+                  if (v.status !== 'active') return false
+                  const daysUntilExpiry = Math.ceil((new Date(v.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
+                  return daysUntilExpiry <= 7 && daysUntilExpiry > 0
+                }).length})
+              </button>
+            </div>
+            
+            {/* Vouchers Table */}
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', overflowX: 'auto'}}>
+              <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                <thead>
+                  <tr style={{borderBottom: '2px solid #ddd'}}>
+                    <th style={{padding: '12px', textAlign: 'left'}}>Recipient</th>
+                    <th style={{padding: '12px', textAlign: 'left'}}>Contact</th>
+                    <th style={{padding: '12px', textAlign: 'left'}}>Code</th>
+                    <th style={{padding: '12px', textAlign: 'right'}}>Value</th>
+                    <th style={{padding: '12px', textAlign: 'center'}}>Status</th>
+                    <th style={{padding: '12px', textAlign: 'left'}}>Issued</th>
+                    <th style={{padding: '12px', textAlign: 'left'}}>Expires</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vouchers
+                    .filter(v => {
+                      if (statusFilter === 'all') return true
+                      if (statusFilter === 'expiring') {
+                        if (v.status !== 'active') return false
+                        const daysUntilExpiry = Math.ceil((new Date(v.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
+                        return daysUntilExpiry <= 7 && daysUntilExpiry > 0
+                      }
+                      return v.status === statusFilter
+                    })
+                    .map(voucher => {
+                      const daysUntilExpiry = Math.ceil((new Date(voucher.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
+                      const isExpiringSoon = voucher.status === 'active' && daysUntilExpiry <= 7 && daysUntilExpiry > 0
+                      
+                      return (
+                        <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
+                          <td style={{padding: '12px'}}>
+                            <strong>{voucher.recipient?.name || 'Unknown'}</strong>
+                          </td>
+                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                            {voucher.recipient?.email}<br/>
+                            {voucher.recipient?.phone}
+                          </td>
+                          <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>
+                            {voucher.code}
+                          </td>
+                          <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold'}}>
+                            £{voucher.value.toFixed(2)}
+                          </td>
+                          <td style={{padding: '12px', textAlign: 'center'}}>
+                            <span style={{
+                              padding: '5px 12px',
+                              borderRadius: '20px',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              backgroundColor: 
+                                voucher.status === 'active' ? '#e8f5e9' :
+                                voucher.status === 'redeemed' ? '#e3f2fd' : '#ffebee',
+                              color:
+                                voucher.status === 'active' ? '#2e7d32' :
+                                voucher.status === 'redeemed' ? '#1565c0' : '#c62828'
+                            }}>
+                              {voucher.status.toUpperCase()}
+                            </span>
+                            {isExpiringSoon && (
+                              <div style={{fontSize: '11px', color: '#FF9800', marginTop: '3px'}}>
+                                ⚠️ {daysUntilExpiry} days left
+                              </div>
+                            )}
+                          </td>
+                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                            {new Date(voucher.created_at).toLocaleDateString()}
+                          </td>
+                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                            {new Date(voucher.expiry_date).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                </tbody>
+              </table>
+              
+              {vouchers.filter(v => {
+                if (statusFilter === 'all') return true
+                if (statusFilter === 'expiring') {
+                  if (v.status !== 'active') return false
+                  const daysUntilExpiry = Math.ceil((new Date(v.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
+                  return daysUntilExpiry <= 7 && daysUntilExpiry > 0
+                }
+                return v.status === statusFilter
+              }).length === 0 && (
+                <div style={{textAlign: 'center', padding: '40px', color: '#999'}}>
+                  <p>No vouchers found for this filter</p>
                 </div>
               )}
             </div>
