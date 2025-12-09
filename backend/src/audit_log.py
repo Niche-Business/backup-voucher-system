@@ -90,8 +90,10 @@ def init_audit_system(app_db, user_model):
     globals()['AuditLog'] = AuditLog
     
     # Create table if it doesn't exist
-    with app_db.app.app_context():
+    try:
         db.create_all()
+    except Exception as e:
+        logger.warning(f"Could not create audit_logs table: {e}")
     
     logger.info("Audit log system initialized")
 
