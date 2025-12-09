@@ -2161,6 +2161,40 @@ def get_stripe_config():
     except Exception as e:
         return jsonify({'error': f'Failed to get Stripe config: {str(e)}'}), 500
 
+@app.route('/api/admin/stripe-diagnostic', methods=['GET'])
+def stripe_diagnostic():
+    """Admin-only endpoint to diagnose Stripe configuration issues"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        import stripe
+        raw_secret = os.getenv('STRIPE_SECRET_KEY', '')
+        raw_publishable = os.getenv('STRIPE_PUBLISHABLE_KEY', '')
+        
+        diagnostic = {
+            'secret_key_configured': bool(raw_secret),
+            'secret_key_length': len(raw_secret) if raw_secret else 0,
+            'secret_key_starts_with': raw_secret[:10] if raw_secret else 'N/A',
+            'secret_key_format_valid': raw_secret.startswith('sk_test_') or raw_secret.startswith('sk_live_') if raw_secret else False,
+            'secret_key_has_bearer_prefix': raw_secret.startswith('Bearer ') or raw_secret.startswith('bearer ') if raw_secret else False,
+            'publishable_key_configured': bool(raw_publishable),
+            'publishable_key_length': len(raw_publishable) if raw_publishable else 0,
+            'publishable_key_starts_with': raw_publishable[:10] if raw_publishable else 'N/A',
+            'current_stripe_api_key': stripe.api_key[:15] + '...' if stripe.api_key else 'Not set',
+            'stripe_api_key_length': len(stripe.api_key) if stripe.api_key else 0
+        }
+        
+        return jsonify(diagnostic), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Diagnostic failed: {str(e)}'}), 500
+
 @app.route('/api/payment/create-intent', methods=['POST'])
 def create_payment_intent():
     """Create a Stripe Payment Intent for VCFSE fund loading"""

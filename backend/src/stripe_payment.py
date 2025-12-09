@@ -4,7 +4,23 @@ import os
 from datetime import datetime
 
 # Initialize Stripe with API key from environment
-stripe.api_key = os.getenv('STRIPE_SECRET_KEY', '')
+# Clean and validate the API key
+raw_api_key = os.getenv('STRIPE_SECRET_KEY', '')
+
+# Remove any 'Bearer ' prefix if present (common misconfiguration)
+if raw_api_key.startswith('Bearer '):
+    raw_api_key = raw_api_key[7:]  # Remove 'Bearer ' prefix
+elif raw_api_key.startswith('bearer '):
+    raw_api_key = raw_api_key[7:]  # Remove 'bearer ' prefix
+
+# Strip whitespace
+raw_api_key = raw_api_key.strip()
+
+# Validate API key format (should start with sk_test_ or sk_live_)
+if raw_api_key and not (raw_api_key.startswith('sk_test_') or raw_api_key.startswith('sk_live_')):
+    print(f"WARNING: Invalid Stripe API key format. Key should start with 'sk_test_' or 'sk_live_'. Current: {raw_api_key[:10]}...")
+
+stripe.api_key = raw_api_key
 
 def get_publishable_key():
     """
@@ -28,6 +44,10 @@ def create_payment_intent(amount, vcse_id, vcse_email, description="Fund Loading
     Returns:
         dict: Payment intent details including client_secret
     """
+    # Check if Stripe API key is configured
+    if not stripe.api_key or len(stripe.api_key) < 20:
+        raise Exception("Stripe API key is not properly configured. Please contact the administrator.")
+    
     try:
         # Convert pounds to pence (Stripe uses smallest currency unit)
         amount_in_pence = int(float(amount) * 100)
