@@ -1422,6 +1422,169 @@ def vcse_export_vouchers():
     except Exception as e:
         return jsonify({'error': f'Failed to export vouchers: {str(e)}'}), 500
 
+@app.route('/api/vcse/reports/pdf', methods=['GET'])
+def vcse_generate_pdf_report():
+    """Generate comprehensive PDF report for VCFSE organization"""
+    try:
+        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.lib.units import inch
+        from reportlab.pdfgen import canvas
+        from reportlab.lib import colors
+        from reportlab.platypus import Table, TableStyle
+        from io import BytesIO
+        from flask import send_file
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'Only VCFSE organizations can generate reports'}), 403
+        
+        # Get date range from query parameters
+        date_from = request.args.get('date_from')
+        date_to = request.args.get('date_to')
+        
+        # Parse dates
+        from datetime import datetime, timedelta
+        if date_from:
+            start_date = datetime.strptime(date_from, '%Y-%m-%d')
+        else:
+            start_date = datetime.now() - timedelta(days=30)
+        
+        if date_to:
+            end_date = datetime.strptime(date_to, '%Y-%m-%d')
+        else:
+            end_date = datetime.now()
+        
+        # Get vouchers issued by this VCFSE in date range
+        vouchers = Voucher.query.filter(
+            Voucher.issued_by == user_id,
+            Voucher.created_at >= start_date,
+            Voucher.created_at <= end_date
+        ).all()
+        
+        # Calculate statistics
+        total_vouchers = len(vouchers)
+        total_value = sum(float(v.value) for v in vouchers)
+        active_vouchers = len([v for v in vouchers if v.status == 'active'])
+        redeemed_vouchers = len([v for v in vouchers if v.status == 'redeemed'])
+        expired_vouchers = len([v for v in vouchers if v.status == 'expired'])
+        
+        # Create PDF
+        buffer = BytesIO()
+        c = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+        
+        # Header
+        c.setFillColor(colors.HexColor('#4CAF50'))
+        c.rect(0, height - 2*inch, width, 2*inch, fill=True, stroke=False)
+        c.setFillColor(colors.white)
+        c.setFont('Helvetica-Bold', 28)
+        c.drawCentredString(width/2, height - 1*inch, 'VCFSE Activity Report')
+        c.setFont('Helvetica', 12)
+        c.drawCentredString(width/2, height - 1.4*inch, f'{user.organization_name or user.email}')
+        c.drawCentredString(width/2, height - 1.7*inch, f'Period: {start_date.strftime("%d %B %Y")} to {end_date.strftime("%d %B %Y")}')
+        
+        # Summary Statistics
+        y_pos = height - 2.5*inch
+        c.setFillColor(colors.black)
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(1*inch, y_pos, 'Summary Statistics')
+        
+        y_pos -= 0.4*inch
+        c.setFont('Helvetica', 12)
+        c.drawString(1*inch, y_pos, f'Total Vouchers Issued: {total_vouchers}')
+        y_pos -= 0.25*inch
+        c.drawString(1*inch, y_pos, f'Total Value Issued: £{total_value:.2f}')
+        y_pos -= 0.25*inch
+        c.setFillColor(colors.HexColor('#4CAF50'))
+        c.drawString(1*inch, y_pos, f'Active Vouchers: {active_vouchers}')
+        y_pos -= 0.25*inch
+        c.setFillColor(colors.HexColor('#2196F3'))
+        c.drawString(1*inch, y_pos, f'Redeemed Vouchers: {redeemed_vouchers}')
+        y_pos -= 0.25*inch
+        c.setFillColor(colors.HexColor('#f44336'))
+        c.drawString(1*inch, y_pos, f'Expired Vouchers: {expired_vouchers}')
+        
+        # Voucher List
+        y_pos -= 0.6*inch
+        c.setFillColor(colors.black)
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(1*inch, y_pos, 'Voucher Details')
+        
+        y_pos -= 0.3*inch
+        c.setFont('Helvetica', 9)
+        
+        # Table headers
+        c.setFont('Helvetica-Bold', 9)
+        c.drawString(1*inch, y_pos, 'Code')
+        c.drawString(2.2*inch, y_pos, 'Recipient')
+        c.drawString(3.8*inch, y_pos, 'Value')
+        c.drawString(4.5*inch, y_pos, 'Status')
+        c.drawString(5.3*inch, y_pos, 'Issue Date')
+        c.drawString(6.5*inch, y_pos, 'Expiry')
+        
+        y_pos -= 0.05*inch
+        c.line(1*inch, y_pos, width - 1*inch, y_pos)
+        y_pos -= 0.15*inch
+        
+        c.setFont('Helvetica', 8)
+        for voucher in vouchers[:30]:  # Limit to first 30 vouchers
+            if y_pos < 1.5*inch:
+                # Start new page
+                c.showPage()
+                y_pos = height - 1*inch
+                c.setFont('Helvetica', 8)
+            
+            recipient = User.query.get(voucher.recipient_id)
+            recipient_name = f"{recipient.first_name} {recipient.last_name}" if recipient else "Unknown"
+            
+            c.drawString(1*inch, y_pos, voucher.code[:12])
+            c.drawString(2.2*inch, y_pos, recipient_name[:20])
+            c.drawString(3.8*inch, y_pos, f'£{float(voucher.value):.2f}')
+            
+            # Color-coded status
+            if voucher.status == 'active':
+                c.setFillColor(colors.HexColor('#4CAF50'))
+            elif voucher.status == 'redeemed':
+                c.setFillColor(colors.HexColor('#2196F3'))
+            else:
+                c.setFillColor(colors.HexColor('#f44336'))
+            c.drawString(4.5*inch, y_pos, voucher.status.upper())
+            c.setFillColor(colors.black)
+            
+            c.drawString(5.3*inch, y_pos, voucher.created_at.strftime('%d/%m/%Y') if voucher.created_at else '')
+            c.drawString(6.5*inch, y_pos, voucher.expiry_date.strftime('%d/%m/%Y') if voucher.expiry_date else '')
+            
+            y_pos -= 0.2*inch
+        
+        if total_vouchers > 30:
+            y_pos -= 0.2*inch
+            c.setFont('Helvetica-Oblique', 9)
+            c.drawString(1*inch, y_pos, f'... and {total_vouchers - 30} more vouchers (download Excel for complete list)')
+        
+        # Footer
+        c.setFont('Helvetica-Oblique', 8)
+        c.setFillColor(colors.grey)
+        c.drawCentredString(width/2, 0.5*inch, f'Generated on {datetime.now().strftime("%d %B %Y at %H:%M")} | BAK UP E-Voucher System')
+        
+        c.save()
+        buffer.seek(0)
+        
+        # Send PDF
+        return send_file(
+            buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'vcse_report_{start_date.strftime("%Y%m%d")}_to_{end_date.strftime("%Y%m%d")}.pdf'
+        )
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to generate PDF report: {str(e)}'}), 500
+
 @app.route('/api/school/place-order', methods=['POST'])
 def school_place_order():
     """School/Care organizations can place orders for To Go items on behalf of families"""
