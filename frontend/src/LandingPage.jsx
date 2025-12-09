@@ -225,24 +225,7 @@ const LandingPage = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* For Administrators */}
-          <div style={{
-            backgroundColor: '#f9f9f9',
-            padding: '30px',
-            borderRadius: '12px',
-            border: '2px solid #1976d2'
-          }}>
-            <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#1976d2' }}>
-              👨‍💼 {t('landing.whoWeServe.admins.title')}
-            </h3>
-            <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
-              <li>• {t('landing.whoWeServe.admins.item1')}</li>
-              <li>• {t('landing.whoWeServe.admins.item2')}</li>
-              <li>• {t('landing.whoWeServe.admins.item3')}</li>
-              <li>• {t('landing.whoWeServe.admins.item4')}</li>
-              <li>• {t('landing.whoWeServe.admins.item5')}</li>
-            </ul>
-          </div>
+
         </div>
       </div>
 
