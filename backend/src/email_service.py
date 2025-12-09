@@ -11,9 +11,18 @@ class EmailService:
     def __init__(self):
         self.smtp_server = 'smtp.gmail.com'
         self.smtp_port = 587
-        self.smtp_user = os.environ.get('GMAIL_USER')
-        self.smtp_password = os.environ.get('GMAIL_APP_PASSWORD')
-        self.from_email = os.environ.get('FROM_EMAIL', self.smtp_user)
+        
+        # Get and sanitize Gmail credentials
+        raw_gmail_user = os.environ.get('GMAIL_USER', '')
+        raw_gmail_password = os.environ.get('GMAIL_APP_PASSWORD', '')
+        
+        # Strip whitespace and newlines (common copy-paste errors)
+        self.smtp_user = raw_gmail_user.strip() if raw_gmail_user else None
+        self.smtp_password = raw_gmail_password.strip() if raw_gmail_password else None
+        
+        # Get FROM_EMAIL with sanitization
+        raw_from_email = os.environ.get('FROM_EMAIL', '')
+        self.from_email = raw_from_email.strip() if raw_from_email else self.smtp_user
         self.app_url = os.environ.get('APP_URL', 'https://backup-voucher-system.onrender.com')
         self.enabled = bool(self.smtp_user and self.smtp_password)
         
