@@ -2498,6 +2498,47 @@ def email_diagnostic():
     except Exception as e:
         return jsonify({'error': f'Email diagnostic failed: {str(e)}'}), 500
 
+@app.route('/api/admin/diagnostic/user-counts', methods=['GET'])
+def diagnostic_user_counts():
+    """Diagnostic endpoint to check how many users exist by type for notifications"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Count users by type
+        recipient_count = User.query.filter_by(user_type='recipient').count()
+        vcse_count = User.query.filter_by(user_type='vcse').count()
+        school_count = User.query.filter_by(user_type='school').count()
+        vendor_count = User.query.filter_by(user_type='vendor').count()
+        admin_count = User.query.filter_by(user_type='admin').count()
+        
+        # Get sample users from each type
+        recipients = User.query.filter_by(user_type='recipient').limit(3).all()
+        vcses = User.query.filter_by(user_type='vcse').limit(3).all()
+        schools = User.query.filter_by(user_type='school').limit(3).all()
+        
+        return jsonify({
+            'counts': {
+                'recipients': recipient_count,
+                'vcses': vcse_count,
+                'schools': school_count,
+                'vendors': vendor_count,
+                'admins': admin_count
+            },
+            'samples': {
+                'recipients': [{'id': u.id, 'email': u.email, 'first_name': u.first_name} for u in recipients],
+                'vcses': [{'id': u.id, 'email': u.email, 'first_name': u.first_name} for u in vcses],
+                'schools': [{'id': u.id, 'email': u.email, 'first_name': u.first_name} for u in schools]
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/admin/test-email', methods=['POST'])
 def test_email():
     """Admin-only endpoint to test email sending"""
