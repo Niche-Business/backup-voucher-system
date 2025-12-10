@@ -6396,16 +6396,29 @@ def delete_school(school_id):
                 'error': f'Cannot delete school. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
             }), 400
         
-        # Delete associated records first to avoid foreign key constraints
-        # Delete login sessions
-        LoginSession.query.filter_by(user_id=school_id).delete()
+        # Delete associated records in correct order to avoid foreign key constraints
+        logger.info(f"Deleting school: {school.organization_name} (ID: {school_id})")
         
-        # Delete notifications
-        Notification.query.filter_by(user_id=school_id).delete()
+        # 1. Delete notification preferences
+        pref_count = NotificationPreference.query.filter_by(user_id=school_id).delete()
+        logger.info(f"Deleted {pref_count} notification preferences")
         
-        # Delete the school
+        # 2. Delete notifications where this user is the recipient
+        notif_count = Notification.query.filter_by(user_id=school_id).delete()
+        logger.info(f"Deleted {notif_count} notifications")
+        
+        # 3. Delete login sessions
+        session_count = LoginSession.query.filter_by(user_id=school_id).delete()
+        logger.info(f"Deleted {session_count} login sessions")
+        
+        # 4. Flush changes to ensure foreign keys are updated
+        db.session.flush()
+        
+        # 5. Finally delete the school
         db.session.delete(school)
         db.session.commit()
+        
+        logger.info(f"Successfully deleted school: {school.organization_name}")
         
         return jsonify({
             'message': 'School deleted successfully',
@@ -6496,16 +6509,29 @@ def delete_vcse(vcse_id):
                 'error': f'Cannot delete VCFSE organization. It has issued {vouchers_count} voucher(s). Please reassign or delete vouchers first.'
             }), 400
         
-        # Delete associated records first to avoid foreign key constraints
-        # Delete login sessions
-        LoginSession.query.filter_by(user_id=vcse_id).delete()
+        # Delete associated records in correct order to avoid foreign key constraints
+        logger.info(f"Deleting VCFSE: {vcse.organization_name or vcse.first_name} (ID: {vcse_id})")
         
-        # Delete notifications
-        Notification.query.filter_by(user_id=vcse_id).delete()
+        # 1. Delete notification preferences
+        pref_count = NotificationPreference.query.filter_by(user_id=vcse_id).delete()
+        logger.info(f"Deleted {pref_count} notification preferences")
         
-        # Delete the VCFSE organization
+        # 2. Delete notifications where this user is the recipient
+        notif_count = Notification.query.filter_by(user_id=vcse_id).delete()
+        logger.info(f"Deleted {notif_count} notifications")
+        
+        # 3. Delete login sessions
+        session_count = LoginSession.query.filter_by(user_id=vcse_id).delete()
+        logger.info(f"Deleted {session_count} login sessions")
+        
+        # 4. Flush changes to ensure foreign keys are updated
+        db.session.flush()
+        
+        # 5. Finally delete the VCFSE organization
         db.session.delete(vcse)
         db.session.commit()
+        
+        logger.info(f"Successfully deleted VCFSE: {vcse.organization_name or vcse.first_name}")
         
         return jsonify({
             'message': 'VCFSE organization deleted successfully',
@@ -6545,23 +6571,35 @@ def delete_recipient(recipient_id):
                 'error': f'Cannot delete recipient. They have {active_vouchers_count} active voucher(s). Please expire or redeem vouchers first.'
             }), 400
         
-        # Delete associated records first to avoid foreign key constraints
-        # Delete login sessions
-        LoginSession.query.filter_by(user_id=recipient_id).delete()
-        
-        # Delete notifications
-        Notification.query.filter_by(user_id=recipient_id).delete()
-        
-        # Delete cart items
-        Cart.query.filter_by(user_id=recipient_id).delete()
-        
-        # Keep vouchers for record keeping but they'll be orphaned
-        # (or you could delete them if preferred)
-        
-        # Delete the recipient
+        # Delete associated records in correct order to avoid foreign key constraints
         recipient_name = f"{recipient.first_name} {recipient.last_name}"
+        logger.info(f"Deleting recipient: {recipient_name} (ID: {recipient_id})")
+        
+        # 1. Delete notification preferences
+        pref_count = NotificationPreference.query.filter_by(user_id=recipient_id).delete()
+        logger.info(f"Deleted {pref_count} notification preferences")
+        
+        # 2. Delete notifications where this user is the recipient
+        notif_count = Notification.query.filter_by(user_id=recipient_id).delete()
+        logger.info(f"Deleted {notif_count} notifications")
+        
+        # 3. Delete login sessions
+        session_count = LoginSession.query.filter_by(user_id=recipient_id).delete()
+        logger.info(f"Deleted {session_count} login sessions")
+        
+        # 4. Delete cart items
+        cart_count = Cart.query.filter_by(user_id=recipient_id).delete()
+        logger.info(f"Deleted {cart_count} cart items")
+        
+        # 5. Flush changes to ensure foreign keys are updated
+        db.session.flush()
+        
+        # 6. Finally delete the recipient
+        # Keep vouchers for record keeping but they'll be orphaned
         db.session.delete(recipient)
         db.session.commit()
+        
+        logger.info(f"Successfully deleted recipient: {recipient_name}")
         
         return jsonify({
             'message': 'Recipient deleted successfully',
@@ -7041,6 +7079,23 @@ def request_payout():
         db.session.add(payout)
         db.session.commit()
         
+        # Create in-app notification for all admins
+        try:
+            admins = User.query.filter_by(user_type='admin', is_active=True).all()
+            for admin in admins:
+                notification = Notification(
+                    user_id=admin.id,
+                    type='payout_request',
+                    title='New Payout Request',
+                    message=f'{user.first_name} {user.last_name} requested a payout of £{payout.amount:.2f} for {shop.shop_name}',
+                    link=f'/admin/payouts/{payout.id}'
+                )
+                db.session.add(notification)
+            db.session.commit()
+            logger.info(f"Created in-app notifications for {len(admins)} admins about payout request")
+        except Exception as e:
+            logger.error(f"Failed to create in-app notifications for payout request: {e}")
+        
         # Send email notification to admin
         try:
             email_service.send_payout_request_notification(
@@ -7049,7 +7104,7 @@ def request_payout():
                 amount=payout.amount
             )
         except Exception as e:
-            print(f"Failed to send payout request email: {e}")
+            logger.error(f"Failed to send payout request email: {e}")
         
         return jsonify({
             'message': 'Payout request submitted successfully',
@@ -7199,6 +7254,22 @@ def review_payout(payout_id):
         
         db.session.commit()
         
+        # Create in-app notification for vendor
+        try:
+            status_text = 'approved' if payout.status == 'approved' else 'rejected'
+            notification = Notification(
+                user_id=payout.vendor_id,
+                type='payout_status',
+                title=f'Payout Request {status_text.title()}',
+                message=f'Your payout request for £{payout.amount:.2f} has been {status_text}. {admin_notes if admin_notes else ""}',
+                link=f'/vendor/payouts/{payout.id}'
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"Created in-app notification for vendor about payout {status_text}")
+        except Exception as e:
+            logger.error(f"Failed to create in-app notification for payout status: {e}")
+        
         # Send email notification to vendor
         try:
             email_service.send_payout_status_notification(
@@ -7210,7 +7281,7 @@ def review_payout(payout_id):
                 admin_notes=admin_notes
             )
         except Exception as e:
-            print(f"Failed to send payout status email: {e}")
+            logger.error(f"Failed to send payout status email: {e}")
         
         return jsonify({
             'message': f'Payout request {action}d successfully',
@@ -7250,6 +7321,21 @@ def mark_payout_paid(payout_id):
         
         db.session.commit()
         
+        # Create in-app notification for vendor
+        try:
+            notification = Notification(
+                user_id=payout.vendor_id,
+                type='payout_paid',
+                title='Payout Completed',
+                message=f'Your payout of £{payout.amount:.2f} for {payout.shop.shop_name} has been paid.',
+                link=f'/vendor/payouts/{payout.id}'
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"Created in-app notification for vendor about payout payment")
+        except Exception as e:
+            logger.error(f"Failed to create in-app notification for payout payment: {e}")
+        
         # Send payment confirmation email
         try:
             email_service.send_payout_paid_notification(
@@ -7259,7 +7345,7 @@ def mark_payout_paid(payout_id):
                 amount=payout.amount
             )
         except Exception as e:
-            print(f"Failed to send payment confirmation email: {e}")
+            logger.error(f"Failed to send payment confirmation email: {e}")
         
         return jsonify({
             'message': 'Payout marked as paid successfully',
