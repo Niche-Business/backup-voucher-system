@@ -6704,6 +6704,24 @@ function RecipientDashboard({ user, onLogout }) {
           <div>
             <h2>🎁 Food To Go at a Discount</h2>
             
+            {/* Informative banner explaining how Food To Go works */}
+            <div style={{
+              backgroundColor: '#e3f2fd',
+              padding: '20px',
+              borderRadius: '10px',
+              marginBottom: '20px',
+              border: '2px solid #2196F3'
+            }}>
+              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '18px'}}>ℹ️ How "Food To Go" Works</h3>
+              <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
+                <strong>Food To Go</strong> displays surplus and discounted food items that participating shops have actively posted. 
+                While there are {shops.length} participating shops in total, only shops that have posted available items will appear here.
+              </p>
+              <p style={{margin: '0', color: '#555', lineHeight: '1.6'}}>
+                💡 <strong>Tip:</strong> Check back regularly as shops post new items throughout the day to reduce food waste and offer you great savings!
+              </p>
+            </div>
+            
             {discountedItems.length === 0 ? (
               <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', textAlign: 'center'}}>
                 <p style={{color: '#666', marginBottom: '20px'}}>
