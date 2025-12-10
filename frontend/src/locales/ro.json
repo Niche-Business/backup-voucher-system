@@ -424,7 +424,15 @@
   },
   "shop": {
     "portal": "Portalul Magazinului Local",
-    "description": "Acceptați vouchere și sprijiniți comunitatea locală"
+    "description": "Acceptați vouchere și sprijiniți comunitatea locală",
+    "toGoPosted": "Articole de Mâncare Postate",
+    "shopsRegistered": "Magazine Înregistrate",
+    "redeemVouchers": "Valorifică Vouchere",
+    "scanQRCode": "Scanează Cod QR",
+    "redemptionHistory": "Istoric Valorificări",
+    "searchByCodeOrRecipient": "Caută după cod sau destinatar...",
+    "redemptionHistoryComingSoon": "Istoric Valorificări În Curând",
+    "redemptionHistoryDescription": "Vizualizați istoricul detaliat al tuturor valorificărilor de vouchere la magazinul dvs."
   },
   "reports": {
     "generateReport": "Generează Raport",

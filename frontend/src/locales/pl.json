@@ -424,7 +424,15 @@
   },
   "shop": {
     "portal": "Lokalny Portal Sklepowy",
-    "description": "Akceptuj vouchery i wspieraj swoją lokalną społeczność"
+    "description": "Akceptuj vouchery i wspieraj swoją lokalną społeczność",
+    "toGoPosted": "Opublikowane Artykuły Spożywcze",
+    "shopsRegistered": "Zarejestrowane Sklepy",
+    "redeemVouchers": "Zrealizuj Vouchery",
+    "scanQRCode": "Skanuj Kod QR",
+    "redemptionHistory": "Historia Realizacji",
+    "searchByCodeOrRecipient": "Szukaj po kodzie lub odbiorcy...",
+    "redemptionHistoryComingSoon": "Historia Realizacji Wkrótce",
+    "redemptionHistoryDescription": "Wyświetl szczegółową historię wszystkich realizacji voucherów w Twoim sklepie"
   },
   "reports": {
     "generateReport": "Generuj Raport",

@@ -424,7 +424,15 @@
   },
   "shop": {
     "portal": "بوابة المتجر المحلي",
-    "description": "اقبل القسائم وادعم مجتمعك المحلي"
+    "description": "اقبل القسائم وادعم مجتمعك المحلي",
+    "toGoPosted": "عناصر الطعام المنشورة",
+    "shopsRegistered": "المتاجر المسجلة",
+    "redeemVouchers": "استبدال القسائم",
+    "scanQRCode": "مسح رمز الاستجابة السريعة",
+    "redemptionHistory": "سجل الاستبدال",
+    "searchByCodeOrRecipient": "البحث بالرمز أو المستلم...",
+    "redemptionHistoryComingSoon": "سجل الاستبدال قريبًا",
+    "redemptionHistoryDescription": "عرض تاريخ مفصل لجميع عمليات استبدال القسائم في متجرك"
   },
   "reports": {
     "generateReport": "إنشاء تقرير",

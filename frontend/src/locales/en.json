@@ -424,7 +424,15 @@
   },
   "shop": {
     "portal": "Local Shop Portal",
-    "description": "Accept vouchers and support your local community"
+    "description": "Accept vouchers and support your local community",
+    "toGoPosted": "Food To Go Items Posted",
+    "shopsRegistered": "Shops Registered",
+    "redeemVouchers": "Redeem Vouchers",
+    "scanQRCode": "Scan QR Code",
+    "redemptionHistory": "Redemption History",
+    "searchByCodeOrRecipient": "Search by code or recipient...",
+    "redemptionHistoryComingSoon": "Redemption History Coming Soon",
+    "redemptionHistoryDescription": "View detailed history of all voucher redemptions at your shop"
   },
   "reports": {
     "generateReport": "Generate Report",
