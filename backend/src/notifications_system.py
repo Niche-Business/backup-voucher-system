@@ -266,9 +266,9 @@ def init_socketio(socketio_instance):
     return socketio_instance
 
 
-def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_id, item_name, shop_name, quantity):
+def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_id, item_name, shop_name, quantity, item_description='', shop_address=''):
     """
-    Broadcast a new item notification to appropriate user groups via WebSocket
+    Broadcast a new item notification to appropriate user groups via WebSocket and Email
     
     Args:
         socketio_instance: Flask-SocketIO instance
@@ -278,8 +278,12 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
         item_name: Name of the item
         shop_name: Name of the shop
         quantity: Quantity available
+        item_description: Description of the item (optional)
+        shop_address: Address of the shop (optional)
     """
     try:
+        from email_service import email_service
+        
         if item_type == 'discount':
             # Discounted items go to recipients, schools, and VCFSEs
             notification_type = 'discounted_item'
@@ -291,7 +295,7 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
             target_groups = ['vcse']
             message = f"New free item available for collection: {item_name} at {shop_name}"
         
-        # Create notification in database
+        # Create notification in database and send to users
         for target_group in target_groups:
             notification = create_notification(
                 notification_type=notification_type,
@@ -308,8 +312,28 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
                 # Broadcast via WebSocket to the appropriate room
                 room = f"{target_group}_room"
                 socketio_instance.emit('new_item_notification', notification.to_dict(), room=room)
+                
+                # Send email notifications to users in this group
+                # Get all users of this type who have email notifications enabled
+                users = _User.query.filter_by(user_type=target_group).all()
+                for user in users:
+                    # Check if user has email notifications enabled (default: True)
+                    pref = _NotificationPreference.query.filter_by(user_id=user.id).first()
+                    if not pref or pref.email_notifications:  # Default to True if no preference set
+                        user_name = user.first_name or user.email.split('@')[0]
+                        email_service.send_new_item_notification(
+                            user_email=user.email,
+                            user_name=user_name,
+                            item_name=item_name,
+                            item_type=item_type,
+                            quantity=quantity,
+                            shop_name=shop_name,
+                            shop_address=shop_address,
+                            item_description=item_description
+                        )
         
         return True
     except Exception as e:
         print(f"Error broadcasting notification: {str(e)}")
         return False
+

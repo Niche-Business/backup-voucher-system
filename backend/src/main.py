@@ -4088,16 +4088,18 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
-        # Broadcast real-time notification via WebSocket
+        # Broadcast real-time notification via WebSocket and Email
         from notifications_system import broadcast_new_item_notification
         broadcast_new_item_notification(
             socketio,
-            item_type=data.get('item_type', 'free'),
+            item_type=item_type,
             shop_id=shop.id,
             item_id=new_item.id,
             item_name=data['item_name'],
             shop_name=shop.shop_name,
-            quantity=data['quantity']
+            quantity=data['quantity'],
+            item_description=data.get('description', ''),
+            shop_address=shop.address or ''
         )
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")

@@ -902,3 +902,92 @@ class EmailService:
 
 # Create global instance
 email_service = EmailService()
+
+    def send_new_item_notification(self, user_email, user_name, item_name, item_type, quantity, shop_name, shop_address, item_description=''):
+        """Send email notification when a new Food To Go item is posted"""
+        
+        # Customize email based on item type
+        if item_type == 'free':
+            subject = f"🆓 New FREE Food To Go Item Available: {item_name}"
+            header_color = "#4CAF50"
+            item_type_label = "FREE for VCFSE Collection"
+            price_info = "<p style='font-size: 24px; color: #4CAF50; font-weight: bold; margin: 20px 0;'>🆓 FREE</p>"
+        else:  # discount
+            subject = f"💰 New Discounted Food To Go Item: {item_name}"
+            header_color = "#9C27B0"
+            item_type_label = "Discounted Item"
+            price_info = "<p style='font-size: 18px; color: #9C27B0; font-weight: bold; margin: 20px 0;'>💰 Discounted Price Available</p>"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: {header_color}; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .item-card {{ background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid {header_color}; }}
+                .shop-info {{ background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0; }}
+                .button {{ display: inline-block; padding: 15px 30px; background-color: {header_color}; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="margin: 0;">🍎 New Food To Go Item!</h1>
+                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">{item_type_label}</p>
+                </div>
+                <div class="content">
+                    <p>Hi {user_name},</p>
+                    
+                    <p>Great news! A new Food To Go item has just been posted by a local shop in your area:</p>
+                    
+                    <div class="item-card">
+                        <h2 style="margin: 0 0 15px 0; color: {header_color};">{item_name}</h2>
+                        {price_info}
+                        <p style="margin: 10px 0;"><strong>📦 Quantity Available:</strong> {quantity}</p>
+                        {f'<p style="margin: 10px 0;"><strong>📝 Description:</strong> {item_description}</p>' if item_description else ''}
+                    </div>
+                    
+                    <div class="shop-info">
+                        <h3 style="margin: 0 0 10px 0; color: #2E7D32;">🏪 Shop Information</h3>
+                        <p style="margin: 5px 0;"><strong>Shop:</strong> {shop_name}</p>
+                        <p style="margin: 5px 0;"><strong>📍 Address:</strong> {shop_address}</p>
+                    </div>
+                    
+                    <p style="margin: 25px 0 15px 0;"><strong>⚡ Act fast!</strong> Food To Go items are available on a first-come, first-served basis.</p>
+                    
+                    <div style="text-align: center;">
+                        <a href="{self.app_url}" class="button">View Item Now →</a>
+                    </div>
+                    
+                    <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+                    
+                    <p style="font-size: 13px; color: #666;">
+                        <strong>💡 Tip:</strong> Log in to your BAK UP account to view full details, check availability, and {'order for your clients' if item_type == 'free' else 'add to your cart'}.
+                    </p>
+                    
+                    <p style="font-size: 13px; color: #666;">
+                        You're receiving this email because you have email notifications enabled for new Food To Go items. 
+                        You can manage your notification preferences in your account settings.
+                    </p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP E-Voucher System</p>
+                    <p>Reducing food waste, supporting communities</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=user_email,
+            subject=subject,
+            html_content=html_content
+        )
+
+# Create global instance
+email_service = EmailService()
