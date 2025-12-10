@@ -37,8 +37,20 @@ export default function QRScanner({ onScan, onClose }) {
       )
       setScanning(true)
     } catch (err) {
-      setError('Failed to start camera. Please check permissions.')
       console.error('QR Scanner error:', err)
+      
+      // Provide detailed error message based on error type
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError('Camera permission denied. Please enable camera access in your browser settings and try again.')
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setError('No camera found on this device. Please use manual voucher code entry instead.')
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        setError('Camera is already in use by another application. Please close other apps and try again.')
+      } else if (err.name === 'OverconstrainedError') {
+        setError('Camera does not support required settings. Please use manual voucher code entry instead.')
+      } else {
+        setError('Failed to start camera. Please use manual voucher code entry below instead.')
+      }
     }
   }
 
@@ -103,11 +115,32 @@ export default function QRScanner({ onScan, onClose }) {
           <div style={{
             backgroundColor: '#ffebee',
             color: '#c62828',
-            padding: '10px',
+            padding: '15px',
             borderRadius: '5px',
-            marginBottom: '15px'
+            marginBottom: '15px',
+            fontSize: '14px',
+            lineHeight: '1.6'
           }}>
-            {error}
+            <div style={{fontWeight: 'bold', marginBottom: '8px'}}>⚠️ Camera Access Issue</div>
+            <div style={{marginBottom: '10px'}}>{error}</div>
+            
+            {error.includes('permission') && (
+              <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#fff3e0', color: '#e65100', borderRadius: '5px'}}>
+                <strong>🔧 How to Enable Camera:</strong>
+                <ol style={{margin: '8px 0 0 20px', padding: 0}}>
+                  <li>Look for a camera icon in your browser's address bar</li>
+                  <li>Click it and select "Allow" or "Always allow"</li>
+                  <li>Refresh this page and try again</li>
+                </ol>
+                <div style={{marginTop: '8px', fontStyle: 'italic'}}>Or close this and use manual voucher code entry instead.</div>
+              </div>
+            )}
+            
+            {error.includes('No camera') && (
+              <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', color: '#01579b', borderRadius: '5px'}}>
+                <strong>📝 Alternative:</strong> Close this window and manually type the voucher code in the input field below.
+              </div>
+            )}
           </div>
         )}
 
