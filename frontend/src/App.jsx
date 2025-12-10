@@ -16,6 +16,30 @@ import { QRCodeSVG } from 'qrcode.react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
+// Notification Sound Utility
+const playNotificationSound = () => {
+  try {
+    // Create a simple notification beep using Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const oscillator = audioContext.createOscillator()
+    const gainNode = audioContext.createGain()
+    
+    oscillator.connect(gainNode)
+    gainNode.connect(audioContext.destination)
+    
+    oscillator.frequency.value = 800 // Frequency in Hz
+    oscillator.type = 'sine'
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
+    
+    oscillator.start(audioContext.currentTime)
+    oscillator.stop(audioContext.currentTime + 0.5)
+  } catch (error) {
+    console.log('Could not play notification sound:', error)
+  }
+}
+
 // Error Boundary Component
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -3699,6 +3723,8 @@ function VCSEDashboard({ user, onLogout }) {
   const [reassignVoucher, setReassignVoucher] = useState(null)
   const [reassignEmail, setReassignEmail] = useState('')
   const [reassignReason, setReassignReason] = useState('')
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [lastItemCount, setLastItemCount] = useState(0)
 
   useEffect(() => {
     loadBalance()
@@ -3707,6 +3733,41 @@ function VCSEDashboard({ user, onLogout }) {
     loadAnalytics()
     loadVendorShops()
   }, [])
+
+  // Periodic check for new Food To Go items (every 30 seconds when on togo tab)
+  useEffect(() => {
+    if (activeTab !== 'togo') return
+    
+    const checkForNewItems = async () => {
+      try {
+        const data = await apiCall('/vcse/to-go-items')
+        const newItems = data.items || []
+        
+        // Check if there are new items (more than before)
+        if (lastItemCount > 0 && newItems.length > lastItemCount && soundEnabled) {
+          playNotificationSound()
+          // Show visual notification
+          const notification = document.createElement('div')
+          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+          notification.textContent = `🔔 ${newItems.length - lastItemCount} new FREE Food To Go item(s) available!`
+          document.body.appendChild(notification)
+          setTimeout(() => notification.remove(), 5000)
+        }
+        
+        setToGoItems(newItems)
+        setLastItemCount(newItems.length)
+      } catch (error) {
+        console.error('Failed to check for new items:', error)
+      }
+    }
+    
+    // Check immediately
+    checkForNewItems()
+    
+    // Then check every 30 seconds
+    const interval = setInterval(checkForNewItems, 30000)
+    return () => clearInterval(interval)
+  }, [activeTab, lastItemCount, soundEnabled])
 
   useEffect(() => {
     loadVouchers()
@@ -4637,8 +4698,30 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🛒️ {t('pages.foodToGoOrderTitle')}</h2>
-            <p style={{marginBottom: '20px', color: '#666'}}>{t('pages.foodToGoOrderDesc')}</p>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+              <div>
+                <h2 style={{margin: 0}}>🛒️ {t('pages.foodToGoOrderTitle')}</h2>
+                <p style={{margin: '5px 0 0 0', color: '#666'}}>{t('pages.foodToGoOrderDesc')}</p>
+              </div>
+              <button
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: soundEnabled ? '#4CAF50' : '#9E9E9E',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                {soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF'}
+              </button>
+            </div>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
@@ -5992,6 +6075,8 @@ function RecipientDashboard({ user, onLogout }) {
   const [showShopSelection, setShowShopSelection] = useState(false)
   const [shopSelectionVoucherCode, setShopSelectionVoucherCode] = useState(null)
   const [discountedItems, setDiscountedItems] = useState([])
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [lastItemCount, setLastItemCount] = useState(0)
 
   useEffect(() => {
     loadVouchers()
@@ -6000,6 +6085,41 @@ function RecipientDashboard({ user, onLogout }) {
     loadCart()
     checkShopSelectionRequired()
   }, [])
+
+  // Periodic check for new Food To Go items (every 30 seconds when on togo tab)
+  useEffect(() => {
+    if (activeTab !== 'togo') return
+    
+    const checkForNewItems = async () => {
+      try {
+        const data = await apiCall('/recipient/to-go-items')
+        const newItems = data.items || []
+        
+        // Check if there are new items (more than before)
+        if (lastItemCount > 0 && newItems.length > lastItemCount && soundEnabled) {
+          playNotificationSound()
+          // Show visual notification
+          const notification = document.createElement('div')
+          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+          notification.textContent = `🔔 ${newItems.length - lastItemCount} new discounted Food To Go item(s) available!`
+          document.body.appendChild(notification)
+          setTimeout(() => notification.remove(), 5000)
+        }
+        
+        setToGoItems(newItems)
+        setLastItemCount(newItems.length)
+      } catch (error) {
+        console.error('Failed to check for new items:', error)
+      }
+    }
+    
+    // Check immediately
+    checkForNewItems()
+    
+    // Then check every 30 seconds
+    const interval = setInterval(checkForNewItems, 30000)
+    return () => clearInterval(interval)
+  }, [activeTab, lastItemCount, soundEnabled])
 
   // Watch townFilter and reload shops when it changes
   useEffect(() => {
@@ -6546,7 +6666,31 @@ function RecipientDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <h2>🍎 {t('dashboard.browseToGo')} ({toGoItems.length})</h2>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+              <div>
+                <h2 style={{margin: 0}}>🍎 {t('dashboard.browseToGo')} ({toGoItems.length})</h2>
+                <p style={{margin: '5px 0 0 0', color: '#666'}}>Discounted surplus food items from local shops</p>
+              </div>
+              <button
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: soundEnabled ? '#4CAF50' : '#9e9e9e',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                title={soundEnabled ? 'Disable notification sounds' : 'Enable notification sounds'}
+              >
+                {soundEnabled ? '🔔' : '🔕'} {soundEnabled ? 'Sound ON' : 'Sound OFF'}
+              </button>
+            </div>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <p>{t('dashboard.noToGoItems')}</p>
