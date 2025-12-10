@@ -4257,6 +4257,7 @@ def post_surplus_item():
         db.session.commit()
         
         # Broadcast real-time notification via WebSocket and Email (non-blocking)
+        # FIXED: Application context wrapper added to prevent RuntimeError
         def send_notifications_async():
             # CRITICAL: Must run within Flask application context for database access
             with app.app_context():
