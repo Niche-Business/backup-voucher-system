@@ -3955,12 +3955,13 @@ def redeem_voucher():
 def get_notifications():
     """Get notifications for a user"""
     try:
-        user_id = request.args.get('user_id')
+        # Use session-based authentication
+        user_id = session.get('user_id')
         
         if not user_id:
-            return jsonify({'error': 'User ID required'}), 400
+            return jsonify({'error': 'Not authenticated'}), 401
         
-        notifications = Notification.query.filter_by(user_id=user_id).order_by(Notification.created_at.desc()).limit(50).all()
+        notifications = UserNotification.query.filter_by(user_id=user_id).order_by(UserNotification.created_at.desc()).limit(50).all()
         
         notifications_data = []
         for notif in notifications:
@@ -3973,7 +3974,13 @@ def get_notifications():
                 'created_at': notif.created_at.isoformat() if notif.created_at else None
             })
         
-        return jsonify({'notifications': notifications_data}), 200
+        # Count unread notifications
+        unread_count = UserNotification.query.filter_by(user_id=user_id, is_read=False).count()
+        
+        return jsonify({
+            'notifications': notifications_data,
+            'unread_count': unread_count
+        }), 200
         
     except Exception as e:
         return jsonify({'error': f'Failed to load notifications: {str(e)}'}), 500
@@ -3982,7 +3989,11 @@ def get_notifications():
 def mark_notification_read(notification_id):
     """Mark a notification as read"""
     try:
-        notification = Notification.query.get(notification_id)
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        notification = UserNotification.query.filter_by(id=notification_id, user_id=user_id).first()
         
         if not notification:
             return jsonify({'error': 'Notification not found'}), 404
@@ -3995,6 +4006,65 @@ def mark_notification_read(notification_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to mark notification as read: {str(e)}'}), 500
+
+@app.route('/api/notifications/mark-all-read', methods=['POST'])
+def mark_all_notifications_read():
+    """Mark all notifications as read for the current user"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        UserNotification.query.filter_by(user_id=user_id, is_read=False).update({'is_read': True})
+        db.session.commit()
+        
+        return jsonify({'message': 'All notifications marked as read'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to mark all notifications as read: {str(e)}'}), 500
+
+@app.route('/api/notifications/preferences', methods=['GET', 'POST'])
+def notification_preferences():
+    """Get or update notification preferences"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        if request.method == 'GET':
+            pref = NotificationPreference.query.filter_by(user_id=user_id).first()
+            if not pref:
+                # Return defaults
+                return jsonify({
+                    'sound_enabled': True,
+                    'email_enabled': True
+                }), 200
+            return jsonify({
+                'sound_enabled': pref.sound_enabled,
+                'email_enabled': pref.email_enabled
+            }), 200
+        
+        else:  # POST
+            data = request.get_json()
+            pref = NotificationPreference.query.filter_by(user_id=user_id).first()
+            
+            if not pref:
+                pref = NotificationPreference(user_id=user_id)
+                db.session.add(pref)
+            
+            if 'sound_enabled' in data:
+                pref.sound_enabled = data['sound_enabled']
+            if 'email_enabled' in data:
+                pref.email_enabled = data['email_enabled']
+            
+            db.session.commit()
+            
+            return jsonify({'message': 'Preferences updated'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to update preferences: {str(e)}'}), 500
 
 # Vendor Routes - Post Surplus Food
 @app.route('/api/items/post', methods=['POST'])
@@ -4665,6 +4735,8 @@ def vcse_get_to_go_items():
                     'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
                     'shop_name': shop.shop_name if shop else 'Unknown',
                     'shop_address': shop.address if shop else 'N/A',
+                    'shop_city': shop.city if shop else None,
+                    'shop_town': shop.town if shop else None,
                     'shop_phone': shop.phone if shop else 'N/A',
                     'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
                     'created_at': item.posted_at.isoformat() if item.posted_at else None,
@@ -4741,7 +4813,8 @@ def vcse_get_discounted_items():
                 'shop_name': shop.shop_name if shop else 'Unknown',
                 'shop_address': shop.address if shop else 'N/A',
                 'shop_phone': shop.phone if shop else 'N/A',
-                'shop_city': shop.city if shop else 'N/A',
+                'shop_city': shop.city if shop else None,
+                'shop_town': shop.town if shop else None,
                 'shop_postcode': shop.postcode if shop else 'N/A',
                 'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
                 'posted_at': item.posted_at.isoformat() if item.posted_at else None
