@@ -5933,10 +5933,10 @@ function VendorDashboard({ user, onLogout }) {
             
             <h3>Your Food to Go Items ({toGoCount})</h3>
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {toGoItems.length === 0 ? (
+              {toGoItems.filter(item => item.status !== 'removed').length === 0 ? (
                 <p>No Food to Go Items posted yet</p>
               ) : (
-                toGoItems.map(item => (
+                toGoItems.filter(item => item.status !== 'removed').map(item => (
                   <div key={item.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                     <div style={{flex: 1}}>
                       <strong style={{fontSize: '18px', color: '#FF9800'}}>{item.item_name}</strong><br />
