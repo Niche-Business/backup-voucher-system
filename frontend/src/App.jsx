@@ -5334,8 +5334,16 @@ function VendorDashboard({ user, onLogout }) {
 
   const handlePostToGo = async (e) => {
     e.preventDefault()
+    
+    // Disable button to prevent double-clicking
+    const submitButton = e.target.querySelector('button[type="submit"]')
+    if (submitButton) {
+      submitButton.disabled = true
+      submitButton.textContent = '⏳ Posting...'
+    }
+    
     try {
-      await apiCall('/items/post', {
+      const response = await apiCall('/items/post', {
         method: 'POST',
         body: JSON.stringify({
           shop_name: toGoForm.shopName,
@@ -5350,12 +5358,31 @@ function VendorDashboard({ user, onLogout }) {
           original_price: toGoForm.item_type === 'discount' ? toGoForm.original_price : null
         })
       })
-      setMessage('Food to Go Items posted successfully!')
+      
+      // Show success message
+      if (response.duplicate_warning) {
+        setMessage(`⚠️ ${response.message}`)
+      } else {
+        setMessage(`✅ ${response.message || 'Food to Go item posted successfully!'}`)
+      }
+      
+      // Clear form
       setToGoForm({ ...toGoForm, itemName: '', quantity: '', description: '', expiry_date: '', item_type: 'free', price: '', original_price: '' })
+      
+      // Reload items
       loadToGoItems()
-      setTimeout(() => setMessage(''), 3000)
+      
+      // Clear message after 5 seconds
+      setTimeout(() => setMessage(''), 5000)
     } catch (error) {
-      setMessage('Error: ' + error.message)
+      setMessage('❌ Error: ' + error.message)
+      setTimeout(() => setMessage(''), 5000)
+    } finally {
+      // Re-enable button
+      if (submitButton) {
+        submitButton.disabled = false
+        submitButton.textContent = 'Post Food to Go Items Item'
+      }
     }
   }
 

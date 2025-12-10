@@ -4139,6 +4139,56 @@ def post_surplus_item():
             if price >= original_price:
                 return jsonify({'error': 'Discounted price must be less than original price'}), 400
         
+        # Check for duplicate items posted in the last 5 minutes
+        from datetime import timedelta
+        five_minutes_ago = datetime.now() - timedelta(minutes=5)
+        duplicate_check = SurplusItem.query.filter(
+            SurplusItem.vendor_id == user_id,
+            SurplusItem.shop_id == shop.id,
+            SurplusItem.item_name == data['item_name'],
+            SurplusItem.category == data['category'],
+            SurplusItem.item_type == item_type,
+            SurplusItem.status == 'available',
+            SurplusItem.posted_at >= five_minutes_ago
+        ).first()
+        
+        duplicate_warning = False
+        if duplicate_check:
+            # Update the existing item's quantity instead of creating a duplicate
+            try:
+                # Parse quantities (handle strings like "20 loaves")
+                existing_qty_str = str(duplicate_check.quantity)
+                new_qty_str = str(data['quantity'])
+                
+                # Try to extract numbers
+                import re
+                existing_num = re.search(r'\d+', existing_qty_str)
+                new_num = re.search(r'\d+', new_qty_str)
+                
+                if existing_num and new_num:
+                    combined_qty = int(existing_num.group()) + int(new_num.group())
+                    # Keep the unit from the existing quantity
+                    unit = existing_qty_str.replace(existing_num.group(), '').strip()
+                    duplicate_check.quantity = f"{combined_qty} {unit}" if unit else str(combined_qty)
+                else:
+                    # Can't parse, just concatenate
+                    duplicate_check.quantity = f"{existing_qty_str} + {new_qty_str}"
+                
+                db.session.commit()
+                
+                return jsonify({
+                    'message': f'Duplicate detected! Updated existing "{data["item_name"]}" quantity to {duplicate_check.quantity}',
+                    'duplicate_warning': True,
+                    'item_id': duplicate_check.id,
+                    'item_name': duplicate_check.item_name,
+                    'shop': shop.shop_name,
+                    'updated_quantity': duplicate_check.quantity
+                }), 200
+            except Exception as update_error:
+                # If update fails, continue to create new item but warn
+                duplicate_warning = True
+                print(f"Failed to update duplicate: {update_error}")
+        
         # Create surplus item
         new_item = SurplusItem(
             vendor_id=user_id,

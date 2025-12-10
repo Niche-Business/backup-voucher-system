@@ -111,7 +111,7 @@ export function NotificationBell({ apiCall, userType }) {
 
   const markAsRead = async (notificationId) => {
     try {
-      await apiCall(`/api/notifications/${notificationId}/read`, 'POST');
+      await apiCall(`/notifications/${notificationId}/read`, { method: 'POST' });
       setNotifications(prev =>
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       );
@@ -123,7 +123,7 @@ export function NotificationBell({ apiCall, userType }) {
 
   const markAllAsRead = async () => {
     try {
-      await apiCall('/api/notifications/mark-all-read', 'POST');
+      await apiCall('/notifications/mark-all-read', { method: 'POST' });
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (error) {
@@ -296,14 +296,34 @@ export function NotificationBell({ apiCall, userType }) {
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  onClick={() => !notification.is_read && markAsRead(notification.id)}
+                  onClick={() => {
+                    // Mark as read
+                    if (!notification.is_read) {
+                      markAsRead(notification.id);
+                    }
+                    // Navigate to item (close dropdown first)
+                    setShowDropdown(false);
+                    // Trigger navigation based on user type
+                    if (notification.item_type === 'free') {
+                      // Free items - navigate to VCFSE To Go tab
+                      window.location.hash = '#vcfse-togo';
+                    } else {
+                      // Discounted items - navigate to Browse To Go tab
+                      window.location.hash = '#browse-togo';
+                    }
+                  }}
                   style={{
                     padding: '15px',
                     borderBottom: '1px solid #eee',
-                    cursor: notification.is_read ? 'default' : 'pointer',
+                    cursor: 'pointer',
                     backgroundColor: notification.is_read ? 'white' : '#e8f5e9',
-                    transition: 'background-color 0.2s'
+                    transition: 'background-color 0.2s',
+                    '&:hover': {
+                      backgroundColor: '#f5f5f5'
+                    }
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = notification.is_read ? 'white' : '#e8f5e9'}
                 >
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <div style={{ fontSize: '24px', flexShrink: 0 }}>
