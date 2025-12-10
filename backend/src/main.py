@@ -4215,28 +4215,35 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
-        # Broadcast real-time notification via WebSocket and Email
-        try:
-            from notifications_system import broadcast_new_item_notification
-            success = broadcast_new_item_notification(
-                socketio,
-                item_type=item_type,
-                shop_id=shop.id,
-                item_id=new_item.id,
-                item_name=data['item_name'],
-                shop_name=shop.shop_name,
-                quantity=data['quantity'],
-                item_description=data.get('description', ''),
-                shop_address=shop.address or ''
-            )
-            if success:
-                print(f"✅ Notifications sent successfully for: {data['item_name']}")
-            else:
-                print(f"⚠️ Notification broadcast returned False for: {data['item_name']}")
-        except Exception as notif_error:
-            print(f"❌ ERROR: Failed to send notifications: {str(notif_error)}")
-            import traceback
-            traceback.print_exc()
+        # Broadcast real-time notification via WebSocket and Email (non-blocking)
+        def send_notifications_async():
+            try:
+                from notifications_system import broadcast_new_item_notification
+                success = broadcast_new_item_notification(
+                    socketio,
+                    item_type=item_type,
+                    shop_id=shop.id,
+                    item_id=new_item.id,
+                    item_name=data['item_name'],
+                    shop_name=shop.shop_name,
+                    quantity=data['quantity'],
+                    item_description=data.get('description', ''),
+                    shop_address=shop.address or ''
+                )
+                if success:
+                    print(f"✅ Notifications sent successfully for: {data['item_name']}")
+                else:
+                    print(f"⚠️ Notification broadcast returned False for: {data['item_name']}")
+            except Exception as notif_error:
+                print(f"❌ ERROR: Failed to send notifications: {str(notif_error)}")
+                import traceback
+                traceback.print_exc()
+        
+        # Run notifications in background thread to avoid blocking the response
+        import threading
+        notification_thread = threading.Thread(target=send_notifications_async)
+        notification_thread.daemon = True
+        notification_thread.start()
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         

@@ -332,17 +332,20 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
                     # Check if user has email notifications enabled (default: True)
                     pref = _NotificationPreference.query.filter_by(user_id=user.id).first()
                     if not pref or pref.email_enabled:  # Fixed: was email_notifications, should be email_enabled
-                        user_name = user.first_name or user.email.split('@')[0]
-                        email_service.send_new_item_notification(
-                            user_email=user.email,
-                            user_name=user_name,
-                            item_name=item_name,
-                            item_type=item_type,
-                            quantity=quantity,
-                            shop_name=shop_name,
-                            shop_address=shop_address,
-                            item_description=item_description
-                        )
+                        try:
+                            user_name = user.first_name or user.email.split('@')[0]
+                            email_service.send_new_item_notification(
+                                user_email=user.email,
+                                user_name=user_name,
+                                item_name=item_name,
+                                item_type=item_type,
+                                quantity=quantity,
+                                shop_name=shop_name,
+                                shop_address=shop_address,
+                                item_description=item_description
+                            )
+                        except Exception as email_error:
+                            print(f"Failed to send email to {user.email}: {str(email_error)}")
         
         return True
     except Exception as e:
