@@ -6257,6 +6257,62 @@ def delete_vcse(vcse_id):
         return jsonify({'error': f'Failed to delete VCFSE organization: {str(e)}'}), 500
 
 
+@app.route('/api/admin/recipient/<int:recipient_id>', methods=['DELETE'])
+def delete_recipient(recipient_id):
+    """Admin deletes/deactivates a recipient"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        # Get the recipient
+        recipient = User.query.get(recipient_id)
+        if not recipient or recipient.user_type != 'recipient':
+            return jsonify({'error': 'Recipient not found'}), 404
+        
+        # Check if recipient has active vouchers
+        active_vouchers_count = Voucher.query.filter_by(
+            recipient_id=recipient_id,
+            status='active'
+        ).count()
+        
+        if active_vouchers_count > 0:
+            return jsonify({
+                'error': f'Cannot delete recipient. They have {active_vouchers_count} active voucher(s). Please expire or redeem vouchers first.'
+            }), 400
+        
+        # Delete associated records first to avoid foreign key constraints
+        # Delete login sessions
+        LoginSession.query.filter_by(user_id=recipient_id).delete()
+        
+        # Delete notifications
+        Notification.query.filter_by(user_id=recipient_id).delete()
+        
+        # Delete cart items
+        Cart.query.filter_by(user_id=recipient_id).delete()
+        
+        # Keep vouchers for record keeping but they'll be orphaned
+        # (or you could delete them if preferred)
+        
+        # Delete the recipient
+        recipient_name = f"{recipient.first_name} {recipient.last_name}"
+        db.session.delete(recipient)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Recipient deleted successfully',
+            'recipient_name': recipient_name
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to delete recipient: {str(e)}'}), 500
+
+
 @app.route('/api/admin/shops/<int:shop_id>', methods=['PUT'])
 def admin_edit_shop(shop_id):
     """Admin edits a local shop"""
