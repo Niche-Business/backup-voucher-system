@@ -6691,6 +6691,26 @@ function RecipientDashboard({ user, onLogout }) {
                 {soundEnabled ? '🔔' : '🔕'} {soundEnabled ? 'Sound ON' : 'Sound OFF'}
               </button>
             </div>
+            
+            {/* Informative Banner */}
+            <div style={{
+              backgroundColor: '#e3f2fd',
+              padding: '20px',
+              borderRadius: '10px',
+              marginBottom: '20px',
+              border: '2px solid #2196F3'
+            }}>
+              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '18px'}}>ℹ️ How "Browse Food To Go" Works</h3>
+              <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
+                <strong>Browse Food To Go</strong> displays discounted surplus food items that participating shops have actively posted. 
+                While there are {shops.length} participating shops in total, only shops that have posted available items will appear here.
+              </p>
+              <p style={{margin: '0', color: '#555', lineHeight: '1.6'}}>
+                💡 <strong>Tip:</strong> Check back regularly! Shops post new items throughout the day as surplus becomes available. 
+                You can also enable sound notifications above to be alerted when new items are posted.
+              </p>
+            </div>
+            
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {toGoItems.length === 0 ? (
                 <p>{t('dashboard.noToGoItems')}</p>
@@ -7623,14 +7643,23 @@ function SchoolDashboard({ user, onLogout }) {
                       required
                     >
                       <option value="">-- Select a shop --</option>
-                      {toGoItems.length > 0 && [...new Set(toGoItems.map(item => JSON.stringify({id: item.shop_id, name: item.shop_name, town: item.shop_town})))].map(shopStr => {
-                        const shop = JSON.parse(shopStr)
-                        return (
-                          <option key={shop.id} value={shop.id}>
-                            {shop.name} - {shop.town}
-                          </option>
-                        )
-                      })}
+                      {toGoItems.length > 0 && (() => {
+                        try {
+                          const validItems = toGoItems.filter(item => item && item.shop_id && item.shop_name)
+                          const uniqueShops = [...new Set(validItems.map(item => JSON.stringify({id: item.shop_id, name: item.shop_name, town: item.shop_town || 'N/A'})))]
+                          return uniqueShops.map(shopStr => {
+                            const shop = JSON.parse(shopStr)
+                            return (
+                              <option key={shop.id} value={shop.id}>
+                                {shop.name} - {shop.town}
+                              </option>
+                            )
+                          })
+                        } catch (error) {
+                          console.error('Error rendering shop options:', error)
+                          return null
+                        }
+                      })()}
                     </select>
                   </div>
                 )}
