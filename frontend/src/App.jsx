@@ -1333,6 +1333,7 @@ function AdminDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <h1>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <NotificationBell apiCall={apiCall} userType="admin" />
           <LanguageSelector />
           <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
         </div>

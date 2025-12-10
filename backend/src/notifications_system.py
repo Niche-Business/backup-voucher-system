@@ -96,6 +96,12 @@ def get_user_notifications():
                 (_Notification.target_group == 'all'),
                 _Notification.type == 'discounted_item'
             ).order_by(_Notification.created_at.desc()).limit(50).all()
+        elif user.user_type == 'admin':
+            # Admins see ALL notifications
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'admin') | 
+                (_Notification.target_group == 'all')
+            ).order_by(_Notification.created_at.desc()).limit(50).all()
         else:
             notifications = []
         
@@ -161,6 +167,12 @@ def mark_all_notifications_read():
                 (_Notification.target_group == 'recipient') | 
                 (_Notification.target_group == 'all'),
                 _Notification.type == 'discounted_item',
+                _Notification.is_read == False
+            ).all()
+        elif user.user_type == 'admin':
+            notifications = _Notification.query.filter(
+                (_Notification.target_group == 'admin') | 
+                (_Notification.target_group == 'all'),
                 _Notification.is_read == False
             ).all()
         else:
@@ -285,14 +297,14 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
         from email_service import email_service
         
         if item_type == 'discount':
-            # Discounted items go to recipients, schools, and VCFSEs
+            # Discounted items go to recipients, schools, VCFSEs, and admins
             notification_type = 'discounted_item'
-            target_groups = ['recipient', 'school', 'vcse']
+            target_groups = ['recipient', 'school', 'vcse', 'admin']
             message = f"New discounted item available: {item_name} at {shop_name}"
         else:  # free
-            # Free items go only to VCFSEs
+            # Free items go to VCFSEs and admins
             notification_type = 'free_item'
-            target_groups = ['vcse']
+            target_groups = ['vcse', 'admin']
             message = f"New free item available for collection: {item_name} at {shop_name}"
         
         # Create notification in database and send to users
@@ -319,7 +331,7 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
                 for user in users:
                     # Check if user has email notifications enabled (default: True)
                     pref = _NotificationPreference.query.filter_by(user_id=user.id).first()
-                    if not pref or pref.email_notifications:  # Default to True if no preference set
+                    if not pref or pref.email_enabled:  # Fixed: was email_notifications, should be email_enabled
                         user_name = user.first_name or user.email.split('@')[0]
                         email_service.send_new_item_notification(
                             user_email=user.email,
