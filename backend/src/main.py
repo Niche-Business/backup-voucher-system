@@ -11,6 +11,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
 import secrets
+import logging
+import sys
 from email_service import email_service
 from charity_verification import verify_charity_number
 from sms_service import sms_service
@@ -55,6 +57,16 @@ socketio = SocketIO(app, cors_allowed_origins='*', manage_session=False)
 
 # Initialize Flask-Compress for Gzip compression
 Compress(app)
+
+# Configure logging to avoid WSGI errors
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # Initialize Flask-Limiter for rate limiting
 limiter = Limiter(
@@ -476,7 +488,7 @@ BAK UP Team
             mail.send(msg)
         return True
     except Exception as e:
-        print(f"Email sending failed: {e}")
+            logger.error(f"Email sending failed: {e}")
         return False
 
 def send_welcome_email(user):
@@ -572,12 +584,12 @@ BAK UP CIC - Northamptonshire Community E-Voucher Scheme
         
         if not app.config['MAIL_SUPPRESS_SEND']:
             mail.send(msg)
-            print(f"Welcome email sent to {user.email}")
+            logger.info(f"Welcome email sent to {user_email}")
         else:
-            print(f"Email suppressed (dev mode): Would send welcome email to {user.email}")
+            logger.info(f"Email suppressed (dev mode): Would send welcome email to {user_email}")
         return True
     except Exception as e:
-        print(f"Welcome email sending failed: {e}")
+        logger.error(f"Welcome email sending failed: {e}")
         return False
 
 def create_notification(user_id, title, message, notification_type='info'):
@@ -639,12 +651,12 @@ def register():
         if not data:
             return jsonify({'error': 'Request body is empty'}), 400
         
-        print(f"\n{'='*80}")
-        print(f"REGISTRATION REQUEST RECEIVED:")
-        print(f"Email: {data.get('email')}")
-        print(f"User Type: {data.get('user_type')} (type: {type(data.get('user_type'))}")
-        print(f"Full data keys: {list(data.keys())}")
-        print(f"{'='*80}\n")
+        logger.info("="*80)
+        logger.info("REGISTRATION REQUEST RECEIVED:")
+        logger.info(f"Email: {data.get('email')}")
+        logger.info(f"User Type: {data.get('user_type')} (type: {type(data.get('user_type'))}")
+        logger.info(f"Full data keys: {list(data.keys())}")
+        logger.info("="*80)
         
         # Validate required fields
         required_fields = ['email', 'password', 'first_name', 'last_name', 'user_type']
@@ -798,11 +810,11 @@ def register():
                         html_content=html_content
                     )
                 except Exception as email_error:
-                    print(f"Warning: Could not send admin notification: {email_error}")
+                    logger.warning(f"Could not send admin notification: {email_error}")
                     pass  # Don't fail registration if admin notification fails
                         
         except Exception as email_error:
-            print(f"Warning: Could not send email: {email_error}")
+            logger.warning(f"Could not send email: {email_error}")
         
         # For demo purposes, auto-verify
         user.is_verified = True
@@ -842,13 +854,13 @@ def register():
         
     except Exception as e:
         db.session.rollback()
-        print(f"\n{'='*80}")
-        print(f"REGISTRATION ERROR:")
-        print(f"Error type: {type(e).__name__}")
-        print(f"Error message: {str(e)}")
+        logger.error("="*80)
+        logger.error("REGISTRATION ERROR:")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error message: {str(e)}")
         import traceback
-        traceback.print_exc()
-        print(f"{'='*80}\n")
+        logger.error(traceback.format_exc())
+        logger.error("="*80)
         
         # Return user-friendly error message
         error_message = str(e)
@@ -994,19 +1006,19 @@ def forgot_password():
         db.session.commit()
         
         # Send password reset email using SendGrid
-        print(f"[FORGOT-PASSWORD] Attempting to send email to {user.email}")
-        print(f"[FORGOT-PASSWORD] Email service enabled: {email_service.enabled}")
+        logger.info(f"[FORGOT-PASSWORD] Attempting to send email to {user.email}")
+        logger.info(f"[FORGOT-PASSWORD] Email service enabled: {email_service.enabled}")
         try:
             result = email_service.send_password_reset_email(
                 user_email=user.email,
                 user_name=f"{user.first_name} {user.last_name}",
                 reset_token=token
             )
-            print(f"[FORGOT-PASSWORD] Email send result: {result}")
+            logger.info(f"[FORGOT-PASSWORD] Email send result: {result}")
         except Exception as email_error:
-            print(f"[FORGOT-PASSWORD] ERROR: {str(email_error)}")
+            logger.error(f"[FORGOT-PASSWORD] ERROR: {str(email_error)}")
             import traceback
-            traceback.print_exc()
+            logger.error(traceback.format_exc())
         
         return jsonify({
             'message': 'If the email exists, a password reset link has been sent'
@@ -1306,9 +1318,9 @@ def admin_analytics():
         }), 200
         
     except Exception as e:
-        print(f"Error in admin analytics: {str(e)}")
+        logger.error(f"Error in admin analytics: {str(e)}")
         import traceback
-        traceback.print_exc()
+        logger.error(traceback.format_exc())
         return jsonify({'error': f'Failed to load analytics: {str(e)}'}), 500
 
 @app.route('/api/vcse/vouchers', methods=['GET'])
