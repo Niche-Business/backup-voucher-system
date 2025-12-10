@@ -136,21 +136,49 @@ class ErrorBoundary extends Component {
 
 // API Helper Function
 const apiCall = async (endpoint, options = {}) => {
-  const response = await fetch(`/api${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
-    },
-    credentials: 'include'
-  })
-  
-  if (!response.ok && response.status !== 401) {
-    const error = await response.json()
-    throw new Error(error.error || 'Request failed')
+  try {
+    const response = await fetch(`/api${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      },
+      credentials: 'include'
+    })
+    
+    // Handle non-OK responses
+    if (!response.ok && response.status !== 401) {
+      let errorMessage = 'Request failed'
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData.error || errorData.message || errorMessage
+      } catch (parseError) {
+        // If response is not JSON, try to get text
+        try {
+          const errorText = await response.text()
+          errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`
+        } catch {
+          errorMessage = `HTTP ${response.status}: ${response.statusText}`
+        }
+      }
+      throw new Error(errorMessage)
+    }
+    
+    // Parse successful response
+    try {
+      return await response.json()
+    } catch (parseError) {
+      console.error('Failed to parse response as JSON:', parseError)
+      throw new Error('Invalid server response')
+    }
+  } catch (error) {
+    // Network errors or fetch failures
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Network error: Unable to connect to server. Please check your internet connection.')
+    }
+    // Re-throw other errors
+    throw error
   }
-  
-  return response.json()
 }
 
 function App() {

@@ -629,11 +629,20 @@ def health_check():
 @app.route('/api/register', methods=['POST'])
 def register():
     try:
+        # Validate request has JSON data
+        if not request.is_json:
+            return jsonify({'error': 'Request must be JSON'}), 400
+        
         data = request.get_json()
+        
+        # Validate data is not None or empty
+        if not data:
+            return jsonify({'error': 'Request body is empty'}), 400
+        
         print(f"\n{'='*80}")
         print(f"REGISTRATION REQUEST RECEIVED:")
         print(f"Email: {data.get('email')}")
-        print(f"User Type: {data.get('user_type')} (type: {type(data.get('user_type'))})")
+        print(f"User Type: {data.get('user_type')} (type: {type(data.get('user_type'))}")
         print(f"Full data keys: {list(data.keys())}")
         print(f"{'='*80}\n")
         
@@ -732,26 +741,65 @@ def register():
                 user_type=user.user_type
             )
             
-            # Notify admin when VCFSE registers (informational only)
-            if user.user_type == 'vcse':
-                admin_users = User.query.filter_by(user_type='admin').all()
-                for admin in admin_users:
-                    try:
-                        email_service.send_email(
-                            to_email=admin.email,
-                            subject=f"New VCFSE Registration: {user.organization_name}",
-                            html_content=f"""
-                            <h3>New VCFSE Organization Registered</h3>
-                            <p><strong>Organization:</strong> {user.organization_name}</p>
-                            <p><strong>Charity Number:</strong> {user.charity_commission_number}</p>
-                            <p><strong>Contact:</strong> {user.first_name} {user.last_name}</p>
-                            <p><strong>Email:</strong> {user.email}</p>
-                            <p><strong>Status:</strong> Auto-approved (charity verified)</p>
-                            <p>The organization has been automatically approved and can now access the platform.</p>
-                            """
-                        )
-                    except:
-                        pass  # Don't fail registration if admin notification fails
+            # Notify admins of new user registration
+            admin_users = User.query.filter_by(user_type='admin').all()
+            for admin in admin_users:
+                try:
+                    # Customize email based on user type
+                    if user.user_type == 'vcse':
+                        subject = f"New VCFSE Registration: {user.organization_name}"
+                        html_content = f"""
+                        <h3>🎉 New VCFSE Organization Registered</h3>
+                        <p><strong>Organization:</strong> {user.organization_name}</p>
+                        <p><strong>Charity Number:</strong> {user.charity_commission_number}</p>
+                        <p><strong>Contact:</strong> {user.first_name} {user.last_name}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Phone:</strong> {user.phone}</p>
+                        <p><strong>Status:</strong> Auto-approved (charity verified)</p>
+                        <p>The organization has been automatically approved and can now access the platform.</p>
+                        """
+                    elif user.user_type == 'vendor':
+                        subject = f"New Vendor Registration: {user.shop_name or user.first_name}"
+                        html_content = f"""
+                        <h3>🏪 New Vendor Registered</h3>
+                        <p><strong>Shop Name:</strong> {user.shop_name}</p>
+                        <p><strong>Category:</strong> {user.shop_category}</p>
+                        <p><strong>Owner:</strong> {user.first_name} {user.last_name}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Phone:</strong> {user.phone}</p>
+                        <p><strong>Address:</strong> {user.address}, {user.city} {user.postcode}</p>
+                        <p><strong>Status:</strong> Active</p>
+                        """
+                    elif user.user_type == 'school':
+                        subject = f"New School Registration: {user.organization_name}"
+                        html_content = f"""
+                        <h3>🏫 New School Registered</h3>
+                        <p><strong>School:</strong> {user.organization_name}</p>
+                        <p><strong>Contact:</strong> {user.first_name} {user.last_name}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Phone:</strong> {user.phone}</p>
+                        <p><strong>Address:</strong> {user.address}, {user.city} {user.postcode}</p>
+                        <p><strong>Status:</strong> Active</p>
+                        """
+                    else:  # recipient
+                        subject = f"New Recipient Registration: {user.first_name} {user.last_name}"
+                        html_content = f"""
+                        <h3>👤 New Recipient Registered</h3>
+                        <p><strong>Name:</strong> {user.first_name} {user.last_name}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Phone:</strong> {user.phone}</p>
+                        <p><strong>Address:</strong> {user.address}, {user.city} {user.postcode}</p>
+                        <p><strong>Status:</strong> Active</p>
+                        """
+                    
+                    email_service.send_email(
+                        to_email=admin.email,
+                        subject=subject,
+                        html_content=html_content
+                    )
+                except Exception as email_error:
+                    print(f"Warning: Could not send admin notification: {email_error}")
+                    pass  # Don't fail registration if admin notification fails
                         
         except Exception as email_error:
             print(f"Warning: Could not send email: {email_error}")
@@ -794,7 +842,27 @@ def register():
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': f'Registration failed: {str(e)}'}), 500
+        print(f"\n{'='*80}")
+        print(f"REGISTRATION ERROR:")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        print(f"{'='*80}\n")
+        
+        # Return user-friendly error message
+        error_message = str(e)
+        if 'duplicate key' in error_message.lower() or 'unique constraint' in error_message.lower():
+            error_message = 'Email already registered. Please use a different email or try logging in.'
+        elif 'connection' in error_message.lower():
+            error_message = 'Database connection error. Please try again in a moment.'
+        elif not error_message or len(error_message) > 200:
+            error_message = 'Registration failed. Please check your information and try again.'
+        
+        return jsonify({
+            'error': error_message,
+            'details': str(e) if len(str(e)) < 200 else 'Internal server error'
+        }), 500
 
 @app.route('/api/login', methods=['POST'])
 @limiter.limit("5 per 15 minutes")
