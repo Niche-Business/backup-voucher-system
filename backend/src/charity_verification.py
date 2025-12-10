@@ -214,6 +214,6 @@ class CharityVerificationService:
 
 
 # Convenience function for easy import
-def verify_charity_number(charity_number):
-    """Verify a charity registration number"""
-    return CharityVerificationService.verify_charity_number(charity_number)
+def verify_charity_number(charity_number, organization_name=None):
+    """Verify a charity registration number and optionally check organization name match"""
+    return CharityVerificationService.verify_charity_number(charity_number, organization_name)
