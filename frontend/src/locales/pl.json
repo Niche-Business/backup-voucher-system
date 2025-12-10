@@ -435,7 +435,14 @@
     "redemptionHistoryDescription": "Wyświetl szczegółową historię wszystkich realizacji voucherów w Twoim sklepie",
     "yourShops": "Twoje Sklepy",
     "edit": "Edytuj",
-    "delete": "Usuń"
+    "delete": "Usuń",
+    "enterVoucherCode": "Wprowadź Kod Vouchera",
+    "howToRedeem": "Jak Zrealizować Vouchery",
+    "step1": "Klient prezentuje swój voucher (kod QR lub kod vouchera)",
+    "step2": "Zeskanuj kod QR lub ręcznie wprowadź kod vouchera poniżej",
+    "step3": "Zweryfikuj szczegóły vouchera (wartość, imię odbiorcy, data ważności)",
+    "step4": "Zakończ transakcję i dostarcz towary/usługi",
+    "step5": "Voucher zostanie automatycznie oznaczony jako zrealizowany"
   },
   "reports": {
     "generateReport": "Generuj Raport",

@@ -435,7 +435,14 @@
     "redemptionHistoryDescription": "View detailed history of all voucher redemptions at your shop",
     "yourShops": "Your Shops",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "enterVoucherCode": "Enter Voucher Code",
+    "howToRedeem": "How to Redeem Vouchers",
+    "step1": "Customer presents their voucher (QR code or voucher code)",
+    "step2": "Scan the QR code or manually enter the voucher code below",
+    "step3": "Verify the voucher details (value, recipient name, expiry date)",
+    "step4": "Complete the transaction and provide the goods/services",
+    "step5": "The voucher will be automatically marked as redeemed"
   },
   "reports": {
     "generateReport": "Generate Report",

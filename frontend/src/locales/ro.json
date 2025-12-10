@@ -435,7 +435,14 @@
     "redemptionHistoryDescription": "Vizualizați istoricul detaliat al tuturor valorificărilor de vouchere la magazinul dvs.",
     "yourShops": "Magazinele Dvs.",
     "edit": "Editează",
-    "delete": "Șterge"
+    "delete": "Șterge",
+    "enterVoucherCode": "Introduceți Codul Voucherului",
+    "howToRedeem": "Cum să Valorificați Voucherele",
+    "step1": "Clientul prezintă voucherul (cod QR sau cod voucher)",
+    "step2": "Scanați codul QR sau introduceți manual codul voucherului mai jos",
+    "step3": "Verificați detaliile voucherului (valoare, nume destinatar, dată expirare)",
+    "step4": "Finalizați tranzacția și furnizați bunurile/serviciile",
+    "step5": "Voucherul va fi marcat automat ca valorificat"
   },
   "reports": {
     "generateReport": "Generează Raport",
