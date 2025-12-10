@@ -1668,14 +1668,21 @@ def vcse_place_order():
             return jsonify({'error': 'Item is no longer available'}), 400
         
         # Check if sufficient quantity available
-        if item.quantity < quantity:
-            return jsonify({'error': f'Insufficient quantity. Only {item.quantity} available'}), 400
+        # Convert item.quantity to int for comparison (it's stored as string in DB)
+        try:
+            available_quantity = int(item.quantity)
+        except (ValueError, TypeError):
+            return jsonify({'error': 'Invalid quantity format in database'}), 500
+            
+        if available_quantity < quantity:
+            return jsonify({'error': f'Insufficient quantity. Only {available_quantity} available'}), 400
         
         # Reduce item quantity
-        item.quantity -= quantity
+        new_quantity = available_quantity - quantity
+        item.quantity = str(new_quantity)  # Store back as string
         
         # If quantity reaches 0, mark as unavailable
-        if item.quantity == 0:
+        if new_quantity == 0:
             item.status = 'unavailable'
         
         # Create order
