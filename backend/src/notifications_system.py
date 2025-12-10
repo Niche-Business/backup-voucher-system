@@ -293,8 +293,12 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
         item_description: Description of the item (optional)
         shop_address: Address of the shop (optional)
     """
+    print(f"\n🔔 === NOTIFICATION BROADCAST STARTED ===")
+    print(f"Item: {item_name} | Type: {item_type} | Shop: {shop_name}")
+    
     try:
         from email_service import email_service
+        print(f"✅ Email service imported successfully")
         
         if item_type == 'discount':
             # Discounted items go to recipients, schools, VCFSEs, and admins
@@ -307,8 +311,17 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
             target_groups = ['vcse', 'admin']
             message = f"New free item available for collection: {item_name} at {shop_name}"
         
+        print(f"📢 Target groups: {', '.join(target_groups)}")
+        print(f"📝 Message: {message}")
+        
         # Create notification in database and send to users
+        total_notifications_created = 0
+        total_emails_sent = 0
+        total_websocket_broadcasts = 0
+        
         for target_group in target_groups:
+            print(f"\n👥 Processing target group: {target_group}")
+            
             notification = create_notification(
                 notification_type=notification_type,
                 shop_id=shop_id,
@@ -321,19 +334,30 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
             )
             
             if notification:
+                total_notifications_created += 1
+                print(f"✅ Database notification created (ID: {notification.id})")
+                
                 # Broadcast via WebSocket to the appropriate room
                 room = f"{target_group}_room"
-                socketio_instance.emit('new_item_notification', notification.to_dict(), room=room)
+                try:
+                    socketio_instance.emit('new_item_notification', notification.to_dict(), room=room)
+                    total_websocket_broadcasts += 1
+                    print(f"📡 WebSocket broadcast sent to room: {room}")
+                except Exception as ws_error:
+                    print(f"❌ WebSocket broadcast failed for {room}: {str(ws_error)}")
                 
                 # Send email notifications to users in this group
                 # Get all users of this type who have email notifications enabled
                 users = _User.query.filter_by(user_type=target_group).all()
+                print(f"📊 Found {len(users)} users in group '{target_group}'")
+                
                 for user in users:
                     # Check if user has email notifications enabled (default: True)
                     pref = _NotificationPreference.query.filter_by(user_id=user.id).first()
-                    if not pref or pref.email_enabled:  # Fixed: was email_notifications, should be email_enabled
+                    if not pref or pref.email_enabled:
                         try:
                             user_name = user.first_name or user.email.split('@')[0]
+                            print(f"  📧 Sending email to: {user.email} ({user_name})")
                             email_service.send_new_item_notification(
                                 user_email=user.email,
                                 user_name=user_name,
@@ -344,11 +368,25 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
                                 shop_address=shop_address,
                                 item_description=item_description
                             )
+                            total_emails_sent += 1
+                            print(f"  ✅ Email sent successfully to {user.email}")
                         except Exception as email_error:
-                            print(f"Failed to send email to {user.email}: {str(email_error)}")
+                            print(f"  ❌ Failed to send email to {user.email}: {str(email_error)}")
+                    else:
+                        print(f"  ⏭️ Skipping {user.email} (email notifications disabled)")
+            else:
+                print(f"❌ Failed to create notification for group: {target_group}")
+        
+        print(f"\n🎯 === NOTIFICATION BROADCAST SUMMARY ===")
+        print(f"📦 Database notifications created: {total_notifications_created}")
+        print(f"📡 WebSocket broadcasts sent: {total_websocket_broadcasts}")
+        print(f"📧 Emails sent: {total_emails_sent}")
+        print(f"✅ Broadcast completed successfully\n")
         
         return True
     except Exception as e:
-        print(f"Error broadcasting notification: {str(e)}")
+        print(f"\n❌❌❌ ERROR broadcasting notification: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return False
 
