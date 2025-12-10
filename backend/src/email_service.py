@@ -900,8 +900,6 @@ class EmailService:
         return self.send_email(user_email, subject, html_content)
 
 
-# Create global instance
-email_service = EmailService()
 
     def send_new_item_notification(self, user_email, user_name, item_name, item_type, quantity, shop_name, shop_address, item_description=''):
         """Send email notification when a new Food To Go item is posted"""
@@ -989,5 +987,7 @@ email_service = EmailService()
             html_content=html_content
         )
 
+# Create global instance
+email_service = EmailService()
 # Create global instance
 email_service = EmailService()
