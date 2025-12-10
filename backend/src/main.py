@@ -78,7 +78,7 @@ class User(db.Model):
     address = db.Column(db.Text)
     postcode = db.Column(db.String(10))
     city = db.Column(db.String(50))
-    date_of_birth = db.Column(db.Date)  # Recipient date of birth
+    # date_of_birth = db.Column(db.Date)  # Recipient date of birth - COMMENTED OUT temporarily
     charity_commission_number = db.Column(db.String(50))
     shop_category = db.Column(db.String(50))  # African, Caribbean, Mixed African & Caribbean, Indian/South Asian, Eastern European, Middle Eastern
     is_verified = db.Column(db.Boolean, default=False)
@@ -1771,7 +1771,7 @@ def vcse_issue_voucher():
                 address=recipient_address,
                 city=recipient_city,
                 postcode=recipient_postcode,
-                date_of_birth=dob,
+                # date_of_birth=dob,  # Commented out temporarily
                 user_type='recipient',
                 is_verified=True,
                 is_active=True
