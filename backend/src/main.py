@@ -1654,7 +1654,7 @@ def vcse_place_order():
         client_name = data.get('client_name')
         client_mobile = data.get('client_mobile')
         client_email = data.get('client_email')
-        quantity = data.get('quantity', 1)
+        quantity = int(data.get('quantity', 1))  # Convert to int to avoid str/int comparison error
         
         if not all([surplus_item_id, client_name, client_mobile, client_email]):
             return jsonify({'error': 'All fields are required'}), 400
