@@ -3210,11 +3210,18 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
       )}
       
       <div style={{marginBottom: '10px'}}>
-        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>{item.item_name || item.title}</h3>
+        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>
+          {item.item_name || item.title}
+          {item.batch_count > 1 && (
+            <span style={{marginLeft: '10px', fontSize: '12px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
+              {item.batch_count} batches
+            </span>
+          )}
+        </h3>
         <div style={{fontSize: '14px', color: '#666'}}>
           <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
           <div><strong>{t('product.category')}</strong> {item.category}</div>
-          <div><strong>{t('product.available')}</strong> {item.quantity}</div>
+          <div><strong>{t('product.available')}</strong> {item.quantity}{item.batch_count > 1 && ` (combined from ${item.batch_count} batches)`}</div>
           {item.expiry_date && <div><strong>{t('product.expiry')}</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
           {item.description && <div style={{marginTop: '8px'}}>{item.description}</div>}
         </div>
@@ -8035,11 +8042,18 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
       )}
       
       <div style={{marginBottom: '10px'}}>
-        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>{item.item_name || item.title}</h3>
+        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>
+          {item.item_name || item.title}
+          {item.batch_count > 1 && (
+            <span style={{marginLeft: '10px', fontSize: '12px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
+              {item.batch_count} batches
+            </span>
+          )}
+        </h3>
         <div style={{fontSize: '14px', color: '#666'}}>
           <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
           <div><strong>{t('product.category')}</strong> {item.category}</div>
-          <div><strong>{t('product.available')}</strong> {item.quantity}</div>
+          <div><strong>{t('product.available')}</strong> {item.quantity}{item.batch_count > 1 && ` (combined from ${item.batch_count} batches)`}</div>
           {item.expiry_date && <div><strong>{t('product.expiry')}</strong> {new Date(item.expiry_date).toLocaleDateString()}</div>}
           {item.description && <div style={{marginTop: '8px'}}>{item.description}</div>}
         </div>

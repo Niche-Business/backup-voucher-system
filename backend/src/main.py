@@ -4620,26 +4620,49 @@ def vcse_get_to_go_items():
             status='available'
         ).order_by(SurplusItem.posted_at.desc()).all()
         
-        items_data = []
+        # Deduplication: Group identical items by name, shop, category, and expiry
+        grouped_items = {}
         for item in items:
             shop = VendorShop.query.get(item.shop_id)
             vendor = User.query.get(shop.vendor_id) if shop else None
             
-            items_data.append({
-                'id': item.id,
-                'item_name': item.item_name,
-                'quantity': item.quantity,
-                'unit': item.unit,
-                'category': item.category,
-                'description': item.description,
-                'status': item.status,
-                'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
-                'shop_name': shop.shop_name if shop else 'Unknown',
-                'shop_address': shop.address if shop else 'N/A',
-                'shop_phone': shop.phone if shop else 'N/A',
-                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
-                'created_at': item.posted_at.isoformat() if item.posted_at else None
-            })
+            # Create unique key for grouping
+            expiry_str = item.expiry_date.isoformat() if item.expiry_date else 'no_expiry'
+            group_key = f"{item.item_name}|{item.shop_id}|{item.category}|{expiry_str}"
+            
+            if group_key not in grouped_items:
+                # First occurrence - create new entry
+                grouped_items[group_key] = {
+                    'id': item.id,  # Use first item's ID
+                    'item_ids': [item.id],  # Track all IDs for this group
+                    'item_name': item.item_name,
+                    'quantity': item.quantity,
+                    'unit': item.unit,
+                    'category': item.category,
+                    'description': item.description,
+                    'status': item.status,
+                    'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
+                    'shop_name': shop.shop_name if shop else 'Unknown',
+                    'shop_address': shop.address if shop else 'N/A',
+                    'shop_phone': shop.phone if shop else 'N/A',
+                    'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                    'created_at': item.posted_at.isoformat() if item.posted_at else None,
+                    'batch_count': 1
+                }
+            else:
+                # Duplicate found - combine quantities
+                grouped_items[group_key]['item_ids'].append(item.id)
+                grouped_items[group_key]['batch_count'] += 1
+                # Add quantities (handle string quantities)
+                try:
+                    existing_qty = int(grouped_items[group_key]['quantity']) if isinstance(grouped_items[group_key]['quantity'], str) else grouped_items[group_key]['quantity']
+                    new_qty = int(item.quantity) if isinstance(item.quantity, str) else item.quantity
+                    grouped_items[group_key]['quantity'] = existing_qty + new_qty
+                except (ValueError, TypeError):
+                    # If quantities can't be converted, keep the first one
+                    pass
+        
+        items_data = list(grouped_items.values())
         
         return jsonify({
             'items': items_data,
