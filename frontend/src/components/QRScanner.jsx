@@ -6,6 +6,7 @@ export default function QRScanner({ onScan, onClose }) {
   const [error, setError] = useState('')
   const [cameraEnabled, setCameraEnabled] = useState(false)
   const [showInstructions, setShowInstructions] = useState(true)
+  const [permissionBlocked, setPermissionBlocked] = useState(false)
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
@@ -15,22 +16,45 @@ export default function QRScanner({ onScan, onClose }) {
     }
   }, [])
 
+  const getBrowserInfo = () => {
+    const userAgent = navigator.userAgent
+    if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'chrome'
+    if (userAgent.includes('Firefox')) return 'firefox'
+    if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'safari'
+    if (userAgent.includes('Edg')) return 'edge'
+    return 'unknown'
+  }
+
+  const getCameraSettingsUrl = () => {
+    const browser = getBrowserInfo()
+    switch(browser) {
+      case 'chrome':
+        return 'chrome://settings/content/camera'
+      case 'firefox':
+        return 'about:preferences#privacy'
+      case 'edge':
+        return 'edge://settings/content/camera'
+      default:
+        return null
+    }
+  }
+
   const startScanner = async () => {
     try {
       setError('')
       setShowInstructions(false)
+      setPermissionBlocked(false)
       
       const html5QrCode = new Html5Qrcode("qr-reader")
       html5QrCodeRef.current = html5QrCode
 
       await html5QrCode.start(
-        { facingMode: "environment" }, // Use back camera
+        { facingMode: "environment" },
         {
           fps: 10,
           qrbox: { width: 250, height: 250 }
         },
         (decodedText) => {
-          // Successfully scanned
           onScan(decodedText)
           stopScanner()
         },
@@ -45,17 +69,16 @@ export default function QRScanner({ onScan, onClose }) {
       setCameraEnabled(false)
       setScanning(false)
       
-      // Provide detailed error message based on error type
+      // Check if permission was denied
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setError('Camera permission was denied. Please check your browser settings to allow camera access for this site.')
+        setPermissionBlocked(true)
+        setError('Camera permission is blocked in your browser settings.')
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        setError('No camera found on this device. Please use manual voucher code entry instead.')
+        setError('No camera found on this device.')
       } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-        setError('Camera is already in use by another application. Please close other apps and try again.')
-      } else if (err.name === 'OverconstrainedError') {
-        setError('Camera does not support required settings. Please use manual voucher code entry instead.')
+        setError('Camera is already in use by another application.')
       } else {
-        setError('Failed to start camera. Please use manual voucher code entry instead.')
+        setError('Failed to start camera.')
       }
     }
   }
@@ -81,6 +104,13 @@ export default function QRScanner({ onScan, onClose }) {
   const handleEnableCamera = () => {
     setShowInstructions(false)
     startScanner()
+  }
+
+  const openCameraSettings = () => {
+    const url = getCameraSettingsUrl()
+    if (url) {
+      window.open(url, '_blank')
+    }
   }
 
   return (
@@ -125,28 +155,71 @@ export default function QRScanner({ onScan, onClose }) {
           </button>
         </div>
 
-        {/* Show instructions before camera is enabled */}
+        {/* Initial instructions */}
         {showInstructions && !cameraEnabled && (
           <div style={{marginBottom: '20px'}}>
+            {/* Prominent manual entry recommendation */}
+            <div style={{
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              <div style={{fontSize: '32px', marginBottom: '10px'}}>💡</div>
+              <h3 style={{margin: '0 0 10px 0'}}>Recommended: Use Manual Entry</h3>
+              <p style={{margin: '0', fontSize: '14px', lineHeight: '1.6'}}>
+                Close this window and type the voucher code manually. It's faster and more reliable!
+              </p>
+              <button
+                onClick={handleClose}
+                style={{
+                  backgroundColor: 'white',
+                  color: '#4CAF50',
+                  border: 'none',
+                  borderRadius: '5px',
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  marginTop: '15px',
+                  width: '100%'
+                }}
+              >
+                ✓ Use Manual Entry Instead
+              </button>
+            </div>
+
+            <div style={{
+              textAlign: 'center',
+              margin: '20px 0',
+              color: '#999',
+              fontSize: '14px'
+            }}>
+              — OR —
+            </div>
+
+            {/* QR scanner option */}
             <div style={{
               backgroundColor: '#e3f2fd',
               padding: '20px',
               borderRadius: '8px',
               marginBottom: '20px'
             }}>
-              <h4 style={{margin: '0 0 15px 0', color: '#1976d2'}}>📋 How to Scan QR Codes:</h4>
-              <ol style={{margin: '0', paddingLeft: '20px', lineHeight: '1.8'}}>
-                <li><strong>Click "Enable Camera"</strong> button below</li>
-                <li><strong>Allow camera access</strong> when your browser asks</li>
-                <li><strong>Point your camera</strong> at the customer's QR code</li>
-                <li><strong>Code will scan automatically</strong> when detected</li>
+              <h4 style={{margin: '0 0 15px 0', color: '#1976d2'}}>📱 Try QR Scanner:</h4>
+              <ol style={{margin: '0', paddingLeft: '20px', lineHeight: '1.8', fontSize: '14px'}}>
+                <li>Click "Enable Camera" below</li>
+                <li>Your browser will ask for permission</li>
+                <li>Click "Allow" when prompted</li>
+                <li>Point camera at QR code</li>
               </ol>
             </div>
 
             <button
               onClick={handleEnableCamera}
               style={{
-                backgroundColor: '#4CAF50',
+                backgroundColor: '#2196F3',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -158,70 +231,65 @@ export default function QRScanner({ onScan, onClose }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '10px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                transition: 'all 0.3s'
+                gap: '10px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
             >
               <span style={{fontSize: '24px'}}>📷</span>
               <span>Enable Camera</span>
             </button>
-
-            <div style={{
-              marginTop: '20px',
-              padding: '15px',
-              backgroundColor: '#fff3e0',
-              borderRadius: '8px',
-              fontSize: '14px',
-              lineHeight: '1.6'
-            }}>
-              <strong>⚠️ Important:</strong> Your browser will ask for permission to use the camera. 
-              Please click <strong>"Allow"</strong> when prompted.
-            </div>
-
-            <div style={{
-              marginTop: '15px',
-              padding: '15px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '8px',
-              fontSize: '14px',
-              textAlign: 'center'
-            }}>
-              <strong>💡 Alternative:</strong> Close this window and manually type the voucher code instead.
-            </div>
           </div>
         )}
 
-        {/* Show error message if camera fails */}
+        {/* Error message with browser-specific help */}
         {error && (
           <div style={{
             backgroundColor: '#ffebee',
             color: '#c62828',
-            padding: '15px',
+            padding: '20px',
             borderRadius: '8px',
             marginBottom: '15px',
             fontSize: '14px',
             lineHeight: '1.6'
           }}>
-            <div style={{fontWeight: 'bold', marginBottom: '8px', fontSize: '16px'}}>⚠️ Camera Access Failed</div>
+            <div style={{fontWeight: 'bold', marginBottom: '10px', fontSize: '16px'}}>⚠️ Camera Access Failed</div>
             <div style={{marginBottom: '15px'}}>{error}</div>
             
-            <div style={{
-              marginTop: '15px',
-              padding: '15px',
-              backgroundColor: '#fff3e0',
-              borderRadius: '5px',
-              color: '#e65100'
-            }}>
-              <strong>🔧 How to Fix:</strong>
-              <ol style={{margin: '10px 0 0 20px', padding: 0, lineHeight: '1.8'}}>
-                <li>Look for a <strong>camera icon 📷</strong> or <strong>lock icon 🔒</strong> in your browser's address bar</li>
-                <li>Click it and select <strong>"Allow"</strong> for camera access</li>
-                <li>Refresh this page and try again</li>
-              </ol>
-            </div>
+            {permissionBlocked && (
+              <div style={{
+                marginTop: '15px',
+                padding: '15px',
+                backgroundColor: '#fff3e0',
+                borderRadius: '5px',
+                color: '#e65100'
+              }}>
+                <strong>🔧 Your browser has blocked camera access.</strong>
+                <p style={{margin: '10px 0'}}>To fix this:</p>
+                <ol style={{margin: '10px 0 10px 20px', padding: 0, lineHeight: '1.8'}}>
+                  <li>Look for a <strong>camera icon 📷</strong> or <strong>lock icon 🔒</strong> in your browser's address bar (top left)</li>
+                  <li>Click it and change camera permission to <strong>"Allow"</strong></li>
+                  <li>Refresh this page and try again</li>
+                </ol>
+                
+                {getCameraSettingsUrl() && (
+                  <button
+                    onClick={openCameraSettings}
+                    style={{
+                      backgroundColor: '#ff9800',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '10px 20px',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      width: '100%',
+                      marginTop: '10px'
+                    }}
+                  >
+                    ⚙️ Open Browser Camera Settings
+                  </button>
+                )}
+              </div>
+            )}
 
             <button
               onClick={handleEnableCamera}
@@ -243,14 +311,27 @@ export default function QRScanner({ onScan, onClose }) {
 
             <div style={{
               marginTop: '15px',
-              padding: '12px',
-              backgroundColor: '#e3f2fd',
+              padding: '15px',
+              backgroundColor: '#4CAF50',
               borderRadius: '5px',
-              color: '#01579b',
-              textAlign: 'center',
-              fontWeight: 'bold'
+              textAlign: 'center'
             }}>
-              📝 Or close this and use manual voucher code entry
+              <button
+                onClick={handleClose}
+                style={{
+                  backgroundColor: 'white',
+                  color: '#4CAF50',
+                  border: 'none',
+                  borderRadius: '5px',
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                ✓ Use Manual Entry Instead (Recommended)
+              </button>
             </div>
           </div>
         )}
