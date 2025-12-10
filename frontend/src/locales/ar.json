@@ -432,7 +432,10 @@
     "redemptionHistory": "سجل الاستبدال",
     "searchByCodeOrRecipient": "البحث بالرمز أو المستلم...",
     "redemptionHistoryComingSoon": "سجل الاستبدال قريبًا",
-    "redemptionHistoryDescription": "عرض تاريخ مفصل لجميع عمليات استبدال القسائم في متجرك"
+    "redemptionHistoryDescription": "عرض تاريخ مفصل لجميع عمليات استبدال القسائم في متجرك",
+    "yourShops": "متاجرك",
+    "edit": "تعديل",
+    "delete": "حذف"
   },
   "reports": {
     "generateReport": "إنشاء تقرير",

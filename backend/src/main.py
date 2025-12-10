@@ -4216,18 +4216,27 @@ def post_surplus_item():
         db.session.commit()
         
         # Broadcast real-time notification via WebSocket and Email
-        from notifications_system import broadcast_new_item_notification
-        broadcast_new_item_notification(
-            socketio,
-            item_type=item_type,
-            shop_id=shop.id,
-            item_id=new_item.id,
-            item_name=data['item_name'],
-            shop_name=shop.shop_name,
-            quantity=data['quantity'],
-            item_description=data.get('description', ''),
-            shop_address=shop.address or ''
-        )
+        try:
+            from notifications_system import broadcast_new_item_notification
+            success = broadcast_new_item_notification(
+                socketio,
+                item_type=item_type,
+                shop_id=shop.id,
+                item_id=new_item.id,
+                item_name=data['item_name'],
+                shop_name=shop.shop_name,
+                quantity=data['quantity'],
+                item_description=data.get('description', ''),
+                shop_address=shop.address or ''
+            )
+            if success:
+                print(f"✅ Notifications sent successfully for: {data['item_name']}")
+            else:
+                print(f"⚠️ Notification broadcast returned False for: {data['item_name']}")
+        except Exception as notif_error:
+            print(f"❌ ERROR: Failed to send notifications: {str(notif_error)}")
+            import traceback
+            traceback.print_exc()
         
         print(f"Surplus item posted: {data['item_name']} at {shop.shop_name}")
         
@@ -4261,6 +4270,9 @@ def get_vendor_surplus_items():
         # Get all surplus items posted by this vendor
         surplus_items = SurplusItem.query.filter_by(vendor_id=user_id).order_by(SurplusItem.posted_at.desc()).all()
         
+        # Count only available items (not removed/deleted)
+        available_count = SurplusItem.query.filter_by(vendor_id=user_id, status='available').count()
+        
         items_list = []
         for item in surplus_items:
             shop = VendorShop.query.get(item.shop_id)
@@ -4277,7 +4289,7 @@ def get_vendor_surplus_items():
         
         return jsonify({
             'surplus_items': items_list,
-            'total_count': len(items_list)
+            'total_count': available_count  # Only count available items
         }), 200
         
     except Exception as e:

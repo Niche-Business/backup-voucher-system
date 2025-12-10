@@ -432,7 +432,10 @@
     "redemptionHistory": "Redemption History",
     "searchByCodeOrRecipient": "Search by code or recipient...",
     "redemptionHistoryComingSoon": "Redemption History Coming Soon",
-    "redemptionHistoryDescription": "View detailed history of all voucher redemptions at your shop"
+    "redemptionHistoryDescription": "View detailed history of all voucher redemptions at your shop",
+    "yourShops": "Your Shops",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "reports": {
     "generateReport": "Generate Report",

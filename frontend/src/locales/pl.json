@@ -432,7 +432,10 @@
     "redemptionHistory": "Historia Realizacji",
     "searchByCodeOrRecipient": "Szukaj po kodzie lub odbiorcy...",
     "redemptionHistoryComingSoon": "Historia Realizacji Wkrótce",
-    "redemptionHistoryDescription": "Wyświetl szczegółową historię wszystkich realizacji voucherów w Twoim sklepie"
+    "redemptionHistoryDescription": "Wyświetl szczegółową historię wszystkich realizacji voucherów w Twoim sklepie",
+    "yourShops": "Twoje Sklepy",
+    "edit": "Edytuj",
+    "delete": "Usuń"
   },
   "reports": {
     "generateReport": "Generuj Raport",

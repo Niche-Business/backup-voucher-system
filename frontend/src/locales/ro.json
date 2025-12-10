@@ -432,7 +432,10 @@
     "redemptionHistory": "Istoric Valorificări",
     "searchByCodeOrRecipient": "Caută după cod sau destinatar...",
     "redemptionHistoryComingSoon": "Istoric Valorificări În Curând",
-    "redemptionHistoryDescription": "Vizualizați istoricul detaliat al tuturor valorificărilor de vouchere la magazinul dvs."
+    "redemptionHistoryDescription": "Vizualizați istoricul detaliat al tuturor valorificărilor de vouchere la magazinul dvs.",
+    "yourShops": "Magazinele Dvs.",
+    "edit": "Editează",
+    "delete": "Șterge"
   },
   "reports": {
     "generateReport": "Generează Raport",
