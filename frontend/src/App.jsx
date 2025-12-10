@@ -3712,6 +3712,7 @@ function VCSEDashboard({ user, onLogout }) {
   })
   const [message, setMessage] = useState('')
   const [toGoItems, setToGoItems] = useState([])
+  const [discountedItems, setDiscountedItems] = useState([])
   const [vouchers, setVouchers] = useState([])
   const [analytics, setAnalytics] = useState(null)
   const [statusFilter, setStatusFilter] = useState('all')
@@ -3729,6 +3730,7 @@ function VCSEDashboard({ user, onLogout }) {
   useEffect(() => {
     loadBalance()
     loadToGoItems()
+    loadDiscountedItems()
     loadVouchers()
     loadAnalytics()
     loadVendorShops()
@@ -3788,6 +3790,15 @@ function VCSEDashboard({ user, onLogout }) {
       setToGoItems(data.items || [])
     } catch (error) {
       console.error('Failed to load Food to Go Items:', error)
+    }
+  }
+
+  const loadDiscountedItems = async () => {
+    try {
+      const data = await apiCall('/vcse/discounted-items')
+      setDiscountedItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load discounted items:', error)
     }
   }
 
@@ -3910,6 +3921,7 @@ function VCSEDashboard({ user, onLogout }) {
           <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
           <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients & Vouchers</button>
           <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
+          <button onClick={() => setActiveTab('discounted')} style={activeTab === 'discounted' ? styles.activeTab : styles.tab}>💰 Discounted Items</button>
         </div>
         
         {activeTab === 'overview' && (
@@ -4733,6 +4745,82 @@ function VCSEDashboard({ user, onLogout }) {
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
                   {toGoItems.map(item => (
                     <ToGoOrderCard key={item.id} item={item} onOrderPlaced={loadToGoItems} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'discounted' && (
+          <div>
+            <div style={{marginBottom: '20px'}}>
+              <h2 style={{margin: 0}}>💰 Discounted Items - Purchase for Distribution</h2>
+              <p style={{margin: '10px 0 0 0', color: '#666'}}>
+                These discounted items can be purchased using your allocated funds and distributed to families in your community.
+              </p>
+            </div>
+            
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {discountedItems.length === 0 ? (
+                <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                  <p>No discounted items available at the moment</p>
+                  <p style={{fontSize: '14px'}}>Check back later for discounted surplus items from local shops</p>
+                </div>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                  {discountedItems.map(item => (
+                    <div key={item.id} style={{padding: '20px', border: '2px solid #4CAF50', borderRadius: '10px', backgroundColor: '#f1f8f4'}}>
+                      <div style={{
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        padding: '8px 12px',
+                        borderRadius: '5px',
+                        marginBottom: '10px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                      }}>
+                        💰 DISCOUNTED - Save {item.savings_percent}%
+                      </div>
+                      <h3 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{item.item_name}</h3>
+                      <div style={{marginBottom: '15px'}}>
+                        <p style={{margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#4CAF50'}}>
+                          💰 £{item.price.toFixed(2)} per {item.unit}
+                        </p>
+                        <p style={{margin: '5px 0', fontSize: '14px', color: '#999', textDecoration: 'line-through'}}>
+                          Was: £{item.original_price.toFixed(2)}
+                        </p>
+                        <p style={{margin: '5px 0', fontSize: '16px', fontWeight: 'bold', color: '#FF9800'}}>
+                          🎉 Save £{item.savings.toFixed(2)} ({item.savings_percent}% off)
+                        </p>
+                      </div>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Available:</strong> {item.quantity} {item.unit}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Category:</strong> {item.category}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Description:</strong> {item.description || 'Fresh and ready'}
+                      </p>
+                      <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
+                        <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
+                          🏪 {item.shop_name}
+                        </p>
+                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                          📍 {item.shop_address}
+                        </p>
+                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                          📞 {item.shop_phone}
+                        </p>
+                      </div>
+                      <div style={{marginTop: '15px'}}>
+                        <p style={{fontSize: '13px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
+                          💳 Contact the shop directly to purchase this item using your allocated funds
+                        </p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -6702,7 +6790,10 @@ function RecipientDashboard({ user, onLogout }) {
             }}>
               <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '18px'}}>ℹ️ How "Browse Food To Go" Works</h3>
               <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
-                <strong>Browse Food To Go</strong> displays discounted surplus food items that participating shops have actively posted. 
+                <strong>Browse Food To Go</strong> displays <strong>discounted surplus food items</strong> that participating shops have actively posted, 
+                plus <strong style={{color: '#FF9800'}}>🆓 FREE items</strong> that were originally posted for VCFSE organizations but remain unclaimed after 5 hours.
+              </p>
+              <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
                 While there are {shops.length} participating shops in total, only shops that have posted available items will appear here.
               </p>
               <p style={{margin: '0', color: '#555', lineHeight: '1.6'}}>
@@ -6716,11 +6807,31 @@ function RecipientDashboard({ user, onLogout }) {
                 <p>{t('dashboard.noToGoItems')}</p>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '15px'}}>
-                  {toGoItems.map(item => (
-                    <div key={item.id} style={{padding: '20px', border: '2px solid #9C27B0', borderRadius: '10px', backgroundColor: '#f3e5f5'}}>
-                      <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{item.item_name}</h3>
-                      <p style={{margin: '8px 0', fontSize: '16px', fontWeight: 'bold', color: '#4CAF50'}}>
-                        💰 £{item.price.toFixed(2)} per {item.unit}
+                  {toGoItems.map(item => {
+                    const isUnclaimedFree = item.is_unclaimed_free || item.item_type === 'free';
+                    const borderColor = isUnclaimedFree ? '#FF9800' : '#9C27B0';
+                    const bgColor = isUnclaimedFree ? '#fff3e0' : '#f3e5f5';
+                    const titleColor = isUnclaimedFree ? '#FF9800' : '#9C27B0';
+                    
+                    return (
+                    <div key={item.id} style={{padding: '20px', border: `2px solid ${borderColor}`, borderRadius: '10px', backgroundColor: bgColor}}>
+                      {isUnclaimedFree && (
+                        <div style={{
+                          backgroundColor: '#FF9800',
+                          color: 'white',
+                          padding: '8px 12px',
+                          borderRadius: '5px',
+                          marginBottom: '10px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          textAlign: 'center'
+                        }}>
+                          🆓 FREE - Unclaimed VCFSE Item (Posted {item.hours_since_posted}h ago)
+                        </div>
+                      )}
+                      <h3 style={{margin: '0 0 10px 0', color: titleColor}}>{item.item_name}</h3>
+                      <p style={{margin: '8px 0', fontSize: '16px', fontWeight: 'bold', color: isUnclaimedFree ? '#FF9800' : '#4CAF50'}}>
+                        {isUnclaimedFree ? '🆓 FREE' : `💰 £${item.price ? item.price.toFixed(2) : '0.00'} per ${item.unit || 'unit'}`}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '14px'}}>
                         <strong>{t('recipient.available')}</strong> {item.quantity} {item.unit}
@@ -6761,7 +6872,8 @@ function RecipientDashboard({ user, onLogout }) {
                         </p>
                       </div>
                     </div>
-                  ))}
+                  );
+                  })}
                 </div>
               )}
             </div>

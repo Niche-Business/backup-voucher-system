@@ -4673,6 +4673,68 @@ def vcse_get_to_go_items():
         return jsonify({'error': f'Failed to get to-go items: {str(e)}'}), 500
 
 
+@app.route('/api/vcse/discounted-items', methods=['GET'])
+def vcse_get_discounted_items():
+    """VCFSE endpoint to view discounted items available for purchase (for distribution)"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCFSE access required'}), 403
+        
+        # Get discounted items that are available
+        items = SurplusItem.query.filter_by(
+            item_type='discount',
+            status='available'
+        ).order_by(SurplusItem.posted_at.desc()).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            vendor = User.query.get(shop.vendor_id) if shop else None
+            
+            # Calculate savings
+            savings = 0.0
+            savings_percent = 0.0
+            if item.original_price and item.price:
+                savings = float(item.original_price) - float(item.price)
+                savings_percent = round((savings / float(item.original_price)) * 100, 0)
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'description': item.description,
+                'status': item.status,
+                'item_type': 'discount',
+                'price': float(item.price) if item.price else 0.0,
+                'original_price': float(item.original_price) if item.original_price else 0.0,
+                'savings': savings,
+                'savings_percent': savings_percent,
+                'expiry_date': item.expiry_date.isoformat() if item.expiry_date else None,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'shop_phone': shop.phone if shop else 'N/A',
+                'shop_city': shop.city if shop else 'N/A',
+                'shop_postcode': shop.postcode if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'posted_at': item.posted_at.isoformat() if item.posted_at else None
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get discounted items: {str(e)}'}), 500
+
+
 @app.route('/api/recipient/shops', methods=['GET'])
 def get_shops_for_recipient():
     """Recipient endpoint to view all participating shops with optional town filtering"""
@@ -5315,15 +5377,34 @@ def get_recipient_shops():
 
 @app.route('/api/recipient/to-go-items', methods=['GET'])
 def get_recipient_to_go_items():
-    """Get all available discounted to-go items from all shops (no free items)"""
+    """Get discounted items + unclaimed free items (after 5-hour VCFSE priority window)"""
     try:
-        # Recipients should only see discounted items, not free items
-        items = SurplusItem.query.filter_by(status='available', item_type='discount').all()
+        from datetime import datetime, timedelta
+        
+        # Get discounted items (always visible to recipients)
+        discounted_items = SurplusItem.query.filter_by(status='available', item_type='discount').all()
+        
+        # Get free items that have been posted for more than 5 hours (unclaimed by VCFSE)
+        five_hours_ago = datetime.utcnow() - timedelta(hours=5)
+        unclaimed_free_items = SurplusItem.query.filter(
+            SurplusItem.status == 'available',
+            SurplusItem.item_type == 'free',
+            SurplusItem.posted_at <= five_hours_ago
+        ).all()
+        
+        # Combine both lists
+        all_items = list(discounted_items) + list(unclaimed_free_items)
         items_data = []
         
-        for item in items:
+        for item in all_items:
             # Get shop information
             shop = VendorShop.query.get(item.shop_id)
+            
+            # Calculate hours since posted (for unclaimed free items)
+            hours_since_posted = None
+            if item.item_type == 'free' and item.posted_at:
+                time_diff = datetime.utcnow() - item.posted_at
+                hours_since_posted = round(time_diff.total_seconds() / 3600, 1)
             
             items_data.append({
                 'id': item.id,
@@ -5339,7 +5420,9 @@ def get_recipient_to_go_items():
                 'shop_address': shop.address if shop else '',
                 'shop_city': shop.city if shop else '',
                 'shop_postcode': shop.postcode if shop else '',
-                'posted_at': item.posted_at.isoformat() if item.posted_at else None
+                'posted_at': item.posted_at.isoformat() if item.posted_at else None,
+                'hours_since_posted': hours_since_posted,
+                'is_unclaimed_free': item.item_type == 'free'
             })
         
         return jsonify({'items': items_data}), 200
