@@ -488,7 +488,7 @@ BAK UP Team
             mail.send(msg)
         return True
     except Exception as e:
-            logger.error(f"Email sending failed: {e}")
+        logger.error(f"Email sending failed: {e}")
         return False
 
 def send_welcome_email(user):
