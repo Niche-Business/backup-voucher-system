@@ -438,11 +438,14 @@
     "delete": "Șterge",
     "enterVoucherCode": "Introduceți Codul Voucherului",
     "howToRedeem": "Cum să Valorificați Voucherele",
-    "step1": "Clientul prezintă voucherul (cod QR sau cod voucher)",
-    "step2": "Scanați codul QR sau introduceți manual codul voucherului mai jos",
-    "step3": "Verificați detaliile voucherului (valoare, nume destinatar, dată expirare)",
-    "step4": "Finalizați tranzacția și furnizați bunurile/serviciile",
-    "step5": "Voucherul va fi marcat automat ca valorificat"
+    "step1": "Întrebați clientul pentru codul voucherului - Ar fi trebuit să-l primească prin email sau mesaj text",
+    "step2": "Introduceți codul voucherului în câmpul de mai jos (sau scanați codul QR dacă este disponibil)",
+    "step3": "Faceți clic pe 'Validare' pentru a verifica dacă voucherul este valid și pentru a vedea valoarea acestuia",
+    "step4": "Finalizați tranzacția - Lăsați clientul să selecteze articole până la valoarea voucherului",
+    "step5": "Faceți clic pe 'Răscumpărare' pentru a finaliza răscumpărarea - Suma voucherului va fi creditată în soldul magazinului dvs.",
+    "step6": "Solicitați plata - Odată ce ați acumulat sold, puteți solicita o plată în contul dvs. bancar",
+    "tip": "Sfat",
+    "tipText": "Validați întotdeauna voucherul înainte de finalizarea tranzacției pentru a vă asigura că este activ și are valoare suficientă."
   },
   "reports": {
     "generateReport": "Generează Raport",

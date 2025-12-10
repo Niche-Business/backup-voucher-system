@@ -5648,17 +5648,17 @@ function VendorDashboard({ user, onLogout }) {
             
             {/* Redemption Instructions */}
             <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px', maxWidth: '800px', margin: '0 auto 20px'}}>
-              <h3 style={{marginTop: 0, color: '#1976d2', fontSize: '18px'}}>📝 How to Redeem Vouchers</h3>
+              <h3 style={{marginTop: 0, color: '#1976d2', fontSize: '18px'}}>📝 {t('shop.howToRedeem')}</h3>
               <ol style={{marginBottom: 0, paddingLeft: '20px', lineHeight: '1.8'}}>
-                <li><strong>Ask the customer for their voucher code</strong> - They should have received it via email or text message</li>
-                <li><strong>Enter the voucher code</strong> in the field below (or scan the QR code if available)</li>
-                <li><strong>Click "Validate"</strong> to check if the voucher is valid and see its value</li>
-                <li><strong>Complete the transaction</strong> - Let the customer select items up to the voucher value</li>
-                <li><strong>Click "Redeem"</strong> to complete the redemption - The voucher amount will be credited to your shop balance</li>
-                <li><strong>Request payout</strong> - Once you have accumulated balance, you can request a payout to your bank account</li>
+                <li>{t('shop.step1')}</li>
+                <li>{t('shop.step2')}</li>
+                <li>{t('shop.step3')}</li>
+                <li>{t('shop.step4')}</li>
+                <li>{t('shop.step5')}</li>
+                <li>{t('shop.step6')}</li>
               </ol>
               <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px', fontSize: '14px'}}>
-                💡 <strong>Tip:</strong> Always validate the voucher before completing the transaction to ensure it's active and has sufficient value.
+                💡 <strong>{t('shop.tip')}:</strong> {t('shop.tipText')}
               </div>
             </div>
             

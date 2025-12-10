@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Html5Qrcode } from 'html5-qrcode'
 
-export default function QRScanner({ onScan, onClose }) {
+export default function QRScanner({ onScan, onClose, t }) {
   const [scanning, setScanning] = useState(false)
   const [error, setError] = useState('')
   const [cameraEnabled, setCameraEnabled] = useState(false)
