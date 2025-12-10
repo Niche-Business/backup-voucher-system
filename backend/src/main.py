@@ -6846,13 +6846,29 @@ def delete_admin_account(admin_id):
         if admin_count <= 1:
             return jsonify({'error': 'Cannot delete the last admin account'}), 400
         
-        # Delete associated records
-        LoginSession.query.filter_by(user_id=admin_id).delete()
-        Notification.query.filter_by(user_id=admin_id).delete()
+        # Delete associated records in correct order
+        logger.info(f"Deleting admin account: {admin_to_delete.email} (ID: {admin_id})")
         
-        # Delete admin
+        # 1. Delete notification preferences
+        pref_count = NotificationPreference.query.filter_by(user_id=admin_id).delete()
+        logger.info(f"Deleted {pref_count} notification preferences")
+        
+        # 2. Delete notifications where this user is the recipient
+        notif_count = Notification.query.filter_by(user_id=admin_id).delete()
+        logger.info(f"Deleted {notif_count} notifications")
+        
+        # 3. Delete login sessions
+        session_count = LoginSession.query.filter_by(user_id=admin_id).delete()
+        logger.info(f"Deleted {session_count} login sessions")
+        
+        # 4. Flush changes to ensure foreign keys are updated
+        db.session.flush()
+        
+        # 5. Finally delete the admin user
         db.session.delete(admin_to_delete)
         db.session.commit()
+        
+        logger.info(f"Successfully deleted admin account: {admin_to_delete.email}")
         
         return jsonify({
             'message': 'Admin account deleted successfully',
