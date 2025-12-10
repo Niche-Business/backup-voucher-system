@@ -696,5 +696,9 @@
     "backToHome": "Înapoi la Pagină Principală",
     "registrationSuccess": "Înregistrare reușită! Vă rugăm să vă autentificați.",
     "registrationFailed": "Înregistrare eșuată"
+  },
+  "shop": {
+    "toGoPosted": "Articole de Mâncare Postate",
+    "shopsRegistered": "Magazine Înregistrate"
   }
 }

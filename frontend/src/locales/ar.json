@@ -664,5 +664,9 @@
     "backToHome": "العودة إلى الصفحة الرئيسية",
     "registrationSuccess": "تم التسجيل بنجاح! الرجاء تسجيل الدخول.",
     "registrationFailed": "فشل التسجيل"
+  },
+  "shop": {
+    "toGoPosted": "عناصر الطعام المنشورة",
+    "shopsRegistered": "المتاجر المسجلة"
   }
 }

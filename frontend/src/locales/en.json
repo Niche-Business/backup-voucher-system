@@ -696,5 +696,9 @@
     "backToHome": "Back to Home",
     "registrationSuccess": "Registration successful! Please sign in.",
     "registrationFailed": "Registration failed"
+  },
+  "shop": {
+    "toGoPosted": "To Go Items Posted",
+    "shopsRegistered": "Shops Registered"
   }
 }

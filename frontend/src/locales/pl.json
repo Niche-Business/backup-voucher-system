@@ -664,5 +664,9 @@
     "backToHome": "Powrót do Strony Głównej",
     "registrationSuccess": "Rejestracja udana! Proszę się zalogować.",
     "registrationFailed": "Rejestracja nie powiodła się"
+  },
+  "shop": {
+    "toGoPosted": "Opublikowane Produkty Spożywcze",
+    "shopsRegistered": "Zarejestrowane Sklepy"
   }
 }
