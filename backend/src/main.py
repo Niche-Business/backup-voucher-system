@@ -4524,8 +4524,11 @@ def get_vendor_surplus_items():
         if not user or user.user_type != 'vendor':
             return jsonify({'error': 'Vendor access required'}), 403
         
-        # Get all surplus items posted by this vendor
-        surplus_items = SurplusItem.query.filter_by(vendor_id=user_id).order_by(SurplusItem.posted_at.desc()).all()
+        # Get all surplus items posted by this vendor (exclude removed items)
+        surplus_items = SurplusItem.query.filter(
+            SurplusItem.vendor_id == user_id,
+            SurplusItem.status != 'removed'
+        ).order_by(SurplusItem.posted_at.desc()).all()
         
         # Count only available items (not removed/deleted)
         available_count = SurplusItem.query.filter_by(vendor_id=user_id, status='available').count()
@@ -4546,7 +4549,7 @@ def get_vendor_surplus_items():
         
         return jsonify({
             'surplus_items': items_list,
-            'total_count': available_count  # Only count available items
+            'total_count': len(items_list)  # Count of non-removed items
         }), 200
         
     except Exception as e:
