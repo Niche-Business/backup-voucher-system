@@ -4050,6 +4050,25 @@ def post_surplus_item():
             except ValueError:
                 pass
         
+        # Validate item_type and pricing
+        item_type = data.get('item_type', 'free')
+        if item_type not in ['free', 'discount']:
+            return jsonify({'error': 'Invalid item_type. Must be "free" or "discount"'}), 400
+        
+        # Enforce data integrity: free items must have price=0, discounted items must have price>0
+        if item_type == 'free':
+            price = 0.0
+            original_price = 0.0
+        else:  # discount
+            if not data.get('price') or float(data.get('price', 0)) <= 0:
+                return jsonify({'error': 'Discounted items must have a valid price greater than 0'}), 400
+            if not data.get('original_price') or float(data.get('original_price', 0)) <= 0:
+                return jsonify({'error': 'Discounted items must have a valid original price greater than 0'}), 400
+            price = float(data['price'])
+            original_price = float(data['original_price'])
+            if price >= original_price:
+                return jsonify({'error': 'Discounted price must be less than original price'}), 400
+        
         # Create surplus item
         new_item = SurplusItem(
             vendor_id=user_id,
@@ -4059,9 +4078,9 @@ def post_surplus_item():
             category=data['category'],
             description=data.get('description', ''),
             expiry_date=expiry_date,
-            item_type=data.get('item_type', 'free'),  # 'free' or 'discount'
-            price=data.get('price') if data.get('item_type') == 'discount' else None,
-            original_price=data.get('original_price') if data.get('item_type') == 'discount' else None,
+            item_type=item_type,
+            price=price,
+            original_price=original_price,
             status='available',
             posted_at=datetime.now()
         )
@@ -5382,13 +5401,20 @@ def get_recipient_to_go_items():
         from datetime import datetime, timedelta
         
         # Get discounted items (always visible to recipients)
-        discounted_items = SurplusItem.query.filter_by(status='available', item_type='discount').all()
+        # Must have item_type='discount' AND have a price > 0
+        discounted_items = SurplusItem.query.filter(
+            SurplusItem.status == 'available',
+            SurplusItem.item_type == 'discount',
+            SurplusItem.price > 0
+        ).all()
         
         # Get free items that have been posted for more than 5 hours (unclaimed by VCFSE)
+        # Must have item_type='free' AND price = 0 or NULL
         five_hours_ago = datetime.utcnow() - timedelta(hours=5)
         unclaimed_free_items = SurplusItem.query.filter(
             SurplusItem.status == 'available',
             SurplusItem.item_type == 'free',
+            db.or_(SurplusItem.price == 0, SurplusItem.price == None),
             SurplusItem.posted_at <= five_hours_ago
         ).all()
         

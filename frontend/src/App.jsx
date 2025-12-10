@@ -6858,17 +6858,17 @@ function RecipientDashboard({ user, onLogout }) {
                           onClick={() => addToCart(item.id)}
                           style={{
                             ...styles.primaryButton,
-                            backgroundColor: '#4CAF50',
+                            backgroundColor: isUnclaimedFree ? '#FF9800' : '#4CAF50',
                             width: '100%',
                             padding: '12px',
                             fontSize: '16px',
                             fontWeight: 'bold'
                           }}
                         >
-                         🛍️ {t('recipient.addToCart')}
+                         {isUnclaimedFree ? '🆓 Collect FREE Item' : `🛍️ ${t('recipient.addToCart')}`}
                         </button>
                         <p style={{fontSize: '12px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
-                          💳 {t('recipient.useVoucher')}
+                          {isUnclaimedFree ? '🆓 No voucher needed - completely FREE!' : `💳 ${t('recipient.useVoucher')}`}
                         </p>
                       </div>
                     </div>
