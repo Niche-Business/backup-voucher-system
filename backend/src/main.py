@@ -4256,6 +4256,18 @@ def post_surplus_item():
         db.session.add(new_item)
         db.session.commit()
         
+        # Extract values BEFORE background thread to avoid DetachedInstanceError
+        notification_data = {
+            'item_type': item_type,
+            'shop_id': shop.id,
+            'item_id': new_item.id,
+            'item_name': data['item_name'],
+            'shop_name': shop.shop_name,
+            'quantity': data['quantity'],
+            'item_description': data.get('description', ''),
+            'shop_address': shop.address or ''
+        }
+        
         # Broadcast real-time notification via WebSocket and Email (non-blocking)
         # FIXED: Application context wrapper added to prevent RuntimeError
         def send_notifications_async():
@@ -4265,14 +4277,14 @@ def post_surplus_item():
                     from notifications_system import broadcast_new_item_notification
                     success = broadcast_new_item_notification(
                         socketio,
-                        item_type=item_type,
-                        shop_id=shop.id,
-                        item_id=new_item.id,
-                        item_name=data['item_name'],
-                        shop_name=shop.shop_name,
-                        quantity=data['quantity'],
-                        item_description=data.get('description', ''),
-                        shop_address=shop.address or ''
+                        item_type=notification_data['item_type'],
+                        shop_id=notification_data['shop_id'],
+                        item_id=notification_data['item_id'],
+                        item_name=notification_data['item_name'],
+                        shop_name=notification_data['shop_name'],
+                        quantity=notification_data['quantity'],
+                        item_description=notification_data['item_description'],
+                        shop_address=notification_data['shop_address']
                     )
                     if success:
                         print(f"✅ Notifications sent successfully for: {data['item_name']}")
