@@ -5552,6 +5552,26 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         
+        # Run automatic migration for date_of_birth field
+        try:
+            # Check if date_of_birth column exists
+            result = db.session.execute(text("""
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name='user' AND column_name='date_of_birth'
+            """))
+            
+            if not result.fetchone():
+                print("Adding date_of_birth column to user table...")
+                db.session.execute(text('ALTER TABLE "user" ADD COLUMN date_of_birth VARCHAR(50)'))
+                db.session.commit()
+                print("✅ date_of_birth column added successfully")
+            else:
+                print("✅ date_of_birth column already exists")
+        except Exception as e:
+            print(f"Migration check: {e}")
+            db.session.rollback()
+        
         # Create default categories if they don't exist
         if not Category.query.first():
             categories = [
