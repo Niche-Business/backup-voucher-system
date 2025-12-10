@@ -6274,6 +6274,7 @@ function VendorDashboard({ user, onLogout }) {
         <QRScanner 
           onScan={handleQRScan}
           onClose={() => setShowQRScanner(false)}
+          t={t}
         />
       )}
     </div>

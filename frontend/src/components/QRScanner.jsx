@@ -10,6 +10,12 @@ export default function QRScanner({ onScan, onClose, t }) {
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
+  // Fallback function if t is not provided
+  const translate = (key) => {
+    if (!t) return key
+    return t(key)
+  }
+
   useEffect(() => {
     return () => {
       stopScanner()
@@ -72,13 +78,13 @@ export default function QRScanner({ onScan, onClose, t }) {
       // Check if permission was denied
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
         setPermissionBlocked(true)
-        setError('Camera permission is blocked in your browser settings.')
+        setError(translate('qrScanner.errorPermissionBlocked'))
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        setError('No camera found on this device.')
+        setError(translate('qrScanner.errorNoCamera'))
       } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-        setError('Camera is already in use by another application.')
+        setError(translate('qrScanner.errorCameraInUse'))
       } else {
-        setError('Failed to start camera.')
+        setError(translate('qrScanner.errorFailed'))
       }
     }
   }
@@ -138,7 +144,7 @@ export default function QRScanner({ onScan, onClose, t }) {
         overflowY: 'auto'
       }}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
-          <h3 style={{margin: 0}}>📷 Scan QR Code</h3>
+          <h3 style={{margin: 0}}>📷 {translate('qrScanner.title')}</h3>
           <button 
             onClick={handleClose}
             style={{
@@ -151,7 +157,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               fontSize: '16px'
             }}
           >
-            ✕ Close
+            ✕ {translate('common.close')}
           </button>
         </div>
 
@@ -168,9 +174,9 @@ export default function QRScanner({ onScan, onClose, t }) {
               textAlign: 'center'
             }}>
               <div style={{fontSize: '32px', marginBottom: '10px'}}>💡</div>
-              <h3 style={{margin: '0 0 10px 0'}}>Recommended: Use Manual Entry</h3>
+              <h3 style={{margin: '0 0 10px 0'}}>{translate('qrScanner.recommendedTitle')}</h3>
               <p style={{margin: '0', fontSize: '14px', lineHeight: '1.6'}}>
-                Close this window and type the voucher code manually. It's faster and more reliable!
+                {translate('qrScanner.recommendedText')}
               </p>
               <button
                 onClick={handleClose}
@@ -187,7 +193,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                   width: '100%'
                 }}
               >
-                ✓ Use Manual Entry Instead
+                ✓ {translate('qrScanner.useManualEntry')}
               </button>
             </div>
 
@@ -197,7 +203,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               color: '#999',
               fontSize: '14px'
             }}>
-              — OR —
+              — {translate('qrScanner.or')} —
             </div>
 
             {/* QR scanner option */}
@@ -207,12 +213,12 @@ export default function QRScanner({ onScan, onClose, t }) {
               borderRadius: '8px',
               marginBottom: '20px'
             }}>
-              <h4 style={{margin: '0 0 15px 0', color: '#1976d2'}}>📱 Try QR Scanner:</h4>
+              <h4 style={{margin: '0 0 15px 0', color: '#1976d2'}}>📱 {translate('qrScanner.tryQRScanner')}</h4>
               <ol style={{margin: '0', paddingLeft: '20px', lineHeight: '1.8', fontSize: '14px'}}>
-                <li>Click "Enable Camera" below</li>
-                <li>Your browser will ask for permission</li>
-                <li>Click "Allow" when prompted</li>
-                <li>Point camera at QR code</li>
+                <li>{translate('qrScanner.instruction1')}</li>
+                <li>{translate('qrScanner.instruction2')}</li>
+                <li>{translate('qrScanner.instruction3')}</li>
+                <li>{translate('qrScanner.instruction4')}</li>
               </ol>
             </div>
 
@@ -235,7 +241,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               }}
             >
               <span style={{fontSize: '24px'}}>📷</span>
-              <span>Enable Camera</span>
+              <span>{translate('qrScanner.enableCamera')}</span>
             </button>
           </div>
         )}
@@ -251,7 +257,7 @@ export default function QRScanner({ onScan, onClose, t }) {
             fontSize: '14px',
             lineHeight: '1.6'
           }}>
-            <div style={{fontWeight: 'bold', marginBottom: '10px', fontSize: '16px'}}>⚠️ Camera Access Failed</div>
+            <div style={{fontWeight: 'bold', marginBottom: '10px', fontSize: '16px'}}>⚠️ {translate('qrScanner.errorTitle')}</div>
             <div style={{marginBottom: '15px'}}>{error}</div>
             
             {permissionBlocked && (
@@ -262,12 +268,12 @@ export default function QRScanner({ onScan, onClose, t }) {
                 borderRadius: '5px',
                 color: '#e65100'
               }}>
-                <strong>🔧 Your browser has blocked camera access.</strong>
-                <p style={{margin: '10px 0'}}>To fix this:</p>
+                <strong>{translate('qrScanner.fixTitle')}</strong>
+                <p style={{margin: '10px 0'}}>{translate('qrScanner.fixInstructions')}</p>
                 <ol style={{margin: '10px 0 10px 20px', padding: 0, lineHeight: '1.8'}}>
-                  <li>Look for a <strong>camera icon 📷</strong> or <strong>lock icon 🔒</strong> in your browser's address bar (top left)</li>
-                  <li>Click it and change camera permission to <strong>"Allow"</strong></li>
-                  <li>Refresh this page and try again</li>
+                  <li>{translate('qrScanner.fixStep1')}</li>
+                  <li>{translate('qrScanner.fixStep2')}</li>
+                  <li>{translate('qrScanner.fixStep3')}</li>
                 </ol>
                 
                 {getCameraSettingsUrl() && (
@@ -285,7 +291,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                       marginTop: '10px'
                     }}
                   >
-                    ⚙️ Open Browser Camera Settings
+                    ⚙️ {translate('qrScanner.openSettings')}
                   </button>
                 )}
               </div>
@@ -306,7 +312,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                 marginTop: '15px'
               }}
             >
-              🔄 Try Again
+              🔄 {translate('qrScanner.tryAgain')}
             </button>
 
             <div style={{
@@ -330,7 +336,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                   width: '100%'
                 }}
               >
-                ✓ Use Manual Entry Instead (Recommended)
+                ✓ {translate('qrScanner.useManualEntryRecommended')}
               </button>
             </div>
           </div>
@@ -357,10 +363,10 @@ export default function QRScanner({ onScan, onClose, t }) {
             textAlign: 'center'
           }}>
             <div style={{fontSize: '18px', fontWeight: 'bold', color: '#2e7d32', marginBottom: '8px'}}>
-              ✅ Camera Active
+              ✅ {translate('qrScanner.cameraActive')}
             </div>
             <div style={{fontSize: '14px', color: '#1b5e20'}}>
-              {scanning ? '📱 Position the QR code within the frame' : '⏳ Initializing camera...'}
+              {scanning ? translate('qrScanner.positionQR') : translate('qrScanner.initializing')}
             </div>
           </div>
         )}
