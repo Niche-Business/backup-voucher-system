@@ -1129,6 +1129,120 @@ def vcse_analytics():
     except Exception as e:
         return jsonify({'error': f'Failed to get analytics: {str(e)}'}), 500
 
+@app.route('/api/admin/analytics', methods=['GET'])
+def admin_analytics():
+    """Get system-wide analytics data for admin dashboard"""
+    try:
+        from sqlalchemy import func
+        from datetime import datetime, timedelta
+        
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'admin':
+            return jsonify({'error': 'Only admins can view system analytics'}), 403
+        
+        # System-wide user statistics
+        total_recipients = User.query.filter_by(user_type='recipient').count()
+        total_vcses = User.query.filter_by(user_type='vcse').count()
+        total_schools = User.query.filter_by(user_type='school').count()
+        total_vendors = User.query.filter_by(user_type='vendor').count()
+        
+        # Voucher statistics (all vouchers in system)
+        all_vouchers = Voucher.query.all()
+        total_vouchers = len(all_vouchers)
+        total_value = sum(float(v.value) for v in all_vouchers)
+        active_vouchers = len([v for v in all_vouchers if v.status == 'active'])
+        redeemed_vouchers = len([v for v in all_vouchers if v.status == 'redeemed'])
+        expired_vouchers = len([v for v in all_vouchers if v.status == 'expired'])
+        
+        # Marketplace statistics
+        total_shops = VendorShop.query.filter_by(is_active=True).count()
+        all_items = SurplusItem.query.all()
+        total_items = len(all_items)
+        available_items = len([i for i in all_items if i.status == 'available'])
+        claimed_items = len([i for i in all_items if i.status == 'claimed'])
+        collected_items = len([i for i in all_items if i.status == 'collected'])
+        
+        # Status breakdown
+        status_breakdown = {
+            'active': active_vouchers,
+            'redeemed': redeemed_vouchers,
+            'expired': expired_vouchers
+        }
+        
+        # Issuance trend (last 30 days)
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        recent_vouchers = [v for v in all_vouchers if v.created_at and v.created_at >= thirty_days_ago]
+        
+        # Group by date
+        issuance_by_date = {}
+        for v in recent_vouchers:
+            date_key = v.created_at.strftime('%Y-%m-%d')
+            issuance_by_date[date_key] = issuance_by_date.get(date_key, 0) + 1
+        
+        # Fill in missing dates with 0
+        trend_data = []
+        for i in range(30):
+            date = (datetime.utcnow() - timedelta(days=29-i)).strftime('%Y-%m-%d')
+            trend_data.append({
+                'date': date,
+                'count': issuance_by_date.get(date, 0)
+            })
+        
+        # Value distributed by status
+        value_by_status = {
+            'active': sum(float(v.value) for v in all_vouchers if v.status == 'active'),
+            'redeemed': sum(float(v.value) for v in all_vouchers if v.status == 'redeemed'),
+            'expired': sum(float(v.value) for v in all_vouchers if v.status == 'expired')
+        }
+        
+        # Calculate redemption rate
+        redemption_rate = round((redeemed_vouchers / total_vouchers * 100) if total_vouchers > 0 else 0, 2)
+        
+        return jsonify({
+            'users': {
+                'recipients': total_recipients,
+                'vcses': total_vcses,
+                'schools': total_schools,
+                'vendors': total_vendors,
+                'total': total_recipients + total_vcses + total_schools + total_vendors
+            },
+            'vouchers': {
+                'total': total_vouchers,
+                'active': active_vouchers,
+                'redeemed': redeemed_vouchers,
+                'expired': expired_vouchers,
+                'total_value': total_value,
+                'redeemed_value': value_by_status['redeemed'],
+                'redemption_rate': redemption_rate
+            },
+            'marketplace': {
+                'total_shops': total_shops,
+                'total_items': total_items,
+                'available_items': available_items,
+                'claimed_items': claimed_items,
+                'collected_items': collected_items
+            },
+            'total_vouchers': total_vouchers,
+            'total_value': total_value,
+            'active_vouchers': active_vouchers,
+            'redeemed_vouchers': redeemed_vouchers,
+            'expired_vouchers': expired_vouchers,
+            'status_breakdown': status_breakdown,
+            'issuance_trend': trend_data,
+            'value_by_status': value_by_status
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in admin analytics: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Failed to load analytics: {str(e)}'}), 500
+
 @app.route('/api/vcse/vouchers', methods=['GET'])
 def vcse_get_vouchers():
     """Get all vouchers issued by this VCFSE organization"""
