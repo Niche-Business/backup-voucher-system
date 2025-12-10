@@ -15,6 +15,14 @@ import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { QRCodeSVG } from 'qrcode.react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import io from 'socket.io-client'
+
+// Socket.IO client connection
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const socket = io(API_URL, {
+  withCredentials: true,
+  transports: ['websocket', 'polling']
+})
 
 // Notification Sound Utility
 const playNotificationSound = () => {
@@ -3726,6 +3734,8 @@ function VCSEDashboard({ user, onLogout }) {
   const [reassignReason, setReassignReason] = useState('')
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [lastItemCount, setLastItemCount] = useState(0)
+  const [townFilter, setTownFilter] = useState('all')
+  const [filteredToGoItems, setFilteredToGoItems] = useState([])
 
   useEffect(() => {
     loadBalance()
@@ -3734,7 +3744,40 @@ function VCSEDashboard({ user, onLogout }) {
     loadVouchers()
     loadAnalytics()
     loadVendorShops()
-  }, [])
+    
+    // Join VCFSE room for real-time notifications
+    socket.emit('join_room', { user_type: 'vcse' })
+    
+    // Listen for new item notifications
+    socket.on('new_item_notification', (notification) => {
+      console.log('Received notification:', notification)
+      
+      // Play sound if enabled
+      if (soundEnabled) {
+        playNotificationSound()
+      }
+      
+      // Show visual notification
+      const notificationDiv = document.createElement('div')
+      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+      notificationDiv.textContent = `🔔 ${notification.message}`
+      document.body.appendChild(notificationDiv)
+      setTimeout(() => notificationDiv.remove(), 5000)
+      
+      // Reload items
+      if (notification.type === 'free_item') {
+        loadToGoItems()
+      } else if (notification.type === 'discounted_item') {
+        loadDiscountedItems()
+      }
+    })
+    
+    // Cleanup on unmount
+    return () => {
+      socket.off('new_item_notification')
+      socket.emit('leave_room', { user_type: 'vcse' })
+    }
+  }, [soundEnabled])
 
   // Periodic check for new Food To Go items (every 30 seconds when on togo tab)
   useEffect(() => {
@@ -3774,6 +3817,20 @@ function VCSEDashboard({ user, onLogout }) {
   useEffect(() => {
     loadVouchers()
   }, [statusFilter, searchQuery])
+
+  // Filter to-go items by town
+  useEffect(() => {
+    if (townFilter === 'all') {
+      setFilteredToGoItems(toGoItems)
+    } else {
+      const filtered = toGoItems.filter(item => {
+        // Assuming items have shop_city or shop_town field
+        const itemTown = item.shop_city || item.shop_town || ''
+        return itemTown.toLowerCase() === townFilter.toLowerCase()
+      })
+      setFilteredToGoItems(filtered)
+    }
+  }, [toGoItems, townFilter])
 
   const loadBalance = async () => {
     try {
@@ -4710,40 +4767,75 @@ function VCSEDashboard({ user, onLogout }) {
         
         {activeTab === 'togo' && (
           <div>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
-              <div>
-                <h2 style={{margin: 0}}>🛒️ {t('pages.foodToGoOrderTitle')}</h2>
-                <p style={{margin: '5px 0 0 0', color: '#666'}}>{t('pages.foodToGoOrderDesc')}</p>
+            <div style={{marginBottom: '15px'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                <div>
+                  <h2 style={{margin: 0}}>🛍️ {t('pages.foodToGoOrderTitle')}</h2>
+                  <p style={{margin: '5px 0 0 0', color: '#666'}}>{t('pages.foodToGoOrderDesc')}</p>
+                </div>
+                <button
+                  onClick={() => setSoundEnabled(!soundEnabled)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: soundEnabled ? '#4CAF50' : '#9E9E9E',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF'}
+                </button>
               </div>
-              <button
-                onClick={() => setSoundEnabled(!soundEnabled)}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: soundEnabled ? '#4CAF50' : '#9E9E9E',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                {soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF'}
-              </button>
+              
+              {/* Town Filter */}
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555'}}>
+                  📍 Filter by Town/City:
+                </label>
+                <select
+                  value={townFilter}
+                  onChange={(e) => setTownFilter(e.target.value)}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '2px solid #ddd',
+                    fontSize: '14px',
+                    width: '300px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="all">All Towns/Cities</option>
+                  <option value="Northampton">Northampton</option>
+                  <option value="Daventry">Daventry</option>
+                  <option value="Brackley">Brackley</option>
+                  <option value="Towcester">Towcester</option>
+                  <option value="Wellingborough">Wellingborough</option>
+                  <option value="Kettering">Kettering</option>
+                  <option value="Corby">Corby</option>
+                </select>
+                {townFilter !== 'all' && (
+                  <span style={{marginLeft: '10px', color: '#666', fontSize: '14px'}}>
+                    Showing items from {townFilter} ({filteredToGoItems.length} items)
+                  </span>
+                )}
+              </div>
             </div>
             
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {toGoItems.length === 0 ? (
+              {filteredToGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                  <p>No Food to Go Items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for surplus Food to Go Items from local shops</p>
+                  <p>No Food to Go Items available {townFilter !== 'all' ? `in ${townFilter}` : 'at the moment'}</p>
+                  <p style={{fontSize: '14px'}}>{townFilter !== 'all' ? 'Try selecting a different town or "All Towns/Cities"' : 'Check back later for surplus Food to Go Items from local shops'}</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
-                  {toGoItems.map(item => (
+                  {filteredToGoItems.map(item => (
                     <ToGoOrderCard key={item.id} item={item} onOrderPlaced={loadToGoItems} />
                   ))}
                 </div>
@@ -6172,7 +6264,36 @@ function RecipientDashboard({ user, onLogout }) {
     loadToGoItems()
     loadCart()
     checkShopSelectionRequired()
-  }, [])
+    
+    // Join recipient room for real-time notifications
+    socket.emit('join_room', { user_type: 'recipient' })
+    
+    // Listen for new item notifications
+    socket.on('new_item_notification', (notification) => {
+      console.log('Received notification:', notification)
+      
+      // Play sound if enabled
+      if (soundEnabled) {
+        playNotificationSound()
+      }
+      
+      // Show visual notification
+      const notificationDiv = document.createElement('div')
+      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #9C27B0; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+      notificationDiv.textContent = `🔔 ${notification.message}`
+      document.body.appendChild(notificationDiv)
+      setTimeout(() => notificationDiv.remove(), 5000)
+      
+      // Reload items
+      loadToGoItems()
+    })
+    
+    // Cleanup on unmount
+    return () => {
+      socket.off('new_item_notification')
+      socket.emit('leave_room', { user_type: 'recipient' })
+    }
+  }, [soundEnabled])
 
   // Periodic check for new Food To Go items (every 30 seconds when on togo tab)
   useEffect(() => {
