@@ -638,6 +638,23 @@ def health_check():
         'timestamp': datetime.utcnow().isoformat()
     })
 
+@app.route('/api/version', methods=['GET'])
+def version_check():
+    """Return deployment version to verify correct code is running"""
+    return jsonify({
+        'version': 'v2227071_fix_foreign_keys_and_notifications',
+        'commit': '2227071',
+        'deployed_at': datetime.now().isoformat(),
+        'fixes': [
+            'Foreign key constraints for school deletion',
+            'Foreign key constraints for VCFSE deletion',
+            'Foreign key constraints for recipient deletion',
+            'In-app notifications for payout requests',
+            'In-app notifications for payout approvals',
+            'In-app notifications for payout payments'
+        ]
+    })
+
 @app.route('/api/register', methods=['POST'])
 def register():
     try:
