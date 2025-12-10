@@ -3757,10 +3757,29 @@ function VCSEDashboard({ user, onLogout }) {
         playNotificationSound()
       }
       
+      // Get translated message based on current language
+      const translations = {
+        'free_item': {
+          'en': `New free item available for collection: ${notification.item_name} at ${notification.shop_name}`,
+          'ar': `عنصر مجاني جديد متاح للتحصيل: ${notification.item_name} في ${notification.shop_name}`,
+          'ro': `Articol gratuit nou disponibil pentru colectare: ${notification.item_name} la ${notification.shop_name}`,
+          'pl': `Nowy darmowy artykuł dostępny do odbioru: ${notification.item_name} w ${notification.shop_name}`
+        },
+        'discounted_item': {
+          'en': `New discounted item available: ${notification.item_name} at ${notification.shop_name}`,
+          'ar': `عنصر مخفض جديد متاح: ${notification.item_name} في ${notification.shop_name}`,
+          'ro': `Articol nou redus disponibil: ${notification.item_name} la ${notification.shop_name}`,
+          'pl': `Nowy przeceniony artykuł dostępny: ${notification.item_name} w ${notification.shop_name}`
+        }
+      }
+      
+      const currentLang = i18n.language || 'en'
+      const translatedMessage = translations[notification.type]?.[currentLang] || notification.message
+      
       // Show visual notification
       const notificationDiv = document.createElement('div')
       notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
-      notificationDiv.textContent = `🔔 ${notification.message}`
+      notificationDiv.textContent = `🔔 ${translatedMessage}`
       document.body.appendChild(notificationDiv)
       setTimeout(() => notificationDiv.remove(), 5000)
       
@@ -6277,10 +6296,29 @@ function RecipientDashboard({ user, onLogout }) {
         playNotificationSound()
       }
       
+      // Get translated message based on current language
+      const translations = {
+        'free_item': {
+          'en': `New free item available for collection: ${notification.item_name} at ${notification.shop_name}`,
+          'ar': `عنصر مجاني جديد متاح للتحصيل: ${notification.item_name} في ${notification.shop_name}`,
+          'ro': `Articol gratuit nou disponibil pentru colectare: ${notification.item_name} la ${notification.shop_name}`,
+          'pl': `Nowy darmowy artykuł dostępny do odbioru: ${notification.item_name} w ${notification.shop_name}`
+        },
+        'discounted_item': {
+          'en': `New discounted item available: ${notification.item_name} at ${notification.shop_name}`,
+          'ar': `عنصر مخفض جديد متاح: ${notification.item_name} في ${notification.shop_name}`,
+          'ro': `Articol nou redus disponibil: ${notification.item_name} la ${notification.shop_name}`,
+          'pl': `Nowy przeceniony artykuł dostępny: ${notification.item_name} w ${notification.shop_name}`
+        }
+      }
+      
+      const currentLang = i18n.language || 'en'
+      const translatedMessage = translations[notification.type]?.[currentLang] || notification.message
+      
       // Show visual notification
       const notificationDiv = document.createElement('div')
       notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #9C27B0; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
-      notificationDiv.textContent = `🔔 ${notification.message}`
+      notificationDiv.textContent = `🔔 ${translatedMessage}`
       document.body.appendChild(notificationDiv)
       setTimeout(() => notificationDiv.remove(), 5000)
       
