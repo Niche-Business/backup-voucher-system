@@ -76,6 +76,28 @@ limiter = Limiter(
     storage_uri="memory://"
 )
 
+# Global error handlers to return JSON instead of HTML
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not found', 'message': str(error)}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    logger.error(f'Internal server error: {str(error)}')
+    return jsonify({'error': 'Internal server error', 'message': str(error)}), 500
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    # Log the error
+    logger.error(f'Unhandled exception: {str(error)}', exc_info=True)
+    
+    # Return JSON instead of HTML
+    if hasattr(error, 'code'):
+        return jsonify({'error': error.__class__.__name__, 'message': str(error)}), error.code
+    else:
+        return jsonify({'error': 'Internal server error', 'message': str(error)}), 500
+
 # Enhanced Database Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
