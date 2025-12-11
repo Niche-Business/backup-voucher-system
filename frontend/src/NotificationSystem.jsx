@@ -38,8 +38,8 @@ export function NotificationBell({ apiCall, userType }) {
         audioRef.current.play().catch(err => console.log('Audio play failed:', err));
       }
       
-      // Show browser notification if permitted
-      if (Notification.permission === 'granted') {
+      // Show browser notification if permitted (check if Notification API exists)
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         new Notification('New Item Available', {
           body: notification.message,
           icon: '/favicon.ico',
@@ -60,8 +60,8 @@ export function NotificationBell({ apiCall, userType }) {
     // Load notification preferences
     loadPreferences();
 
-    // Request browser notification permission
-    if (Notification.permission === 'default') {
+    // Request browser notification permission (check if Notification API exists)
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
       Notification.requestPermission();
     }
 
