@@ -2010,9 +2010,10 @@ def vcse_issue_voucher():
         if value <= 0:
             return jsonify({'error': 'Voucher value must be positive'}), 400
         
-        # Check if VCFSE has sufficient allocated balance from admin
-        if user.allocated_balance < value:
-            return jsonify({'error': f'Insufficient allocated funds. Current allocated balance: £{user.allocated_balance:.2f}'}), 400
+        # Check if VCFSE has sufficient total balance (self-loaded + allocated)
+        total_available = (user.balance or 0) + (user.allocated_balance or 0)
+        if total_available < value:
+            return jsonify({'error': f'Insufficient funds. Current available balance: £{total_available:.2f}'}), 400
         
         # Find or create recipient
         recipient = User.query.filter_by(email=recipient_email).first()
@@ -2074,8 +2075,15 @@ def vcse_issue_voucher():
             assign_shop_method=assign_shop_method
         )
         
-        # Deduct from VCFSE allocated balance
-        user.allocated_balance -= value
+        # Deduct from VCFSE balance (self-loaded first, then allocated)
+        if user.balance >= value:
+            # Sufficient self-loaded funds
+            user.balance -= value
+        else:
+            # Use self-loaded funds first, then allocated
+            remaining = value - (user.balance or 0)
+            user.balance = 0
+            user.allocated_balance -= remaining
         
         db.session.add(voucher)
         db.session.commit()

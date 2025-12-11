@@ -3892,7 +3892,9 @@ function VCSEDashboard({ user, onLogout }) {
   const loadBalance = async () => {
     try {
       const data = await apiCall('/vcse/balance')
-      setAllocatedBalance(data.allocated_balance || 0)
+      // Calculate total available balance (self-loaded + allocated)
+      const totalAvailable = (data.balance || 0) + (data.allocated_balance || 0)
+      setAllocatedBalance(totalAvailable)
     } catch (error) {
       console.error('Failed to load balance:', error)
     }
@@ -4739,7 +4741,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your allocated balance (£{allocatedBalance.toFixed(2)} available)</small>
+                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your balance (£{allocatedBalance.toFixed(2)} available)</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
