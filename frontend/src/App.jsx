@@ -14,7 +14,7 @@ import Pagination from './components/Pagination'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
 import { QRCodeSVG } from 'qrcode.react'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import io from 'socket.io-client'
 
 // Socket.IO client connection
@@ -3610,9 +3610,11 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
     setError('')
     
     try {
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement)
+      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        redirect: 'if_required',
+        confirmParams: {
+          return_url: window.location.origin
         }
       })
       
@@ -3666,18 +3668,13 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
             borderRadius: '8px',
             backgroundColor: 'white'
           }}>
-            <CardElement options={{
-              hidePostalCode: false,
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': {
-                    color: '#aab7c4'
+            <PaymentElement options={{
+              layout: 'tabs',
+              defaultValues: {
+                billingDetails: {
+                  address: {
+                    country: 'GB'
                   }
-                },
-                invalid: {
-                  color: '#9e2146'
                 }
               }
             }} />
