@@ -938,11 +938,16 @@ def register():
 def login():
     try:
         data = request.get_json()
+        logger.info(f"[LOGIN DEBUG] Login attempt for email: {data.get('email')}")
+        logger.info(f"[LOGIN DEBUG] Session before login: {dict(session)}")
         
         if not data.get('email') or not data.get('password'):
             return jsonify({'error': 'Email and password are required'}), 400
         
         user = User.query.filter_by(email=data['email']).first()
+        logger.info(f"[LOGIN DEBUG] User lookup result: {user}")
+        if user:
+            logger.info(f"[LOGIN DEBUG] Found user - ID: {user.id}, Email: {user.email}, Type: {user.user_type}")
         
         if not user or not check_password_hash(user.password_hash, data['password']):
             return jsonify({'error': 'Invalid email or password'}), 401
@@ -972,6 +977,8 @@ def login():
         # Create session
         session['user_id'] = user.id
         session['user_type'] = user.user_type
+        logger.info(f"[LOGIN DEBUG] Session after setting: {dict(session)}")
+        logger.info(f"[LOGIN DEBUG] Set user_id={user.id}, user_type={user.user_type}")
         
         return jsonify({
             'message': 'Login successful',
