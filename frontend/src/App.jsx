@@ -4496,8 +4496,8 @@ function VCSEDashboard({ user, onLogout }) {
           <div>
             <h2>Issue Vouchers</h2>
             <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
-              <strong>💰 Allocated Funds from Admin: £{allocatedBalance.toFixed(2)}</strong>
-              <p style={{margin: '10px 0 0'}}>Use these funds to issue vouchers to recipients</p>
+              <strong>💰 Total Available Funds: £{allocatedBalance.toFixed(2)}</strong>
+              <p style={{margin: '10px 0 0'}}>Combined balance from admin allocation and self-loaded funds</p>
             </div>
             
             {/* Instructions Banner */}
