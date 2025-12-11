@@ -188,16 +188,37 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
                 if recipient_name and recipient_name.lower() not in recipient_full_name.lower():
                     continue
                 
-                # Get shop info (from redeemed_at_shop_id)
+                # Get shop info
                 shop = None
                 shop_town = None
                 shop_name_str = 'N/A'
                 
+                # For redeemed vouchers, show the shop where it was redeemed
                 if voucher.redeemed_at_shop_id:
                     shop = VendorShop.query.get(voucher.redeemed_at_shop_id)
                     if shop:
                         shop_name_str = shop.shop_name
                         shop_town = shop.town
+                # For active vouchers, show where they can be accepted
+                elif voucher.vendor_restrictions:
+                    try:
+                        import json
+                        shop_ids = json.loads(voucher.vendor_restrictions)
+                        if isinstance(shop_ids, list) and len(shop_ids) > 0:
+                            # Get first shop for display (could show multiple later)
+                            first_shop = VendorShop.query.get(shop_ids[0])
+                            if first_shop:
+                                if len(shop_ids) == 1:
+                                    shop_name_str = first_shop.shop_name
+                                    shop_town = first_shop.town
+                                else:
+                                    shop_name_str = f"{first_shop.shop_name} (+{len(shop_ids)-1} more)"
+                                    shop_town = first_shop.town
+                    except:
+                        shop_name_str = 'All Local Food Shops'
+                else:
+                    # No restrictions = can be used at any shop
+                    shop_name_str = 'All Local Food Shops'
                 
                 # Filter by shop name
                 if shop_name and shop_name.lower() not in shop_name_str.lower():
