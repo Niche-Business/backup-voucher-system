@@ -164,7 +164,7 @@ export function NotificationBell({ apiCall, userType }) {
           cursor: 'pointer',
           fontSize: '24px',
           padding: '8px',
-          color: '#333'
+          color: 'white'
         }}
       >
         🔔
