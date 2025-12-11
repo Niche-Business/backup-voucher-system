@@ -3623,19 +3623,25 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
       }
       
       if (paymentIntent.status === 'succeeded') {
+        console.log('Payment succeeded, verifying with backend...', paymentIntent.id)
         // Verify payment with backend
         try {
-          await apiCall('/payment/verify', {
+          const verifyResult = await apiCall('/payment/verify', {
             method: 'POST',
             body: JSON.stringify({
-              payment_intent_id: paymentIntentId
+              payment_intent_id: paymentIntent.id
             })
           })
+          console.log('Payment verification successful:', verifyResult)
           
           onSuccess()
         } catch (verifyError) {
+          console.error('Payment verification failed:', verifyError)
           setError(`Payment succeeded but verification failed: ${verifyError.message}`)
         }
+      } else {
+        console.log('Payment status:', paymentIntent.status)
+        setError(`Payment status: ${paymentIntent.status}`)
       }
     } catch (err) {
       setError(`Payment failed: ${err.message}`)
