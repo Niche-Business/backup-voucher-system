@@ -51,9 +51,22 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'BAK U
 app.config['MAIL_SUPPRESS_SEND'] = os.environ.get('MAIL_SUPPRESS_SEND', 'True') == 'True'  # Set to True to disable emails in dev (default: True)
 
 db = SQLAlchemy(app)
-CORS(app, supports_credentials=True, origins=['*'])
+# CORS configuration - must specify exact origin when using credentials
+# Cannot use origins=['*'] with supports_credentials=True
+CORS(app, 
+     supports_credentials=True, 
+     origins=['https://backup-voucher-system-1.onrender.com', 'http://localhost:3000', 'http://localhost:5000'],
+     allow_headers=['Content-Type', 'Authorization'],
+     expose_headers=['Content-Type'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 mail = Mail(app)
-socketio = SocketIO(app, cors_allowed_origins='*', manage_session=False)
+socketio = SocketIO(app, cors_allowed_origins=['https://backup-voucher-system-1.onrender.com', 'http://localhost:3000'], manage_session=False)
+
+# Session configuration for production
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to True if using HTTPS only
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
 
 # Initialize Flask-Compress for Gzip compression
 Compress(app)
