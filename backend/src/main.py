@@ -2875,11 +2875,20 @@ def create_payment_intent():
     """Create a Stripe Payment Intent for VCFSE fund loading"""
     try:
         user_id = session.get('user_id')
+        logger.info(f"[PAYMENT DEBUG] Session user_id: {user_id}")
+        logger.info(f"[PAYMENT DEBUG] Session contents: {dict(session)}")
+        
         if not user_id:
+            logger.error("[PAYMENT DEBUG] No user_id in session")
             return jsonify({'error': 'Not authenticated'}), 401
         
         user = User.query.get(user_id)
+        logger.info(f"[PAYMENT DEBUG] User lookup result: {user}")
+        if user:
+            logger.info(f"[PAYMENT DEBUG] User type: {user.user_type}, Email: {user.email}")
+        
         if not user or user.user_type != 'vcse':
+            logger.error(f"[PAYMENT DEBUG] Auth failed - user: {user}, user_type: {user.user_type if user else 'N/A'}")
             return jsonify({'error': 'Only VCFSE organizations can load funds'}), 403
         
         data = request.get_json()
