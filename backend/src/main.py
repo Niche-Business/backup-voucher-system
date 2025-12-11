@@ -63,9 +63,11 @@ mail = Mail(app)
 socketio = SocketIO(app, cors_allowed_origins=['https://backup-voucher-system-1.onrender.com', 'http://localhost:3000'], manage_session=False)
 
 # Session configuration for production
-app.config['SESSION_COOKIE_SECURE'] = False  # Set to True if using HTTPS only
+# CRITICAL: Must set SECURE=True for HTTPS sites, otherwise cookies won't persist!
+app.config['SESSION_COOKIE_SECURE'] = True  # Required for HTTPS (Render deployment)
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_NAME'] = 'vcse_session'
 app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
 
 # Initialize Flask-Compress for Gzip compression
