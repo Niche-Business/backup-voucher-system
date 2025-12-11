@@ -3007,7 +3007,9 @@ def verify_payment():
             transaction.payment_method_id = verification.get('payment_method')
             
             # Add funds to user balance
-            user.balance = (user.balance or 0) + transaction.amount
+            old_balance = user.balance or 0
+            user.balance = old_balance + transaction.amount
+            app.logger.info(f'[VERIFY DEBUG] User {user.id} balance update: {old_balance} + {transaction.amount} = {user.balance}')
             
             # Create success notification
             create_notification(
@@ -3018,6 +3020,7 @@ def verify_payment():
             )
             
             db.session.commit()
+            app.logger.info(f'[VERIFY DEBUG] Database committed. Final balance in DB: {user.balance}')
             
             return jsonify({
                 'success': True,
