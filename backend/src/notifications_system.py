@@ -306,10 +306,69 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
             target_groups = ['recipient', 'school', 'vcse', 'admin']
             message = f"New discounted item available: {item_name} at {shop_name}"
         else:  # free
-            # Free items go to VCFSEs and admins
+            # Free items go to VCFSEs and admins immediately
+            # Recipients get notified after 5 hours if item is still available
             notification_type = 'free_item'
             target_groups = ['vcse', 'admin']
             message = f"New free item available for collection: {item_name} at {shop_name}"
+            
+            # Schedule delayed notification for recipients (5 hours later)
+            import threading
+            def send_delayed_recipient_notification():
+                import time
+                time.sleep(5 * 60 * 60)  # Wait 5 hours
+                
+                # Check if item is still available
+                from models import SurplusItem as _SurplusItem
+                item = _SurplusItem.query.get(item_id)
+                if item and item.status == 'available':
+                    # Send notification to recipients and schools
+                    recipient_message = f"Free item now available for recipients: {item_name} at {shop_name}"
+                    
+                    for recipient_group in ['recipient', 'school']:
+                        recipient_notification = create_notification(
+                            notification_type='free_item_delayed',
+                            shop_id=shop_id,
+                            item_id=item_id,
+                            target_group=recipient_group,
+                            message=recipient_message,
+                            item_name=item_name,
+                            shop_name=shop_name,
+                            quantity=quantity
+                        )
+                        
+                        if recipient_notification:
+                            # Broadcast via WebSocket
+                            room = f"{recipient_group}_room"
+                            try:
+                                socketio_instance.emit('new_item_notification', recipient_notification.to_dict(), room=room)
+                            except:
+                                pass
+                            
+                            # Send emails
+                            users = _User.query.filter_by(user_type=recipient_group).all()
+                            for user in users:
+                                pref = _NotificationPreference.query.filter_by(user_id=user.id).first()
+                                if not pref or pref.email_enabled:
+                                    try:
+                                        user_name = user.first_name or user.email.split('@')[0]
+                                        email_service.send_new_item_notification(
+                                            user_email=user.email,
+                                            user_name=user_name,
+                                            item_name=item_name,
+                                            item_type='free',
+                                            quantity=quantity,
+                                            shop_name=shop_name,
+                                            shop_address=shop_address,
+                                            item_description=item_description
+                                        )
+                                    except:
+                                        pass
+            
+            # Start delayed notification thread
+            delayed_thread = threading.Thread(target=send_delayed_recipient_notification)
+            delayed_thread.daemon = True
+            delayed_thread.start()
         
         print(f"📢 Target groups: {', '.join(target_groups)}")
         print(f"📝 Message: {message}")

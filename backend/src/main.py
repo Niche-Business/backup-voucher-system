@@ -6430,23 +6430,23 @@ def delete_school(school_id):
         logger.info(f"Deleting school: {school.organization_name} (ID: {school_id})")
         
         # 1. Delete notification preferences
-        pref_count = NotificationPreference.query.filter_by(user_id=school_id).delete()
+        pref_count = NotificationPreference.query.filter_by(user_id=school_id).delete(synchronize_session=False)
         logger.info(f"Deleted {pref_count} notification preferences")
         
         # 2. Delete user notifications (in-app notifications)
-        user_notif_count = UserNotification.query.filter_by(user_id=school_id).delete()
+        user_notif_count = UserNotification.query.filter_by(user_id=school_id).delete(synchronize_session=False)
         logger.info(f"Deleted {user_notif_count} user notifications")
         
         # 3. Delete notifications where this user is the recipient (surplus food notifications)
-        notif_count = Notification.query.filter_by(user_id=school_id).delete()
+        notif_count = Notification.query.filter_by(user_id=school_id).delete(synchronize_session=False)
         logger.info(f"Deleted {notif_count} surplus notifications")
         
         # 4. Delete wallet transactions
-        wallet_tx_count = WalletTransaction.query.filter_by(user_id=school_id).delete()
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=school_id).delete(synchronize_session=False)
         logger.info(f"Deleted {wallet_tx_count} wallet transactions")
         
         # 5. Delete login sessions
-        session_count = LoginSession.query.filter_by(user_id=school_id).delete()
+        session_count = LoginSession.query.filter_by(user_id=school_id).delete(synchronize_session=False)
         logger.info(f"Deleted {session_count} login sessions")
         
         # 6. Flush changes to ensure foreign keys are updated
@@ -6551,23 +6551,23 @@ def delete_vcse(vcse_id):
         logger.info(f"Deleting VCFSE: {vcse.organization_name or vcse.first_name} (ID: {vcse_id})")
         
         # 1. Delete notification preferences
-        pref_count = NotificationPreference.query.filter_by(user_id=vcse_id).delete()
+        pref_count = NotificationPreference.query.filter_by(user_id=vcse_id).delete(synchronize_session=False)
         logger.info(f"Deleted {pref_count} notification preferences")
         
         # 2. Delete user notifications (in-app notifications)
-        user_notif_count = UserNotification.query.filter_by(user_id=vcse_id).delete()
+        user_notif_count = UserNotification.query.filter_by(user_id=vcse_id).delete(synchronize_session=False)
         logger.info(f"Deleted {user_notif_count} user notifications")
         
         # 3. Delete notifications where this user is the recipient (surplus food notifications)
-        notif_count = Notification.query.filter_by(user_id=vcse_id).delete()
+        notif_count = Notification.query.filter_by(user_id=vcse_id).delete(synchronize_session=False)
         logger.info(f"Deleted {notif_count} surplus notifications")
         
         # 4. Delete wallet transactions
-        wallet_tx_count = WalletTransaction.query.filter_by(user_id=vcse_id).delete()
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=vcse_id).delete(synchronize_session=False)
         logger.info(f"Deleted {wallet_tx_count} wallet transactions")
         
         # 5. Delete login sessions
-        session_count = LoginSession.query.filter_by(user_id=vcse_id).delete()
+        session_count = LoginSession.query.filter_by(user_id=vcse_id).delete(synchronize_session=False)
         logger.info(f"Deleted {session_count} login sessions")
         
         # 6. Flush changes to ensure foreign keys are updated
@@ -6622,27 +6622,27 @@ def delete_recipient(recipient_id):
         logger.info(f"Deleting recipient: {recipient_name} (ID: {recipient_id})")
         
         # 1. Delete notification preferences
-        pref_count = NotificationPreference.query.filter_by(user_id=recipient_id).delete()
+        pref_count = NotificationPreference.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {pref_count} notification preferences")
         
         # 2. Delete user notifications (in-app notifications)
-        user_notif_count = UserNotification.query.filter_by(user_id=recipient_id).delete()
+        user_notif_count = UserNotification.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {user_notif_count} user notifications")
         
         # 3. Delete notifications where this user is the recipient (surplus food notifications)
-        notif_count = Notification.query.filter_by(user_id=recipient_id).delete()
+        notif_count = Notification.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {notif_count} surplus notifications")
         
         # 4. Delete wallet transactions
-        wallet_tx_count = WalletTransaction.query.filter_by(user_id=recipient_id).delete()
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {wallet_tx_count} wallet transactions")
         
         # 5. Delete login sessions
-        session_count = LoginSession.query.filter_by(user_id=recipient_id).delete()
+        session_count = LoginSession.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {session_count} login sessions")
         
         # 6. Delete cart items
-        cart_count = Cart.query.filter_by(user_id=recipient_id).delete()
+        cart_count = Cart.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {cart_count} cart items")
         
         # 7. Flush changes to ensure foreign keys are updated
@@ -6945,23 +6945,23 @@ def delete_admin_account(admin_id):
         logger.info(f"Deleting admin account: {admin_to_delete.email} (ID: {admin_id})")
         
         # 1. Delete notification preferences
-        pref_count = NotificationPreference.query.filter_by(user_id=admin_id).delete()
+        pref_count = NotificationPreference.query.filter_by(user_id=admin_id).delete(synchronize_session=False)
         logger.info(f"Deleted {pref_count} notification preferences")
         
         # 2. Delete user notifications (in-app notifications)
-        user_notif_count = UserNotification.query.filter_by(user_id=admin_id).delete()
+        user_notif_count = UserNotification.query.filter_by(user_id=admin_id).delete(synchronize_session=False)
         logger.info(f"Deleted {user_notif_count} user notifications")
         
         # 3. Delete notifications where this user is the recipient (surplus food notifications)
-        notif_count = Notification.query.filter_by(user_id=admin_id).delete()
+        notif_count = Notification.query.filter_by(user_id=admin_id).delete(synchronize_session=False)
         logger.info(f"Deleted {notif_count} surplus notifications")
         
         # 4. Delete wallet transactions
-        wallet_tx_count = WalletTransaction.query.filter_by(user_id=admin_id).delete()
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=admin_id).delete(synchronize_session=False)
         logger.info(f"Deleted {wallet_tx_count} wallet transactions")
         
         # 5. Delete login sessions
-        session_count = LoginSession.query.filter_by(user_id=admin_id).delete()
+        session_count = LoginSession.query.filter_by(user_id=admin_id).delete(synchronize_session=False)
         logger.info(f"Deleted {session_count} login sessions")
         
         # 6. Flush changes to ensure foreign keys are updated
