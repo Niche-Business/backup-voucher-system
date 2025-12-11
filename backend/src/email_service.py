@@ -95,7 +95,7 @@ class EmailService:
         
         return self.send_email(user_email, f"Welcome to BAK UP E-Voucher System - {role_name}", html_content)
     
-    def send_new_item_notification(self, user_email, user_name, item_name, item_type, quantity, shop_name):
+    def send_new_item_notification(self, user_email, user_name, item_name, item_type, quantity, shop_name, shop_address='', item_description=''):
         """Send notification email when new item is posted"""
         item_type_emoji = '🆓' if item_type == 'free' else '🎁'
         item_type_text = 'Free Item' if item_type == 'free' else 'Discounted Item'
@@ -125,8 +125,10 @@ class EmailService:
                     <div class="item-box">
                         <h2 style="margin-top: 0; color: #FF9800;">{item_name}</h2>
                         <p><strong>Shop:</strong> {shop_name}</p>
+                        {f'<p><strong>Location:</strong> {shop_address}</p>' if shop_address else ''}
                         <p><strong>Quantity Available:</strong> {quantity}</p>
                         <p><strong>Type:</strong> {item_type_text}</p>
+                        {f'<p><strong>Description:</strong> {item_description}</p>' if item_description else ''}
                     </div>
                     <p>Log in now to view details and place your order before it's gone!</p>
                     <a href="{self.app_url}" class="button">View Item Now</a>
