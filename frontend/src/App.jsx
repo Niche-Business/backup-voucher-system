@@ -4496,7 +4496,7 @@ function VCSEDashboard({ user, onLogout }) {
           <div>
             <h2>Issue Vouchers</h2>
             <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
-              <strong>💰 Total Available Funds: £{totalAvailable.toFixed(2)}</strong>
+              <strong>💰 Total Available Funds: £{allocatedBalance.toFixed(2)}</strong>
               <p style={{margin: '10px 0 0'}}>Combined balance from admin allocation and self-loaded funds</p>
             </div>
             
@@ -4741,7 +4741,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your balance (£{totalAvailable.toFixed(2)} available)</small>
+                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your balance (£{allocatedBalance.toFixed(2)} available)</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
