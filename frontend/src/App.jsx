@@ -8701,9 +8701,12 @@ const styles = {
   }
 }
 
-// Initialize Stripe with publishable key
+// Initialize Stripe with publishable key and UK locale
 // Note: Publishable keys (pk_test_...) are safe to expose in client-side code
-const stripePromise = loadStripe('pk_test_51Sc7h13gtZiQWbc7XZP3ooVrjZp0XcaHOWk8aPzXvFLt9qH7aKd7NspGSo3klEzj43qV56Gial5zqFbloWpKGqqw00v1IHlzjt')
+const stripePromise = loadStripe(
+  'pk_test_51Sc7h13gtZiQWbc7XZP3ooVrjZp0XcaHOWk8aPzXvFLt9qH7aKd7NspGSo3klEzj43qV56Gial5zqFbloWpKGqqw00v1IHlzjt',
+  { locale: 'en-GB' }
+)
 
 // Wrap App with Stripe Elements and ErrorBoundary
 const AppWithErrorBoundary = () => (
