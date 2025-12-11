@@ -6428,14 +6428,18 @@ def delete_school(school_id):
         notif_count = Notification.query.filter_by(user_id=school_id).delete()
         logger.info(f"Deleted {notif_count} surplus notifications")
         
-        # 4. Delete login sessions
+        # 4. Delete wallet transactions
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=school_id).delete()
+        logger.info(f"Deleted {wallet_tx_count} wallet transactions")
+        
+        # 5. Delete login sessions
         session_count = LoginSession.query.filter_by(user_id=school_id).delete()
         logger.info(f"Deleted {session_count} login sessions")
         
-        # 5. Flush changes to ensure foreign keys are updated
+        # 6. Flush changes to ensure foreign keys are updated
         db.session.flush()
         
-        # 6. Finally delete the school
+        # 7. Finally delete the school
         db.session.delete(school)
         db.session.commit()
         
@@ -6545,14 +6549,18 @@ def delete_vcse(vcse_id):
         notif_count = Notification.query.filter_by(user_id=vcse_id).delete()
         logger.info(f"Deleted {notif_count} surplus notifications")
         
-        # 4. Delete login sessions
+        # 4. Delete wallet transactions
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=vcse_id).delete()
+        logger.info(f"Deleted {wallet_tx_count} wallet transactions")
+        
+        # 5. Delete login sessions
         session_count = LoginSession.query.filter_by(user_id=vcse_id).delete()
         logger.info(f"Deleted {session_count} login sessions")
         
-        # 5. Flush changes to ensure foreign keys are updated
+        # 6. Flush changes to ensure foreign keys are updated
         db.session.flush()
         
-        # 6. Finally delete the VCFSE organization
+        # 7. Finally delete the VCFSE organization
         db.session.delete(vcse)
         db.session.commit()
         
@@ -6612,18 +6620,22 @@ def delete_recipient(recipient_id):
         notif_count = Notification.query.filter_by(user_id=recipient_id).delete()
         logger.info(f"Deleted {notif_count} surplus notifications")
         
-        # 4. Delete login sessions
+        # 4. Delete wallet transactions
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=recipient_id).delete()
+        logger.info(f"Deleted {wallet_tx_count} wallet transactions")
+        
+        # 5. Delete login sessions
         session_count = LoginSession.query.filter_by(user_id=recipient_id).delete()
         logger.info(f"Deleted {session_count} login sessions")
         
-        # 5. Delete cart items
+        # 6. Delete cart items
         cart_count = Cart.query.filter_by(user_id=recipient_id).delete()
         logger.info(f"Deleted {cart_count} cart items")
         
-        # 6. Flush changes to ensure foreign keys are updated
+        # 7. Flush changes to ensure foreign keys are updated
         db.session.flush()
         
-        # 7. Finally delete the recipient
+        # 8. Finally delete the recipient
         # Keep vouchers for record keeping but they'll be orphaned
         db.session.delete(recipient)
         db.session.commit()
@@ -6931,14 +6943,18 @@ def delete_admin_account(admin_id):
         notif_count = Notification.query.filter_by(user_id=admin_id).delete()
         logger.info(f"Deleted {notif_count} surplus notifications")
         
-        # 4. Delete login sessions
+        # 4. Delete wallet transactions
+        wallet_tx_count = WalletTransaction.query.filter_by(user_id=admin_id).delete()
+        logger.info(f"Deleted {wallet_tx_count} wallet transactions")
+        
+        # 5. Delete login sessions
         session_count = LoginSession.query.filter_by(user_id=admin_id).delete()
         logger.info(f"Deleted {session_count} login sessions")
         
-        # 5. Flush changes to ensure foreign keys are updated
+        # 6. Flush changes to ensure foreign keys are updated
         db.session.flush()
         
-        # 6. Finally delete the admin user
+        # 7. Finally delete the admin user
         db.session.delete(admin_to_delete)
         db.session.commit()
         
