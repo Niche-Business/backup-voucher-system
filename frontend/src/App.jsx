@@ -8708,7 +8708,12 @@ const stripePromise = loadStripe('pk_test_51Sc7h13gtZiQWbc7XZP3ooVrjZp0XcaHOWk8a
 // Wrap App with Stripe Elements and ErrorBoundary
 const AppWithErrorBoundary = () => (
   <ErrorBoundary>
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} options={{
+      locale: 'en-GB',
+      appearance: {
+        theme: 'stripe'
+      }
+    }}>
       <App />
     </Elements>
   </ErrorBoundary>
