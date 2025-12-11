@@ -3516,13 +3516,18 @@ function PaymentTab({ user, onBalanceUpdate }) {
           </div>
         </div>
       ) : (
-        <StripePaymentForm
-          clientSecret={clientSecret}
-          paymentIntentId={paymentIntentId}
-          amount={parseFloat(amount)}
-          onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-        />
+        <Elements stripe={stripePromise} options={{
+          clientSecret: clientSecret,
+          appearance: { theme: 'stripe' }
+        }}>
+          <StripePaymentForm
+            clientSecret={clientSecret}
+            paymentIntentId={paymentIntentId}
+            amount={parseFloat(amount)}
+            onSuccess={handlePaymentSuccess}
+            onCancel={handlePaymentCancel}
+          />
+        </Elements>
       )}
       
       {/* Payment History */}
