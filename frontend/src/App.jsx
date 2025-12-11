@@ -3661,6 +3661,7 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
             backgroundColor: 'white'
           }}>
             <CardElement options={{
+              hidePostalCode: false,
               style: {
                 base: {
                   fontSize: '16px',
