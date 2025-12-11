@@ -6642,7 +6642,7 @@ def delete_recipient(recipient_id):
         logger.info(f"Deleted {session_count} login sessions")
         
         # 6. Delete cart items
-        cart_count = Cart.query.filter_by(user_id=recipient_id).delete(synchronize_session=False)
+        cart_count = ShoppingCart.query.filter_by(recipient_id=recipient_id).delete(synchronize_session=False)
         logger.info(f"Deleted {cart_count} cart items")
         
         # 7. Flush changes to ensure foreign keys are updated
