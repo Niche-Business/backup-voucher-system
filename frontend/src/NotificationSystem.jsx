@@ -21,6 +21,9 @@ export function NotificationBell({ apiCall, userType }) {
 
     socket.on('connect', () => {
       console.log('Connected to notification server');
+      // Join the appropriate room based on user type
+      socket.emit('join_room', { user_type: userType });
+      console.log(`Joined ${userType} room for notifications`);
     });
 
     socket.on('new_item_notification', (notification) => {
