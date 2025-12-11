@@ -6394,7 +6394,15 @@ def edit_school(school_id):
 
 @app.route('/api/admin/schools/<int:school_id>', methods=['DELETE'])
 def delete_school(school_id):
-    """Admin deletes a school/care organization"""
+    """Admin deletes a school/care organization
+    
+    FIXED: Deletes all foreign key references including:
+    - NotificationPreference
+    - UserNotification  
+    - Notification
+    - WalletTransaction
+    - LoginSession
+    """
     try:
         user_id = session.get('user_id')
         if not user_id:
