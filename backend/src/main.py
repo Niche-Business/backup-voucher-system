@@ -4949,6 +4949,9 @@ def get_vcse_balance():
         balance = float(user.balance) if user.balance else 0.0
         allocated_balance = float(user.allocated_balance) if user.allocated_balance else 0.0
         
+        app.logger.info(f'[BALANCE DEBUG] User {user_id} - balance: {balance}, allocated_balance: {allocated_balance}')
+        app.logger.info(f'[BALANCE DEBUG] User object - balance field: {user.balance}, allocated_balance field: {user.allocated_balance}')
+        
         return jsonify({
             'balance': balance,
             'allocated_balance': allocated_balance,
