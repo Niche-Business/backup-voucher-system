@@ -642,13 +642,16 @@ def health_check():
 def version_check():
     """Return deployment version to verify correct code is running"""
     return jsonify({
-        'version': 'v2227071_fix_foreign_keys_and_notifications',
-        'commit': '2227071',
+        'version': 'vbcf13d5_complete_fix_wallet_transactions',
+        'commit': 'bcf13d5',
         'deployed_at': datetime.now().isoformat(),
         'fixes': [
             'Foreign key constraints for school deletion',
             'Foreign key constraints for VCFSE deletion',
             'Foreign key constraints for recipient deletion',
+            'Foreign key constraints for admin deletion',
+            'Wallet transaction deletion for all user types',
+            'UserNotification deletion for all user types',
             'In-app notifications for payout requests',
             'In-app notifications for payout approvals',
             'In-app notifications for payout payments'
