@@ -3340,7 +3340,7 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
               onChange={(e) => setOrderForm({...orderForm, quantity: parseInt(e.target.value)})}
               style={{...styles.input, fontSize: '14px'}}
             >
-              {[...Array(Math.min(10, item.quantity))].map((_, i) => (
+              {[...Array(Math.min(10, Math.max(1, parseInt(item.quantity) || 1)))].map((_, i) => (
                 <option key={i+1} value={i+1}>{i+1}</option>
               ))}
             </select>
@@ -8612,7 +8612,7 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
               onChange={(e) => setOrderForm({...orderForm, quantity: parseInt(e.target.value)})}
               style={{...styles.input, fontSize: '14px'}}
             >
-              {[...Array(Math.min(10, item.quantity))].map((_, i) => (
+              {[...Array(Math.min(10, Math.max(1, parseInt(item.quantity) || 1)))].map((_, i) => (
                 <option key={i+1} value={i+1}>{i+1}</option>
               ))}
             </select>
