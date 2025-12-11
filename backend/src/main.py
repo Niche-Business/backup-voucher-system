@@ -642,6 +642,8 @@ def health_check():
 def version_check():
     """Return deployment version to verify correct code is running"""
     return jsonify({
+        'delete_school_has_wallet_tx_deletion': True,  # Proof that bcf13d5 is deployed
+        'delete_school_has_user_notification_deletion': True,  # Proof that 2c720c6 is deployed
         'version': 'vbcf13d5_complete_fix_wallet_transactions',
         'commit': 'bcf13d5',
         'deployed_at': datetime.now().isoformat(),
