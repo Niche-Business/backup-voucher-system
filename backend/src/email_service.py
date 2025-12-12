@@ -40,8 +40,15 @@ class EmailService:
             sg = SendGridAPIClient(self.api_key)
             response = sg.send(message)
             
-            print(f"✓ Email sent to {to_email}: {subject} (Status: {response.status_code})")
-            return True
+            # SendGrid returns 202 for successful email acceptance
+            if response.status_code == 202:
+                print(f"✓ Email sent to {to_email}: {subject} (Status: {response.status_code})")
+                return True
+            else:
+                print(f"✗ SendGrid returned error status {response.status_code} for {to_email}")
+                print(f"   Response body: {response.body}")
+                print(f"   Response headers: {response.headers}")
+                return False
             
         except Exception as e:
             print(f"✗ Failed to send email to {to_email}: {str(e)}")
