@@ -40,13 +40,32 @@ const styles = {
     maxHeight: '90vh',
     overflowY: 'auto'
   },
+  inputWrapper: {
+    position: 'relative',
+    width: '100%'
+  },
   input: {
     width: '100%',
     padding: '12px',
+    paddingRight: '45px',
     fontSize: '16px',
     border: '1px solid #ddd',
     borderRadius: '5px',
     boxSizing: 'border-box'
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: '10px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '20px',
+    padding: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   button: {
     padding: '12px 24px',
@@ -79,6 +98,9 @@ export default function PasswordChangeModal({ onClose }) {
   })
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -140,29 +162,49 @@ export default function PasswordChangeModal({ onClose }) {
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>
               Current Password
             </label>
-            <input
-              type="password"
-              value={passwordForm.current_password}
-              onChange={(e) => setPasswordForm({...passwordForm, current_password: e.target.value})}
-              style={styles.input}
-              required
-              disabled={loading}
-            />
+            <div style={styles.inputWrapper}>
+              <input
+                type={showCurrentPassword ? "text" : "password"}
+                value={passwordForm.current_password}
+                onChange={(e) => setPasswordForm({...passwordForm, current_password: e.target.value})}
+                style={styles.input}
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                style={styles.eyeButton}
+                disabled={loading}
+              >
+                {showCurrentPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           
           <div style={{marginBottom: '20px'}}>
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>
               New Password
             </label>
-            <input
-              type="password"
-              value={passwordForm.new_password}
-              onChange={(e) => setPasswordForm({...passwordForm, new_password: e.target.value})}
-              style={styles.input}
-              required
-              minLength="8"
-              disabled={loading}
-            />
+            <div style={styles.inputWrapper}>
+              <input
+                type={showNewPassword ? "text" : "password"}
+                value={passwordForm.new_password}
+                onChange={(e) => setPasswordForm({...passwordForm, new_password: e.target.value})}
+                style={styles.input}
+                required
+                minLength="8"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                style={styles.eyeButton}
+                disabled={loading}
+              >
+                {showNewPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
             <small style={{color: '#666'}}>Minimum 8 characters</small>
           </div>
           
@@ -170,14 +212,24 @@ export default function PasswordChangeModal({ onClose }) {
             <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>
               Confirm New Password
             </label>
-            <input
-              type="password"
-              value={passwordForm.confirm_password}
-              onChange={(e) => setPasswordForm({...passwordForm, confirm_password: e.target.value})}
-              style={styles.input}
-              required
-              disabled={loading}
-            />
+            <div style={styles.inputWrapper}>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={passwordForm.confirm_password}
+                onChange={(e) => setPasswordForm({...passwordForm, confirm_password: e.target.value})}
+                style={styles.input}
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={styles.eyeButton}
+                disabled={loading}
+              >
+                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           
           <div style={{display: 'flex', gap: '10px'}}>
