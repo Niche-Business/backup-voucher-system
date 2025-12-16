@@ -464,6 +464,7 @@ function LoginPage({ onLogin, onNavigate }) {
 
 // Admin Login Page Component
 function AdminLoginPage({ onLogin, onNavigate }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
