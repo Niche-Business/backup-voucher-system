@@ -18,7 +18,8 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import io from 'socket.io-client'
 
 // Socket.IO client connection
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+// Use window.location.origin to automatically connect to the same domain as the frontend
+const API_URL = import.meta.env.VITE_API_URL || window.location.origin
 const socket = io(API_URL, {
   withCredentials: true,
   transports: ['websocket', 'polling']
