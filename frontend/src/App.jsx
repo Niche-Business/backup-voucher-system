@@ -7740,12 +7740,7 @@ function SchoolDashboard({ user, onLogout }) {
           >
             💰 Wallet Management
           </button>
-          <button 
-            onClick={() => setActiveTab('payment')} 
-            style={activeTab === 'payment' ? styles.activeTab : styles.tab}
-          >
-            💳 {t('tabs.loadFunds')}
-          </button>
+          {/* Load Funds button removed - schools receive allocated funds from administrators, not self-funded */}
           <button 
             onClick={() => setActiveTab('orders')} 
             style={activeTab === 'orders' ? styles.activeTab : styles.tab}
