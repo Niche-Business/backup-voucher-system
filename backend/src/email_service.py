@@ -200,3 +200,57 @@ class EmailService:
 
 # Create global instance
 email_service = EmailService()
+    
+    def send_password_reset_email(self, user_email, user_name, reset_token):
+        """Send password reset email with secure link"""
+        reset_link = f"{self.app_url}/reset-password?token={reset_token}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #2196F3; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+                .button {{ display: inline-block; padding: 12px 30px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+                .warning {{ background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🔒 Password Reset Request</h1>
+                </div>
+                <div class="content">
+                    <h2>Hello {user_name},</h2>
+                    <p>We received a request to reset your password for your BAK UP account.</p>
+                    
+                    <p>Click the button below to create a new password:</p>
+                    <a href="{reset_link}" class="button">Reset Password</a>
+                    
+                    <p>Or copy and paste this link into your browser:</p>
+                    <p style="word-break: break-all; background-color: #f0f0f0; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 12px;">{reset_link}</p>
+                    
+                    <div class="warning">
+                        <p style="margin: 0;"><strong>⚠️ Security Notice:</strong></p>
+                        <ul style="margin: 10px 0 0 0;">
+                            <li>This link will expire in 1 hour</li>
+                            <li>If you didn't request this reset, please ignore this email</li>
+                            <li>Never share this link with anyone</li>
+                        </ul>
+                    </div>
+                    
+                    <p>Best regards,<br>BAK UP E-Voucher Team</p>
+                </div>
+                <div class="footer">
+                    <p>© 2025 BAK UP E-Voucher System. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(user_email, "🔒 Password Reset Request - BAK UP E-Voucher System", html_content)
