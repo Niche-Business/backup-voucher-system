@@ -24,7 +24,8 @@
     "back": "Wstecz",
     "next": "Dalej",
     "submit": "Wyślij",
-    "welcome": "Witaj"
+    "welcome": "Witaj",
+    "changeLanguage": "Zmień Język"
   },
   "login": {
     "title": "Zaloguj się do BAK UP",

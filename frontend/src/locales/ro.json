@@ -24,7 +24,8 @@
     "back": "Înapoi",
     "next": "Următorul",
     "submit": "Trimite",
-    "welcome": "Bun venit"
+    "welcome": "Bun venit",
+    "changeLanguage": "Schimbă Limba"
   },
   "login": {
     "title": "Autentificare în BAK UP",

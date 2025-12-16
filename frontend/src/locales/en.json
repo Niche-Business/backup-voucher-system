@@ -24,7 +24,8 @@
     "back": "Back",
     "next": "Next",
     "submit": "Submit",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "changeLanguage": "Change Language"
   },
   "login": {
     "title": "Sign In to BAK UP",
