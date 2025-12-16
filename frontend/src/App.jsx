@@ -6373,7 +6373,7 @@ function VendorDashboard({ user, onLogout }) {
 
 // RECIPIENT DASHBOARD
 function RecipientDashboard({ user, onLogout }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [activeTab, setActiveTab] = useState('vouchers')
   const [vouchers, setVouchers] = useState([])
   const [voucherSummary, setVoucherSummary] = useState(null)
