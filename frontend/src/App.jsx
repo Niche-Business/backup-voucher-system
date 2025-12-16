@@ -8509,6 +8509,7 @@ function SchoolDashboard({ user, onLogout }) {
 
 // RECIPIENT DASHBOARDER CARD COMPONENT
 function SchoolToGoOrderCard({ item, onOrderPlaced }) {
+  const { t } = useTranslation()
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [orderForm, setOrderForm] = useState({
     client_name: '',
