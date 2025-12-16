@@ -1094,6 +1094,8 @@ function AdminDashboard({ user, onLogout }) {
   const [payoutRequests, setPayoutRequests] = useState([])
   const [payoutStatusFilter, setPayoutStatusFilter] = useState('all')
   const [payoutSummary, setPayoutSummary] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     loadVcseOrgs()
@@ -1360,34 +1362,149 @@ function AdminDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
+      <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '28px',
+              cursor: 'pointer',
+              padding: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          </button>
+          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        </div>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="admin" />
-          <LanguageSelector />
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '28px',
+              cursor: 'pointer',
+              padding: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          </button>
         </div>
       </div>
       
-      <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.overview')}</button>
-          <button onClick={() => setActiveTab('search')} style={activeTab === 'search' ? styles.activeTab : styles.tab}>🔍 Global Search</button>
-          <button onClick={() => setActiveTab('transactions')} style={activeTab === 'transactions' ? styles.activeTab : styles.tab}>📊 Transactions</button>
-          <button onClick={() => setActiveTab('broadcast')} style={activeTab === 'broadcast' ? styles.activeTab : styles.tab}>📢 Broadcast</button>
-          <button onClick={() => setActiveTab('funding')} style={activeTab === 'funding' ? styles.activeTab : styles.tab}>💰 Fund Allocation</button>
-          <button onClick={() => setActiveTab('vcse-verification')} style={activeTab === 'vcse-verification' ? styles.activeTab : styles.tab}>🔍 VCFSE Verification</button>
-          <button onClick={() => setActiveTab('vcse')} style={activeTab === 'vcse' ? styles.activeTab : styles.tab}>🤝 VCFSE Organisations</button>
-          <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients</button>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.voucherManagement')}</button>
-          <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.schoolsOrgs')}</button>
-          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.localShops')}</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.tabs.allToGo')}</button>
-          <button onClick={() => setActiveTab('payouts')} style={activeTab === 'payouts' ? styles.activeTab : styles.tab}>💰 {t('payout.managePayout')}</button>
-          <button onClick={() => setActiveTab('analytics')} style={activeTab === 'analytics' ? styles.activeTab : styles.tab}>📈 Analytics</button>
-          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📊 Reports</button>
-          <button onClick={() => setActiveTab('settings')} style={activeTab === 'settings' ? styles.activeTab : styles.tab}>⚙️ {t('dashboard.tabs.settings')}</button>
+      {/* Dropdown Menu */}
+      {menuOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          right: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+          minWidth: '250px',
+          overflow: 'hidden'
+        }}>
+          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
+            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <LanguageSelector />
+          </div>
+          
+          <button
+            onClick={() => {
+              onLogout()
+              setMenuOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🚪 {t('common.signOut')}
+          </button>
         </div>
+      )}
+      
+      {/* Collapsible Sidebar */}
+      {sidebarOpen && (
+        <div style={{
+          position: 'fixed',
+          top: '70px',
+          left: 0,
+          width: '280px',
+          height: 'calc(100vh - 70px)',
+          backgroundColor: 'white',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
+          zIndex: 999,
+          overflowY: 'auto',
+          padding: '20px 0'
+        }}>
+          <button onClick={() => { setActiveTab('overview'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'overview' ? '#e3f2fd' : 'transparent'}}>📋 {t('dashboard.tabs.overview')}</button>
+          <button onClick={() => { setActiveTab('search'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'search' ? '#e3f2fd' : 'transparent'}}>🔍 Global Search</button>
+          <button onClick={() => { setActiveTab('transactions'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'transactions' ? '#e3f2fd' : 'transparent'}}>📊 Transactions</button>
+          <button onClick={() => { setActiveTab('broadcast'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'broadcast' ? '#e3f2fd' : 'transparent'}}>📢 Broadcast</button>
+          <button onClick={() => { setActiveTab('funding'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'funding' ? '#e3f2fd' : 'transparent'}}>💰 Fund Allocation</button>
+          <button onClick={() => { setActiveTab('vcse-verification'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse-verification' ? '#e3f2fd' : 'transparent'}}>🔍 VCFSE Verification</button>
+          <button onClick={() => { setActiveTab('vcse'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse' ? '#e3f2fd' : 'transparent'}}>🤝 VCFSE Organisations</button>
+          <button onClick={() => { setActiveTab('recipients'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'recipients' ? '#e3f2fd' : 'transparent'}}>👥 Recipients</button>
+          <button onClick={() => { setActiveTab('vouchers'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vouchers' ? '#e3f2fd' : 'transparent'}}>🎫 {t('dashboard.tabs.voucherManagement')}</button>
+          <button onClick={() => { setActiveTab('schools'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'schools' ? '#e3f2fd' : 'transparent'}}>🏫 {t('dashboard.tabs.schoolsOrgs')}</button>
+          <button onClick={() => { setActiveTab('shops'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'shops' ? '#e3f2fd' : 'transparent'}}>🏪 {t('dashboard.tabs.localShops')}</button>
+          <button onClick={() => { setActiveTab('togo'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'togo' ? '#e3f2fd' : 'transparent'}}>🍔 {t('dashboard.tabs.allToGo')}</button>
+          <button onClick={() => { setActiveTab('payouts'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'payouts' ? '#e3f2fd' : 'transparent'}}>💰 {t('payout.managePayout')}</button>
+          <button onClick={() => { setActiveTab('analytics'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'analytics' ? '#e3f2fd' : 'transparent'}}>📈 Analytics</button>
+          <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 Reports</button>
+          <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
+        </div>
+      )}
+      
+      {/* Overlay to close sidebar when clicking outside */}
+      {sidebarOpen && (
+        <div 
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: '70px',
+            left: 0,
+            width: '100vw',
+            height: 'calc(100vh - 70px)',
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            zIndex: 998
+          }}
+        />
+      )}
+      
+      <div style={{padding: '20px'}}>
         
         {activeTab === 'overview' && (
           <div>
@@ -3766,6 +3883,7 @@ function VCSEDashboard({ user, onLogout }) {
   const [statusFilter, setStatusFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [vendorShops, setVendorShops] = useState([])
   const [selectedShops, setSelectedShops] = useState('all')
   const [showReassignModal, setShowReassignModal] = useState(false)
@@ -4019,15 +4137,100 @@ function VCSEDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+      <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="vcse" />
-          <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#FF9800', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 Password</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '28px',
+              cursor: 'pointer',
+              padding: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          </button>
         </div>
       </div>
+      
+      {/* Dropdown Menu */}
+      {menuOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          right: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+          minWidth: '250px',
+          overflow: 'hidden'
+        }}>
+          <button
+            onClick={() => {
+              setShowPasswordModal(true)
+              setMenuOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '16px',
+              borderBottom: '1px solid #eee',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🔒 {t('common.password')}
+          </button>
+          
+          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
+            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <LanguageSelector />
+          </div>
+          
+          <button
+            onClick={() => {
+              onLogout()
+              setMenuOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🚪 {t('common.signOut')}
+          </button>
+        </div>
+      )}
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
@@ -5285,6 +5488,7 @@ function VendorDashboard({ user, onLogout }) {
     phone: ''
   })
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [redemptionHistorySearch, setRedemptionHistorySearch] = useState('')
   const [redemptionHistoryFilter, setRedemptionHistoryFilter] = useState('all')
   const [payoutRequests, setPayoutRequests] = useState([])
@@ -5565,14 +5769,97 @@ function VendorDashboard({ user, onLogout }) {
 
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
-      <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
+      <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
-          <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 {t('common.password')}</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
-        </div>
+        <button 
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontSize: '28px',
+            cursor: 'pointer',
+            padding: '10px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+        </button>
       </div>
+      
+      {/* Dropdown Menu */}
+      {menuOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          right: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+          minWidth: '250px',
+          overflow: 'hidden'
+        }}>
+          <button
+            onClick={() => {
+              setShowPasswordModal(true)
+              setMenuOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '16px',
+              borderBottom: '1px solid #eee',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🔒 {t('common.password')}
+          </button>
+          
+          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
+            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <LanguageSelector />
+          </div>
+          
+          <button
+            onClick={() => {
+              onLogout()
+              setMenuOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🚪 {t('common.signOut')}
+          </button>
+        </div>
+      )}
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
@@ -8976,6 +9263,16 @@ const styles = {
     cursor: 'pointer',
     fontSize: '14px',
     fontWeight: 'bold'
+  },
+  sidebarButton: {
+    width: '100%',
+    padding: '15px 20px',
+    border: 'none',
+    textAlign: 'left',
+    cursor: 'pointer',
+    fontSize: '15px',
+    color: '#333',
+    transition: 'background-color 0.2s'
   }
 }
 
