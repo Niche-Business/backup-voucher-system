@@ -5499,13 +5499,16 @@ function VendorDashboard({ user, onLogout }) {
       
       if (data.valid) {
         setVoucherValidation(data.voucher)
+        setPurchaseAmount('')  // Clear previous amount when validating new voucher
         setRedemptionMessage('')
       } else {
         setVoucherValidation(null)
+        setPurchaseAmount('')  // Clear amount on validation failure
         setRedemptionMessage(data.error || 'Invalid voucher')
       }
     } catch (error) {
       setVoucherValidation(null)
+      setPurchaseAmount('')  // Clear amount on error
       setRedemptionMessage('Error validating voucher: ' + error.message)
     }
   }
@@ -5516,13 +5519,20 @@ function VendorDashboard({ user, onLogout }) {
       return
     }
     
-    if (!purchaseAmount || parseFloat(purchaseAmount) <= 0) {
+    const amount = parseFloat(purchaseAmount)
+    if (!purchaseAmount || isNaN(amount) || amount <= 0) {
       setRedemptionMessage('Please enter a valid purchase amount')
       return
     }
     
-    if (voucherValidation && parseFloat(purchaseAmount) > parseFloat(voucherValidation.value)) {
-      setRedemptionMessage(`Purchase amount £${purchaseAmount} exceeds voucher balance £${voucherValidation.value}`)
+    // Ensure voucher code matches the validated voucher
+    if (!voucherValidation || voucherValidation.code !== voucherCode.trim().toUpperCase()) {
+      setRedemptionMessage('Please validate the voucher first')
+      return
+    }
+    
+    if (amount > parseFloat(voucherValidation.value)) {
+      setRedemptionMessage(`Purchase amount £${amount.toFixed(2)} exceeds voucher balance £${voucherValidation.value}`)
       return
     }
     
@@ -5531,7 +5541,7 @@ function VendorDashboard({ user, onLogout }) {
         method: 'POST',
         body: JSON.stringify({ 
           code: voucherCode.trim().toUpperCase(),
-          amount: parseFloat(purchaseAmount)
+          amount: amount  // Use already parsed and validated amount
         })
       })
       

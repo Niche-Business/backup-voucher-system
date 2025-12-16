@@ -5655,14 +5655,15 @@ def vendor_redeem_voucher():
         except (ValueError, TypeError):
             return jsonify({'error': 'Invalid redemption amount'}), 400
         
-        # Find voucher by code
-        voucher = Voucher.query.filter_by(code=voucher_code).first()
+        # Find voucher by code with row-level lock to prevent concurrent redemptions
+        voucher = Voucher.query.filter_by(code=voucher_code).with_for_update().first()
         
         if not voucher:
             return jsonify({'error': 'Invalid voucher code'}), 404
         
-        # Check if voucher is already fully redeemed
-        if voucher.status == 'redeemed' and float(voucher.value) <= 0:
+        # Check if voucher is already fully redeemed (check balance first)
+        current_voucher_value = float(voucher.value)
+        if current_voucher_value <= 0:
             return jsonify({'error': 'Voucher has been fully redeemed'}), 400
         
         # Check if voucher is expired
@@ -5677,7 +5678,6 @@ def vendor_redeem_voucher():
             return jsonify({'error': 'Voucher has expired'}), 400
         
         # NEW: Check if redemption amount exceeds voucher balance
-        current_voucher_value = float(voucher.value)
         if redemption_amount > current_voucher_value:
             return jsonify({'error': f'Redemption amount £{redemption_amount:.2f} exceeds voucher balance £{current_voucher_value:.2f}'}), 400
         
@@ -5685,23 +5685,27 @@ def vendor_redeem_voucher():
         recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
         
         # NEW: Partial redemption - deduct amount from voucher balance
-        new_voucher_balance = current_voucher_value - redemption_amount
+        # Round to 2 decimal places to avoid floating point precision errors
+        new_voucher_balance = round(current_voucher_value - redemption_amount, 2)
         voucher.value = new_voucher_balance
         
         # NEW: Only mark as fully redeemed if balance is zero
         if new_voucher_balance <= 0:
             voucher.status = 'redeemed'
             voucher.redeemed_at = datetime.now()
-        else:
-            voucher.status = 'active'  # Keep active if balance remains
+        # Note: Don't change status if balance remains - keep current status
         
         voucher.redeemed_by_vendor = user_id
         
         # Update vendor balance with redemption amount (not full voucher value)
         current_balance = float(user.balance) if user.balance else 0.0
-        user.balance = current_balance + redemption_amount
+        user.balance = round(current_balance + redemption_amount, 2)
         
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Failed to process redemption: {str(e)}'}), 500
         
         # Optional: Send SMS to recipient confirming redemption
         if recipient and recipient.phone:
