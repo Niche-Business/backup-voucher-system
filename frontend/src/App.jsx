@@ -6626,18 +6626,245 @@ function RecipientDashboard({ user, onLogout }) {
     }
   }
 
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', position: 'relative'}}>
           <NotificationBell apiCall={apiCall} userType="recipient" />
-          <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 {t('common.password')}</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
+          
+          {/* Hamburger Menu Button */}
+          <button 
+            onClick={() => setShowMenuDropdown(!showMenuDropdown)}
+            style={{
+              backgroundColor: 'transparent',
+              border: '2px solid white',
+              borderRadius: '50%',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              cursor: 'pointer',
+              padding: '8px'
+            }}
+          >
+            <div style={{width: '24px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '24px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            <div style={{width: '24px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+          </button>
+
+          {/* Dropdown Menu */}
+          {showMenuDropdown && (
+            <div style={{
+              position: 'absolute',
+              top: '60px',
+              right: '0',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              minWidth: '220px',
+              zIndex: 1000,
+              overflow: 'hidden'
+            }}>
+              <button
+                onClick={() => {
+                  setShowProfileModal(true)
+                  setShowMenuDropdown(false)
+                }}
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  color: '#333',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderBottom: '1px solid #eee'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                👤 My Profile
+              </button>
+              
+              <button
+                onClick={() => {
+                  setShowPasswordModal(true)
+                  setShowMenuDropdown(false)
+                }}
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  color: '#333',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  borderBottom: '1px solid #eee'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                🔒 Change Password
+              </button>
+
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee'}}>
+                <div style={{fontSize: '13px', color: '#666', marginBottom: '8px'}}>🌐 Change Language</div>
+                <select 
+                  value={i18n.language} 
+                  onChange={(e) => {
+                    i18n.changeLanguage(e.target.value)
+                    setShowMenuDropdown(false)
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    borderRadius: '5px',
+                    border: '1px solid #ddd',
+                    fontSize: '14px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="en">🇬🇧 English</option>
+                  <option value="ar">🇸🇦 العربية</option>
+                  <option value="ro">🇷🇴 Română</option>
+                  <option value="pl">🇵🇱 Polski</option>
+                </select>
+              </div>
+
+              <button
+                onClick={() => {
+                  setShowMenuDropdown(false)
+                  onLogout()
+                }}
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  color: '#d32f2f',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontWeight: 'bold'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                🚪 Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </div>
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
+      {showProfileModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '15px',
+            padding: '30px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+              <h2 style={{margin: 0, color: '#9C27B0'}}>👤 My Profile</h2>
+              <button
+                onClick={() => setShowProfileModal(false)}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666'
+                }}
+              >
+                ✖️
+              </button>
+            </div>
+            
+            <div style={{marginBottom: '15px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Name</label>
+              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                {user.name}
+              </div>
+            </div>
+
+            <div style={{marginBottom: '15px'}}>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Email</label>
+              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                {user.email}
+              </div>
+            </div>
+
+            {user.phone && (
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Phone</label>
+                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                  {user.phone}
+                </div>
+              </div>
+            )}
+
+            {user.address && (
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Address</label>
+                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                  {user.address}
+                </div>
+              </div>
+            )}
+
+            <div style={{marginTop: '25px', paddingTop: '20px', borderTop: '1px solid #eee'}}>
+              <button
+                onClick={() => {
+                  setShowProfileModal(false)
+                  setShowPasswordModal(true)
+                }}
+                style={{
+                  ...styles.primaryButton,
+                  backgroundColor: '#1976d2',
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '15px'
+                }}
+              >
+                🔒 Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div style={{padding: '20px'}}>
         <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
