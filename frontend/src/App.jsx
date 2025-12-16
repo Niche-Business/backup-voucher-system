@@ -1359,11 +1359,11 @@ function AdminDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <h1>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
           <NotificationBell apiCall={apiCall} userType="admin" />
           <LanguageSelector />
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
         </div>
       </div>
       
@@ -4018,12 +4018,12 @@ function VCSEDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <h1>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
           <NotificationBell apiCall={apiCall} userType="vcse" />
           <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#FF9800'}}>🔒 Password</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#FF9800', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 Password</button>
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
         </div>
       </div>
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
@@ -5539,11 +5539,11 @@ function VendorDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <h1>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
           <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 {t('common.password')}</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 {t('common.password')}</button>
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
         </div>
       </div>
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
@@ -6578,12 +6578,12 @@ function RecipientDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <h1>{t('dashboard.welcome')}, {user.name}</h1>
-        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
           <NotificationBell apiCall={apiCall} userType="recipient" />
           <LanguageSelector />
-          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2'}}>🔒 {t('common.password')}</button>
-          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>{t('common.signOut')}</button>
+          <button onClick={() => setShowPasswordModal(true)} style={{...styles.primaryButton, backgroundColor: '#1976d2', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 {t('common.password')}</button>
+          <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>{t('common.signOut')}</button>
         </div>
       </div>
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
@@ -7673,12 +7673,12 @@ function SchoolDashboard({ user, onLogout }) {
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       {/* Header */}
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px'}}>
-        <div style={{maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div style={{maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
           <div>
-            <h1 style={{margin: '0 0 5px 0'}}>School/Care Organization Portal</h1>
+            <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
             <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
           </div>
-          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+          <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
             <NotificationBell apiCall={apiCall} userType="school" />
             <select 
               value={i18n.language} 
@@ -7698,8 +7698,8 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
-            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white'}}>🔒 Password</button>
-            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white'}}>Logout</button>
+            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 Password</button>
+            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>
         </div>
       </div>
