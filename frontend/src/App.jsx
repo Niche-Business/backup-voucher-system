@@ -5275,6 +5275,7 @@ function VendorDashboard({ user, onLogout }) {
   const [voucherCode, setVoucherCode] = useState('')
   const [voucherValidation, setVoucherValidation] = useState(null)
   const [redemptionMessage, setRedemptionMessage] = useState('')
+  const [purchaseAmount, setPurchaseAmount] = useState('')
   const [editingShop, setEditingShop] = useState(null)
   const [shopEditForm, setShopEditForm] = useState({
     shop_name: '',
@@ -5515,15 +5516,29 @@ function VendorDashboard({ user, onLogout }) {
       return
     }
     
+    if (!purchaseAmount || parseFloat(purchaseAmount) <= 0) {
+      setRedemptionMessage('Please enter a valid purchase amount')
+      return
+    }
+    
+    if (voucherValidation && parseFloat(purchaseAmount) > parseFloat(voucherValidation.value)) {
+      setRedemptionMessage(`Purchase amount £${purchaseAmount} exceeds voucher balance £${voucherValidation.value}`)
+      return
+    }
+    
     try {
       const data = await apiCall('/vendor/redeem-voucher', {
         method: 'POST',
-        body: JSON.stringify({ code: voucherCode.trim().toUpperCase() })
+        body: JSON.stringify({ 
+          code: voucherCode.trim().toUpperCase(),
+          amount: parseFloat(purchaseAmount)
+        })
       })
       
-      setRedemptionMessage(`Success! Voucher £${data.voucher.value} redeemed. New balance: £${data.new_balance}`)
+      setRedemptionMessage(`Success! £${purchaseAmount} redeemed. Remaining balance: £${data.remaining_balance.toFixed(2)}`)
       setVoucherCode('')
       setVoucherValidation(null)
+      setPurchaseAmount('')
       setTimeout(() => setRedemptionMessage(''), 5000)
     } catch (error) {
       setRedemptionMessage('Error: ' + error.message)
@@ -5739,6 +5754,29 @@ function VendorDashboard({ user, onLogout }) {
                 </button>
               </div>
               
+              {voucherValidation && (
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>💷 Purchase Amount</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    max={voucherValidation.value}
+                    value={purchaseAmount}
+                    onChange={(e) => setPurchaseAmount(e.target.value)}
+                    placeholder={`Enter amount (max £${voucherValidation.value})`}
+                    style={{
+                      ...styles.input,
+                      fontSize: '18px',
+                      fontWeight: 'bold'
+                    }}
+                  />
+                  <small style={{color: '#666', fontSize: '14px', display: 'block', marginTop: '5px'}}>
+                    Available balance: £{voucherValidation.value}
+                  </small>
+                </div>
+              )}
+              
               <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
                 <button 
                   onClick={handleValidateVoucher}
@@ -5755,9 +5793,10 @@ function VendorDashboard({ user, onLogout }) {
                   style={{
                     ...styles.primaryButton,
                     backgroundColor: '#4CAF50',
-                    flex: 1
+                    flex: 1,
+                    opacity: (!voucherCode.trim() || !purchaseAmount || !voucherValidation) ? 0.5 : 1
                   }}
-                  disabled={!voucherCode.trim()}
+                  disabled={!voucherCode.trim() || !purchaseAmount || !voucherValidation}
                 >
                   ✅ {t('shop.redeem')}
                 </button>

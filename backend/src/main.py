@@ -5639,9 +5639,21 @@ def vendor_redeem_voucher():
         
         data = request.get_json()
         voucher_code = data.get('code', '').strip().upper()
+        redemption_amount = data.get('amount')  # NEW: Get redemption amount
         
         if not voucher_code:
             return jsonify({'error': 'Voucher code is required'}), 400
+        
+        # NEW: Validate redemption amount
+        if not redemption_amount:
+            return jsonify({'error': 'Redemption amount is required'}), 400
+        
+        try:
+            redemption_amount = float(redemption_amount)
+            if redemption_amount <= 0:
+                return jsonify({'error': 'Redemption amount must be greater than 0'}), 400
+        except (ValueError, TypeError):
+            return jsonify({'error': 'Invalid redemption amount'}), 400
         
         # Find voucher by code
         voucher = Voucher.query.filter_by(code=voucher_code).first()
@@ -5649,9 +5661,9 @@ def vendor_redeem_voucher():
         if not voucher:
             return jsonify({'error': 'Invalid voucher code'}), 404
         
-        # Check if voucher is already redeemed
-        if voucher.status == 'redeemed':
-            return jsonify({'error': 'Voucher has already been redeemed'}), 400
+        # Check if voucher is already fully redeemed
+        if voucher.status == 'redeemed' and float(voucher.value) <= 0:
+            return jsonify({'error': 'Voucher has been fully redeemed'}), 400
         
         # Check if voucher is expired
         if voucher.status == 'expired':
@@ -5664,25 +5676,47 @@ def vendor_redeem_voucher():
             db.session.commit()
             return jsonify({'error': 'Voucher has expired'}), 400
         
+        # NEW: Check if redemption amount exceeds voucher balance
+        current_voucher_value = float(voucher.value)
+        if redemption_amount > current_voucher_value:
+            return jsonify({'error': f'Redemption amount £{redemption_amount:.2f} exceeds voucher balance £{current_voucher_value:.2f}'}), 400
+        
         # Get recipient details
         recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
         
-        # Redeem voucher
-        voucher.status = 'redeemed'
-        voucher.redeemed_at = datetime.now()
+        # NEW: Partial redemption - deduct amount from voucher balance
+        new_voucher_balance = current_voucher_value - redemption_amount
+        voucher.value = new_voucher_balance
+        
+        # NEW: Only mark as fully redeemed if balance is zero
+        if new_voucher_balance <= 0:
+            voucher.status = 'redeemed'
+            voucher.redeemed_at = datetime.now()
+        else:
+            voucher.status = 'active'  # Keep active if balance remains
+        
         voucher.redeemed_by_vendor = user_id
         
-        # Update vendor balance
+        # Update vendor balance with redemption amount (not full voucher value)
         current_balance = float(user.balance) if user.balance else 0.0
-        user.balance = current_balance + float(voucher.value)
+        user.balance = current_balance + redemption_amount
         
         db.session.commit()
         
         # Optional: Send SMS to recipient confirming redemption
         if recipient and recipient.phone:
-            redemption_message = f"""BAK UP Voucher Update
+            if new_voucher_balance > 0:
+                redemption_message = f"""BAK UP Voucher Update
 
-Your voucher {voucher_code} (£{voucher.value:.2f}) has been redeemed at {user.shop_name or 'a vendor shop'}.
+Your voucher {voucher_code}: £{redemption_amount:.2f} redeemed at {user.shop_name or 'a vendor shop'}.
+
+Remaining balance: £{new_voucher_balance:.2f}
+
+BAK UP Team"""
+            else:
+                redemption_message = f"""BAK UP Voucher Update
+
+Your voucher {voucher_code} (£{redemption_amount:.2f}) has been fully redeemed at {user.shop_name or 'a vendor shop'}.
 
 Thank you for using BAK UP!
 
@@ -5697,8 +5731,8 @@ BAK UP Team"""
                 recipient.email,
                 f"{recipient.first_name} {recipient.last_name}",
                 voucher_code,
-                float(voucher.value),
-                0.0,  # Remaining balance (0 for full redemption)
+                redemption_amount,  # Amount redeemed
+                new_voucher_balance,  # Remaining balance
                 user.shop_name or 'Local Food Shop'
             )
             if not email_result:
@@ -5714,6 +5748,8 @@ BAK UP Team"""
                     'phone': recipient.phone if recipient else 'N/A'
                 } if recipient else None
             },
+            'redemption_amount': redemption_amount,
+            'remaining_balance': new_voucher_balance,
             'new_balance': float(user.balance)
         }), 200
         
