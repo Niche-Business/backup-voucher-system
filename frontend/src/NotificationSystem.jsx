@@ -162,7 +162,7 @@ export function NotificationBell({ apiCall, userType }) {
           background: 'none',
           border: 'none',
           cursor: 'pointer',
-          fontSize: '24px',
+          fontSize: '28px',
           padding: '8px',
           color: 'white'
         }}
@@ -182,7 +182,7 @@ export function NotificationBell({ apiCall, userType }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '12px',
+              fontSize: '16px',
               fontWeight: 'bold'
             }}
           >
@@ -219,7 +219,7 @@ export function NotificationBell({ apiCall, userType }) {
               backgroundColor: '#f8f9fa'
             }}
           >
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 'bold' }}>
+            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold' }}>
               Notifications
             </h3>
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -229,7 +229,7 @@ export function NotificationBell({ apiCall, userType }) {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '18px',
+                  fontSize: '22px',
                   padding: '4px'
                 }}
                 title="Settings"
@@ -243,7 +243,7 @@ export function NotificationBell({ apiCall, userType }) {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: '12px',
+                    fontSize: '16px',
                     color: '#4CAF50',
                     fontWeight: 'bold'
                   }}
@@ -277,7 +277,7 @@ export function NotificationBell({ apiCall, userType }) {
                   onChange={(e) => setSoundEnabled(e.target.checked)}
                   style={{ cursor: 'pointer' }}
                 />
-                <span style={{ fontSize: '14px' }}>Enable notification sound</span>
+                <span style={{ fontSize: '18px' }}>Enable notification sound</span>
               </label>
             </div>
           )}
@@ -292,7 +292,7 @@ export function NotificationBell({ apiCall, userType }) {
                   color: '#999'
                 }}
               >
-                <div style={{ fontSize: '48px', marginBottom: '10px' }}>🔔</div>
+                <div style={{ fontSize: '52px', marginBottom: '10px' }}>🔔</div>
                 <p>No notifications yet</p>
               </div>
             ) : (
@@ -329,14 +329,14 @@ export function NotificationBell({ apiCall, userType }) {
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = notification.is_read ? 'white' : '#e8f5e9'}
                 >
                   <div style={{ display: 'flex', gap: '10px' }}>
-                    <div style={{ fontSize: '24px', flexShrink: 0 }}>
+                    <div style={{ fontSize: '28px', flexShrink: 0 }}>
                       {getNotificationIcon(notification.type)}
                     </div>
                     <div style={{ flex: 1 }}>
                       <p
                         style={{
                           margin: '0 0 5px 0',
-                          fontSize: '14px',
+                          fontSize: '18px',
                           fontWeight: notification.is_read ? 'normal' : 'bold',
                           color: '#333'
                         }}
@@ -348,7 +348,7 @@ export function NotificationBell({ apiCall, userType }) {
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
-                          fontSize: '12px',
+                          fontSize: '16px',
                           color: '#666'
                         }}
                       >
@@ -356,7 +356,7 @@ export function NotificationBell({ apiCall, userType }) {
                         <span>{formatTime(notification.created_at)}</span>
                       </div>
                       {notification.quantity && (
-                        <div style={{ fontSize: '12px', color: '#666', marginTop: '3px' }}>
+                        <div style={{ fontSize: '16px', color: '#666', marginTop: '3px' }}>
                           Quantity: {notification.quantity}
                         </div>
                       )}

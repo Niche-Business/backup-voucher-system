@@ -154,7 +154,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               borderRadius: '5px',
               padding: '8px 16px',
               cursor: 'pointer',
-              fontSize: '16px'
+              fontSize: '18px'
             }}
           >
             ✕ {translate('common.close')}
@@ -173,9 +173,9 @@ export default function QRScanner({ onScan, onClose, t }) {
               marginBottom: '20px',
               textAlign: 'center'
             }}>
-              <div style={{fontSize: '32px', marginBottom: '10px'}}>💡</div>
+              <div style={{fontSize: '34px', marginBottom: '10px'}}>💡</div>
               <h3 style={{margin: '0 0 10px 0'}}>{translate('qrScanner.recommendedTitle')}</h3>
-              <p style={{margin: '0', fontSize: '14px', lineHeight: '1.6'}}>
+              <p style={{margin: '0', fontSize: '16px', lineHeight: '1.6'}}>
                 {translate('qrScanner.recommendedText')}
               </p>
               <button
@@ -186,7 +186,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                   border: 'none',
                   borderRadius: '5px',
                   padding: '12px 24px',
-                  fontSize: '16px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   marginTop: '15px',
@@ -201,7 +201,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               textAlign: 'center',
               margin: '20px 0',
               color: '#999',
-              fontSize: '14px'
+              fontSize: '16px'
             }}>
               — {translate('qrScanner.or')} —
             </div>
@@ -214,7 +214,7 @@ export default function QRScanner({ onScan, onClose, t }) {
               marginBottom: '20px'
             }}>
               <h4 style={{margin: '0 0 15px 0', color: '#1976d2'}}>📱 {translate('qrScanner.tryQRScanner')}</h4>
-              <ol style={{margin: '0', paddingLeft: '20px', lineHeight: '1.8', fontSize: '14px'}}>
+              <ol style={{margin: '0', paddingLeft: '20px', lineHeight: '1.8', fontSize: '16px'}}>
                 <li>{translate('qrScanner.instruction1')}</li>
                 <li>{translate('qrScanner.instruction2')}</li>
                 <li>{translate('qrScanner.instruction3')}</li>
@@ -230,7 +230,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                 border: 'none',
                 borderRadius: '8px',
                 padding: '15px 30px',
-                fontSize: '18px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 width: '100%',
@@ -240,7 +240,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                 gap: '10px'
               }}
             >
-              <span style={{fontSize: '24px'}}>📷</span>
+              <span style={{fontSize: '26px'}}>📷</span>
               <span>{translate('qrScanner.enableCamera')}</span>
             </button>
           </div>
@@ -254,10 +254,10 @@ export default function QRScanner({ onScan, onClose, t }) {
             padding: '20px',
             borderRadius: '8px',
             marginBottom: '15px',
-            fontSize: '14px',
+            fontSize: '16px',
             lineHeight: '1.6'
           }}>
-            <div style={{fontWeight: 'bold', marginBottom: '10px', fontSize: '16px'}}>⚠️ {translate('qrScanner.errorTitle')}</div>
+            <div style={{fontWeight: 'bold', marginBottom: '10px', fontSize: '18px'}}>⚠️ {translate('qrScanner.errorTitle')}</div>
             <div style={{marginBottom: '15px'}}>{error}</div>
             
             {permissionBlocked && (
@@ -285,7 +285,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                       border: 'none',
                       borderRadius: '5px',
                       padding: '10px 20px',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       cursor: 'pointer',
                       width: '100%',
                       marginTop: '10px'
@@ -305,7 +305,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                 border: 'none',
                 borderRadius: '5px',
                 padding: '12px 24px',
-                fontSize: '16px',
+                fontSize: '18px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 width: '100%',
@@ -330,7 +330,7 @@ export default function QRScanner({ onScan, onClose, t }) {
                   border: 'none',
                   borderRadius: '5px',
                   padding: '12px 24px',
-                  fontSize: '16px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   width: '100%'
@@ -362,10 +362,10 @@ export default function QRScanner({ onScan, onClose, t }) {
             borderRadius: '8px',
             textAlign: 'center'
           }}>
-            <div style={{fontSize: '18px', fontWeight: 'bold', color: '#2e7d32', marginBottom: '8px'}}>
+            <div style={{fontSize: '20px', fontWeight: 'bold', color: '#2e7d32', marginBottom: '8px'}}>
               ✅ {translate('qrScanner.cameraActive')}
             </div>
-            <div style={{fontSize: '14px', color: '#1b5e20'}}>
+            <div style={{fontSize: '16px', color: '#1b5e20'}}>
               {scanning ? translate('qrScanner.positionQR') : translate('qrScanner.initializing')}
             </div>
           </div>

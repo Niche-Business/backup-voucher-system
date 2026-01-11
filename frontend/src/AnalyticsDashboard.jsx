@@ -56,8 +56,8 @@ export function AnalyticsDashboard({ apiCall }) {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '60px' }}>
-        <div style={{ fontSize: '24px', marginBottom: '20px' }}>📊 Loading Analytics...</div>
-        <div style={{ fontSize: '16px', color: '#666' }}>Please wait while we gather the data</div>
+        <div style={{ fontSize: '28px', marginBottom: '20px' }}>📊 Loading Analytics...</div>
+        <div style={{ fontSize: '20px', color: '#666' }}>Please wait while we gather the data</div>
       </div>
     );
   }
@@ -65,15 +65,15 @@ export function AnalyticsDashboard({ apiCall }) {
   if (error || !analytics) {
     return (
       <div style={{ textAlign: 'center', padding: '60px' }}>
-        <div style={{ fontSize: '24px', color: '#e74c3c', marginBottom: '20px' }}>⚠️ Failed to Load Analytics</div>
-        <div style={{ fontSize: '16px', color: '#666', marginBottom: '20px' }}>
+        <div style={{ fontSize: '28px', color: '#e74c3c', marginBottom: '20px' }}>⚠️ Failed to Load Analytics</div>
+        <div style={{ fontSize: '20px', color: '#666', marginBottom: '20px' }}>
           {error || 'Unable to load analytics data'}
         </div>
         <button 
           onClick={loadAnalyticsData} 
           style={{ 
             padding: '12px 24px', 
-            fontSize: '16px',
+            fontSize: '20px',
             backgroundColor: '#4CAF50',
             color: 'white',
             border: 'none',
@@ -153,7 +153,7 @@ export function AnalyticsDashboard({ apiCall }) {
           onClick={loadAnalyticsData}
           style={{
             padding: '8px 16px',
-            fontSize: '14px',
+            fontSize: '18px',
             backgroundColor: '#4CAF50',
             color: 'white',
             border: 'none',
@@ -321,11 +321,11 @@ function MetricCard({ title, value, subtitle, icon, color }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>{title}</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', color: color }}>{value}</div>
-          {subtitle && <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>{subtitle}</div>}
+          <div style={{ fontSize: '18px', color: '#666', marginBottom: '8px' }}>{title}</div>
+          <div style={{ fontSize: '32px', fontWeight: 'bold', color: color }}>{value}</div>
+          {subtitle && <div style={{ fontSize: '16px', color: '#999', marginTop: '4px' }}>{subtitle}</div>}
         </div>
-        <div style={{ fontSize: '36px' }}>{icon}</div>
+        <div style={{ fontSize: '40px' }}>{icon}</div>
       </div>
     </div>
   );
@@ -334,8 +334,8 @@ function MetricCard({ title, value, subtitle, icon, color }) {
 function FinancialMetric({ label, value, color = '#333' }) {
   return (
     <div style={{ padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
-      <div style={{ fontSize: '12px', color: '#666', marginBottom: '5px' }}>{label}</div>
-      <div style={{ fontSize: '20px', fontWeight: 'bold', color }}>{value}</div>
+      <div style={{ fontSize: '16px', color: '#666', marginBottom: '5px' }}>{label}</div>
+      <div style={{ fontSize: '24px', fontWeight: 'bold', color }}>{value}</div>
     </div>
   );
 }

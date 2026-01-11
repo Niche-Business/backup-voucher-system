@@ -28,7 +28,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
     borderRadius: '4px',
     backgroundColor: 'white',
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '16px'
   }
   
   const activeButtonStyle = {
@@ -95,7 +95,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
         {t('pagination.next')} →
       </button>
       
-      <div style={{marginLeft: '20px', fontSize: '14px', color: '#666'}}>
+      <div style={{marginLeft: '20px', fontSize: '16px', color: '#666'}}>
         {t('pagination.page')} {currentPage} {t('pagination.of')} {totalPages} ({totalItems} {t('pagination.totalItems')})
       </div>
     </div>

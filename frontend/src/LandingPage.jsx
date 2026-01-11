@@ -24,10 +24,10 @@ const LandingPage = ({ onNavigate }) => {
         padding: '80px 20px',
         textAlign: 'center'
       }}>
-        <h1 style={{ fontSize: '3em', marginBottom: '20px', fontWeight: 'bold' }}>
+        <h1 style={{ fontSize: '3.3em', marginBottom: '20px', fontWeight: 'bold' }}>
           {t('landing.hero.title')}
         </h1>
-        <p style={{ fontSize: '1.3em', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
+        <p style={{ fontSize: '1.6em', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
           {t('landing.hero.subtitle')}
         </p>
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -35,7 +35,7 @@ const LandingPage = ({ onNavigate }) => {
             onClick={() => onNavigate('register')}
             style={{
               padding: '15px 40px',
-              fontSize: '1.1em',
+              fontSize: '1.4em',
               backgroundColor: '#fff',
               color: '#4CAF50',
               border: 'none',
@@ -51,7 +51,7 @@ const LandingPage = ({ onNavigate }) => {
             onClick={() => onNavigate('login')}
             style={{
               padding: '15px 40px',
-              fontSize: '1.1em',
+              fontSize: '1.4em',
               backgroundColor: 'transparent',
               color: '#fff',
               border: '2px solid white',
@@ -76,8 +76,8 @@ const LandingPage = ({ onNavigate }) => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3em', marginBottom: '15px' }}>🎫</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
+            <div style={{ fontSize: '3.3em', marginBottom: '15px' }}>🎫</div>
+            <h3 style={{ fontSize: '1.7em', marginBottom: '15px', color: '#333' }}>
               {t('landing.features.communities.title')}
             </h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
@@ -93,8 +93,8 @@ const LandingPage = ({ onNavigate }) => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3em', marginBottom: '15px' }}>🤝</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
+            <div style={{ fontSize: '3.3em', marginBottom: '15px' }}>🤝</div>
+            <h3 style={{ fontSize: '1.7em', marginBottom: '15px', color: '#333' }}>
               {t('landing.features.vcse.title')}
             </h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
@@ -110,8 +110,8 @@ const LandingPage = ({ onNavigate }) => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3em', marginBottom: '15px' }}>🏪</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
+            <div style={{ fontSize: '3.3em', marginBottom: '15px' }}>🏪</div>
+            <h3 style={{ fontSize: '1.7em', marginBottom: '15px', color: '#333' }}>
               {t('landing.features.vendors.title')}
             </h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
@@ -127,8 +127,8 @@ const LandingPage = ({ onNavigate }) => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3em', marginBottom: '15px' }}>🍎</div>
-            <h3 style={{ fontSize: '1.4em', marginBottom: '15px', color: '#333' }}>
+            <div style={{ fontSize: '3.3em', marginBottom: '15px' }}>🍎</div>
+            <h3 style={{ fontSize: '1.7em', marginBottom: '15px', color: '#333' }}>
               {t('landing.features.surplus.title')}
             </h3>
             <p style={{ color: '#666', lineHeight: '1.6' }}>
@@ -140,7 +140,7 @@ const LandingPage = ({ onNavigate }) => {
 
       {/* Who We Serve Section */}
       <div style={{ backgroundColor: '#fff', padding: '60px 20px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: '#333' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2.8em', marginBottom: '50px', color: '#333' }}>
           {t('landing.whoWeServe.title')}
         </h2>
         <div style={{ 
@@ -157,7 +157,7 @@ const LandingPage = ({ onNavigate }) => {
             borderRadius: '12px',
             border: '2px solid #9C27B0'
           }}>
-            <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#9C27B0' }}>
+            <h3 style={{ fontSize: '1.8em', marginBottom: '20px', color: '#9C27B0' }}>
               👤 {t('landing.whoWeServe.recipients.title')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
@@ -175,7 +175,7 @@ const LandingPage = ({ onNavigate }) => {
             borderRadius: '12px',
             border: '2px solid #FF9800'
           }}>
-            <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#FF9800' }}>
+            <h3 style={{ fontSize: '1.8em', marginBottom: '20px', color: '#FF9800' }}>
               🏪 {t('landing.whoWeServe.vendors.title')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
@@ -194,7 +194,7 @@ const LandingPage = ({ onNavigate }) => {
             borderRadius: '12px',
             border: '2px solid #4CAF50'
           }}>
-            <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#4CAF50' }}>
+            <h3 style={{ fontSize: '1.8em', marginBottom: '20px', color: '#4CAF50' }}>
               🤝 {t('landing.whoWeServe.vcse.title')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
@@ -213,7 +213,7 @@ const LandingPage = ({ onNavigate }) => {
             borderRadius: '12px',
             border: '2px solid #2196F3'
           }}>
-            <h3 style={{ fontSize: '1.5em', marginBottom: '20px', color: '#2196F3' }}>
+            <h3 style={{ fontSize: '1.8em', marginBottom: '20px', color: '#2196F3' }}>
               🎓 {t('landing.whoWeServe.schools.title')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#666', lineHeight: '2' }}>
@@ -232,29 +232,29 @@ const LandingPage = ({ onNavigate }) => {
       {/* About the Scheme Section */}
       <div style={{ backgroundColor: '#f0f7f0', padding: '80px 20px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: '#2e7d32', fontWeight: 'bold' }}>
+          <h2 style={{ textAlign: 'center', fontSize: '2.8em', marginBottom: '50px', color: '#2e7d32', fontWeight: 'bold' }}>
             {t('landing.about.sectionTitle')}
           </h2>
           
           {/* Mission Statement */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.mission.title')}</h3>
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+            <h3 style={{ fontSize: '1.9em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.mission.title')}</h3>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555' }}>
               {t('landing.about.mission.text')}
             </p>
           </div>
 
           {/* Our Vision */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.vision.title')}</h3>
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+            <h3 style={{ fontSize: '1.9em', color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>{t('landing.about.vision.title')}</h3>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555' }}>
               {t('landing.about.vision.text')}
             </p>
           </div>
 
           {/* Our Values */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
-            <h3 style={{ fontSize: '1.6em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>{t('landing.about.values.title')}</h3>
+            <h3 style={{ fontSize: '1.9em', color: '#2e7d32', marginBottom: '25px', fontWeight: 'bold' }}>{t('landing.about.values.title')}</h3>
             <ul style={{ listStyle: 'none', padding: 0, color: '#555', lineHeight: '2' }}>
               <li style={{ marginBottom: '15px' }}>
                 <strong style={{ color: '#2e7d32' }}>{t('landing.about.values.compassion')}</strong> – {t('landing.about.values.compassionDesc')}
@@ -277,10 +277,10 @@ const LandingPage = ({ onNavigate }) => {
           {/* About BAK UP CIC */}
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
             {t('landing.about.bakup.title')}
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '20px' }}>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555', marginBottom: '20px' }}>
               {t('landing.about.bakup.paragraph1')}
             </p>
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555' }}>
               {t('landing.about.bakup.paragraph2')}
             </p>
           </div>
@@ -310,17 +310,17 @@ const LandingPage = ({ onNavigate }) => {
 
           <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
             {t('landing.about.circular.title')}
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555', marginBottom: '15px' }}>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555', marginBottom: '15px' }}>
               {t('landing.about.circular.paragraph1')}
             </p>
-            <p style={{ fontSize: '1.1em', lineHeight: '1.8', color: '#555' }}>
+            <p style={{ fontSize: '1.4em', lineHeight: '1.8', color: '#555' }}>
               {t('landing.about.circular.paragraph2')}
             </p>
           </div>
 
           <div style={{ backgroundColor: '#e8f5e9', padding: '40px', borderRadius: '15px', border: '2px solid #4CAF50' }}>
             {t('landing.about.funders.title')}
-            <p style={{ fontSize: '1.2em', lineHeight: '1.8', color: '#333', textAlign: 'center', fontWeight: '500' }}>
+            <p style={{ fontSize: '1.5em', lineHeight: '1.8', color: '#333', textAlign: 'center', fontWeight: '500' }}>
               {t('landing.about.funders.text')}
             </p>
           </div>
@@ -330,7 +330,7 @@ const LandingPage = ({ onNavigate }) => {
               onClick={() => onNavigate('register')}
               style={{
                 padding: '15px 40px',
-                fontSize: '1.2em',
+                fontSize: '1.5em',
                 backgroundColor: '#4CAF50',
                 color: 'white',
                 border: 'none',
@@ -353,17 +353,17 @@ const LandingPage = ({ onNavigate }) => {
         padding: '60px 20px',
         textAlign: 'center'
       }}>
-        <h2 style={{ fontSize: '2.5em', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '2.8em', marginBottom: '20px' }}>
           {t('landing.cta.title')}
         </h2>
-        <p style={{ fontSize: '1.2em', marginBottom: '30px' }}>
+        <p style={{ fontSize: '1.5em', marginBottom: '30px' }}>
           {t('landing.cta.subtitle')}
         </p>
         <button
           onClick={() => onNavigate('register')}
           style={{
             padding: '15px 40px',
-            fontSize: '1.1em',
+            fontSize: '1.4em',
             backgroundColor: '#fff',
             color: '#4CAF50',
             border: 'none',
@@ -402,7 +402,7 @@ const LandingPage = ({ onNavigate }) => {
                   borderRadius: '5px',
                   cursor: 'pointer',
                   fontWeight: 'bold',
-                  fontSize: '0.95em'
+                  fontSize: '1.25em'
                 }}
               >
                 {t('landing.about.footerAbout.learnMore')}
@@ -445,15 +445,15 @@ const LandingPage = ({ onNavigate }) => {
             paddingTop: '20px',
             textAlign: 'center',
             color: '#c8e6c9',
-            fontSize: '0.9em'
+            fontSize: '1.2em'
           }}>
             <p style={{ margin: '0 0 10px 0' }}>
               © {new Date().getFullYear()} BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme
             </p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '0.85em' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '1.15em' }}>
               Charity Company Registration Number: 12994379
             </p>
-            <p style={{ margin: '0', fontSize: '0.85em', fontStyle: 'italic' }}>
+            <p style={{ margin: '0', fontSize: '1.15em', fontStyle: 'italic' }}>
               BAK UP E-Voucher System v1.0.2
             </p>
           </div>

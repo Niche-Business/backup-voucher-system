@@ -239,7 +239,7 @@ const VoucherPrint = ({ voucher, onClose }) => {
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
-                  fontSize: '16px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   display: 'flex',
@@ -257,7 +257,7 @@ const VoucherPrint = ({ voucher, onClose }) => {
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
-                  fontSize: '16px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   display: 'flex',
@@ -276,7 +276,7 @@ const VoucherPrint = ({ voucher, onClose }) => {
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
-                fontSize: '16px',
+                fontSize: '18px',
                 fontWeight: 'bold',
                 cursor: 'pointer'
               }}
@@ -343,7 +343,7 @@ const VoucherPrint = ({ voucher, onClose }) => {
             <div className="print-footer">
               <p><strong>BAK UP - Community Food Support</strong></p>
               <p>For assistance, please contact your issuing organization</p>
-              <p style={{ fontSize: '12px', marginTop: '10px' }}>
+              <p style={{ fontSize: '14px', marginTop: '10px' }}>
                 This voucher is valid only at participating shops. Not redeemable for cash.
               </p>
             </div>

@@ -110,14 +110,14 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       textAlign: 'center'
     },
     statNumber: {
-      fontSize: '32px',
+      fontSize: '36px',
       fontWeight: 'bold',
       color: '#4CAF50',
       margin: '10px 0'
     },
     statLabel: {
       color: '#666',
-      fontSize: '14px'
+      fontSize: '18px'
     },
     vcseCard: {
       backgroundColor: 'white',
@@ -136,14 +136,14 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       borderBottom: '2px solid #f0f0f0'
     },
     vcseTitle: {
-      fontSize: '20px',
+      fontSize: '24px',
       fontWeight: 'bold',
       color: '#333',
       marginBottom: '5px'
     },
     vcseSubtitle: {
       color: '#666',
-      fontSize: '14px'
+      fontSize: '18px'
     },
     detailsGrid: {
       display: 'grid',
@@ -157,13 +157,13 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       borderRadius: '5px'
     },
     detailLabel: {
-      fontSize: '12px',
+      fontSize: '16px',
       color: '#666',
       marginBottom: '5px',
       fontWeight: '600'
     },
     detailValue: {
-      fontSize: '14px',
+      fontSize: '18px',
       color: '#333'
     },
     charityBox: {
@@ -185,7 +185,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       padding: '12px 24px',
       borderRadius: '5px',
       cursor: 'pointer',
-      fontSize: '14px',
+      fontSize: '18px',
       fontWeight: 'bold',
       flex: 1
     },
@@ -196,7 +196,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       padding: '12px 24px',
       borderRadius: '5px',
       cursor: 'pointer',
-      fontSize: '14px',
+      fontSize: '18px',
       fontWeight: 'bold',
       flex: 1
     },
@@ -225,7 +225,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       padding: '10px',
       borderRadius: '5px',
       border: '1px solid #ddd',
-      fontSize: '14px',
+      fontSize: '18px',
       fontFamily: 'Arial, sans-serif',
       marginTop: '10px'
     },
@@ -285,7 +285,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
                 <div style={styles.vcseSubtitle}>
                   {vcse.first_name} {vcse.last_name} • {vcse.email}
                 </div>
-                <div style={{...styles.vcseSubtitle, fontSize: '12px', marginTop: '5px'}}>
+                <div style={{...styles.vcseSubtitle, fontSize: '16px', marginTop: '5px'}}>
                   Registered: {formatDate(vcse.created_at)}
                 </div>
               </div>
@@ -294,7 +294,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
                 color: '#f57c00',
                 padding: '6px 12px',
                 borderRadius: '20px',
-                fontSize: '12px',
+                fontSize: '16px',
                 fontWeight: 'bold'
               }}>
                 PENDING
@@ -302,13 +302,13 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
             </div>
 
             <div style={styles.charityBox}>
-              <div style={{fontSize: '12px', color: '#2e7d32', fontWeight: 'bold', marginBottom: '5px'}}>
+              <div style={{fontSize: '16px', color: '#2e7d32', fontWeight: 'bold', marginBottom: '5px'}}>
                 🏛️ CHARITY COMMISSION DETAILS
               </div>
-              <div style={{fontSize: '18px', fontWeight: 'bold', color: '#1b5e20'}}>
+              <div style={{fontSize: '22px', fontWeight: 'bold', color: '#1b5e20'}}>
                 {vcse.charity_commission_number}
               </div>
-              <div style={{fontSize: '12px', color: '#666', marginTop: '5px'}}>
+              <div style={{fontSize: '16px', color: '#666', marginTop: '5px'}}>
                 ⚠️ Verify this number at{' '}
                 <a
                   href={`https://register-of-charities.charitycommission.gov.uk/charity-search?p_p_id=uk_gov_ccew_onereg_charitydetails_web_portlet_CharityDetailsPortlet&p_p_lifecycle=1&p_p_state=normal&_uk_gov_ccew_onereg_charitydetails_web_portlet_CharityDetailsPortlet_javax.portlet.action=searchCharitiesAction&_uk_gov_ccew_onereg_charitydetails_web_portlet_CharityDetailsPortlet_searchValue=${vcse.charity_commission_number}`}

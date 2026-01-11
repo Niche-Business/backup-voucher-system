@@ -31,7 +31,7 @@ const LanguageSelector = () => {
           border: '1px solid #ddd',
           backgroundColor: 'white',
           cursor: 'pointer',
-          fontSize: '14px',
+          fontSize: '16px',
           fontWeight: '500',
           outline: 'none',
           transition: 'all 0.2s',

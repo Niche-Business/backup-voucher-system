@@ -120,7 +120,7 @@ const PWAInstallPrompt = () => {
     color: isActive ? 'white' : '#666',
     border: 'none',
     borderRadius: '6px',
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: '500',
     cursor: 'pointer'
   })
@@ -134,8 +134,8 @@ const PWAInstallPrompt = () => {
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
               <img src="/icon-192.png" alt="BAK UP" style={{ width: '40px', height: '40px', marginRight: '12px', borderRadius: '8px' }} />
               <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#333' }}>Install BAK UP</h3>
-                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#666' }}>Add to Home Screen</p>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#333' }}>Install BAK UP</h3>
+                <p style={{ margin: '2px 0 0 0', fontSize: '14px', color: '#666' }}>Add to Home Screen</p>
               </div>
             </div>
             
@@ -149,30 +149,30 @@ const PWAInstallPrompt = () => {
               </button>
             </div>
 
-            <p style={{ fontSize: '14px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
+            <p style={{ fontSize: '16px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
               {t('landing.pwa.iosInstructions')}
             </p>
             
             <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-                <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>1️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep1') }} />
+                <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>1️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep1') }} />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-                <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>2️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep2') }} />
+                <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>2️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep2') }} />
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>3️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep3') }} />
+                <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>3️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.iosStep3') }} />
               </div>
             </div>
             
-            <div style={{ fontSize: '12px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '10px' }}>
+            <div style={{ fontSize: '14px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '10px' }}>
               {t('landing.pwa.iosNote')}
             </div>
           </div>
-          <button onClick={handleDismiss} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', padding: '0', marginLeft: '10px' }}>
+          <button onClick={handleDismiss} style={{ background: 'none', border: 'none', fontSize: '26px', cursor: 'pointer', color: '#999', padding: '0', marginLeft: '10px' }}>
             ✕
           </button>
         </div>
@@ -188,8 +188,8 @@ const PWAInstallPrompt = () => {
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
             <img src="/icon-192.png" alt="BAK UP" style={{ width: '40px', height: '40px', marginRight: '12px', borderRadius: '8px' }} />
             <div style={{ flex: 1 }}>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#333' }}>{t('landing.pwa.install')}</h3>
-              <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#666' }}>{t('landing.pwa.addToHomeScreen')}</p>
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#333' }}>{t('landing.pwa.install')}</h3>
+              <p style={{ margin: '2px 0 0 0', fontSize: '14px', color: '#666' }}>{t('landing.pwa.addToHomeScreen')}</p>
             </div>
           </div>
           
@@ -203,35 +203,35 @@ const PWAInstallPrompt = () => {
               </button>
           </div>
 
-            <p style={{ fontSize: '14px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
+            <p style={{ fontSize: '16px', color: '#555', margin: '10px 0 15px 0', lineHeight: '1.5' }}>
               {t('landing.pwa.androidInstructions')}
             </p>
           
           <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', marginBottom: '10px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-              <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>1️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep1') }} />
+              <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>1️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep1') }} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-              <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>2️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep2') }} />
+              <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>2️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep2') }} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ fontSize: '24px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>3️⃣</div>
-                <div style={{ fontSize: '14px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep3') }} />
+              <div style={{ fontSize: '26px', marginRight: '12px', minWidth: '30px', textAlign: 'center' }}>3️⃣</div>
+                <div style={{ fontSize: '16px', color: '#333' }} dangerouslySetInnerHTML={{ __html: t('landing.pwa.androidStep3') }} />
             </div>
           </div>
           
           <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-            <button onClick={handleDismiss} style={{ padding: '10px 20px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', flex: 1 }}>
+            <button onClick={handleDismiss} style={{ padding: '10px 20px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '500', cursor: 'pointer', flex: 1 }}>
               {t('landing.pwa.notNow')}
             </button>
-            <button onClick={handleInstallClick} style={{ padding: '10px 20px', background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)', flex: 1 }}>
+            <button onClick={handleInstallClick} style={{ padding: '10px 20px', background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: 'pointer', boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)', flex: 1 }}>
               {t('landing.pwa.installButton')}
             </button>
           </div>
         </div>
-        <button onClick={handleDismiss} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', padding: '0', marginLeft: '10px' }}>
+        <button onClick={handleDismiss} style={{ background: 'none', border: 'none', fontSize: '26px', cursor: 'pointer', color: '#999', padding: '0', marginLeft: '10px' }}>
           ✕
         </button>
       </div>

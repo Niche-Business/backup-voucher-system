@@ -48,7 +48,7 @@ const styles = {
     width: '100%',
     padding: '12px',
     paddingRight: '45px',
-    fontSize: '16px',
+    fontSize: '18px',
     border: '1px solid #ddd',
     borderRadius: '5px',
     boxSizing: 'border-box'
@@ -61,7 +61,7 @@ const styles = {
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    fontSize: '20px',
+    fontSize: '22px',
     padding: '5px',
     display: 'flex',
     alignItems: 'center',
@@ -69,7 +69,7 @@ const styles = {
   },
   button: {
     padding: '12px 24px',
-    fontSize: '16px',
+    fontSize: '18px',
     backgroundColor: '#2196F3',
     color: 'white',
     border: 'none',
@@ -80,7 +80,7 @@ const styles = {
   },
   cancelButton: {
     padding: '12px 24px',
-    fontSize: '16px',
+    fontSize: '18px',
     backgroundColor: '#757575',
     color: 'white',
     border: 'none',

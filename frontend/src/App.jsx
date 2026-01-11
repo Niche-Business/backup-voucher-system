@@ -78,14 +78,14 @@ class ErrorBoundary extends Component {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
           <h1 style={{ color: '#e74c3c', marginBottom: '20px' }}>⚠️ Something went wrong</h1>
-          <p style={{ fontSize: '18px', color: '#555', marginBottom: '30px' }}>
+          <p style={{ fontSize: '22px', color: '#555', marginBottom: '30px' }}>
             We're sorry, but something unexpected happened. Please try refreshing the page.
           </p>
           <button
             onClick={() => window.location.reload()}
             style={{
               padding: '12px 24px',
-              fontSize: '16px',
+              fontSize: '20px',
               backgroundColor: '#3498db',
               color: 'white',
               border: 'none',
@@ -100,7 +100,7 @@ class ErrorBoundary extends Component {
             onClick={() => window.location.href = '/'}
             style={{
               padding: '12px 24px',
-              fontSize: '16px',
+              fontSize: '20px',
               backgroundColor: '#95a5a6',
               color: 'white',
               border: 'none',
@@ -119,7 +119,7 @@ class ErrorBoundary extends Component {
                 backgroundColor: '#f8f9fa',
                 borderRadius: '4px',
                 overflow: 'auto',
-                fontSize: '12px',
+                fontSize: '16px',
                 color: '#e74c3c'
               }}>
                 {this.state.error.toString()}
@@ -332,8 +332,8 @@ function App() {
 function HomePage({ onNavigate }) {
   return (
     <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '60px 20px', textAlign: 'center'}}>
-      <h1 style={{fontSize: '48px', marginBottom: '20px'}}>BAK UP E-Voucher System</h1>
-      <p style={{fontSize: '20px', marginBottom: '40px'}}>Reducing waste, supporting communities, strengthening local economies</p>
+      <h1 style={{fontSize: '52px', marginBottom: '20px'}}>BAK UP E-Voucher System</h1>
+      <p style={{fontSize: '24px', marginBottom: '40px'}}>Reducing waste, supporting communities, strengthening local economies</p>
       <div style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>
         <button onClick={() => onNavigate('login')} style={styles.primaryButton}>Sign In</button>
         <button onClick={() => onNavigate('register')} style={styles.secondaryButton}>Register</button>
@@ -352,7 +352,7 @@ function HomePage({ onNavigate }) {
 function FeatureCard({ icon, title, description }) {
   return (
     <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', color: '#333'}}>
-      <div style={{fontSize: '48px', marginBottom: '15px'}}>{icon}</div>
+      <div style={{fontSize: '52px', marginBottom: '15px'}}>{icon}</div>
       <h3 style={{marginBottom: '10px'}}>{title}</h3>
       <p style={{color: '#666', lineHeight: '1.6'}}>{description}</p>
     </div>
@@ -429,7 +429,7 @@ function LoginPage({ onLogin, onNavigate }) {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '18px',
+                  fontSize: '22px',
                   color: '#666'
                 }}
               >
@@ -450,10 +450,10 @@ function LoginPage({ onLogin, onNavigate }) {
         </div>
         
         <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
-          <p style={{margin: '0 0 8px 0', fontSize: '0.9em', lineHeight: '1.5', color: '#333'}}>
+          <p style={{margin: '0 0 8px 0', fontSize: '1.2em', lineHeight: '1.5', color: '#333'}}>
             <strong>🌿 {t('login.aboutTitle')}</strong>
           </p>
-          <p style={{margin: 0, fontSize: '0.85em', lineHeight: '1.5', color: '#555'}}>
+          <p style={{margin: 0, fontSize: '1.15em', lineHeight: '1.5', color: '#555'}}>
             {t('login.aboutText')}
           </p>
         </div>
@@ -493,9 +493,9 @@ function AdminLoginPage({ onLogin, onNavigate }) {
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#1976d2'}}>
       <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
         <div style={{textAlign: 'center', marginBottom: '30px'}}>
-          <div style={{fontSize: '48px', marginBottom: '10px'}}>🔐</div>
+          <div style={{fontSize: '52px', marginBottom: '10px'}}>🔐</div>
           <h2>Administrator Access</h2>
-          <p style={{color: '#666', fontSize: '0.9em'}}>Authorized personnel only</p>
+          <p style={{color: '#666', fontSize: '1.2em'}}>Authorized personnel only</p>
         </div>
         
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
@@ -535,7 +535,7 @@ function AdminLoginPage({ onLogin, onNavigate }) {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '18px',
+                  fontSize: '22px',
                   color: '#666'
                 }}
               >
@@ -706,7 +706,7 @@ function ResetPasswordPage({ token, onNavigate }) {
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '18px',
+                  fontSize: '22px',
                   color: '#666'
                 }}
               >
@@ -737,7 +737,7 @@ function ResetPasswordPage({ token, onNavigate }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: '18px',
+                fontSize: '22px',
                 color: '#666'
               }}
             >
@@ -875,7 +875,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: '18px',
+                    fontSize: '22px',
                     color: '#666'
                   }}
                 >
@@ -898,7 +898,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: '18px',
+                    fontSize: '22px',
                     color: '#666'
                   }}
                 >
@@ -922,7 +922,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                   style={styles.input} 
                   required 
                 />
-                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                <small style={{color: '#666', fontSize: '16px', display: 'block', marginTop: '5px'}}>
                   💡 <strong>Important:</strong> Use the exact name as registered with the Charity Commission
                 </small>
               </div>
@@ -938,7 +938,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                   required 
                 />
                 <div style={{backgroundColor: '#fff3e0', border: '1px solid #ff9800', borderRadius: '5px', padding: '10px', marginTop: '8px'}}>
-                  <small style={{color: '#e65100', fontSize: '12px', display: 'block', lineHeight: '1.5'}}>
+                  <small style={{color: '#e65100', fontSize: '16px', display: 'block', lineHeight: '1.5'}}>
                     <strong>🔒 Security Verification:</strong><br/>
                     • Your charity number will be verified with the UK Charity Commission<br/>
                     • The organization name you enter MUST match the registered charity name<br/>
@@ -992,7 +992,7 @@ function RegisterPage({ onRegister, onNavigate }) {
               <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
             </div>
             <div>
-              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.cityLabel')} <span style={{fontSize: '12px', color: '#666'}}>(Optional for towns)</span></label>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('register.cityLabel')} <span style={{fontSize: '16px', color: '#666'}}>(Optional for towns)</span></label>
               <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} placeholder={t('register.townPlaceholder')} />
             </div>
           </div>
@@ -1037,10 +1037,10 @@ function RegisterPage({ onRegister, onNavigate }) {
         </div>
         
         <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
-          <p style={{margin: '0 0 8px 0', fontSize: '0.9em', lineHeight: '1.5', color: '#333'}}>
+          <p style={{margin: '0 0 8px 0', fontSize: '1.2em', lineHeight: '1.5', color: '#333'}}>
             <strong>🤝 Join the Northamptonshire Community E-Voucher Scheme</strong>
           </p>
-          <p style={{margin: 0, fontSize: '0.85em', lineHeight: '1.5', color: '#555'}}>
+          <p style={{margin: 0, fontSize: '1.15em', lineHeight: '1.5', color: '#555'}}>
             Led by BAK UP CIC, our scheme provides dignified support through flexible vouchers, respects cultural preferences, and strengthens local economies. Together, we're building a more inclusive and sustainable community.
           </p>
         </div>
@@ -1370,7 +1370,7 @@ function AdminDashboard({ user, onLogout }) {
               background: 'none',
               border: 'none',
               color: 'white',
-              fontSize: '28px',
+              fontSize: '32px',
               cursor: 'pointer',
               padding: '10px',
               display: 'flex',
@@ -1386,7 +1386,7 @@ function AdminDashboard({ user, onLogout }) {
           </button>
           <div>
             <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-            <p style={{margin: '5px 0 0 0', fontSize: '0.85em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.2</p>
+            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.2</p>
           </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
@@ -1397,7 +1397,7 @@ function AdminDashboard({ user, onLogout }) {
               background: 'none',
               border: 'none',
               color: 'white',
-              fontSize: '28px',
+              fontSize: '32px',
               cursor: 'pointer',
               padding: '10px',
               display: 'flex',
@@ -1428,7 +1428,7 @@ function AdminDashboard({ user, onLogout }) {
           overflow: 'hidden'
         }}>
           <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
             <LanguageSelector />
           </div>
           
@@ -1444,7 +1444,7 @@ function AdminDashboard({ user, onLogout }) {
               backgroundColor: 'white',
               textAlign: 'left',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
@@ -1519,8 +1519,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🎫</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>🎫</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
                 <div style={{color: '#666'}}>Total Vouchers</div>
               </div>
               
@@ -1530,8 +1530,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>💰</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>💰</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>
                   £{vouchers.filter(v => v.status === 'active').reduce((sum, v) => sum + parseFloat(v.value || 0), 0).toFixed(2)}
                 </div>
                 <div style={{color: '#666'}}>Active Value</div>
@@ -1543,8 +1543,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🤝</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#9C27B0'}}>{vcseOrgs.length}</div>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>🤝</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#9C27B0'}}>{vcseOrgs.length}</div>
                 <div style={{color: '#666'}}>VCFSE Organizations</div>
               </div>
               
@@ -1554,8 +1554,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🎓</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#FF9800'}}>{schools.length}</div>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>🎓</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{schools.length}</div>
                 <div style={{color: '#666'}}>Schools/Care Orgs</div>
               </div>
               
@@ -1565,8 +1565,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>👥</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#00BCD4'}}>{recipients.length}</div>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>👥</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#00BCD4'}}>{recipients.length}</div>
                 <div style={{color: '#666'}}>Recipients</div>
               </div>
               
@@ -1576,8 +1576,8 @@ function AdminDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>🏪</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#F44336'}}>{vendorShops.length}</div>
+                <div style={{fontSize: '40px', marginBottom: '10px'}}>🏪</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#F44336'}}>{vendorShops.length}</div>
                 <div style={{color: '#666'}}>Local Shops</div>
               </div>
             </div>
@@ -1730,7 +1730,7 @@ function AdminDashboard({ user, onLogout }) {
                       <div style={{flex: 1}}>
                         <strong>{org.name}</strong> ({org.email})<br />
                         {org.charity_commission_number && (
-                          <span style={{color: '#666', fontSize: '14px'}}>
+                          <span style={{color: '#666', fontSize: '18px'}}>
                             {t('admin.charityNumber')}: <strong>{org.charity_commission_number}</strong><br />
                           </span>
                         )}
@@ -1746,7 +1746,7 @@ function AdminDashboard({ user, onLogout }) {
                             border: 'none',
                             borderRadius: '5px',
                             cursor: 'pointer',
-                            fontSize: '14px'
+                            fontSize: '18px'
                           }}
                         >
                           ✏️ {t('admin.edit')}
@@ -1770,7 +1770,7 @@ function AdminDashboard({ user, onLogout }) {
                             border: 'none',
                             borderRadius: '5px',
                             cursor: 'pointer',
-                            fontSize: '14px'
+                            fontSize: '18px'
                           }}
                         >
                           🗑️ {t('admin.delete')}
@@ -1792,7 +1792,7 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Recipients</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Recipients</label>
                   <input
                     type="text"
                     placeholder="Search by name, email, or phone..."
@@ -1802,7 +1802,7 @@ function AdminDashboard({ user, onLogout }) {
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📊 Sort By</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 Sort By</label>
                   <select
                     value={recipientSortBy || 'name'}
                     onChange={(e) => setRecipientSortBy(e.target.value)}
@@ -1971,27 +1971,27 @@ function AdminDashboard({ user, onLogout }) {
                       ) : (
                         <div>
                           <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{recipient.name}</h3>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📧 Email:</strong> {recipient.email}
                           </p>
                           {recipient.phone && (
-                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px'}}>
                               <strong>📞 Phone:</strong> {recipient.phone}
                             </p>
                           )}
                           {recipient.address && (
-                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px'}}>
                               <strong>📍 Address:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
                             </p>
                           )}
                           <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
-                            <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold'}}>
                               🎫 Total Vouchers: {recipient.total_vouchers}
                             </p>
-                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px'}}>
                               ✅ Active: {recipient.active_vouchers} | ✓ Redeemed: {recipient.redeemed_vouchers}
                             </p>
-                            <p style={{margin: '5px 0', fontSize: '14px', fontWeight: 'bold', color: '#4CAF50'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#4CAF50'}}>
                               💰 Active Value: £{recipient.total_active_value.toFixed(2)}
                             </p>
                           </div>
@@ -2065,7 +2065,7 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Vouchers</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Vouchers</label>
                   <input
                     type="text"
                     placeholder="Search by code, recipient..."
@@ -2075,7 +2075,7 @@ function AdminDashboard({ user, onLogout }) {
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📋 Status Filter</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 Status Filter</label>
                   <select
                     value={voucherStatusFilter || 'all'}
                     onChange={(e) => setVoucherStatusFilter(e.target.value)}
@@ -2088,7 +2088,7 @@ function AdminDashboard({ user, onLogout }) {
                   </select>
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📊 Sort By</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 Sort By</label>
                   <select
                     value={voucherSortBy || 'recent'}
                     onChange={(e) => setVoucherSortBy(e.target.value)}
@@ -2296,16 +2296,16 @@ function AdminDashboard({ user, onLogout }) {
                       ) : (
                         <div>
                           <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📞 Phone:</strong> {shop.phone}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                              <strong>👤 Shop Owner:</strong> {shop.vendor_name}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📧 Email:</strong> {shop.vendor_email}
                           </p>
                           <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
@@ -2321,7 +2321,7 @@ function AdminDashboard({ user, onLogout }) {
                                 border: 'none',
                                 borderRadius: '5px',
                                 cursor: 'pointer',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 flex: 1
                               }}
                             >
@@ -2336,7 +2336,7 @@ function AdminDashboard({ user, onLogout }) {
                                 border: 'none',
                                 borderRadius: '5px',
                                 cursor: 'pointer',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 flex: 1
                               }}
                             >
@@ -2478,25 +2478,25 @@ function AdminDashboard({ user, onLogout }) {
                       ) : (
                         <div>
                           <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{school.organization_name}</h3>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>👤 Contact:</strong> {school.first_name} {school.last_name}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📧 Email:</strong> {school.email}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📞 Phone:</strong> {school.phone}
                           </p>
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>📍 Address:</strong> {school.address}, {school.city} {school.postcode}
                           </p>
                           <div style={{marginTop: '15px', padding: '15px', backgroundColor: '#E1BEE7', borderRadius: '8px'}}>
-                            <p style={{margin: '0', fontWeight: 'bold', fontSize: '18px', color: '#6A1B9A'}}>
+                            <p style={{margin: '0', fontWeight: 'bold', fontSize: '22px', color: '#6A1B9A'}}>
                               💰 {t('admin.allocatedBalance')}: £{(school.allocated_balance || 0).toFixed(2)}
                             </p>
                           </div>
                           <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#F3E5F5', borderRadius: '8px'}}>
-                            <p style={{margin: '0', fontSize: '12px', color: '#6A1B9A', fontStyle: 'italic'}}>
+                            <p style={{margin: '0', fontSize: '16px', color: '#6A1B9A', fontStyle: 'italic'}}>
                               🎯 Supporting families from underrepresented communities
                             </p>
                           </div>
@@ -2510,7 +2510,7 @@ function AdminDashboard({ user, onLogout }) {
                             border: 'none',
                             borderRadius: '5px',
                             cursor: 'pointer',
-                            fontSize: '14px'
+                            fontSize: '18px'
                           }}
                             >
                               ✒️ Edit
@@ -2534,7 +2534,7 @@ function AdminDashboard({ user, onLogout }) {
                                 border: 'none',
                                 borderRadius: '5px',
                                 cursor: 'pointer',
-                                fontSize: '14px'
+                                fontSize: '18px'
                               }}
                             >
                               🗑️ {t('admin.delete')}
@@ -2561,25 +2561,25 @@ function AdminDashboard({ user, onLogout }) {
                   {toGoItems.map(item => (
                     <div key={item.id} style={{padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', backgroundColor: item.status === 'available' ? '#f1f8e9' : '#fafafa'}}>
                       <h4 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{item.item_name}</h4>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Quantity:</strong> {item.quantity} {item.unit}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Price:</strong> £{item.price.toFixed(2)} per {item.unit}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Category:</strong> {item.category}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Status:</strong> <span style={{color: item.status === 'available' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{item.status.toUpperCase()}</span>
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Description:</strong> {item.description || 'N/A'}
                       </p>
                       <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
-                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
-                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
-                         <p style={{margin: '2px 0', fontSize: '13px'}}><strong>👤 Shop Owner:</strong> {item.vendor_name}</p>
+                        <p style={{margin: '2px 0', fontSize: '17px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
+                        <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
+                         <p style={{margin: '2px 0', fontSize: '17px'}}><strong>👤 Shop Owner:</strong> {item.vendor_name}</p>
                       </div>
                     </div>
                   ))}
@@ -2777,19 +2777,19 @@ function AdminDashboard({ user, onLogout }) {
             {payoutSummary && (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>{payoutSummary.pending}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>{payoutSummary.pending}</div>
                   <div style={{color: '#666'}}>{t('payout.pending')}</div>
-                  <div style={{fontSize: '20px', color: '#2196F3', marginTop: '5px'}}>£{payoutSummary.total_amount_pending.toFixed(2)}</div>
+                  <div style={{fontSize: '24px', color: '#2196F3', marginTop: '5px'}}>£{payoutSummary.total_amount_pending.toFixed(2)}</div>
                 </div>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{payoutSummary.approved}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>{payoutSummary.approved}</div>
                   <div style={{color: '#666'}}>{t('payout.approved')}</div>
-                  <div style={{fontSize: '20px', color: '#FF9800', marginTop: '5px'}}>£{payoutSummary.total_amount_approved.toFixed(2)}</div>
+                  <div style={{fontSize: '24px', color: '#FF9800', marginTop: '5px'}}>£{payoutSummary.total_amount_approved.toFixed(2)}</div>
                 </div>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>{payoutSummary.paid}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>{payoutSummary.paid}</div>
                   <div style={{color: '#666'}}>{t('payout.paid')}</div>
-                  <div style={{fontSize: '20px', color: '#4CAF50', marginTop: '5px'}}>£{payoutSummary.total_amount_paid.toFixed(2)}</div>
+                  <div style={{fontSize: '24px', color: '#4CAF50', marginTop: '5px'}}>£{payoutSummary.total_amount_paid.toFixed(2)}</div>
                 </div>
               </div>
             )}
@@ -2826,14 +2826,14 @@ function AdminDashboard({ user, onLogout }) {
                     }}>
                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '20px'}}>
                         <div>
-                          <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
-                          <div style={{fontSize: '16px', fontWeight: 'bold', marginTop: '5px'}}>{payout.vendor_name}</div>
-                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
+                          <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
+                          <div style={{fontSize: '20px', fontWeight: 'bold', marginTop: '5px'}}>{payout.vendor_name}</div>
+                          <div style={{fontSize: '18px', color: '#666'}}>{payout.shop_name}</div>
                         </div>
                         <div style={{
                           padding: '8px 20px',
                           borderRadius: '25px',
-                          fontSize: '14px',
+                          fontSize: '18px',
                           fontWeight: 'bold',
                           backgroundColor: 
                             payout.status === 'paid' ? '#e8f5e9' :
@@ -2850,16 +2850,16 @@ function AdminDashboard({ user, onLogout }) {
                       
                       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
                         <div>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.bankName')}:</strong> {payout.bank_name}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.accountNumber')}:</strong> {payout.account_number}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.sortCode')}:</strong> {payout.sort_code}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.accountHolderName')}:</strong> {payout.account_holder_name}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.bankName')}:</strong> {payout.bank_name}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.accountNumber')}:</strong> {payout.account_number}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.sortCode')}:</strong> {payout.sort_code}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.accountHolderName')}:</strong> {payout.account_holder_name}</p>
                         </div>
                         <div>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.vendorName')}:</strong> {payout.vendor_name}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>Email:</strong> {payout.vendor_email}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>Phone:</strong> {payout.vendor_phone}</p>
-                          <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}><strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.vendorName')}:</strong> {payout.vendor_name}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>Email:</strong> {payout.vendor_email}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>Phone:</strong> {payout.vendor_phone}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}</p>
                         </div>
                       </div>
 
@@ -2884,7 +2884,7 @@ function AdminDashboard({ user, onLogout }) {
                               border: 'none',
                               borderRadius: '5px',
                               cursor: 'pointer',
-                              fontSize: '14px',
+                              fontSize: '18px',
                               fontWeight: 'bold'
                             }}
                           >
@@ -2902,7 +2902,7 @@ function AdminDashboard({ user, onLogout }) {
                               border: 'none',
                               borderRadius: '5px',
                               cursor: 'pointer',
-                              fontSize: '14px',
+                              fontSize: '18px',
                               fontWeight: 'bold'
                             }}
                           >
@@ -2921,7 +2921,7 @@ function AdminDashboard({ user, onLogout }) {
                             border: 'none',
                             borderRadius: '5px',
                             cursor: 'pointer',
-                            fontSize: '14px',
+                            fontSize: '18px',
                             fontWeight: 'bold',
                             marginTop: '15px'
                           }}
@@ -3250,12 +3250,12 @@ function AdminSettingsTab({ user }) {
                           {admin.id !== user.id ? (
                             <button
                               onClick={() => handleDeleteAdmin(admin.id, admin.email)}
-                              style={{...styles.button, backgroundColor: '#f44336', padding: '8px 16px', fontSize: '14px'}}
+                              style={{...styles.button, backgroundColor: '#f44336', padding: '8px 16px', fontSize: '18px'}}
                             >
                               {t('admin.delete')}
                             </button>
                           ) : (
-                            <span style={{color: '#999', fontSize: '14px'}}>{t('admin.currentUser')}</span>
+                            <span style={{color: '#999', fontSize: '18px'}}>{t('admin.currentUser')}</span>
                           )}
                         </td>
                       </tr>
@@ -3278,15 +3278,15 @@ function AdminSettingsTab({ user }) {
               {/* Summary Cards */}
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
                 <div style={{backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '10px'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>{loginStats.total_users}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>{loginStats.total_users}</div>
                   <div style={{color: '#666'}}>Total Users</div>
                 </div>
                 <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>{loginStats.active_users}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>{loginStats.active_users}</div>
                   <div style={{color: '#666'}}>Active Users (30 days)</div>
                 </div>
                 <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{loginStats.total_logins}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>{loginStats.total_logins}</div>
                   <div style={{color: '#666'}}>Total Logins</div>
                 </div>
               </div>
@@ -3308,12 +3308,12 @@ function AdminSettingsTab({ user }) {
                     {loginStats.users.map(u => (
                       <tr key={u.id} style={{borderBottom: '1px solid #eee'}}>
                         <td style={{padding: '12px'}}>{u.first_name} {u.last_name}</td>
-                        <td style={{padding: '12px', fontSize: '14px'}}>{u.email}</td>
+                        <td style={{padding: '12px', fontSize: '18px'}}>{u.email}</td>
                         <td style={{padding: '12px'}}>
                           <span style={{
                             padding: '4px 12px',
                             borderRadius: '12px',
-                            fontSize: '12px',
+                            fontSize: '16px',
                             fontWeight: 'bold',
                             backgroundColor: u.role === 'admin' ? '#e8f5e9' : u.role === 'vcse' ? '#e3f2fd' : u.role === 'vendor' ? '#fff3e0' : '#f3e5f5',
                             color: u.role === 'admin' ? '#2e7d32' : u.role === 'vcse' ? '#1565c0' : u.role === 'vendor' ? '#e65100' : '#6a1b9a'
@@ -3387,21 +3387,21 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
   return (
     <div style={{border: '1px solid #ddd', borderRadius: '10px', padding: '15px', backgroundColor: '#fafafa'}}>
       {message && (
-        <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '8px', borderRadius: '5px', marginBottom: '10px', fontSize: '14px'}}>
+        <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '8px', borderRadius: '5px', marginBottom: '10px', fontSize: '18px'}}>
           {message}
         </div>
       )}
       
       <div style={{marginBottom: '10px'}}>
-        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>
+        <h3 style={{margin: '0 0 8px 0', fontSize: '22px'}}>
           {item.item_name || item.title}
           {item.batch_count > 1 && (
-            <span style={{marginLeft: '10px', fontSize: '12px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
+            <span style={{marginLeft: '10px', fontSize: '16px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
               {item.batch_count} batches
             </span>
           )}
         </h3>
-        <div style={{fontSize: '14px', color: '#666'}}>
+        <div style={{fontSize: '18px', color: '#666'}}>
           <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
           <div><strong>{t('product.category')}</strong> {item.category}</div>
           <div><strong>{t('product.available')}</strong> {item.quantity}{item.batch_count > 1 && ` (combined from ${item.batch_count} batches)`}</div>
@@ -3420,47 +3420,47 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
       ) : (
         <form onSubmit={handlePlaceOrder} style={{marginTop: '15px'}}>
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Client Full Name *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Client Full Name *</label>
             <input
               type="text"
               value={orderForm.client_name}
               onChange={(e) => setOrderForm({...orderForm, client_name: e.target.value})}
               placeholder="e.g., John Smith"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Mobile Number *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Mobile Number *</label>
             <input
               type="tel"
               value={orderForm.client_mobile}
               onChange={(e) => setOrderForm({...orderForm, client_mobile: e.target.value})}
               placeholder="e.g., 07700900000"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Email Address *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Email Address *</label>
             <input
               type="email"
               value={orderForm.client_email}
               onChange={(e) => setOrderForm({...orderForm, client_email: e.target.value})}
               placeholder="e.g., client@example.com"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Quantity</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Quantity</label>
             <select
               value={orderForm.quantity}
               onChange={(e) => setOrderForm({...orderForm, quantity: parseInt(e.target.value)})}
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
             >
               {[...Array(Math.min(10, Math.max(1, parseInt(item.quantity) || 1)))].map((_, i) => (
                 <option key={i+1} value={i+1}>{i+1}</option>
@@ -3469,13 +3469,13 @@ function ToGoOrderCard({ item, onOrderPlaced }) {
           </div>
           
           <div style={{display: 'flex', gap: '10px'}}>
-            <button type="submit" style={{...styles.primaryButton, flex: 1, fontSize: '14px'}}>
+            <button type="submit" style={{...styles.primaryButton, flex: 1, fontSize: '18px'}}>
               ✅ Place Order
             </button>
             <button 
               type="button" 
               onClick={() => setShowOrderForm(false)} 
-              style={{...styles.secondaryButton, flex: 1, fontSize: '14px'}}
+              style={{...styles.secondaryButton, flex: 1, fontSize: '18px'}}
             >
               Cancel
             </button>
@@ -3604,14 +3604,14 @@ function PaymentTab({ user, onBalanceUpdate }) {
                 style={{
                   width: '100%',
                   padding: '12px',
-                  fontSize: '18px',
+                  fontSize: '22px',
                   border: '2px solid #ddd',
                   borderRadius: '8px'
                 }}
                 required
                 disabled={loading}
               />
-              <p style={{fontSize: '14px', color: '#666', marginTop: '8px'}}>
+              <p style={{fontSize: '18px', color: '#666', marginTop: '8px'}}>
                 Minimum: £10 | Maximum: £10,000 per transaction
               </p>
             </div>
@@ -3622,7 +3622,7 @@ function PaymentTab({ user, onBalanceUpdate }) {
               style={{
                 ...styles.primaryButton,
                 width: '100%',
-                fontSize: '18px',
+                fontSize: '22px',
                 padding: '15px',
                 backgroundColor: '#4CAF50'
               }}
@@ -3632,7 +3632,7 @@ function PaymentTab({ user, onBalanceUpdate }) {
           </form>
           
           <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
-            <p style={{margin: 0, fontSize: '14px', color: '#666'}}>
+            <p style={{margin: 0, fontSize: '18px', color: '#666'}}>
               🔒 <strong>Secure Payment:</strong> Your card details are processed securely by Stripe. We never store your card information.
             </p>
           </div>
@@ -3659,7 +3659,7 @@ function PaymentTab({ user, onBalanceUpdate }) {
         {paymentHistory.length === 0 ? (
           <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
             <p>No payment history yet</p>
-            <p style={{fontSize: '14px'}}>Your payment transactions will appear here</p>
+            <p style={{fontSize: '18px'}}>Your payment transactions will appear here</p>
           </div>
         ) : (
           <div style={{overflowX: 'auto'}}>
@@ -3680,18 +3680,18 @@ function PaymentTab({ user, onBalanceUpdate }) {
                       <td style={{padding: '12px'}}>
                         {new Date(transaction.created_at).toLocaleDateString()}
                         <br />
-                        <span style={{fontSize: '12px', color: '#666'}}>
+                        <span style={{fontSize: '16px', color: '#666'}}>
                           {new Date(transaction.created_at).toLocaleTimeString()}
                         </span>
                       </td>
-                      <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', fontSize: '16px'}}>
+                      <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', fontSize: '20px'}}>
                         £{transaction.amount.toFixed(2)}
                       </td>
                       <td style={{padding: '12px', textAlign: 'center'}}>
                         <span style={{
                           padding: '4px 12px',
                           borderRadius: '12px',
-                          fontSize: '12px',
+                          fontSize: '16px',
                           fontWeight: 'bold',
                           backgroundColor: statusStyle.bg,
                           color: statusStyle.color
@@ -3699,10 +3699,10 @@ function PaymentTab({ user, onBalanceUpdate }) {
                           {transaction.status.toUpperCase()}
                         </span>
                       </td>
-                      <td style={{padding: '12px', fontSize: '14px', color: '#666'}}>
+                      <td style={{padding: '12px', fontSize: '18px', color: '#666'}}>
                         {transaction.description || 'Fund loading'}
                         {transaction.failure_reason && (
-                          <div style={{color: '#c62828', fontSize: '12px', marginTop: '4px'}}>
+                          <div style={{color: '#c62828', fontSize: '16px', marginTop: '4px'}}>
                             {transaction.failure_reason}
                           </div>
                         )}
@@ -3827,7 +3827,7 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
             style={{
               ...styles.primaryButton,
               flex: 1,
-              fontSize: '16px',
+              fontSize: '20px',
               padding: '15px',
               backgroundColor: '#4CAF50'
             }}
@@ -3842,7 +3842,7 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
             style={{
               ...styles.primaryButton,
               flex: 1,
-              fontSize: '16px',
+              fontSize: '20px',
               padding: '15px',
               backgroundColor: '#f44336'
             }}
@@ -3853,7 +3853,7 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
       </form>
       
       <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
-        <p style={{margin: 0, fontSize: '14px', color: '#666'}}>
+        <p style={{margin: 0, fontSize: '18px', color: '#666'}}>
           🔒 <strong>Secure Payment:</strong> Powered by Stripe. Your payment information is encrypted and secure.
         </p>
       </div>
@@ -3939,7 +3939,7 @@ function VCSEDashboard({ user, onLogout }) {
       
       // Show visual notification
       const notificationDiv = document.createElement('div')
-      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 20px; fontWeight: bold;'
       notificationDiv.textContent = `🔔 ${translatedMessage}`
       document.body.appendChild(notificationDiv)
       setTimeout(() => notificationDiv.remove(), 5000)
@@ -3973,7 +3973,7 @@ function VCSEDashboard({ user, onLogout }) {
           playNotificationSound()
           // Show visual notification
           const notification = document.createElement('div')
-          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 20px; fontWeight: bold;'
           notification.textContent = `🔔 ${newItems.length - lastItemCount} new FREE Food To Go item(s) available!`
           document.body.appendChild(notification)
           setTimeout(() => notification.remove(), 5000)
@@ -4150,7 +4150,7 @@ function VCSEDashboard({ user, onLogout }) {
               background: 'none',
               border: 'none',
               color: 'white',
-              fontSize: '28px',
+              fontSize: '32px',
               cursor: 'pointer',
               padding: '10px',
               display: 'flex',
@@ -4192,7 +4192,7 @@ function VCSEDashboard({ user, onLogout }) {
               backgroundColor: 'white',
               textAlign: 'left',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               borderBottom: '1px solid #eee',
               display: 'flex',
               alignItems: 'center',
@@ -4205,7 +4205,7 @@ function VCSEDashboard({ user, onLogout }) {
           </button>
           
           <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
             <LanguageSelector />
           </div>
           
@@ -4221,7 +4221,7 @@ function VCSEDashboard({ user, onLogout }) {
               backgroundColor: 'white',
               textAlign: 'left',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
@@ -4254,18 +4254,18 @@ function VCSEDashboard({ user, onLogout }) {
               {/* Admin Allocated Balance */}
               <div style={{backgroundColor: '#e3f2fd', padding: '25px', borderRadius: '15px'}}>
                 <h3 style={{marginTop: 0, color: '#1565c0'}}>💼 Admin Allocated Funds</h3>
-                <p style={{fontSize: '14px', color: '#666'}}>Funds allocated by administrator</p>
+                <p style={{fontSize: '18px', color: '#666'}}>Funds allocated by administrator</p>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
-                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>£{allocatedBalance.toFixed(2)}</div>
+                  <div style={{fontSize: '40px', fontWeight: 'bold', color: '#1976d2'}}>£{allocatedBalance.toFixed(2)}</div>
                 </div>
               </div>
               
               {/* Self-Loaded Balance */}
               <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '15px'}}>
                 <h3 style={{marginTop: 0, color: '#2e7d32'}}>💳 Self-Loaded Funds</h3>
-                <p style={{fontSize: '14px', color: '#666'}}>Funds loaded via payment</p>
+                <p style={{fontSize: '18px', color: '#666'}}>Funds loaded via payment</p>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
-                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>£{(user.balance || 0).toFixed(2)}</div>
+                  <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>£{(user.balance || 0).toFixed(2)}</div>
                 </div>
                 <button
                   onClick={() => setActiveTab('payment')}
@@ -4278,9 +4278,9 @@ function VCSEDashboard({ user, onLogout }) {
               {/* Total Balance */}
               <div style={{backgroundColor: '#fff3e0', padding: '25px', borderRadius: '15px'}}>
                 <h3 style={{marginTop: 0, color: '#e65100'}}>💰 Total Available</h3>
-                <p style={{fontSize: '14px', color: '#666'}}>Combined balance for vouchers</p>
+                <p style={{fontSize: '18px', color: '#666'}}>Combined balance for vouchers</p>
                 <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
-                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>£{((user.balance || 0) + allocatedBalance).toFixed(2)}</div>
+                  <div style={{fontSize: '40px', fontWeight: 'bold', color: '#FF9800'}}>£{((user.balance || 0) + allocatedBalance).toFixed(2)}</div>
                 </div>
               </div>
             </div>
@@ -4297,7 +4297,7 @@ function VCSEDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
                 Our E-Voucher system replaces traditional food parcels with <strong>flexible, dignified support</strong> that respects cultural preferences and gives families real choice. Every voucher you issue helps strengthen local economies by supporting participating shops and retailers.
               </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', color: '#555'}}>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', color: '#555'}}>
                 🌟 Together, we're building a more inclusive, sustainable, and resilient community where everyone can thrive.
               </p>
             </div>
@@ -4372,14 +4372,14 @@ function VCSEDashboard({ user, onLogout }) {
                         <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
                           <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>{voucher.code}</td>
                           <td style={{padding: '12px'}}>{voucher.recipient?.name || 'Unknown'}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient?.email || ''}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{voucher.recipient?.email || ''}</td>
                           <td style={{padding: '12px'}}>{voucher.recipient?.phone || ''}</td>
                           <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: '#4CAF50'}}>£{voucher.value.toFixed(2)}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <span style={{
                               padding: '4px 12px',
                               borderRadius: '12px',
-                              fontSize: '12px',
+                              fontSize: '16px',
                               fontWeight: 'bold',
                               backgroundColor: voucher.status === 'active' ? '#e8f5e9' : voucher.status === 'redeemed' ? '#e3f2fd' : '#ffebee',
                               color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#1565c0' : '#c62828'
@@ -4387,16 +4387,16 @@ function VCSEDashboard({ user, onLogout }) {
                               {voucher.status.toUpperCase()}
                             </span>
                           </td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
                               <a 
                                 href={`/api/vcse/voucher-pdf/${voucher.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
+                                style={{...styles.primaryButton, fontSize: '16px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
                               >
                                 📝 PDF
                               </a>
@@ -4406,7 +4406,7 @@ function VCSEDashboard({ user, onLogout }) {
                                     setReassignVoucher(voucher)
                                     setShowReassignModal(true)
                                   }}
-                                  style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', backgroundColor: '#FF9800'}}
+                                  style={{...styles.primaryButton, fontSize: '16px', padding: '6px 12px', backgroundColor: '#FF9800'}}
                                 >
                                   🔄 Reassign
                                 </button>
@@ -4437,20 +4437,20 @@ function VCSEDashboard({ user, onLogout }) {
                 {/* Key Metrics Cards */}
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Total Vouchers Issued</div>
-                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>{analytics.total_vouchers}</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Total Vouchers Issued</div>
+                    <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>{analytics.total_vouchers}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Total Value Distributed</div>
-                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>£{analytics.total_value.toFixed(2)}</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Total Value Distributed</div>
+                    <div style={{fontSize: '40px', fontWeight: 'bold', color: '#1976d2'}}>£{analytics.total_value.toFixed(2)}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Active Vouchers</div>
-                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2e7d32'}}>{analytics.active_vouchers}</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Active Vouchers</div>
+                    <div style={{fontSize: '40px', fontWeight: 'bold', color: '#2e7d32'}}>{analytics.active_vouchers}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Redeemed Vouchers</div>
-                    <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1565c0'}}>{analytics.redeemed_vouchers}</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Redeemed Vouchers</div>
+                    <div style={{fontSize: '40px', fontWeight: 'bold', color: '#1565c0'}}>{analytics.redeemed_vouchers}</div>
                   </div>
                 </div>
                 
@@ -4495,19 +4495,19 @@ function VCSEDashboard({ user, onLogout }) {
                       <div style={{marginBottom: '20px'}}>
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                           <span>🟢 Active Value</span>
-                          <strong style={{fontSize: '20px', color: '#4CAF50'}}>£{analytics.value_by_status.active.toFixed(2)}</strong>
+                          <strong style={{fontSize: '24px', color: '#4CAF50'}}>£{analytics.value_by_status.active.toFixed(2)}</strong>
                         </div>
                       </div>
                       <div style={{marginBottom: '20px'}}>
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                           <span>🔵 Redeemed Value</span>
-                          <strong style={{fontSize: '20px', color: '#2196F3'}}>£{analytics.value_by_status.redeemed.toFixed(2)}</strong>
+                          <strong style={{fontSize: '24px', color: '#2196F3'}}>£{analytics.value_by_status.redeemed.toFixed(2)}</strong>
                         </div>
                       </div>
                       <div>
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                           <span>🔴 Expired Value</span>
-                          <strong style={{fontSize: '20px', color: '#f44336'}}>£{analytics.value_by_status.expired.toFixed(2)}</strong>
+                          <strong style={{fontSize: '24px', color: '#f44336'}}>£{analytics.value_by_status.expired.toFixed(2)}</strong>
                         </div>
                       </div>
                     </div>
@@ -4536,13 +4536,13 @@ function VCSEDashboard({ user, onLogout }) {
                               title={`${day.date}: ${day.count} vouchers`}
                             >
                               {day.count > 0 && (
-                                <div style={{position: 'absolute', top: '-20px', left: '50%', transform: 'translateX(-50%)', fontSize: '10px', fontWeight: 'bold'}}>
+                                <div style={{position: 'absolute', top: '-20px', left: '50%', transform: 'translateX(-50%)', fontSize: '14px', fontWeight: 'bold'}}>
                                   {day.count}
                                 </div>
                               )}
                             </div>
                             {idx % 5 === 0 && (
-                              <div style={{fontSize: '9px', marginTop: '5px', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap'}}>
+                              <div style={{fontSize: '13px', marginTop: '5px', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap'}}>
                                 {new Date(day.date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})}
                               </div>
                             )}
@@ -4710,11 +4710,11 @@ function VCSEDashboard({ user, onLogout }) {
             
             {/* Instructions Banner */}
             <div style={{backgroundColor: '#f3e5f5', border: '2px solid #9C27B0', borderRadius: '10px', padding: '20px', marginBottom: '20px'}}>
-              <h3 style={{color: '#7B1FA2', marginTop: 0, marginBottom: '15px', fontSize: '18px'}}>ℹ️ How to Issue Vouchers</h3>
+              <h3 style={{color: '#7B1FA2', marginTop: 0, marginBottom: '15px', fontSize: '22px'}}>ℹ️ How to Issue Vouchers</h3>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px'}}>
                 <div>
-                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '15px'}}>👥 Single Recipient</h4>
-                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '14px', lineHeight: '1.8'}}>
+                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '19px'}}>👥 Single Recipient</h4>
+                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '18px', lineHeight: '1.8'}}>
                     <li>Fill in recipient details in the form below</li>
                     <li>Enter voucher value and expiry days</li>
                     <li>Select which shops can accept the voucher</li>
@@ -4722,8 +4722,8 @@ function VCSEDashboard({ user, onLogout }) {
                   </ol>
                 </div>
                 <div>
-                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '15px'}}>📄 Bulk Upload</h4>
-                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '14px', lineHeight: '1.8'}}>
+                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '19px'}}>📄 Bulk Upload</h4>
+                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '18px', lineHeight: '1.8'}}>
                     <li>Download the CSV template</li>
                     <li>Fill in recipient details in Excel/Sheets</li>
                     <li>Upload the completed CSV file</li>
@@ -4731,7 +4731,7 @@ function VCSEDashboard({ user, onLogout }) {
                   </ol>
                 </div>
               </div>
-              <p style={{margin: '15px 0 0 0', fontSize: '13px', color: '#666', backgroundColor: '#fff', padding: '10px', borderRadius: '5px'}}>
+              <p style={{margin: '15px 0 0 0', fontSize: '17px', color: '#666', backgroundColor: '#fff', padding: '10px', borderRadius: '5px'}}>
                 💡 <strong>Tips:</strong> Recipients receive email & SMS notifications automatically. If an email already exists, the existing account will be used.
               </p>
             </div>
@@ -4874,7 +4874,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>The recipient will receive voucher details at this email</small>
+                <small style={{color: '#666', fontSize: '16px'}}>The recipient will receive voucher details at this email</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -4898,7 +4898,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>Used for SMS notifications with voucher code</small>
+                <small style={{color: '#666', fontSize: '16px'}}>Used for SMS notifications with voucher code</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -4949,7 +4949,7 @@ function VCSEDashboard({ user, onLogout }) {
                   style={styles.input}
                   required
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>Amount will be deducted from your balance (£{allocatedBalance.toFixed(2)} available)</small>
+                <small style={{color: '#666', fontSize: '16px'}}>Amount will be deducted from your balance (£{allocatedBalance.toFixed(2)} available)</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -5049,7 +5049,7 @@ function VCSEDashboard({ user, onLogout }) {
                     border: 'none',
                     borderRadius: '8px',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: '18px',
                     fontWeight: 'bold',
                     display: 'flex',
                     alignItems: 'center',
@@ -5072,7 +5072,7 @@ function VCSEDashboard({ user, onLogout }) {
                     padding: '10px',
                     borderRadius: '8px',
                     border: '2px solid #ddd',
-                    fontSize: '14px',
+                    fontSize: '18px',
                     width: '300px',
                     cursor: 'pointer'
                   }}
@@ -5087,7 +5087,7 @@ function VCSEDashboard({ user, onLogout }) {
                   <option value="Corby">Corby</option>
                 </select>
                 {townFilter !== 'all' && (
-                  <span style={{marginLeft: '10px', color: '#666', fontSize: '14px'}}>
+                  <span style={{marginLeft: '10px', color: '#666', fontSize: '18px'}}>
                     Showing items from {townFilter} ({filteredToGoItems.length} items)
                   </span>
                 )}
@@ -5098,7 +5098,7 @@ function VCSEDashboard({ user, onLogout }) {
               {filteredToGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
                   <p>No Food to Go Items available {townFilter !== 'all' ? `in ${townFilter}` : 'at the moment'}</p>
-                  <p style={{fontSize: '14px'}}>{townFilter !== 'all' ? 'Try selecting a different town or "All Towns/Cities"' : 'Check back later for surplus Food to Go Items from local shops'}</p>
+                  <p style={{fontSize: '18px'}}>{townFilter !== 'all' ? 'Try selecting a different town or "All Towns/Cities"' : 'Check back later for surplus Food to Go Items from local shops'}</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
@@ -5124,7 +5124,7 @@ function VCSEDashboard({ user, onLogout }) {
               {discountedItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
                   <p>No discounted items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for discounted surplus items from local shops</p>
+                  <p style={{fontSize: '18px'}}>Check back later for discounted surplus items from local shops</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
@@ -5136,7 +5136,7 @@ function VCSEDashboard({ user, onLogout }) {
                         padding: '8px 12px',
                         borderRadius: '5px',
                         marginBottom: '10px',
-                        fontSize: '14px',
+                        fontSize: '18px',
                         fontWeight: 'bold',
                         textAlign: 'center'
                       }}>
@@ -5144,38 +5144,38 @@ function VCSEDashboard({ user, onLogout }) {
                       </div>
                       <h3 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{item.item_name}</h3>
                       <div style={{marginBottom: '15px'}}>
-                        <p style={{margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#4CAF50'}}>
+                        <p style={{margin: '5px 0', fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
                           💰 £{item.price.toFixed(2)} per {item.unit}
                         </p>
-                        <p style={{margin: '5px 0', fontSize: '14px', color: '#999', textDecoration: 'line-through'}}>
+                        <p style={{margin: '5px 0', fontSize: '18px', color: '#999', textDecoration: 'line-through'}}>
                           Was: £{item.original_price.toFixed(2)}
                         </p>
-                        <p style={{margin: '5px 0', fontSize: '16px', fontWeight: 'bold', color: '#FF9800'}}>
+                        <p style={{margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#FF9800'}}>
                           🎉 Save £{item.savings.toFixed(2)} ({item.savings_percent}% off)
                         </p>
                       </div>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Available:</strong> {item.quantity} {item.unit}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Category:</strong> {item.category}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Description:</strong> {item.description || 'Fresh and ready'}
                       </p>
                       <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
-                        <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
+                        <p style={{margin: '3px 0', fontSize: '18px', fontWeight: 'bold', color: '#1976d2'}}>
                           🏪 {item.shop_name}
                         </p>
-                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                        <p style={{margin: '3px 0', fontSize: '17px'}}>
                           📍 {item.shop_address}
                         </p>
-                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                        <p style={{margin: '3px 0', fontSize: '17px'}}>
                           📞 {item.shop_phone}
                         </p>
                       </div>
                       <div style={{marginTop: '15px'}}>
-                        <p style={{fontSize: '13px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
+                        <p style={{fontSize: '17px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
                           💳 Contact the shop directly to purchase this item using your allocated funds
                         </p>
                       </div>
@@ -5194,23 +5194,23 @@ function VCSEDashboard({ user, onLogout }) {
             {/* Summary Cards */}
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '30px'}}>
               <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
                 <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
               </div>
               <div style={{backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
               </div>
               <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#2196F3'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
               </div>
               <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => {
                     if (v.status !== 'active') return false
                     const daysUntilExpiry = Math.ceil((new Date(v.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
@@ -5312,7 +5312,7 @@ function VCSEDashboard({ user, onLogout }) {
                           <td style={{padding: '12px'}}>
                             <strong>{voucher.recipient?.name || 'Unknown'}</strong>
                           </td>
-                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                          <td style={{padding: '12px', fontSize: '17px', color: '#666'}}>
                             {voucher.recipient?.email}<br/>
                             {voucher.recipient?.phone}
                           </td>
@@ -5326,7 +5326,7 @@ function VCSEDashboard({ user, onLogout }) {
                             <span style={{
                               padding: '5px 12px',
                               borderRadius: '20px',
-                              fontSize: '12px',
+                              fontSize: '16px',
                               fontWeight: 'bold',
                               backgroundColor: 
                                 voucher.status === 'active' ? '#e8f5e9' :
@@ -5338,15 +5338,15 @@ function VCSEDashboard({ user, onLogout }) {
                               {voucher.status.toUpperCase()}
                             </span>
                             {isExpiringSoon && (
-                              <div style={{fontSize: '11px', color: '#FF9800', marginTop: '3px'}}>
+                              <div style={{fontSize: '15px', color: '#FF9800', marginTop: '3px'}}>
                                 ⚠️ {daysUntilExpiry} days left
                               </div>
                             )}
                           </td>
-                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                          <td style={{padding: '12px', fontSize: '17px', color: '#666'}}>
                             {new Date(voucher.created_at).toLocaleDateString()}
                           </td>
-                          <td style={{padding: '12px', fontSize: '13px', color: '#666'}}>
+                          <td style={{padding: '12px', fontSize: '17px', color: '#666'}}>
                             {new Date(voucher.expiry_date).toLocaleDateString()}
                           </td>
                         </tr>
@@ -5780,7 +5780,7 @@ function VendorDashboard({ user, onLogout }) {
             background: 'none',
             border: 'none',
             color: 'white',
-            fontSize: '28px',
+            fontSize: '32px',
             cursor: 'pointer',
             padding: '10px',
             display: 'flex',
@@ -5821,7 +5821,7 @@ function VendorDashboard({ user, onLogout }) {
               backgroundColor: 'white',
               textAlign: 'left',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               borderBottom: '1px solid #eee',
               display: 'flex',
               alignItems: 'center',
@@ -5834,7 +5834,7 @@ function VendorDashboard({ user, onLogout }) {
           </button>
           
           <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-            <div style={{marginBottom: '5px', fontSize: '14px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
+            <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
             <LanguageSelector />
           </div>
           
@@ -5850,7 +5850,7 @@ function VendorDashboard({ user, onLogout }) {
               backgroundColor: 'white',
               textAlign: 'left',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
@@ -5878,15 +5878,15 @@ function VendorDashboard({ user, onLogout }) {
           <div>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>£{totalSales.toFixed(2)}</div>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#4CAF50'}}>£{totalSales.toFixed(2)}</div>
                 <div>💰 Total Sales</div>
               </div>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>{toGoCount}</div>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#FF9800'}}>{toGoCount}</div>
                 <div>{t('shop.toGoPosted')}</div>
               </div>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#2196F3'}}>{shops.length}</div>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#2196F3'}}>{shops.length}</div>
                 <div>{t('shop.shopsRegistered')}</div>
               </div>
             </div>
@@ -5899,7 +5899,7 @@ function VendorDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
                 By accepting e-vouchers, you provide families with <strong>dignity, choice, and access</strong> to culturally appropriate food and essentials. At the same time, you benefit from increased footfall and support for your local business.
               </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', color: '#555'}}>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', color: '#555'}}>
                 ♻️ You can also help reduce waste by notifying us about surplus food and goods for redistribution, strengthening our circular economy.
               </p>
             </div>
@@ -5980,7 +5980,7 @@ function VendorDashboard({ user, onLogout }) {
                     ) : (
                       <>
                         <div style={{flex: 1}}>
-                          <strong style={{fontSize: '18px', color: '#FF9800'}}>{shop.shop_name}</strong><br />
+                          <strong style={{fontSize: '22px', color: '#FF9800'}}>{shop.shop_name}</strong><br />
                           <span style={{color: '#666'}}>📍 {shop.address}</span><br />
                           <span style={{color: '#666'}}>🏙️ {shop.city} {shop.postcode}</span><br />
                           <span style={{color: '#666'}}>📞 {shop.phone}</span>
@@ -6004,7 +6004,7 @@ function VendorDashboard({ user, onLogout }) {
             
             {/* Redemption Instructions */}
             <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px', maxWidth: '800px', margin: '0 auto 20px'}}>
-              <h3 style={{marginTop: 0, color: '#1976d2', fontSize: '18px'}}>📝 {t('shop.howToRedeem')}</h3>
+              <h3 style={{marginTop: 0, color: '#1976d2', fontSize: '22px'}}>📝 {t('shop.howToRedeem')}</h3>
               <ol style={{marginBottom: 0, paddingLeft: '20px', lineHeight: '1.8'}}>
                 <li>{t('shop.step1')}</li>
                 <li>{t('shop.step2')}</li>
@@ -6013,14 +6013,14 @@ function VendorDashboard({ user, onLogout }) {
                 <li>{t('shop.step5')}</li>
                 <li>{t('shop.step6')}</li>
               </ol>
-              <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px', fontSize: '14px'}}>
+              <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px', fontSize: '18px'}}>
                 💡 <strong>{t('shop.tip')}:</strong> {t('shop.tipText')}
               </div>
             </div>
             
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', maxWidth: '600px', margin: '0 auto'}}>
               <div style={{marginBottom: '20px'}}>
-                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>{t('shop.enterVoucherCode')}</label>
+                <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '20px'}}>{t('shop.enterVoucherCode')}</label>
                 <input
                   type="text"
                   value={voucherCode}
@@ -6032,7 +6032,7 @@ function VendorDashboard({ user, onLogout }) {
                   placeholder="e.g., VCHR-ABC123"
                   style={{
                     ...styles.input,
-                    fontSize: '18px',
+                    fontSize: '22px',
                     fontFamily: 'monospace',
                     letterSpacing: '2px',
                     textTransform: 'uppercase'
@@ -6047,7 +6047,7 @@ function VendorDashboard({ user, onLogout }) {
                     ...styles.primaryButton,
                     backgroundColor: '#9C27B0',
                     width: '100%',
-                    fontSize: '16px'
+                    fontSize: '20px'
                   }}
                 >
                   📷 {t('shop.scanQRCode')}
@@ -6056,7 +6056,7 @@ function VendorDashboard({ user, onLogout }) {
               
               {voucherValidation && (
                 <div style={{marginBottom: '20px'}}>
-                  <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '16px'}}>💷 Purchase Amount</label>
+                  <label style={{display: 'block', marginBottom: '10px', fontWeight: 'bold', fontSize: '20px'}}>💷 Purchase Amount</label>
                   <input
                     type="number"
                     step="0.01"
@@ -6067,11 +6067,11 @@ function VendorDashboard({ user, onLogout }) {
                     placeholder={`Enter amount (max £${voucherValidation.value})`}
                     style={{
                       ...styles.input,
-                      fontSize: '18px',
+                      fontSize: '22px',
                       fontWeight: 'bold'
                     }}
                   />
-                  <small style={{color: '#666', fontSize: '14px', display: 'block', marginTop: '5px'}}>
+                  <small style={{color: '#666', fontSize: '18px', display: 'block', marginTop: '5px'}}>
                     Available balance: £{voucherValidation.value}
                   </small>
                 </div>
@@ -6123,7 +6123,7 @@ function VendorDashboard({ user, onLogout }) {
                   backgroundColor: '#f1f8f4'
                 }}>
                   <h3 style={{margin: '0 0 15px 0', color: '#4CAF50'}}>✅ {t('shop.validVoucher')}</h3>
-                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '15px'}}>
+                  <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '15px'}}>
                     £{voucherValidation.value}
                   </div>
                   <div style={{marginBottom: '10px'}}>
@@ -6140,7 +6140,7 @@ function VendorDashboard({ user, onLogout }) {
                     </div>
                   )}
                   {voucherValidation.expiry_date && (
-                    <div style={{marginTop: '10px', fontSize: '14px', color: '#666'}}>
+                    <div style={{marginTop: '10px', fontSize: '18px', color: '#666'}}>
                       <strong>{t('shop.expires')}:</strong> {new Date(voucherValidation.expiry_date).toLocaleDateString()}
                     </div>
                   )}
@@ -6168,7 +6168,7 @@ function VendorDashboard({ user, onLogout }) {
             
             <form onSubmit={handlePostToGo} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name <span style={{color: '#4CAF50', fontSize: '12px'}}>(Auto-filled from your profile)</span></label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name <span style={{color: '#4CAF50', fontSize: '16px'}}>(Auto-filled from your profile)</span></label>
                 <input
                   type="text"
                   value={toGoForm.shopName}
@@ -6179,7 +6179,7 @@ function VendorDashboard({ user, onLogout }) {
               </div>
               
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Address <span style={{color: '#4CAF50', fontSize: '12px'}}>(Auto-filled from your profile)</span></label>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Address <span style={{color: '#4CAF50', fontSize: '16px'}}>(Auto-filled from your profile)</span></label>
                 <input
                   type="text"
                   value={toGoForm.shopAddress}
@@ -6249,7 +6249,7 @@ function VendorDashboard({ user, onLogout }) {
                     <span>💰 Discounted for Recipients</span>
                   </label>
                 </div>
-                <small style={{color: '#666', fontSize: '12px', display: 'block', marginTop: '5px'}}>
+                <small style={{color: '#666', fontSize: '16px', display: 'block', marginTop: '5px'}}>
                   Free items can be collected by VCFSE organizations. Discounted items can be purchased by recipients.
                 </small>
               </div>
@@ -6281,7 +6281,7 @@ function VendorDashboard({ user, onLogout }) {
                       placeholder="e.g., 5.00"
                       style={styles.input}
                     />
-                    <small style={{color: '#666', fontSize: '12px'}}>Show the original price to display discount percentage</small>
+                    <small style={{color: '#666', fontSize: '16px'}}>Show the original price to display discount percentage</small>
                   </div>
                 </>
               )}
@@ -6295,7 +6295,7 @@ function VendorDashboard({ user, onLogout }) {
                   style={styles.input}
                   min={new Date().toISOString().split('T')[0]}
                 />
-                <small style={{color: '#666', fontSize: '12px'}}>Optional - When does this product expire?</small>
+                <small style={{color: '#666', fontSize: '16px'}}>Optional - When does this product expire?</small>
               </div>
               
               <div style={{marginBottom: '15px'}}>
@@ -6319,7 +6319,7 @@ function VendorDashboard({ user, onLogout }) {
                 toGoItems.filter(item => item.status !== 'removed').map(item => (
                   <div key={item.id} style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                     <div style={{flex: 1}}>
-                      <strong style={{fontSize: '18px', color: '#FF9800'}}>{item.item_name}</strong><br />
+                      <strong style={{fontSize: '22px', color: '#FF9800'}}>{item.item_name}</strong><br />
                       <span style={{color: '#666'}}>📦 Quantity: {item.quantity}</span><br />
                       <span style={{color: '#666'}}>🏷️ Category: {item.category}</span><br />
                       <span style={{color: '#666'}}>🏪 Shop: {item.shop_name}</span><br />
@@ -6460,7 +6460,7 @@ function VendorDashboard({ user, onLogout }) {
                   border: 'none',
                   borderRadius: '5px',
                   cursor: 'pointer',
-                  fontSize: '16px'
+                  fontSize: '20px'
                 }}
               >
                 {showPayoutForm ? t('common.cancel') : t('payout.requestPayment')}
@@ -6571,7 +6571,7 @@ function VendorDashboard({ user, onLogout }) {
                         border: 'none',
                         borderRadius: '5px',
                         cursor: 'pointer',
-                        fontSize: '16px',
+                        fontSize: '20px',
                         marginTop: '10px'
                       }}
                     >
@@ -6598,13 +6598,13 @@ function VendorDashboard({ user, onLogout }) {
                     }}>
                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
                         <div>
-                          <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
-                          <div style={{fontSize: '14px', color: '#666'}}>{payout.shop_name}</div>
+                          <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>£{payout.amount.toFixed(2)}</div>
+                          <div style={{fontSize: '18px', color: '#666'}}>{payout.shop_name}</div>
                         </div>
                         <div style={{
                           padding: '5px 15px',
                           borderRadius: '20px',
-                          fontSize: '12px',
+                          fontSize: '16px',
                           fontWeight: 'bold',
                           backgroundColor: 
                             payout.status === 'paid' ? '#e8f5e9' :
@@ -6620,16 +6620,16 @@ function VendorDashboard({ user, onLogout }) {
                       </div>
                       
                       <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
-                        <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
                           <strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}
                         </p>
                         {payout.reviewed_at && (
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>{t('payout.reviewedAt')}:</strong> {new Date(payout.reviewed_at).toLocaleString()}
                           </p>
                         )}
                         {payout.paid_at && (
-                          <p style={{margin: '5px 0', fontSize: '14px'}}>
+                          <p style={{margin: '5px 0', fontSize: '18px'}}>
                             <strong>{t('payout.paidAt')}:</strong> {new Date(payout.paid_at).toLocaleString()}
                           </p>
                         )}
@@ -6726,7 +6726,7 @@ function RecipientDashboard({ user, onLogout }) {
       
       // Show visual notification
       const notificationDiv = document.createElement('div')
-      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #9C27B0; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #9C27B0; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 20px; fontWeight: bold;'
       notificationDiv.textContent = `🔔 ${translatedMessage}`
       document.body.appendChild(notificationDiv)
       setTimeout(() => notificationDiv.remove(), 5000)
@@ -6756,7 +6756,7 @@ function RecipientDashboard({ user, onLogout }) {
           playNotificationSound()
           // Show visual notification
           const notification = document.createElement('div')
-          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 16px; fontWeight: bold;'
+          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 20px; fontWeight: bold;'
           notification.textContent = `🔔 ${newItems.length - lastItemCount} new discounted Food To Go item(s) available!`
           document.body.appendChild(notification)
           setTimeout(() => notification.remove(), 5000)
@@ -6974,7 +6974,7 @@ function RecipientDashboard({ user, onLogout }) {
                   border: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
-                  fontSize: '15px',
+                  fontSize: '19px',
                   color: '#333',
                   display: 'flex',
                   alignItems: 'center',
@@ -6999,7 +6999,7 @@ function RecipientDashboard({ user, onLogout }) {
                   border: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
-                  fontSize: '15px',
+                  fontSize: '19px',
                   color: '#333',
                   display: 'flex',
                   alignItems: 'center',
@@ -7013,7 +7013,7 @@ function RecipientDashboard({ user, onLogout }) {
               </button>
 
               <div style={{padding: '10px 20px', borderBottom: '1px solid #eee'}}>
-                <div style={{fontSize: '13px', color: '#666', marginBottom: '8px'}}>🌐 Change Language</div>
+                <div style={{fontSize: '17px', color: '#666', marginBottom: '8px'}}>🌐 Change Language</div>
                 <select 
                   value={i18n.language} 
                   onChange={(e) => {
@@ -7025,7 +7025,7 @@ function RecipientDashboard({ user, onLogout }) {
                     padding: '8px',
                     borderRadius: '5px',
                     border: '1px solid #ddd',
-                    fontSize: '14px',
+                    fontSize: '18px',
                     cursor: 'pointer'
                   }}
                 >
@@ -7048,7 +7048,7 @@ function RecipientDashboard({ user, onLogout }) {
                   border: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
-                  fontSize: '15px',
+                  fontSize: '19px',
                   color: '#d32f2f',
                   display: 'flex',
                   alignItems: 'center',
@@ -7094,7 +7094,7 @@ function RecipientDashboard({ user, onLogout }) {
                 style={{
                   backgroundColor: 'transparent',
                   border: 'none',
-                  fontSize: '24px',
+                  fontSize: '28px',
                   cursor: 'pointer',
                   color: '#666'
                 }}
@@ -7105,14 +7105,14 @@ function RecipientDashboard({ user, onLogout }) {
             
             <div style={{marginBottom: '15px'}}>
               <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Name</label>
-              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '19px'}}>
                 {user.name}
               </div>
             </div>
 
             <div style={{marginBottom: '15px'}}>
               <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Email</label>
-              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+              <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '19px'}}>
                 {user.email}
               </div>
             </div>
@@ -7120,7 +7120,7 @@ function RecipientDashboard({ user, onLogout }) {
             {user.phone && (
               <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Phone</label>
-                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '19px'}}>
                   {user.phone}
                 </div>
               </div>
@@ -7129,7 +7129,7 @@ function RecipientDashboard({ user, onLogout }) {
             {user.address && (
               <div style={{marginBottom: '15px'}}>
                 <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666'}}>Address</label>
-                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '15px'}}>
+                <div style={{padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '19px'}}>
                   {user.address}
                 </div>
               </div>
@@ -7146,7 +7146,7 @@ function RecipientDashboard({ user, onLogout }) {
                   backgroundColor: '#1976d2',
                   width: '100%',
                   padding: '12px',
-                  fontSize: '15px'
+                  fontSize: '19px'
                 }}
               >
                 🔒 Change Password
@@ -7178,7 +7178,7 @@ function RecipientDashboard({ user, onLogout }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '12px',
+                fontSize: '16px',
                 fontWeight: 'bold'
               }}>{cartCount}</span>
             )}
@@ -7193,7 +7193,7 @@ function RecipientDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>🔍 Search Vouchers</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Vouchers</label>
                   <input
                     type="text"
                     placeholder="Search by code..."
@@ -7203,7 +7203,7 @@ function RecipientDashboard({ user, onLogout }) {
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>📋 Status Filter</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 Status Filter</label>
                   <select
                     value={recipientVoucherStatus || 'all'}
                     onChange={(e) => setRecipientVoucherStatus(e.target.value)}
@@ -7232,15 +7232,15 @@ function RecipientDashboard({ user, onLogout }) {
             {voucherSummary && (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '20px'}}>
                 <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold'}}>£{voucherSummary.total_active_value.toFixed(2)}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold'}}>£{voucherSummary.total_active_value.toFixed(2)}</div>
                   <div>{t('dashboard.activeBalance')}</div>
                 </div>
                 <div style={{backgroundColor: '#2196F3', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold'}}>{voucherSummary.active_count}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold'}}>{voucherSummary.active_count}</div>
                   <div>{t('dashboard.activeVouchers')}</div>
                 </div>
                 <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
-                  <div style={{fontSize: '32px', fontWeight: 'bold'}}>{voucherSummary.redeemed_count}</div>
+                  <div style={{fontSize: '36px', fontWeight: 'bold'}}>{voucherSummary.redeemed_count}</div>
                   <div>{t('dashboard.redeemed')}</div>
                 </div>
               </div>
@@ -7270,11 +7270,11 @@ function RecipientDashboard({ user, onLogout }) {
                     }}>
                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px'}}>
                         <div style={{flex: 1, minWidth: '250px'}}>
-                          <div style={{fontSize: '42px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '10px'}}>
+                          <div style={{fontSize: '46px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '10px'}}>
                             £{voucher.value}
                           </div>
-                          <div style={{fontSize: '18px', marginBottom: '5px'}}>
-                            <strong>{t('recipient.code')}</strong> <span style={{backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontFamily: 'monospace', fontSize: '16px'}}>{voucher.code}</span>
+                          <div style={{fontSize: '22px', marginBottom: '5px'}}>
+                            <strong>{t('recipient.code')}</strong> <span style={{backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontFamily: 'monospace', fontSize: '20px'}}>{voucher.code}</span>
                           </div>
                           <div style={{marginBottom: '5px'}}>
                             <strong>{t('recipient.status')}</strong> <span style={{
@@ -7287,12 +7287,12 @@ function RecipientDashboard({ user, onLogout }) {
                             <strong>{t('recipient.expires')}</strong> {new Date(voucher.expiry_date).toLocaleDateString()}
                           </div>
                           {voucher.issued_by && (
-                            <div style={{marginTop: '10px', fontSize: '14px', color: '#666'}}>
+                            <div style={{marginTop: '10px', fontSize: '18px', color: '#666'}}>
                               <strong>{t('recipient.issuedBy')}</strong> {voucher.issued_by.name}
                             </div>
                           )}
                           {voucher.redeemed_at && (
-                            <div style={{marginTop: '5px', fontSize: '14px', color: '#666'}}>
+                            <div style={{marginTop: '5px', fontSize: '18px', color: '#666'}}>
                               <strong>{t('recipient.redeemed')}</strong> {new Date(voucher.redeemed_at).toLocaleDateString()}
                               {voucher.redeemed_by && ` ${t('recipient.at')} ${voucher.redeemed_by.name}`}
                             </div>
@@ -7309,7 +7309,7 @@ function RecipientDashboard({ user, onLogout }) {
                               style={{
                                 ...styles.primaryButton,
                                 padding: '10px 20px',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '5px'
@@ -7326,7 +7326,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 ...styles.primaryButton,
                                 backgroundColor: '#2196F3',
                                 padding: '10px 20px',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '5px'
@@ -7358,7 +7358,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 ...styles.primaryButton,
                                 backgroundColor: '#FF5722',
                                 padding: '10px 20px',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '5px'
@@ -7384,7 +7384,7 @@ function RecipientDashboard({ user, onLogout }) {
                                 ...styles.primaryButton,
                                 backgroundColor: '#9C27B0',
                                 padding: '10px 20px',
-                                fontSize: '14px',
+                                fontSize: '18px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '5px'
@@ -7422,15 +7422,15 @@ function RecipientDashboard({ user, onLogout }) {
                   maxWidth: '500px'
                 }}>
                   <h2 style={{marginBottom: '20px'}}>{t('recipient.scanToRedeem')}</h2>
-                  <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '20px'}}>
+                  <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50', marginBottom: '20px'}}>
                     £{selectedVoucher.value}
                   </div>
                   <div style={{marginBottom: '20px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '10px'}}>
-                    <div style={{fontSize: '24px', fontFamily: 'monospace', letterSpacing: '3px'}}>
+                    <div style={{fontSize: '28px', fontFamily: 'monospace', letterSpacing: '3px'}}>
                       {selectedVoucher.code}
                     </div>
                   </div>
-                  <div style={{marginBottom: '20px', fontSize: '14px', color: '#666'}}>
+                  <div style={{marginBottom: '20px', fontSize: '18px', color: '#666'}}>
                     {t('recipient.presentCode')}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
@@ -7485,7 +7485,7 @@ function RecipientDashboard({ user, onLogout }) {
                 }}
                 style={{
                   padding: '10px 15px',
-                  fontSize: '16px',
+                  fontSize: '20px',
                   borderRadius: '8px',
                   border: '2px solid #9C27B0',
                   backgroundColor: 'white',
@@ -7526,14 +7526,14 @@ function RecipientDashboard({ user, onLogout }) {
                     <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
                       <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{shop.shop_name}</h3>
                       {shop.town && (
-                        <p style={{margin: '5px 0', fontSize: '13px', color: '#666', fontWeight: 'bold'}}>
+                        <p style={{margin: '5px 0', fontSize: '17px', color: '#666', fontWeight: 'bold'}}>
                           📍 {shop.town}
                         </p>
                       )}
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>📍 {t('recipient.address')}</strong> {shop.address}, {shop.city} {shop.postcode}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>📞 {t('recipient.phone')}</strong> {shop.phone}
                       </p>
                       <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#f3e5f5', borderRadius: '5px', fontWeight: 'bold', color: '#9C27B0'}}>
@@ -7563,7 +7563,7 @@ function RecipientDashboard({ user, onLogout }) {
                   border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   display: 'flex',
                   alignItems: 'center',
@@ -7583,7 +7583,7 @@ function RecipientDashboard({ user, onLogout }) {
               marginBottom: '20px',
               border: '2px solid #2196F3'
             }}>
-              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '18px'}}>ℹ️ How "Browse Food To Go" Works</h3>
+              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '22px'}}>ℹ️ How "Browse Food To Go" Works</h3>
               <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
                 <strong>Browse Food To Go</strong> displays <strong>discounted surplus food items</strong> that participating shops have actively posted, 
                 plus <strong style={{color: '#FF9800'}}>🆓 FREE items</strong> that were originally posted for VCFSE organizations but remain unclaimed after 5 hours.
@@ -7617,7 +7617,7 @@ function RecipientDashboard({ user, onLogout }) {
                           padding: '8px 12px',
                           borderRadius: '5px',
                           marginBottom: '10px',
-                          fontSize: '14px',
+                          fontSize: '18px',
                           fontWeight: 'bold',
                           textAlign: 'center'
                         }}>
@@ -7625,26 +7625,26 @@ function RecipientDashboard({ user, onLogout }) {
                         </div>
                       )}
                       <h3 style={{margin: '0 0 10px 0', color: titleColor}}>{item.item_name}</h3>
-                      <p style={{margin: '8px 0', fontSize: '16px', fontWeight: 'bold', color: isUnclaimedFree ? '#FF9800' : '#4CAF50'}}>
+                      <p style={{margin: '8px 0', fontSize: '20px', fontWeight: 'bold', color: isUnclaimedFree ? '#FF9800' : '#4CAF50'}}>
                         {isUnclaimedFree ? '🆓 FREE' : `💰 £${item.price ? item.price.toFixed(2) : '0.00'} per ${item.unit || 'unit'}`}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>{t('recipient.available')}</strong> {item.quantity} {item.unit}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>{t('recipient.category')}</strong> {item.category}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>{t('recipient.description')}</strong> {item.description || t('recipient.freshReady')}
                       </p>
                       <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
-                        <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
+                        <p style={{margin: '3px 0', fontSize: '18px', fontWeight: 'bold', color: '#1976d2'}}>
                           🏪 {item.shop_name}
                         </p>
-                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                        <p style={{margin: '3px 0', fontSize: '17px'}}>
                           📍 {item.shop_address}
                         </p>
-                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                        <p style={{margin: '3px 0', fontSize: '17px'}}>
                           📞 {item.shop_phone}
                         </p>
                       </div>
@@ -7656,13 +7656,13 @@ function RecipientDashboard({ user, onLogout }) {
                             backgroundColor: isUnclaimedFree ? '#FF9800' : '#4CAF50',
                             width: '100%',
                             padding: '12px',
-                            fontSize: '16px',
+                            fontSize: '20px',
                             fontWeight: 'bold'
                           }}
                         >
                          {isUnclaimedFree ? '🆓 Collect FREE Item' : `🛍️ ${t('recipient.addToCart')}`}
                         </button>
-                        <p style={{fontSize: '12px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
+                        <p style={{fontSize: '16px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
                           {isUnclaimedFree ? '🆓 No voucher needed - completely FREE!' : `💳 ${t('recipient.useVoucher')}`}
                         </p>
                       </div>
@@ -7681,7 +7681,7 @@ function RecipientDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
               {cart.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px'}}>
-                  <p style={{fontSize: '18px', color: '#666'}}>{t('dashboard.emptyCart')}</p>
+                  <p style={{fontSize: '22px', color: '#666'}}>{t('dashboard.emptyCart')}</p>
                   <button 
                     onClick={() => setActiveTab('togo')}
                     style={{...styles.primaryButton, marginTop: '20px'}}
@@ -7708,20 +7708,20 @@ function RecipientDashboard({ user, onLogout }) {
                         }}>
                           <div style={{flex: 1, minWidth: '250px'}}>
                             <h3 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{cartItem.item.name}</h3>
-                            <p style={{margin: '5px 0', fontSize: '16px', fontWeight: 'bold', color: '#4CAF50'}}>
+                            <p style={{margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#4CAF50'}}>
                               💰 £{cartItem.item.price.toFixed(2)} per {cartItem.item.unit}
                             </p>
-                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px'}}>
                               <strong>{t('cart.quantityInCart')}</strong> {cartItem.quantity}
                             </p>
-                            <p style={{margin: '5px 0', fontSize: '14px'}}>
+                            <p style={{margin: '5px 0', fontSize: '18px'}}>
                               <strong>{t('recipient.category')}</strong> {cartItem.item.category}
                             </p>
                             <div style={{marginTop: '10px', padding: '10px', backgroundColor: 'white', borderRadius: '5px'}}>
-                              <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
+                              <p style={{margin: '3px 0', fontSize: '18px', fontWeight: 'bold', color: '#1976d2'}}>
                                 🏪 {cartItem.shop.name}
                               </p>
-                              <p style={{margin: '3px 0', fontSize: '13px'}}>
+                              <p style={{margin: '3px 0', fontSize: '17px'}}>
                                 📍 {cartItem.shop.address}
                               </p>
                             </div>
@@ -7790,7 +7790,7 @@ function RecipientDashboard({ user, onLogout }) {
               marginBottom: '20px',
               border: '2px solid #2196F3'
             }}>
-              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '18px'}}>ℹ️ How "Food To Go" Works</h3>
+              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '22px'}}>ℹ️ How "Food To Go" Works</h3>
               <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
                 <strong>Food To Go</strong> displays surplus and discounted food items that participating shops have actively posted. 
                 While there are {shops.length} participating shops in total, only shops that have posted available items will appear here.
@@ -7831,13 +7831,13 @@ function RecipientDashboard({ user, onLogout }) {
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}>
                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
-                        <h3 style={{margin: 0, color: '#333', fontSize: '18px'}}>{item.item_name}</h3>
+                        <h3 style={{margin: 0, color: '#333', fontSize: '22px'}}>{item.item_name}</h3>
                         <span style={{
                           backgroundColor: '#4CAF50',
                           color: 'white',
                           padding: '4px 12px',
                           borderRadius: '20px',
-                          fontSize: '12px',
+                          fontSize: '16px',
                           fontWeight: 'bold'
                         }}>
                           SAVE £{item.savings.toFixed(2)}
@@ -7845,33 +7845,33 @@ function RecipientDashboard({ user, onLogout }) {
                       </div>
                       
                       {item.description && (
-                        <p style={{margin: '10px 0', color: '#666', fontSize: '14px'}}>{item.description}</p>
+                        <p style={{margin: '10px 0', color: '#666', fontSize: '18px'}}>{item.description}</p>
                       )}
                       
                       <div style={{marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #e0e0e0'}}>
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
                           <div>
-                            <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
+                            <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>
                               £{item.price.toFixed(2)}
                             </div>
-                            <div style={{fontSize: '14px', color: '#999', textDecoration: 'line-through'}}>
+                            <div style={{fontSize: '18px', color: '#999', textDecoration: 'line-through'}}>
                               Was £{item.original_price.toFixed(2)}
                             </div>
                           </div>
                           <div style={{textAlign: 'right'}}>
-                            <div style={{fontSize: '14px', color: '#666'}}>
+                            <div style={{fontSize: '18px', color: '#666'}}>
                               Qty: {item.quantity} {item.unit}
                             </div>
                           </div>
                         </div>
                         
-                        <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
+                        <div style={{fontSize: '16px', color: '#666', marginTop: '10px'}}>
                           🏪 {item.shop_name}<br/>
                           📍 {item.shop_town}
                         </div>
                         
                         {item.available_until && (
-                          <div style={{marginTop: '10px', padding: '8px', backgroundColor: '#fff3cd', borderRadius: '5px', fontSize: '12px', color: '#856404'}}>
+                          <div style={{marginTop: '10px', padding: '8px', backgroundColor: '#fff3cd', borderRadius: '5px', fontSize: '16px', color: '#856404'}}>
                             ⏰ Available until {new Date(item.available_until).toLocaleDateString()}
                           </div>
                         )}
@@ -7946,7 +7946,7 @@ function RecipientDashboard({ user, onLogout }) {
                             </p>
                           </div>
                         </div>
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '14px'}}>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '18px'}}>
                           <p style={{margin: '5px 0'}}><strong>{t('recipient.issuedBy')}:</strong> {voucher.issued_by?.organization || 'N/A'}</p>
                           <p style={{margin: '5px 0'}}><strong>{t('recipient.expiry')}:</strong> {new Date(voucher.expiry_date).toLocaleDateString()}</p>
                           {voucher.redeemed_at && (
@@ -8038,16 +8038,16 @@ function RecipientDashboard({ user, onLogout }) {
                   }}
                 >
                   <h3 style={{margin: '0 0 10px 0', color: '#333'}}>{shop.shop_name}</h3>
-                  <p style={{margin: '5px 0', color: '#666', fontSize: '14px'}}>
+                  <p style={{margin: '5px 0', color: '#666', fontSize: '18px'}}>
                     📍 {shop.address}, {shop.town} {shop.postcode}
                   </p>
                   {shop.phone && (
-                    <p style={{margin: '5px 0', color: '#666', fontSize: '14px'}}>
+                    <p style={{margin: '5px 0', color: '#666', fontSize: '18px'}}>
                       📞 {shop.phone}
                     </p>
                   )}
                   {shop.category && (
-                    <p style={{margin: '5px 0', color: '#4CAF50', fontSize: '14px', fontWeight: 'bold'}}>
+                    <p style={{margin: '5px 0', color: '#4CAF50', fontSize: '18px', fontWeight: 'bold'}}>
                       🏷️ {shop.category}
                     </p>
                   )}
@@ -8258,7 +8258,7 @@ function SchoolDashboard({ user, onLogout }) {
                 backgroundColor: 'transparent',
                 color: 'white',
                 cursor: 'pointer',
-                fontSize: '14px'
+                fontSize: '18px'
               }}
             >
               <option value="en">🇬🇧 English</option>
@@ -8266,8 +8266,8 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
-            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>🔒 Password</button>
-            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '14px', whiteSpace: 'nowrap'}}>Logout</button>
+            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
+            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>
         </div>
       </div>
@@ -8327,10 +8327,10 @@ function SchoolDashboard({ user, onLogout }) {
           <div>
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
               <h2 style={{marginTop: 0, color: '#9C27B0'}}>Available Balance</h2>
-              <div style={{fontSize: '48px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '10px'}}>
+              <div style={{fontSize: '52px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '10px'}}>
                 £{balance.toFixed(2)}
               </div>
-              <p style={{color: '#666', fontSize: '14px', marginBottom: 0}}>
+              <p style={{color: '#666', fontSize: '18px', marginBottom: 0}}>
                 💡 This balance is allocated by BAK UP administrators to support families in your community
               </p>
             </div>
@@ -8342,7 +8342,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#9C27B0'}}>{vouchers.length}</div>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#9C27B0'}}>{vouchers.length}</div>
                 <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
               </div>
               <div 
@@ -8351,7 +8351,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
@@ -8362,7 +8362,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
@@ -8373,7 +8373,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#F44336'}}>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#F44336'}}>
                   {vouchers.filter(v => v.status === 'expired').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Expired Vouchers</div>
@@ -8384,7 +8384,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'}}
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#2196F3'}}>
                   {vouchers.filter(v => v.status === 'reassigned').length}
                 </div>
                 <div style={{color: '#666', marginTop: '5px'}}>Reissued Vouchers</div>
@@ -8399,7 +8399,7 @@ function SchoolDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0', lineHeight: '1.6'}}>
                 Use your allocated balance to issue e-vouchers directly to families, giving them <strong>dignity and choice</strong> in accessing culturally appropriate food and essentials from local participating shops. Every voucher you issue supports both families in need and strengthens our local economy.
               </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '0.95em', opacity: 0.9}}>
+              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', opacity: 0.9}}>
                 💡 Our scheme replaces traditional food parcels with flexible vouchers, respecting dietary preferences and ensuring families can choose what they truly need.
               </p>
             </div>
@@ -8588,15 +8588,15 @@ function SchoolDashboard({ user, onLogout }) {
                   <div key={voucher.id} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', border: '1px solid #e0e0e0'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
                       <div>
-                        <div style={{fontSize: '20px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '5px'}}>
+                        <div style={{fontSize: '24px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '5px'}}>
                           £{voucher.value.toFixed(2)}
                         </div>
-                        <div style={{fontSize: '14px', color: '#666'}}>Code: {voucher.code}</div>
+                        <div style={{fontSize: '18px', color: '#666'}}>Code: {voucher.code}</div>
                       </div>
                       <div style={{
                         padding: '5px 15px',
                         borderRadius: '20px',
-                        fontSize: '12px',
+                        fontSize: '16px',
                         fontWeight: 'bold',
                         backgroundColor: voucher.status === 'active' ? '#e8f5e9' : voucher.status === 'redeemed' ? '#fff3e0' : '#ffebee',
                         color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#e65100' : '#c62828'
@@ -8605,22 +8605,22 @@ function SchoolDashboard({ user, onLogout }) {
                       </div>
                     </div>
                     <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Recipient:</strong> {voucher.recipient_name}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Email:</strong> {voucher.recipient_email}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Phone:</strong> {voucher.recipient_phone}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Address:</strong> {voucher.recipient_address}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}>
                         <strong>Issued:</strong> {new Date(voucher.created_at).toLocaleDateString()}
                       </p>
-                      <p style={{margin: '5px 0', fontSize: '14px', color: voucher.status === 'expired' ? '#F44336' : '#666'}}>
+                      <p style={{margin: '5px 0', fontSize: '18px', color: voucher.status === 'expired' ? '#F44336' : '#666'}}>
                         <strong>Expires:</strong> {voucher.expiry_date ? new Date(voucher.expiry_date).toLocaleDateString() : 'N/A'}
                       </p>
                     </div>
@@ -8641,7 +8641,7 @@ function SchoolDashboard({ user, onLogout }) {
               {toGoItems.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
                   <p>No Food to Go Items available at the moment</p>
-                  <p style={{fontSize: '14px'}}>Check back later for surplus Food to Go Items from local food shops</p>
+                  <p style={{fontSize: '18px'}}>Check back later for surplus Food to Go Items from local food shops</p>
                 </div>
               ) : (
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
@@ -8660,41 +8660,41 @@ function SchoolDashboard({ user, onLogout }) {
             {/* Wallet Overview Cards */}
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>💰 Current Wallet Balance</div>
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
+                <div style={{fontSize: '18px', color: '#666', marginBottom: '10px'}}>💰 Current Wallet Balance</div>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>
                   £{walletBalance.toFixed(2)}
                 </div>
-                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                <div style={{fontSize: '16px', color: '#999', marginTop: '5px'}}>
                   Available for voucher issuance
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>📊 Total Credits</div>
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
+                <div style={{fontSize: '18px', color: '#666', marginBottom: '10px'}}>📊 Total Credits</div>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#2196F3'}}>
                   £{walletStats.total_credits.toFixed(2)}
                 </div>
-                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                <div style={{fontSize: '16px', color: '#999', marginTop: '5px'}}>
                   Funds added to wallet
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>💸 Total Debits</div>
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
+                <div style={{fontSize: '18px', color: '#666', marginBottom: '10px'}}>💸 Total Debits</div>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#FF9800'}}>
                   £{walletStats.total_debits.toFixed(2)}
                 </div>
-                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                <div style={{fontSize: '16px', color: '#999', marginTop: '5px'}}>
                   Spent on vouchers
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <div style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>🎫 Vouchers Issued</div>
-                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#9C27B0'}}>
+                <div style={{fontSize: '18px', color: '#666', marginBottom: '10px'}}>🎫 Vouchers Issued</div>
+                <div style={{fontSize: '40px', fontWeight: 'bold', color: '#9C27B0'}}>
                   {walletStats.voucher_stats.total_issued}
                 </div>
-                <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
+                <div style={{fontSize: '16px', color: '#999', marginTop: '5px'}}>
                   £{walletStats.voucher_stats.total_value.toFixed(2)} total value
                 </div>
               </div>
@@ -8709,10 +8709,10 @@ function SchoolDashboard({ user, onLogout }) {
               
               <div style={{padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', marginBottom: '20px'}}>
                 <div style={{display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px'}}>
-                  <div style={{fontSize: '48px'}}>💳</div>
+                  <div style={{fontSize: '52px'}}>💳</div>
                   <div>
-                    <div style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '5px'}}>Secure Payment Required</div>
-                    <div style={{fontSize: '14px', color: '#666'}}>All funds must be paid for via debit/credit card before being credited to your wallet</div>
+                    <div style={{fontSize: '22px', fontWeight: 'bold', marginBottom: '5px'}}>Secure Payment Required</div>
+                    <div style={{fontSize: '18px', color: '#666'}}>All funds must be paid for via debit/credit card before being credited to your wallet</div>
                   </div>
                 </div>
                 
@@ -8722,7 +8722,7 @@ function SchoolDashboard({ user, onLogout }) {
                     ...styles.primaryButton,
                     width: '100%',
                     backgroundColor: '#4CAF50',
-                    fontSize: '16px',
+                    fontSize: '20px',
                     padding: '15px'
                   }}
                 >
@@ -8730,7 +8730,7 @@ function SchoolDashboard({ user, onLogout }) {
                 </button>
               </div>
               
-              <div style={{padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '14px'}}>
+              <div style={{padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '18px'}}>
                 💡 <strong>How it works:</strong>
                 <ul style={{marginTop: '10px', marginBottom: '0', paddingLeft: '20px'}}>
                   <li>Click "Go to Payment Page" above</li>
@@ -8768,7 +8768,7 @@ function SchoolDashboard({ user, onLogout }) {
                           <td style={{padding: '12px'}}>
                             {new Date(txn.created_at).toLocaleDateString('en-GB')}
                             <br />
-                            <span style={{fontSize: '12px', color: '#999'}}>
+                            <span style={{fontSize: '16px', color: '#999'}}>
                               {new Date(txn.created_at).toLocaleTimeString('en-GB')}
                             </span>
                           </td>
@@ -8776,7 +8776,7 @@ function SchoolDashboard({ user, onLogout }) {
                             <span style={{
                               padding: '4px 8px',
                               borderRadius: '4px',
-                              fontSize: '12px',
+                              fontSize: '16px',
                               fontWeight: 'bold',
                               backgroundColor: txn.transaction_type === 'credit' ? '#E8F5E9' : txn.transaction_type === 'debit' ? '#FFEBEE' : '#E3F2FD',
                               color: txn.transaction_type === 'credit' ? '#4CAF50' : txn.transaction_type === 'debit' ? '#F44336' : '#2196F3'
@@ -8787,7 +8787,7 @@ function SchoolDashboard({ user, onLogout }) {
                           <td style={{padding: '12px'}}>
                             {txn.description}
                             {txn.reference && (
-                              <div style={{fontSize: '12px', color: '#999'}}>
+                              <div style={{fontSize: '16px', color: '#999'}}>
                                 Ref: {txn.reference}
                               </div>
                             )}
@@ -8802,7 +8802,7 @@ function SchoolDashboard({ user, onLogout }) {
                             <span style={{
                               padding: '4px 8px',
                               borderRadius: '4px',
-                              fontSize: '12px',
+                              fontSize: '16px',
                               backgroundColor: txn.status === 'completed' ? '#E8F5E9' : '#FFF3E0',
                               color: txn.status === 'completed' ? '#4CAF50' : '#FF9800'
                             }}>
@@ -8893,14 +8893,14 @@ function SchoolDashboard({ user, onLogout }) {
                         <tr key={voucher.id} style={{borderBottom: '1px solid #eee'}}>
                           <td style={{padding: '12px', fontFamily: 'monospace', fontWeight: 'bold'}}>{voucher.code}</td>
                           <td style={{padding: '12px'}}>{voucher.recipient?.name || 'Unknown'}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.recipient?.email || ''}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{voucher.recipient?.email || ''}</td>
                           <td style={{padding: '12px'}}>{voucher.recipient?.phone || ''}</td>
                           <td style={{padding: '12px', textAlign: 'right', fontWeight: 'bold', color: '#4CAF50'}}>£{voucher.value.toFixed(2)}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <span style={{
                               padding: '4px 12px',
                               borderRadius: '12px',
-                              fontSize: '12px',
+                              fontSize: '16px',
                               fontWeight: 'bold',
                               backgroundColor: voucher.status === 'active' ? '#e8f5e9' : voucher.status === 'redeemed' ? '#e3f2fd' : '#ffebee',
                               color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#1565c0' : '#c62828'
@@ -8908,16 +8908,16 @@ function SchoolDashboard({ user, onLogout }) {
                               {voucher.status.toUpperCase()}
                             </span>
                           </td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
-                          <td style={{padding: '12px', fontSize: '14px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{new Date(voucher.created_at).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{new Date(voucher.expiry_date).toLocaleDateString()}</td>
+                          <td style={{padding: '12px', fontSize: '18px'}}>{voucher.redeemed_date ? new Date(voucher.redeemed_date).toLocaleDateString() : '-'}</td>
                           <td style={{padding: '12px', textAlign: 'center'}}>
                             <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
                               <a 
                                 href={`/api/school/voucher-pdf/${voucher.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{...styles.primaryButton, fontSize: '12px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
+                                style={{...styles.primaryButton, fontSize: '16px', padding: '6px 12px', textDecoration: 'none', display: 'inline-block', backgroundColor: '#1976d2'}}
                               >
                                 📝 PDF
                               </a>
@@ -8941,27 +8941,27 @@ function SchoolDashboard({ user, onLogout }) {
             
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Total Vouchers Issued</h3>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>{vouchers.length}</div>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Total Vouchers Issued</h3>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#4CAF50'}}>{vouchers.length}</div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Total Value Distributed</h3>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#2196F3'}}>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Total Value Distributed</h3>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#2196F3'}}>
                   £{vouchers.reduce((sum, v) => sum + v.value, 0).toFixed(2)}
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Active Vouchers</h3>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Active Vouchers</h3>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '16px', color: '#666'}}>Redeemed Vouchers</h3>
-                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#9C27B0'}}>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Redeemed Vouchers</h3>
+                <div style={{fontSize: '52px', fontWeight: 'bold', color: '#9C27B0'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
               </div>
@@ -9006,22 +9006,22 @@ function SchoolDashboard({ user, onLogout }) {
               <h3 style={{marginTop: 0}}>Value by Status</h3>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '20px'}}>
                 <div style={{padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px'}}>
-                  <div style={{fontSize: '14px', color: '#2e7d32', marginBottom: '5px'}}>🟢 Active Value</div>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
+                  <div style={{fontSize: '18px', color: '#2e7d32', marginBottom: '5px'}}>🟢 Active Value</div>
+                  <div style={{fontSize: '28px', fontWeight: 'bold', color: '#4CAF50'}}>
                     £{vouchers.filter(v => v.status === 'active').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
                   </div>
                 </div>
                 
                 <div style={{padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
-                  <div style={{fontSize: '14px', color: '#1565c0', marginBottom: '5px'}}>🔵 Redeemed Value</div>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#2196F3'}}>
+                  <div style={{fontSize: '18px', color: '#1565c0', marginBottom: '5px'}}>🔵 Redeemed Value</div>
+                  <div style={{fontSize: '28px', fontWeight: 'bold', color: '#2196F3'}}>
                     £{vouchers.filter(v => v.status === 'redeemed').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
                   </div>
                 </div>
                 
                 <div style={{padding: '15px', backgroundColor: '#ffebee', borderRadius: '8px'}}>
-                  <div style={{fontSize: '14px', color: '#c62828', marginBottom: '5px'}}>🔴 Expired Value</div>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#F44336'}}>
+                  <div style={{fontSize: '18px', color: '#c62828', marginBottom: '5px'}}>🔴 Expired Value</div>
+                  <div style={{fontSize: '28px', fontWeight: 'bold', color: '#F44336'}}>
                     £{vouchers.filter(v => v.status === 'expired').reduce((sum, v) => sum + v.value, 0).toFixed(2)}
                   </div>
                 </div>
@@ -9060,7 +9060,7 @@ function SchoolDashboard({ user, onLogout }) {
                 // For now, showing placeholder
                 return (
                   <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                    <p style={{fontSize: '18px', marginBottom: '10px'}}>{t('shop.redemptionHistoryComingSoon')}</p>
+                    <p style={{fontSize: '22px', marginBottom: '10px'}}>{t('shop.redemptionHistoryComingSoon')}</p>
                     <p>{t('shop.redemptionHistoryDescription')}</p>
                   </div>
                 )
@@ -9112,21 +9112,21 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
   return (
     <div style={{border: '1px solid #ddd', borderRadius: '10px', padding: '15px', backgroundColor: '#fafafa'}}>
       {message && (
-        <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '8px', borderRadius: '5px', marginBottom: '10px', fontSize: '14px'}}>
+        <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '8px', borderRadius: '5px', marginBottom: '10px', fontSize: '18px'}}>
           {message}
         </div>
       )}
       
       <div style={{marginBottom: '10px'}}>
-        <h3 style={{margin: '0 0 8px 0', fontSize: '18px'}}>
+        <h3 style={{margin: '0 0 8px 0', fontSize: '22px'}}>
           {item.item_name || item.title}
           {item.batch_count > 1 && (
-            <span style={{marginLeft: '10px', fontSize: '12px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
+            <span style={{marginLeft: '10px', fontSize: '16px', backgroundColor: '#4CAF50', color: 'white', padding: '2px 8px', borderRadius: '12px'}}>
               {item.batch_count} batches
             </span>
           )}
         </h3>
-        <div style={{fontSize: '14px', color: '#666'}}>
+        <div style={{fontSize: '18px', color: '#666'}}>
           <div><strong>{t('product.shop')}</strong> {item.shop_name}</div>
           <div><strong>{t('product.category')}</strong> {item.category}</div>
           <div><strong>{t('product.available')}</strong> {item.quantity}{item.batch_count > 1 && ` (combined from ${item.batch_count} batches)`}</div>
@@ -9145,47 +9145,47 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
       ) : (
         <form onSubmit={handlePlaceOrder} style={{marginTop: '15px'}}>
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Client Full Name *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Client Full Name *</label>
             <input
               type="text"
               value={orderForm.client_name}
               onChange={(e) => setOrderForm({...orderForm, client_name: e.target.value})}
               placeholder="e.g., John Smith"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Mobile Number *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Mobile Number *</label>
             <input
               type="tel"
               value={orderForm.client_mobile}
               onChange={(e) => setOrderForm({...orderForm, client_mobile: e.target.value})}
               placeholder="e.g., 07700900000"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '10px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Email Address *</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Email Address *</label>
             <input
               type="email"
               value={orderForm.client_email}
               onChange={(e) => setOrderForm({...orderForm, client_email: e.target.value})}
               placeholder="e.g., client@example.com"
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
               required
             />
           </div>
           
           <div style={{marginBottom: '15px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '14px'}}>Quantity</label>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>Quantity</label>
             <select
               value={orderForm.quantity}
               onChange={(e) => setOrderForm({...orderForm, quantity: parseInt(e.target.value)})}
-              style={{...styles.input, fontSize: '14px'}}
+              style={{...styles.input, fontSize: '18px'}}
             >
               {[...Array(Math.min(10, Math.max(1, parseInt(item.quantity) || 1)))].map((_, i) => (
                 <option key={i+1} value={i+1}>{i+1}</option>
@@ -9194,13 +9194,13 @@ function SchoolToGoOrderCard({ item, onOrderPlaced }) {
           </div>
           
           <div style={{display: 'flex', gap: '10px'}}>
-            <button type="submit" style={{...styles.primaryButton, flex: 1, fontSize: '14px', backgroundColor: '#9C27B0'}}>
+            <button type="submit" style={{...styles.primaryButton, flex: 1, fontSize: '18px', backgroundColor: '#9C27B0'}}>
               ✅ Place Order
             </button>
             <button 
               type="button" 
               onClick={() => setShowOrderForm(false)} 
-              style={{...styles.secondaryButton, flex: 1, fontSize: '14px'}}
+              style={{...styles.secondaryButton, flex: 1, fontSize: '18px'}}
             >
               Cancel
             </button>
@@ -9220,7 +9220,7 @@ const styles = {
     padding: '12px 24px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '16px',
+    fontSize: '20px',
     fontWeight: 'bold'
   },
   secondaryButton: {
@@ -9230,7 +9230,7 @@ const styles = {
     padding: '12px 24px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '16px',
+    fontSize: '20px',
     fontWeight: 'bold'
   },
   input: {
@@ -9238,7 +9238,7 @@ const styles = {
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ddd',
-    fontSize: '14px',
+    fontSize: '18px',
     boxSizing: 'border-box'
   },
   linkButton: {
@@ -9247,7 +9247,7 @@ const styles = {
     color: '#1976d2',
     cursor: 'pointer',
     textDecoration: 'underline',
-    fontSize: '14px'
+    fontSize: '18px'
   },
   tab: {
     backgroundColor: 'white',
@@ -9255,7 +9255,7 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '18px'
   },
   activeTab: {
     backgroundColor: '#4CAF50',
@@ -9264,7 +9264,7 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '14px',
+    fontSize: '18px',
     fontWeight: 'bold'
   },
   sidebarButton: {
@@ -9273,7 +9273,7 @@ const styles = {
     border: 'none',
     textAlign: 'left',
     cursor: 'pointer',
-    fontSize: '15px',
+    fontSize: '19px',
     color: '#333',
     transition: 'background-color 0.2s'
   }

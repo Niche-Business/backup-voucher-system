@@ -51,7 +51,7 @@ export function GlobalSearchTab({ apiCall }) {
             style={{
               flex: 1,
               padding: '12px',
-              fontSize: '16px',
+              fontSize: '20px',
               border: '2px solid #ddd',
               borderRadius: '5px'
             }}
@@ -66,7 +66,7 @@ export function GlobalSearchTab({ apiCall }) {
               border: 'none',
               borderRadius: '5px',
               cursor: isSearching ? 'not-allowed' : 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               fontWeight: 'bold'
             }}
           >
@@ -182,7 +182,7 @@ export function GlobalSearchTab({ apiCall }) {
 
           {searchResults.total_count === 0 && (
             <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '10px', textAlign: 'center' }}>
-              <p style={{ fontSize: '18px', color: '#666' }}>No results found for "{searchResults.query}"</p>
+              <p style={{ fontSize: '22px', color: '#666' }}>No results found for "{searchResults.query}"</p>
             </div>
           )}
         </div>
@@ -382,7 +382,7 @@ export function TransactionSearchTab({ apiCall }) {
               border: 'none',
               borderRadius: '5px',
               cursor: isSearching ? 'not-allowed' : 'pointer',
-              fontSize: '16px',
+              fontSize: '20px',
               fontWeight: 'bold'
             }}
           >
@@ -407,7 +407,7 @@ export function TransactionSearchTab({ apiCall }) {
               border: 'none',
               borderRadius: '5px',
               cursor: 'pointer',
-              fontSize: '16px'
+              fontSize: '20px'
             }}
           >
             Clear Filters
@@ -468,7 +468,7 @@ export function TransactionSearchTab({ apiCall }) {
                       <span style={{
                         padding: '4px 12px',
                         borderRadius: '12px',
-                        fontSize: '12px',
+                        fontSize: '16px',
                         fontWeight: 'bold',
                         backgroundColor: tx.status === 'redeemed' ? '#4CAF50' : tx.status === 'active' ? '#2196F3' : '#FF9800',
                         color: 'white'
@@ -564,7 +564,7 @@ export function BroadcastTab({ apiCall }) {
             style={{
               width: '100%',
               padding: '12px',
-              fontSize: '16px',
+              fontSize: '20px',
               border: '1px solid #ddd',
               borderRadius: '5px'
             }}
@@ -581,7 +581,7 @@ export function BroadcastTab({ apiCall }) {
             style={{
               width: '100%',
               padding: '12px',
-              fontSize: '16px',
+              fontSize: '20px',
               border: '1px solid #ddd',
               borderRadius: '5px',
               fontFamily: 'inherit',
@@ -612,7 +612,7 @@ export function BroadcastTab({ apiCall }) {
                   transition: 'all 0.2s'
                 }}
               >
-                <div style={{ fontSize: '18px', fontWeight: 'bold', color: audiences.includes(id) ? color : '#666' }}>
+                <div style={{ fontSize: '22px', fontWeight: 'bold', color: audiences.includes(id) ? color : '#666' }}>
                   {label}
                 </div>
                 {audiences.includes(id) && (
@@ -633,7 +633,7 @@ export function BroadcastTab({ apiCall }) {
             border: 'none',
             borderRadius: '5px',
             cursor: isSending ? 'not-allowed' : 'pointer',
-            fontSize: '18px',
+            fontSize: '22px',
             fontWeight: 'bold',
             width: '100%'
           }}
@@ -766,7 +766,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               style={{
                 width: '100%',
                 padding: '10px',
-                fontSize: '16px',
+                fontSize: '20px',
                 border: '1px solid #ddd',
                 borderRadius: '5px'
               }}
@@ -785,7 +785,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               style={{
                 width: '100%',
                 padding: '10px',
-                fontSize: '16px',
+                fontSize: '20px',
                 border: '1px solid #ddd',
                 borderRadius: '5px'
               }}
@@ -823,7 +823,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               style={{
                 width: '100%',
                 padding: '10px',
-                fontSize: '18px',
+                fontSize: '22px',
                 border: '1px solid #ddd',
                 borderRadius: '5px'
               }}
@@ -838,7 +838,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               marginBottom: '15px',
               border: '2px solid #4CAF50'
             }}>
-              <p style={{ margin: '5px 0', fontSize: '16px' }}>
+              <p style={{ margin: '5px 0', fontSize: '20px' }}>
                 <strong>New Balance:</strong> £{((selectedOrgData.balance || 0) + parseFloat(amount)).toFixed(2)}
               </p>
             </div>
@@ -854,7 +854,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               style={{
                 width: '100%',
                 padding: '10px',
-                fontSize: '14px',
+                fontSize: '18px',
                 border: '1px solid #ddd',
                 borderRadius: '5px',
                 fontFamily: 'inherit',
@@ -873,7 +873,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               border: 'none',
               borderRadius: '5px',
               cursor: (isAllocating || !selectedOrg || !amount) ? 'not-allowed' : 'pointer',
-              fontSize: '18px',
+              fontSize: '22px',
               fontWeight: 'bold',
               width: '100%'
             }}
@@ -907,7 +907,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
                       £{item.total_allocated.toFixed(2)}
                     </span>
                   </div>
-                  <div style={{ fontSize: '14px', color: '#666' }}>
+                  <div style={{ fontSize: '18px', color: '#666' }}>
                     <div>Type: {item.type === 'vcse' ? 'VCFSE' : 'School'}</div>
                     <div>Current Balance: £{item.current_balance.toFixed(2)}</div>
                     <div>Email: {item.email}</div>
