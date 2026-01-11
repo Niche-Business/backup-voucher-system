@@ -60,7 +60,7 @@ CORS(app,
      expose_headers=['Content-Type'],
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 mail = Mail(app)
-socketio = SocketIO(app, cors_allowed_origins=['https://backup-voucher-system-1.onrender.com', 'http://localhost:3000'], manage_session=False)
+socketio = SocketIO(app, cors_allowed_origins=['https://backup-voucher-system-1.onrender.com', 'https://app.breezeconsult.org', 'http://localhost:3000', 'http://localhost:5000'], manage_session=False)
 
 # Session configuration for production
 # CRITICAL: Must set SECURE=True for HTTPS sites, otherwise cookies won't persist!

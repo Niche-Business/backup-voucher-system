@@ -452,13 +452,16 @@ const LandingPage = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Admin Access Link */}
+      {/* Version and Admin Access */}
       <div style={{
         textAlign: 'center',
         padding: '20px',
         backgroundColor: '#f5f5f5',
         borderTop: '1px solid #ddd'
       }}>
+        <div style={{ marginBottom: '15px', fontSize: '0.85em', color: '#666' }}>
+          <strong>BAK UP E-Voucher System</strong> v1.0.2 | SUPER ADMIN Impersonation System
+        </div>
         <button
           onClick={() => onNavigate('admin-login')}
           style={{
