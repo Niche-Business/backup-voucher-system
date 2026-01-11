@@ -430,7 +430,7 @@ const LandingPage = ({ onNavigate }) => {
                 <strong>{t('landing.about.footerContact.company')}</strong><br />
                 {t('landing.about.footerContact.location')}<br />
                 <br />
-                <strong>{t('landing.about.footerContact.email')}</strong> prince@bakupcic.co.uk<br />
+                <strong>{t('landing.about.footerContact.email')}</strong> admin@bakupcic.co.uk<br />
                 <strong>{t('landing.about.footerContact.phone')}</strong> 01933698347 / +447947002815<br />
                 <br />
                 <strong>{t('landing.about.footerContact.hours')}</strong><br />
