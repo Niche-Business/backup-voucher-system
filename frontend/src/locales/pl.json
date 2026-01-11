@@ -93,7 +93,19 @@
     "logins": "Logowania",
     "actions": "Działania",
     "currentUser": "Obecny Użytkownik",
-    "loginStatistics": "Statystyki Logowania Użytkowników"
+    "loginStatistics": "Statystyki Logowania Użytkowników",
+    "searchRecipients": "Szukaj odbiorców",
+    "searchPlaceholder": "Szukaj po nazwie, emailu lub telefonie...",
+    "sortBy": "Sortuj według",
+    "sortName": "Nazwa (A-Z)",
+    "sortEmail": "Email (A-Z)",
+    "sortVouchers": "Najwięcej voucherów",
+    "sortValue": "Najwyższa wartość",
+    "sortRecent": "Najnowsze",
+    "totalVouchers": "Łącznie voucherów",
+    "active": "Aktywny",
+    "redeemed": "Zrealizowany",
+    "activeValue": "Wartość aktywna"
   },
   "dashboard": {
     "welcome": "Witaj",

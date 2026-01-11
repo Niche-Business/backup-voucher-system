@@ -93,7 +93,19 @@
     "logins": "Autentificări",
     "actions": "Acțiuni",
     "currentUser": "Utilizator Curent",
-    "loginStatistics": "Statistici de Autentificare Utilizatori"
+    "loginStatistics": "Statistici de Autentificare Utilizatori",
+    "searchRecipients": "Căutare beneficiari",
+    "searchPlaceholder": "Căutare după nume, email sau telefon...",
+    "sortBy": "Sortare după",
+    "sortName": "Nume (A-Z)",
+    "sortEmail": "Email (A-Z)",
+    "sortVouchers": "Cele mai multe vouchere",
+    "sortValue": "Valoare maximă",
+    "sortRecent": "Cele mai recente",
+    "totalVouchers": "Total vouchere",
+    "active": "Activ",
+    "redeemed": "Răscumpărat",
+    "activeValue": "Valoare activă"
   },
   "dashboard": {
     "welcome": "Bun venit",

@@ -93,7 +93,19 @@
     "logins": "Logins",
     "actions": "Actions",
     "currentUser": "Current User",
-    "loginStatistics": "User Login Statistics"
+    "loginStatistics": "User Login Statistics",
+    "searchRecipients": "Search Recipients",
+    "searchPlaceholder": "Search by name, email, or phone...",
+    "sortBy": "Sort By",
+    "sortName": "Name (A-Z)",
+    "sortEmail": "Email (A-Z)",
+    "sortVouchers": "Most Vouchers",
+    "sortValue": "Highest Value",
+    "sortRecent": "Most Recent",
+    "totalVouchers": "Total Vouchers",
+    "active": "Active",
+    "redeemed": "Redeemed",
+    "activeValue": "Active Value"
   },
   "dashboard": {
     "welcome": "Welcome",

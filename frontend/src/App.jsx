@@ -1802,27 +1802,27 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Recipients</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 {t('admin.searchRecipients')}</label>
                   <input
                     type="text"
-                    placeholder="Search by name, email, or phone..."
+                    placeholder={t('admin.searchPlaceholder')}
                     value={recipientSearchQuery || ''}
                     onChange={(e) => setRecipientSearchQuery(e.target.value)}
                     style={{...styles.input, width: '100%'}}
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 Sort By</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 {t('admin.sortBy')}</label>
                   <select
                     value={recipientSortBy || 'name'}
                     onChange={(e) => setRecipientSortBy(e.target.value)}
                     style={{...styles.input, width: '100%'}}
                   >
-                    <option value="name">Name (A-Z)</option>
-                    <option value="email">Email (A-Z)</option>
-                    <option value="vouchers">Most Vouchers</option>
-                    <option value="value">Highest Value</option>
-                    <option value="recent">Most Recent</option>
+                    <option value="name">{t('admin.sortName')}</option>
+                    <option value="email">{t('admin.sortEmail')}</option>
+                    <option value="vouchers">{t('admin.sortVouchers')}</option>
+                    <option value="value">{t('admin.sortValue')}</option>
+                    <option value="recent">{t('admin.sortRecent')}</option>
                   </select>
                 </div>
                 <div style={{display: 'flex', alignItems: 'flex-end'}}>
@@ -1982,27 +1982,27 @@ function AdminDashboard({ user, onLogout }) {
                         <div>
                           <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{recipient.name}</h3>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📧 Email:</strong> {recipient.email}
+                            <strong>📧 {t('admin.email')}:</strong> {recipient.email}
                           </p>
                           {recipient.phone && (
                             <p style={{margin: '5px 0', fontSize: '18px'}}>
-                              <strong>📞 Phone:</strong> {recipient.phone}
+                              <strong>📞 {t('admin.phone')}:</strong> {recipient.phone}
                             </p>
                           )}
                           {recipient.address && (
                             <p style={{margin: '5px 0', fontSize: '18px'}}>
-                              <strong>📍 Address:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
+                              <strong>📍 {t('admin.address')}:</strong> {recipient.address}, {recipient.city} {recipient.postcode}
                             </p>
                           )}
                           <div style={{marginTop: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
                             <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold'}}>
-                              🎫 Total Vouchers: {recipient.total_vouchers}
+                              🎫 {t('admin.totalVouchers')}: {recipient.total_vouchers}
                             </p>
                             <p style={{margin: '5px 0', fontSize: '18px'}}>
-                              ✅ Active: {recipient.active_vouchers} | ✓ Redeemed: {recipient.redeemed_vouchers}
+                              ✅ {t('admin.active')}: {recipient.active_vouchers} | ✓ {t('admin.redeemed')}: {recipient.redeemed_vouchers}
                             </p>
                             <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#4CAF50'}}>
-                              💰 Active Value: £{recipient.total_active_value.toFixed(2)}
+                              💰 {t('admin.activeValue')}: £{recipient.total_active_value.toFixed(2)}
                             </p>
                           </div>
                           <div style={{marginTop: '15px', display: 'flex', gap: '10px'}}>
@@ -2029,7 +2029,7 @@ function AdminDashboard({ user, onLogout }) {
                                 flex: 1
                               }}
                             >
-                              ✏️ Edit
+                              ✏️ {t('admin.edit')}
                             </button>
                             <button 
                               onClick={() => handleDeleteRecipient(recipient.id)}
@@ -2043,7 +2043,7 @@ function AdminDashboard({ user, onLogout }) {
                                 flex: 1
                               }}
                             >
-                              🗑️ Delete
+                              🗑️ {t('admin.delete')}
                             </button>
                           </div>
                         </div>
@@ -2098,7 +2098,7 @@ function AdminDashboard({ user, onLogout }) {
                   </select>
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 Sort By</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📊 {t('admin.sortBy')}</label>
                   <select
                     value={voucherSortBy || 'recent'}
                     onChange={(e) => setVoucherSortBy(e.target.value)}

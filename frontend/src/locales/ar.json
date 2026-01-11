@@ -93,7 +93,19 @@
     "logins": "عمليات تسجيل الدخول",
     "actions": "الإجراءات",
     "currentUser": "المستخدم الحالي",
-    "loginStatistics": "إحصائيات تسجيل دخول المستخدمين"
+    "loginStatistics": "إحصائيات تسجيل دخول المستخدمين",
+    "searchRecipients": "بحث المستفيدين",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني أو الهاتف...",
+    "sortBy": "ترتيب حسب",
+    "sortName": "الاسم (أ-ي)",
+    "sortEmail": "البريد الإلكتروني (أ-ي)",
+    "sortVouchers": "الأكثر قسائم",
+    "sortValue": "أعلى قيمة",
+    "sortRecent": "الأحدث",
+    "totalVouchers": "إجمالي القسائم",
+    "active": "نشط",
+    "redeemed": "مستردة",
+    "activeValue": "القيمة النشطة"
   },
   "dashboard": {
     "welcome": "مرحبا",
