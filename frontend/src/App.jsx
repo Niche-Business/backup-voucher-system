@@ -367,6 +367,7 @@ function LoginPage({ onLogin, onNavigate }) {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -380,7 +381,6 @@ function LoginPage({ onLogin, onNavigate }) {
         setError(result.error || 'Login failed')
         setLoading(false)
       }
-      // If successful, loading will stop when dashboard loads
     } catch (error) {
       setError(t('login.loginFailed'))
       setLoading(false)
@@ -388,48 +388,49 @@ function LoginPage({ onLogin, onNavigate }) {
   }
 
   return (
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50'}}>
-      <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
-        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>{t('login.title')}</h2>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '20px'}}>
+      <div style={{backgroundColor: 'white', padding: '50px', borderRadius: '12px', width: '100%', maxWidth: '450px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)'}}>
+        <h2 style={{textAlign: 'center', marginBottom: '10px', fontSize: '28px', fontWeight: '700', color: '#333'}}>Sign In</h2>
+        <p style={{textAlign: 'center', marginBottom: '30px', fontSize: '14px', color: '#666'}}>Enter your email and password to login</p>
         
-        {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
+        {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '14px'}}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
-          <div style={{marginBottom: '20px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('login.emailLabel')}</label>
+          <div style={{marginBottom: '18px'}}>
+            <label style={{display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333'}}>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('login.emailPlaceholder')}
+              placeholder="Enter your email"
               required
-              style={styles.input}
+              style={{width: '100%', fontSize: '14px', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box'}}
             />
           </div>
           
-          <div style={{marginBottom: '20px'}}>
-            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>{t('login.passwordLabel')}</label>
+          <div style={{marginBottom: '18px'}}>
+            <label style={{display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333'}}>Password</label>
             <div style={{position: 'relative'}}>
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={t('login.passwordPlaceholder')}
+                placeholder="Enter your password"
                 required
-                style={styles.input}
+                style={{width: '100%', fontSize: '14px', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box'}}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: 'absolute',
-                  right: '10px',
+                  right: '12px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '22px',
+                  fontSize: '18px',
                   color: '#666'
                 }}
               >
@@ -438,15 +439,45 @@ function LoginPage({ onLogin, onNavigate }) {
             </div>
           </div>
           
-          <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
-            {loading ? t('login.signingIn') : t('login.signInButton')}
+          <div style={{marginBottom: '20px', display: 'flex', alignItems: 'center'}}>
+            <input 
+              type="checkbox" 
+              id="remember" 
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              style={{marginRight: '8px', cursor: 'pointer', width: '16px', height: '16px'}} 
+            />
+            <label htmlFor="remember" style={{fontSize: '14px', color: '#666', cursor: 'pointer'}}>Remember me</label>
+          </div>
+          
+          <button 
+            type="submit" 
+            disabled={loading} 
+            style={{width: '100%', marginBottom: '20px', padding: '12px', fontSize: '16px', fontWeight: '600', backgroundColor: '#7c3aed', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', transition: 'background-color 0.3s'}}
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         
-        <div style={{textAlign: 'center'}}>
-          <p>{t('login.noAccount')} <button onClick={() => onNavigate('register')} style={styles.linkButton}>{t('login.registerLink')}</button></p>
-          <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>{t('login.forgotPassword')}</button></p>
-          <button onClick={() => onNavigate('home')} style={styles.linkButton}>{t('login.backToHome')}</button>
+        <div style={{textAlign: 'center', marginBottom: '20px'}}>
+          <p style={{fontSize: '14px', color: '#999', marginBottom: '15px'}}>Or continue with</p>
+          <div style={{display: 'flex', gap: '12px', justifyContent: 'center'}}>
+            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
+              <span style={{fontSize: '18px'}}>📧</span> Google
+            </button>
+            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
+              <span style={{fontSize: '18px'}}>🐙</span> Github
+            </button>
+            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
+              <span style={{fontSize: '18px'}}>𝕏</span> Twitter
+            </button>
+          </div>
+        </div>
+        
+        <div style={{textAlign: 'center', paddingTop: '15px', borderTop: '1px solid #eee'}}>
+          <p style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>Don't have an account? <button onClick={() => onNavigate('register')} style={{background: 'none', border: 'none', color: '#7c3aed', fontWeight: '600', fontSize: '14px', cursor: 'pointer', textDecoration: 'underline'}}>Sign Up</button></p>
+          <p style={{fontSize: '13px', color: '#999', marginBottom: '8px'}}><button onClick={() => onNavigate('forgot-password')} style={{background: 'none', border: 'none', color: '#7c3aed', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline'}}>Forgot Password?</button></p>
+          <p style={{fontSize: '13px', color: '#999'}}><button onClick={() => onNavigate('home')} style={{background: 'none', border: 'none', color: '#7c3aed', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline'}}>Back to Home</button></p>
         </div>
       </div>
     </div>
