@@ -448,15 +448,6 @@ function LoginPage({ onLogin, onNavigate }) {
           <p><button onClick={() => onNavigate('forgot-password')} style={styles.linkButton}>{t('login.forgotPassword')}</button></p>
           <button onClick={() => onNavigate('home')} style={styles.linkButton}>{t('login.backToHome')}</button>
         </div>
-        
-        <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
-          <p style={{margin: '0 0 8px 0', fontSize: '1.2em', lineHeight: '1.5', color: '#333'}}>
-            <strong>🌿 {t('login.aboutTitle')}</strong>
-          </p>
-          <p style={{margin: 0, fontSize: '1.15em', lineHeight: '1.5', color: '#555'}}>
-            {t('login.aboutText')}
-          </p>
-        </div>
       </div>
     </div>
   )
