@@ -113,7 +113,8 @@
     "vcfseOrganisations": "Organizații VCFSE",
     "recipients": "Beneficiari",
     "analytics": "Analiză",
-    "reports": "Rapoarte"
+    "reports": "Rapoarte",
+    "dashboardOverview": "Prezentare generală panou admin"
   },
   "dashboard": {
     "welcome": "Bun venit",

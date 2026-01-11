@@ -113,7 +113,8 @@
     "vcfseOrganisations": "منظمات VCFSE",
     "recipients": "المستفيدون",
     "analytics": "التحليلات",
-    "reports": "التقارير"
+    "reports": "التقارير",
+    "dashboardOverview": "نظرة عامة على لوحة الإدارة"
   },
   "dashboard": {
     "welcome": "مرحبا",

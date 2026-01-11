@@ -1521,7 +1521,7 @@ function AdminDashboard({ user, onLogout }) {
         
         {activeTab === 'overview' && (
           <div>
-            <h2>📊 Admin Dashboard Overview</h2>
+            <h2>📊 {t('admin.dashboardOverview')}</h2>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div 
                 onClick={() => setActiveTab('vouchers')}
@@ -1531,7 +1531,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '40px', marginBottom: '10px'}}>🎫</div>
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
-                <div style={{color: '#666'}}>Total Vouchers</div>
+                <div style={{color: '#666'}}>{t('dashboard.totalVouchers')}</div>
               </div>
               
               <div 
@@ -1544,7 +1544,7 @@ function AdminDashboard({ user, onLogout }) {
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#4CAF50'}}>
                   £{vouchers.filter(v => v.status === 'active').reduce((sum, v) => sum + parseFloat(v.value || 0), 0).toFixed(2)}
                 </div>
-                <div style={{color: '#666'}}>Active Value</div>
+                <div style={{color: '#666'}}>{t('dashboard.activeValue')}</div>
               </div>
               
               <div 
@@ -1555,7 +1555,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '40px', marginBottom: '10px'}}>🤝</div>
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#9C27B0'}}>{vcseOrgs.length}</div>
-                <div style={{color: '#666'}}>VCFSE Organizations</div>
+                <div style={{color: '#666'}}>{t('dashboard.vcfseOrgs')}</div>
               </div>
               
               <div 
@@ -1566,7 +1566,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '40px', marginBottom: '10px'}}>🎓</div>
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#FF9800'}}>{schools.length}</div>
-                <div style={{color: '#666'}}>Schools/Care Orgs</div>
+                <div style={{color: '#666'}}>{t('dashboard.tabs.schoolsOrgs')}</div>
               </div>
               
               <div 
@@ -1577,7 +1577,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '40px', marginBottom: '10px'}}>👥</div>
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#00BCD4'}}>{recipients.length}</div>
-                <div style={{color: '#666'}}>Recipients</div>
+                <div style={{color: '#666'}}>{t('dashboard.recipients')}</div>
               </div>
               
               <div 
@@ -1588,7 +1588,7 @@ function AdminDashboard({ user, onLogout }) {
               >
                 <div style={{fontSize: '40px', marginBottom: '10px'}}>🏪</div>
                 <div style={{fontSize: '32px', fontWeight: 'bold', color: '#F44336'}}>{vendorShops.length}</div>
-                <div style={{color: '#666'}}>Local Shops</div>
+                <div style={{color: '#666'}}>{t('dashboard.localShops')}</div>
               </div>
             </div>
           </div>

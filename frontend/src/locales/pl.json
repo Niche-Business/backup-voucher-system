@@ -113,7 +113,8 @@
     "vcfseOrganisations": "Organizacje VCFSE",
     "recipients": "Odbiorcy",
     "analytics": "Analityka",
-    "reports": "Raporty"
+    "reports": "Raporty",
+    "dashboardOverview": "Przegląd pulpitu administratora"
   },
   "dashboard": {
     "welcome": "Witaj",

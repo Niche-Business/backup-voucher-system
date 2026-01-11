@@ -113,7 +113,8 @@
     "vcfseOrganisations": "VCFSE Organisations",
     "recipients": "Recipients",
     "analytics": "Analytics",
-    "reports": "Reports"
+    "reports": "Reports",
+    "dashboardOverview": "Admin Dashboard Overview"
   },
   "dashboard": {
     "welcome": "Welcome",
