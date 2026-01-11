@@ -445,15 +445,15 @@ const LandingPage = ({ onNavigate }) => {
             paddingTop: '20px',
             textAlign: 'center',
             color: '#c8e6c9',
-            fontSize: '1.2em'
+            fontSize: '14px'
           }}>
-            <p style={{ margin: '0 0 10px 0' }}>
+            <p style={{ margin: '0 0 8px 0', fontSize: '13px' }}>
               © {new Date().getFullYear()} BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme
             </p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '1.15em' }}>
+            <p style={{ margin: '0 0 8px 0', fontSize: '13px' }}>
               Charity Company Registration Number: 12994379
             </p>
-            <p style={{ margin: '0', fontSize: '1.15em', fontStyle: 'italic' }}>
+            <p style={{ margin: '0', fontSize: '13px', fontStyle: 'italic' }}>
               BAK UP E-Voucher System v1.0.2
             </p>
           </div>

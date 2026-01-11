@@ -176,26 +176,9 @@ if __name__ == '__main__':
             print(f"Note: cart_notification table setup: {e}")
             db.session.rollback()
         
-        # Create default admin account if it doesn't exist
-        admin_email = 'admin@bakup.com'
-        if not User.query.filter_by(email=admin_email).first():
-            admin_user = User(
-                email=admin_email,
-                password_hash=generate_password_hash('Admin@2024'),
-                first_name='System',
-                last_name='Administrator',
-                phone='',
-                user_type='admin',
-                organization_name='BAK UP System',
-                is_verified=True
-            )
-            db.session.add(admin_user)
-            db.session.commit()
-            print("✓ Default admin account created")
-            print(f"  Email: {admin_email}")
-            print("  Password: Admin@2024")
-        else:
-            print("✓ Admin account already exists")
+        # Note: Admin accounts are now managed through the create_admin_account endpoint
+        # No automatic admin creation on startup to prevent auto-recreation after deletion
+        print("✓ Admin account management: Use /api/create-admin endpoint")
     
     port = int(os.environ.get('PORT', 8080))
     print("=" * 60)
