@@ -388,7 +388,7 @@ function LoginPage({ onLogin, onNavigate }) {
   }
 
   return (
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '20px'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50', padding: '20px'}}>
       <div style={{backgroundColor: 'white', padding: '50px', borderRadius: '12px', width: '100%', maxWidth: '450px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)'}}>
         <h2 style={{textAlign: 'center', marginBottom: '10px', fontSize: '28px', fontWeight: '700', color: '#333'}}>Sign In</h2>
         <p style={{textAlign: 'center', marginBottom: '30px', fontSize: '14px', color: '#666'}}>Enter your email and password to login</p>
@@ -459,19 +459,13 @@ function LoginPage({ onLogin, onNavigate }) {
           </button>
         </form>
         
-        <div style={{textAlign: 'center', marginBottom: '20px'}}>
-          <p style={{fontSize: '14px', color: '#999', marginBottom: '15px'}}>Or continue with</p>
-          <div style={{display: 'flex', gap: '12px', justifyContent: 'center'}}>
-            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
-              <span style={{fontSize: '18px'}}>📧</span> Google
-            </button>
-            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
-              <span style={{fontSize: '18px'}}>🐙</span> Github
-            </button>
-            <button style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
-              <span style={{fontSize: '18px'}}>𝕏</span> Twitter
-            </button>
-          </div>
+        <div style={{textAlign: 'center', marginBottom: '20px', display: 'flex', gap: '12px', justifyContent: 'center'}}>
+          <button onClick={() => onNavigate('forgot-password')} style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
+            <span style={{fontSize: '18px'}}>🔑</span> Forgot Password
+          </button>
+          <button onClick={() => onNavigate('home')} style={{flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#f5f5f5', cursor: 'pointer', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s'}}>
+            <span style={{fontSize: '18px'}}>🏠</span> Back to Home
+          </button>
         </div>
         
         <div style={{textAlign: 'center', paddingTop: '15px', borderTop: '1px solid #eee'}}>
@@ -1058,14 +1052,7 @@ function RegisterPage({ onRegister, onNavigate }) {
           <button onClick={() => onNavigate('home')} style={styles.linkButton}>{t('register.backToHome')}</button>
         </div>
         
-        <div style={{marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4CAF50'}}>
-          <p style={{margin: '0 0 8px 0', fontSize: '1.2em', lineHeight: '1.5', color: '#333'}}>
-            <strong>🤝 Join the Northamptonshire Community E-Voucher Scheme</strong>
-          </p>
-          <p style={{margin: 0, fontSize: '1.15em', lineHeight: '1.5', color: '#555'}}>
-            Led by BAK UP CIC, our scheme provides dignified support through flexible vouchers, respects cultural preferences, and strengthens local economies. Together, we're building a more inclusive and sustainable community.
-          </p>
-        </div>
+        {/* About section removed - info is on landing page */}
       </div>
     </div>
   )
