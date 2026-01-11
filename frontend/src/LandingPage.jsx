@@ -439,7 +439,7 @@ const LandingPage = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Bottom Footer Bar */}
+          {/* Bottom Footer Bar with Version and Copyright */}
           <div style={{
             borderTop: '1px solid rgba(255,255,255,0.2)',
             paddingTop: '20px',
@@ -447,27 +447,20 @@ const LandingPage = ({ onNavigate }) => {
             color: '#c8e6c9',
             fontSize: '0.9em'
           }}>
-            <p>{t('landing.about.copyright')}<br />{t('landing.about.charityNumber')}</p>
+            <p style={{ margin: '0 0 10px 0' }}>
+              © {new Date().getFullYear()} BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme
+            </p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '0.85em' }}>
+              Charity Company Registration Number: 12994379
+            </p>
+            <p style={{ margin: '0', fontSize: '0.85em', fontStyle: 'italic' }}>
+              BAK UP E-Voucher System v1.0.2
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Copyright Footer */}
-      <div style={{
-        textAlign: 'center',
-        padding: '20px',
-        backgroundColor: '#f5f5f5',
-        borderTop: '1px solid #ddd',
-        fontSize: '0.85em',
-        color: '#999'
-      }}>
-        <p style={{ margin: '0' }}>
-          © 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme
-        </p>
-        <p style={{ margin: '5px 0 0 0', fontSize: '0.8em' }}>
-          Charity Company Registration Number: 12994379
-        </p>
-      </div>
+
     </div>
   );
 };
