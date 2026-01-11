@@ -12,13 +12,26 @@ from pathlib import Path
 backend_path = Path(__file__).parent / 'backend' / 'src'
 sys.path.insert(0, str(backend_path))
 
-from flask import send_from_directory, Response, abort
+from flask import send_from_directory, Response, abort, redirect, request
 import mimetypes
 from main import app, db, Category, User
 from werkzeug.security import generate_password_hash
 
 # Configure frontend serving
 frontend_build = Path(__file__).parent / 'frontend' / 'dist'
+
+# Redirect middleware to force custom domain
+@app.before_request
+def redirect_to_custom_domain():
+    """Redirect from Render domain to custom domain"""
+    host = request.host.lower()
+    # Redirect if accessed via Render domain
+    if 'onrender.com' in host or 'backup-voucher-system' in host:
+        # Redirect to custom domain while preserving path and query string
+        return redirect(
+            'https://app.breezeconsult.org' + request.full_path.replace(host, 'app.breezeconsult.org'),
+            code=301
+        )
 
 # Note: This catch-all route is registered AFTER all API routes from main.py
 # Flask will match more specific routes first, so /api/* routes will work correctly

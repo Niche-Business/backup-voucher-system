@@ -1384,7 +1384,10 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           </button>
-          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+          <div>
+            <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+            <p style={{margin: '5px 0 0 0', fontSize: '0.85em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.2</p>
+          </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="admin" />
