@@ -566,7 +566,9 @@
     "reports": "Raporty",
     "myShops": "Moje sklepy",
     "surplusFood": "Nadwyżka żywności",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "recipientsVouchers": "Odbiorcy i Vouchery",
+    "discountedItems": "Produkty Przecenione"
   },
   "buttons": {
     "addFunds": "Dodaj środki do portfela",
@@ -713,5 +715,22 @@
     "paragraph1": "Dziękujemy za partnerstwo z BAK UP CIC w celu wspierania rodzin i osób borykających się z trudnościami w Northamptonshire. Jako organizacja VCFSE jesteś w centrum naszego podejścia społecznościowego do walki z brakiem bezpieczeństwa żywnościowego.",
     "paragraph2": "Nasz system voucherów elektronicznych zastępuje tradycyjne paczki żywnościowe elastycznym, godnym wsparciem, które szanuje preferencje kulturowe i daje rodzinom prawdziwy wybór. Każdy voucher, który wydajesz, pomaga wzmocnić lokalne gospodarki poprzez wspieranie uczestniczących sklepów i sprzedawców.",
     "paragraph3": "Razem budujemy bardziej inkluzywną, zrównoważoną i odporną społeczność, w której każdy może prosperować."
+  },
+  "sound": {
+    "on": "Dźwięk WŁĄCZONY",
+    "off": "Dźwięk WYŁĄCZONY"
+  },
+  "discount": {
+    "title": "Produkty Przecenione - Zakup do Dystrybucji",
+    "description": "Te przecenione produkty można kupić za pomocą przydzielonych środków i rozdystrybuować rodzinom w Twojej społeczności.",
+    "badge": "PRZECENIONE",
+    "save": "Oszczędź",
+    "per": "za",
+    "was": "Było",
+    "off": "zniżki",
+    "available": "Dostępne",
+    "category": "Kategoria",
+    "freshAndReady": "Świeże i gotowe",
+    "contactShop": "Skontaktuj się bezpośrednio ze sklepem, aby kupić ten produkt za pomocą przydzielonych środków"
   }
 }

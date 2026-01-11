@@ -580,7 +580,26 @@
     "reports": "Reports",
     "myShops": "My Shops",
     "surplusFood": "Surplus Food",
-    "settings": "Settings"
+    "settings": "Settings",
+    "recipientsVouchers": "Recipients & Vouchers",
+    "discountedItems": "Discounted Items"
+  },
+  "sound": {
+    "on": "Sound ON",
+    "off": "Sound OFF"
+  },
+  "discount": {
+    "title": "Discounted Items - Purchase for Distribution",
+    "description": "These discounted items can be purchased using your allocated funds and distributed to families in your community.",
+    "badge": "DISCOUNTED",
+    "save": "Save",
+    "per": "per",
+    "was": "Was",
+    "off": "off",
+    "available": "Available",
+    "category": "Category",
+    "freshAndReady": "Fresh and ready",
+    "contactShop": "Contact the shop directly to purchase this item using your allocated funds"
   },
   "buttons": {
     "addFunds": "Add Funds to Wallet",

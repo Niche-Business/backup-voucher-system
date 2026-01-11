@@ -2578,7 +2578,7 @@ function AdminDashboard({ user, onLogout }) {
                         <strong>Price:</strong> £{item.price.toFixed(2)} per {item.unit}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Category:</strong> {item.category}
+                        <strong>{t('discount.category')}:</strong> {item.category}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Status:</strong> <span style={{color: item.status === 'available' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{item.status.toUpperCase()}</span>
@@ -4254,9 +4254,9 @@ function VCSEDashboard({ user, onLogout }) {
             {label: t('tabs.voucherOrders'), value: 'orders', icon: '📋'},
             {label: t('tabs.reports'), value: 'reports', icon: '📈'},
             {label: t('dashboard.issueVouchers'), value: 'issue', icon: '🎫'},
-            {label: 'Recipients & Vouchers', value: 'recipients', icon: '👥'},
+            {label: t('tabs.recipientsVouchers'), value: 'recipients', icon: '👥'},
             {label: t('dashboard.toGo'), value: 'togo', icon: '📦'},
-            {label: 'Discounted Items', value: 'discounted', icon: '💰'}
+            {label: t('tabs.discountedItems'), value: 'discounted', icon: '💰'}
           ]}
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -5071,7 +5071,7 @@ function VCSEDashboard({ user, onLogout }) {
                     gap: '8px'
                   }}
                 >
-                  {soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF'}
+                  {soundEnabled ? '🔔 ' + t('sound.on') : '🔕 ' + t('sound.off')}
                 </button>
               </div>
               
@@ -5129,9 +5129,9 @@ function VCSEDashboard({ user, onLogout }) {
         {activeTab === 'discounted' && (
           <div>
             <div style={{marginBottom: '20px'}}>
-              <h2 style={{margin: 0}}>💰 Discounted Items - Purchase for Distribution</h2>
+              <h2 style={{margin: 0}}>💰 {t('discount.title')}</h2>
               <p style={{margin: '10px 0 0 0', color: '#666'}}>
-                These discounted items can be purchased using your allocated funds and distributed to families in your community.
+                {t('discount.description')}
               </p>
             </div>
             
@@ -5155,28 +5155,28 @@ function VCSEDashboard({ user, onLogout }) {
                         fontWeight: 'bold',
                         textAlign: 'center'
                       }}>
-                        💰 DISCOUNTED - Save {item.savings_percent}%
+                        💰 {t('discount.badge')} - {t('discount.save')} {item.savings_percent}%
                       </div>
                       <h3 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{item.item_name}</h3>
                       <div style={{marginBottom: '15px'}}>
                         <p style={{margin: '5px 0', fontSize: '24px', fontWeight: 'bold', color: '#4CAF50'}}>
-                          💰 £{item.price.toFixed(2)} per {item.unit}
+                          💰 £{item.price.toFixed(2)} {t('discount.per')} {item.unit}
                         </p>
                         <p style={{margin: '5px 0', fontSize: '18px', color: '#999', textDecoration: 'line-through'}}>
-                          Was: £{item.original_price.toFixed(2)}
+                          {t('discount.was')}: £{item.original_price.toFixed(2)}
                         </p>
                         <p style={{margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#FF9800'}}>
-                          🎉 Save £{item.savings.toFixed(2)} ({item.savings_percent}% off)
+                          🎉 {t('discount.save')} £{item.savings.toFixed(2)} ({item.savings_percent}% {t('discount.off')})
                         </p>
                       </div>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Available:</strong> {item.quantity} {item.unit}
+                        <strong>{t('discount.available')}:</strong> {item.quantity} {item.unit}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Category:</strong> {item.category}
+                        <strong>{t('discount.category')}:</strong> {item.category}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Description:</strong> {item.description || 'Fresh and ready'}
+                        <strong>{t('discount.description')}:</strong> {item.description || t('discount.freshAndReady')}
                       </p>
                       <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
                         <p style={{margin: '3px 0', fontSize: '18px', fontWeight: 'bold', color: '#1976d2'}}>
@@ -5191,7 +5191,7 @@ function VCSEDashboard({ user, onLogout }) {
                       </div>
                       <div style={{marginTop: '15px'}}>
                         <p style={{fontSize: '17px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
-                          💳 Contact the shop directly to purchase this item using your allocated funds
+                          💳 {t('discount.contactShop')}
                         </p>
                       </div>
                     </div>

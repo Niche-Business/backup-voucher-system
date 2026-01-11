@@ -578,7 +578,9 @@
     "reports": "Rapoarte",
     "myShops": "Magazinele Mele",
     "surplusFood": "Alimente în exces",
-    "settings": "Setări"
+    "settings": "Setări",
+    "recipientsVouchers": "Beneficiari și Vouchere",
+    "discountedItems": "Articole Reduse"
   },
   "buttons": {
     "addFunds": "Adaugă fonduri în portofel",
@@ -713,5 +715,22 @@
     "paragraph1": "Vă mulțumim pentru parteneriatul cu BAK UP CIC pentru a sprijini familiile și persoanele care se confruntă cu dificultăți în Northamptonshire. Ca organizație VCFSE, vă aflați în centrul abordării noastre comunitare pentru combaterea insecurității alimentare.",
     "paragraph2": "Sistemul nostru de vouchere electronice înlocuiește pachetele alimentare tradiționale cu sprijin flexibil și demn care respectă preferințele culturale și oferă familiilor o alegere reală. Fiecare voucher pe care îl emiteți ajută la consolidarea economiilor locale prin sprijinirea magazinelor și comercianților participanți.",
     "paragraph3": "Împreună, construim o comunitate mai incluzivă, durabilă și rezistentă în care toată lumea poate prospera."
+  },
+  "sound": {
+    "on": "Sunet PORNIT",
+    "off": "Sunet OPRIT"
+  },
+  "discount": {
+    "title": "Articole Reduse - Cumpărare pentru Distribuție",
+    "description": "Aceste articole reduse pot fi cumpărate folosind fondurile alocate și distribuite familiilor din comunitatea dvs.",
+    "badge": "REDUS",
+    "save": "Economisește",
+    "per": "per",
+    "was": "Era",
+    "off": "reducere",
+    "available": "Disponibil",
+    "category": "Categorie",
+    "freshAndReady": "Proaspăt și gata",
+    "contactShop": "Contactați magazinul direct pentru a cumpăra acest articol folosind fondurile alocate"
   }
 }
