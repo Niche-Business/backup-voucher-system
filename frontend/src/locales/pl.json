@@ -44,7 +44,7 @@
     "loginFailed": "Logowanie nie powiodło się. Spróbuj ponownie."
   },
   "admin": {
-    "fundAllocation": "Alokacja Funduszy",
+    "fundAllocation": "Alokacja funduszy",
     "organizationType": "Typ Organizacji",
     "selectVCSE": "Wybierz Organizację VCSE",
     "amount": "Kwota (£)",
@@ -105,7 +105,15 @@
     "totalVouchers": "Łącznie voucherów",
     "active": "Aktywny",
     "redeemed": "Zrealizowany",
-    "activeValue": "Wartość aktywna"
+    "activeValue": "Wartość aktywna",
+    "globalSearch": "Wyszukiwanie globalne",
+    "transactions": "Transakcje",
+    "broadcast": "Transmisja",
+    "vcfseVerification": "Weryfikacja VCFSE",
+    "vcfseOrganisations": "Organizacje VCFSE",
+    "recipients": "Odbiorcy",
+    "analytics": "Analityka",
+    "reports": "Raporty"
   },
   "dashboard": {
     "welcome": "Witaj",

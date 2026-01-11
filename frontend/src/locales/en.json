@@ -105,7 +105,16 @@
     "totalVouchers": "Total Vouchers",
     "active": "Active",
     "redeemed": "Redeemed",
-    "activeValue": "Active Value"
+    "activeValue": "Active Value",
+    "globalSearch": "Global Search",
+    "transactions": "Transactions",
+    "broadcast": "Broadcast",
+    "fundAllocation": "Fund Allocation",
+    "vcfseVerification": "VCFSE Verification",
+    "vcfseOrganisations": "VCFSE Organisations",
+    "recipients": "Recipients",
+    "analytics": "Analytics",
+    "reports": "Reports"
   },
   "dashboard": {
     "welcome": "Welcome",

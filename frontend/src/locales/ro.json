@@ -44,7 +44,7 @@
     "loginFailed": "Autentificare eșuată. Vă rugăm să încercați din nou."
   },
   "admin": {
-    "fundAllocation": "Alocare Fonduri",
+    "fundAllocation": "Alocarea fondurilor",
     "organizationType": "Tipul Organizației",
     "selectVCSE": "Selectați Organizația VCSE",
     "amount": "Sumă (£)",
@@ -105,7 +105,15 @@
     "totalVouchers": "Total vouchere",
     "active": "Activ",
     "redeemed": "Răscumpărat",
-    "activeValue": "Valoare activă"
+    "activeValue": "Valoare activă",
+    "globalSearch": "Căutare globală",
+    "transactions": "Tranzacții",
+    "broadcast": "Difuzare",
+    "vcfseVerification": "Verificare VCFSE",
+    "vcfseOrganisations": "Organizații VCFSE",
+    "recipients": "Beneficiari",
+    "analytics": "Analiză",
+    "reports": "Rapoarte"
   },
   "dashboard": {
     "welcome": "Bun venit",

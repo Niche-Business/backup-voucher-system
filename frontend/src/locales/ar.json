@@ -105,7 +105,15 @@
     "totalVouchers": "إجمالي القسائم",
     "active": "نشط",
     "redeemed": "مستردة",
-    "activeValue": "القيمة النشطة"
+    "activeValue": "القيمة النشطة",
+    "globalSearch": "البحث العام",
+    "transactions": "المعاملات",
+    "broadcast": "البث",
+    "vcfseVerification": "التحقق من VCFSE",
+    "vcfseOrganisations": "منظمات VCFSE",
+    "recipients": "المستفيدون",
+    "analytics": "التحليلات",
+    "reports": "التقارير"
   },
   "dashboard": {
     "welcome": "مرحبا",

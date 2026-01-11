@@ -1483,20 +1483,20 @@ function AdminDashboard({ user, onLogout }) {
           padding: '20px 0'
         }}>
           <button onClick={() => { setActiveTab('overview'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'overview' ? '#e3f2fd' : 'transparent'}}>📋 {t('dashboard.tabs.overview')}</button>
-          <button onClick={() => { setActiveTab('search'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'search' ? '#e3f2fd' : 'transparent'}}>🔍 Global Search</button>
-          <button onClick={() => { setActiveTab('transactions'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'transactions' ? '#e3f2fd' : 'transparent'}}>📊 Transactions</button>
-          <button onClick={() => { setActiveTab('broadcast'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'broadcast' ? '#e3f2fd' : 'transparent'}}>📢 Broadcast</button>
-          <button onClick={() => { setActiveTab('funding'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'funding' ? '#e3f2fd' : 'transparent'}}>💰 Fund Allocation</button>
-          <button onClick={() => { setActiveTab('vcse-verification'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse-verification' ? '#e3f2fd' : 'transparent'}}>🔍 VCFSE Verification</button>
-          <button onClick={() => { setActiveTab('vcse'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse' ? '#e3f2fd' : 'transparent'}}>🤝 VCFSE Organisations</button>
-          <button onClick={() => { setActiveTab('recipients'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'recipients' ? '#e3f2fd' : 'transparent'}}>👥 Recipients</button>
+          <button onClick={() => { setActiveTab('search'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'search' ? '#e3f2fd' : 'transparent'}}>🔍 {t('admin.globalSearch')}</button>
+          <button onClick={() => { setActiveTab('transactions'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'transactions' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.transactions')}</button>
+          <button onClick={() => { setActiveTab('broadcast'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'broadcast' ? '#e3f2fd' : 'transparent'}}>📢 {t('admin.broadcast')}</button>
+          <button onClick={() => { setActiveTab('funding'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'funding' ? '#e3f2fd' : 'transparent'}}>💰 {t('admin.fundAllocation')}</button>
+          <button onClick={() => { setActiveTab('vcse-verification'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse-verification' ? '#e3f2fd' : 'transparent'}}>🔍 {t('admin.vcfseVerification')}</button>
+          <button onClick={() => { setActiveTab('vcse'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vcse' ? '#e3f2fd' : 'transparent'}}>🤝 {t('admin.vcfseOrganisations')}</button>
+          <button onClick={() => { setActiveTab('recipients'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'recipients' ? '#e3f2fd' : 'transparent'}}>👥 {t('admin.recipients')}</button>
           <button onClick={() => { setActiveTab('vouchers'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'vouchers' ? '#e3f2fd' : 'transparent'}}>🎫 {t('dashboard.tabs.voucherManagement')}</button>
           <button onClick={() => { setActiveTab('schools'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'schools' ? '#e3f2fd' : 'transparent'}}>🏫 {t('dashboard.tabs.schoolsOrgs')}</button>
           <button onClick={() => { setActiveTab('shops'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'shops' ? '#e3f2fd' : 'transparent'}}>🏪 {t('dashboard.tabs.localShops')}</button>
           <button onClick={() => { setActiveTab('togo'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'togo' ? '#e3f2fd' : 'transparent'}}>🍔 {t('dashboard.tabs.allToGo')}</button>
           <button onClick={() => { setActiveTab('payouts'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'payouts' ? '#e3f2fd' : 'transparent'}}>💰 {t('payout.managePayout')}</button>
-          <button onClick={() => { setActiveTab('analytics'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'analytics' ? '#e3f2fd' : 'transparent'}}>📈 Analytics</button>
-          <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 Reports</button>
+          <button onClick={() => { setActiveTab('analytics'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'analytics' ? '#e3f2fd' : 'transparent'}}>📈 {t('admin.analytics')}</button>
+          <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
         </div>
       )}
