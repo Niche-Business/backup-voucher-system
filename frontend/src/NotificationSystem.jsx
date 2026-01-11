@@ -114,7 +114,7 @@ export function NotificationBell({ apiCall, userType }) {
 
   const markAsRead = async (notificationId) => {
     try {
-      await apiCall(`/notifications/${notificationId}/read`, { method: 'POST' });
+      await apiCall(`/api/notifications/${notificationId}/read`, 'POST');
       setNotifications(prev =>
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       );
@@ -126,7 +126,7 @@ export function NotificationBell({ apiCall, userType }) {
 
   const markAllAsRead = async () => {
     try {
-      await apiCall('/notifications/mark-all-read', { method: 'POST' });
+      await apiCall('/api/notifications/mark-all-read', 'POST');
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (error) {
@@ -172,18 +172,21 @@ export function NotificationBell({ apiCall, userType }) {
           <span
             style={{
               position: 'absolute',
-              top: '4px',
-              right: '4px',
-              background: '#f44336',
+              top: '2px',
+              right: '2px',
+              background: '#ff0000',
               color: 'white',
               borderRadius: '50%',
-              width: '20px',
-              height: '20px',
+              minWidth: '22px',
+              height: '22px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '16px',
-              fontWeight: 'bold'
+              fontSize: '13px',
+              fontWeight: 'bold',
+              padding: '0 4px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+              border: '2px solid white'
             }}
           >
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -219,7 +222,7 @@ export function NotificationBell({ apiCall, userType }) {
               backgroundColor: '#f8f9fa'
             }}
           >
-            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold' }}>
+            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#000' }}>
               Notifications
             </h3>
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -277,7 +280,7 @@ export function NotificationBell({ apiCall, userType }) {
                   onChange={(e) => setSoundEnabled(e.target.checked)}
                   style={{ cursor: 'pointer' }}
                 />
-                <span style={{ fontSize: '18px' }}>Enable notification sound</span>
+                <span style={{ fontSize: '18px', color: '#000' }}>Enable notification sound</span>
               </label>
             </div>
           )}
@@ -289,11 +292,11 @@ export function NotificationBell({ apiCall, userType }) {
                 style={{
                   padding: '40px 20px',
                   textAlign: 'center',
-                  color: '#999'
+                  color: '#666'
                 }}
               >
                 <div style={{ fontSize: '52px', marginBottom: '10px' }}>🔔</div>
-                <p>No notifications yet</p>
+                <p style={{ fontSize: '18px', fontWeight: '500', color: '#666' }}>No notifications yet</p>
               </div>
             ) : (
               notifications.map((notification) => (
@@ -338,7 +341,7 @@ export function NotificationBell({ apiCall, userType }) {
                           margin: '0 0 5px 0',
                           fontSize: '18px',
                           fontWeight: notification.is_read ? 'normal' : 'bold',
-                          color: '#333'
+                          color: '#000'
                         }}
                       >
                         {notification.message}
@@ -349,14 +352,14 @@ export function NotificationBell({ apiCall, userType }) {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           fontSize: '16px',
-                          color: '#666'
+                          color: '#555'
                         }}
                       >
                         <span>{notification.shop_name}</span>
                         <span>{formatTime(notification.created_at)}</span>
                       </div>
                       {notification.quantity && (
-                        <div style={{ fontSize: '16px', color: '#666', marginTop: '3px' }}>
+                        <div style={{ fontSize: '16px', color: '#555', marginTop: '3px' }}>
                           Quantity: {notification.quantity}
                         </div>
                       )}
