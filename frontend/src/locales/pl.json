@@ -687,27 +687,11 @@
     "registrationFailed": "Rejestracja nie powiodła się"
   },
   "vendor": {
-    "welcomeTitle": "Witamy w Programie E-Bonów Społeczności Northamptonshire",
-    "welcomeThank": "Dziękujemy za dołączenie do BAK UP CIC jako uczestniczący sklep lub dostawca! Jesteś kluczowym partnerem w naszym społecznościowym podejściu do wspierania rodzin znajdujących się w trudnej sytuacji.",
-    "welcomeDignity": "Akceptując e-bony, zapewniasz rodzinom godność, wybór oraz dostęp do kulturowo odpowiednich produktów spożywczych i podstawowych artykułów. Jednocześnie zyskujesz zwiększony ruch klientów i wsparcie dla swojego lokalnego biznesu.",
-    "welcomeCircular": "Możesz także pomóc w ograniczeniu marnowania, powiadamiając nas o nadmiarze jedzenia i towarów do ponownego rozdysponowania, wzmacniając tym samym naszą gospodarkę obiegową.",
-    "scanQRTitle": "Zeskanuj kod QR",
-    "cameraAccessFailed": "Brak dostępu do kamery",
-    "failedToStartCamera": "Nie udało się uruchomić kamery.",
-    "tryAgain": "Spróbuj ponownie",
-    "useManualEntry": "Zamiast tego użyj ręcznego wprowadzenia (zalecane)",
-    "redemptionInstructions": "Jak zrealizować bony",
-    "instruction1": "Zeskanuj kod QR lub wprowadź kod bonu ręcznie",
-    "instruction2": "Wpisz kod w polu poniżej lub użyj przycisku skanowania",
-    "instruction3": "Kliknij 'Zatwierdź', aby sprawdzić ważność bonu i zobaczyć saldo",
-    "instruction4": "Wprowadź kwotę do zrealizowania (nie może przekraczać salda bonu)",
-    "instruction5": "Zawsze zatwierdzaj bon przed jego przyjęciem jako płatność",
-    "instruction6": "Saldo bonu odbiorcy zostanie zaktualizowane automatycznie",
-    "totalSales": "Łączna sprzedaż",
-    "purchaseAmount": "Kwota zakupu",
-    "availableBalance": "Dostępne saldo",
-    "enterAmount": "Wprowadź kwotę",
-    "maxAmount": "max"
+    "totalSales": "Całkowita sprzedaż",
+    "welcomeTitle": "Witamy w Systemie Voucherów Elektronicznych Społeczności Northamptonshire",
+    "welcomeThank": "Dziękujemy za dołączenie do BAK UP CIC jako uczestniczący sklep lub sprzedawca! Jesteś ważnym partnerem w naszym podejściu społecznościowym do wspierania rodzin borykających się z trudnościami.",
+    "welcomeDignity": "Przyjmując vouchery elektroniczne, zapewniasz rodzinom godność, wybór i dostęp do odpowiednich kulturowo produktów spożywczych i artykułów pierwszej potrzeby. Jednocześnie korzystasz ze zwiększonego ruchu i wsparcia dla lokalnej firmy.",
+    "welcomeCircular": "Możesz również pomóc w redukcji odpadów, informując nas o nadwyżkach żywności i towarów do redystrybucji, wzmacniając naszą gospodarkę o obiegu zamkniętym."
   },
   "qrScanner": {
     "title": "Skanuj kod QR",
@@ -720,5 +704,11 @@
     "errorNoCamera": "Nie znaleziono kamery na tym urządzeniu",
     "errorCameraInUse": "Kamera jest używana przez inną aplikację",
     "errorFailed": "Nie udało się uruchomić kamery."
+  },
+  "vcseWelcome": {
+    "title": "Witamy w Systemie Voucherów Elektronicznych Społeczności Northamptonshire",
+    "paragraph1": "Dziękujemy za partnerstwo z BAK UP CIC w celu wspierania rodzin i osób borykających się z trudnościami w Northamptonshire. Jako organizacja VCFSE jesteś w centrum naszego podejścia społecznościowego do walki z brakiem bezpieczeństwa żywnościowego.",
+    "paragraph2": "Nasz system voucherów elektronicznych zastępuje tradycyjne paczki żywnościowe elastycznym, godnym wsparciem, które szanuje preferencje kulturowe i daje rodzinom prawdziwy wybór. Każdy voucher, który wydajesz, pomaga wzmocnić lokalne gospodarki poprzez wspieranie uczestniczących sklepów i sprzedawców.",
+    "paragraph3": "Razem budujemy bardziej inkluzywną, zrównoważoną i odporną społeczność, w której każdy może prosperować."
   }
 }

@@ -699,26 +699,16 @@
     "registrationFailed": "Înregistrare eșuată"
   },
   "vendor": {
-    "welcomeTitle": "Bine ați venit la Schema Comunitară de E-Vouchere din Northamptonshire",
-    "welcomeThank": "Vă mulțumim că ați ales să fiți un magazin sau furnizor participant al BAK UP CIC! Sunteți un partener esențial în abordarea noastră comunitară dedicată sprijinirii familiilor aflate în dificultate.",
-    "welcomeDignity": "Acceptând e-vouchere, oferiți familiilor demnitate, libertate de alegere și acces la alimente și produse esențiale cultural adecvate. În același timp, beneficiați de o creștere a traficului și de susținerea afacerii dumneavoastră locale.",
-    "welcomeCircular": "De asemenea, puteți contribui la reducerea risipei prin notificarea surplusului de alimente și bunuri pentru redistribuire, consolidând astfel economia noastră circulară.",
-    "scanQRTitle": "Scanează Codul QR",
-    "cameraAccessFailed": "Acces la Cameră Eșuat",
-    "failedToStartCamera": "Nu s-a putut porni camera.",
-    "tryAgain": "Încearcă din nou",
-    "useManualEntry": "Folosește Introducerea Manuală (Recomandat)",
-    "redemptionInstructions": "Cum să Răscumpărați Voucher-ele",
-    "instruction1": "Scanați codul QR sau introduceți codul voucher-ului manual",
-    "instruction2": "Introduceți codul în câmpul de mai jos sau folosiți butonul de scanare",
-    "instruction3": "Apăsați 'Validare' pentru a verifica dacă voucher-ul este valabil și pentru a vedea soldul",
-    "instruction4": "Introduceți suma pentru răscumpărare (nu trebuie să depășească soldul voucher-ului)",
-    "instruction5": "Validați întotdeauna voucher-ul înainte de a-l accepta ca plată",
-    "instruction6": "Soldul voucher-ului beneficiarului va fi actualizat automat",
     "totalSales": "Vânzări totale",
-    "purchaseAmount": "Sumă de cumpărare",
-    "availableBalance": "Sold disponibil",
-    "enterAmount": "Introduceți suma",
-    "maxAmount": "maxim"
+    "welcomeTitle": "Bun venit la Schema de Vouchere Electronice a Comunității Northamptonshire",
+    "welcomeThank": "Vă mulțumim că v-ați alăturat BAK UP CIC ca magazin sau vânzător participant! Sunteți un partener vital în abordarea noastră comunitară pentru sprijinirea familiilor care se confruntă cu dificultăți.",
+    "welcomeDignity": "Prin acceptarea voucherelor electronice, oferiți familiilor demnitate, alegere și acces la alimente și produse de bază adecvate din punct de vedere cultural. În același timp, beneficiați de creșterea traficului și sprijin pentru afacerea dvs. locală.",
+    "welcomeCircular": "De asemenea, puteți ajuta la reducerea deșeurilor prin notificarea noastră despre alimentele și bunurile excedentare pentru redistribuire, consolidând economia noastră circulară."
+  },
+  "vcseWelcome": {
+    "title": "Bun venit la Schema de Vouchere Electronice a Comunității Northamptonshire",
+    "paragraph1": "Vă mulțumim pentru parteneriatul cu BAK UP CIC pentru a sprijini familiile și persoanele care se confruntă cu dificultăți în Northamptonshire. Ca organizație VCFSE, vă aflați în centrul abordării noastre comunitare pentru combaterea insecurității alimentare.",
+    "paragraph2": "Sistemul nostru de vouchere electronice înlocuiește pachetele alimentare tradiționale cu sprijin flexibil și demn care respectă preferințele culturale și oferă familiilor o alegere reală. Fiecare voucher pe care îl emiteți ajută la consolidarea economiilor locale prin sprijinirea magazinelor și comercianților participanți.",
+    "paragraph3": "Împreună, construim o comunitate mai incluzivă, durabilă și rezistentă în care toată lumea poate prospera."
   }
 }
