@@ -113,7 +113,7 @@
     "issueVouchers": "Wydaj Vouchery",
     "participatingShops": "Uczestniczące Sklepy",
     "voucherHistory": "Historia Voucherów",
-    "searchByCode": "Szukaj po kodzie vouchera...",
+    "searchByCode": "Szukaj po kodzie...",
     "allVouchers": "Wszystkie Vouchery",
     "redeemedVouchers": "Zrealizowane",
     "expiredVouchers": "Wygasłe",
@@ -143,7 +143,10 @@
       "settings": "Ustawienia",
       "localShopsWithToGo": "Lokalne Sklepy z To Go",
       "allToGoItems": "Wszystkie Artykuły To Go"
-    }
+    },
+    "searchVouchers": "Szukaj voucherów",
+    "statusFilter": "Filtr statusu",
+    "clearFilters": "Wyczyść filtry"
   },
   "landing": {
     "hero": {

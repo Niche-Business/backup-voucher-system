@@ -113,7 +113,7 @@
     "issueVouchers": "Emite Vouchere",
     "participatingShops": "Magazine Participante",
     "voucherHistory": "Istoric Vouchere",
-    "searchByCode": "Caută după cod voucher...",
+    "searchByCode": "Căutare după cod...",
     "allVouchers": "Toate Voucherele",
     "redeemedVouchers": "Răscumpărate",
     "expiredVouchers": "Expirate",
@@ -143,7 +143,10 @@
       "settings": "Setări",
       "localShopsWithToGo": "Magazine Locale cu To Go",
       "allToGoItems": "Toate Articolele To Go"
-    }
+    },
+    "searchVouchers": "Căutare vouchere",
+    "statusFilter": "Filtru stare",
+    "clearFilters": "Șterge filtre"
   },
   "landing": {
     "hero": {

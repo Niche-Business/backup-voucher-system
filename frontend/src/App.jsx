@@ -1833,7 +1833,7 @@ function AdminDashboard({ user, onLogout }) {
                     }}
                     style={{...styles.secondaryButton, width: '100%'}}
                   >
-                    ✖️ Clear Filters
+                    ✖️ {t('dashboard.clearFilters')}
                   </button>
                 </div>
               </div>
@@ -2075,7 +2075,7 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Vouchers</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 {t('dashboard.searchVouchers')}</label>
                   <input
                     type="text"
                     placeholder="Search by code, recipient..."
@@ -2085,7 +2085,7 @@ function AdminDashboard({ user, onLogout }) {
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 Status Filter</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 {t('dashboard.statusFilter')}</label>
                   <select
                     value={voucherStatusFilter || 'all'}
                     onChange={(e) => setVoucherStatusFilter(e.target.value)}
@@ -2120,7 +2120,7 @@ function AdminDashboard({ user, onLogout }) {
                     }}
                     style={{...styles.secondaryButton, width: '100%'}}
                   >
-                    ✖️ Clear Filters
+                    ✖️ {t('dashboard.clearFilters')}
                   </button>
                 </div>
               </div>
@@ -7200,17 +7200,17 @@ function RecipientDashboard({ user, onLogout }) {
             <div style={{backgroundColor: 'white', padding: '15px', borderRadius: '10px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 Search Vouchers</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 {t('dashboard.searchVouchers')}</label>
                   <input
                     type="text"
-                    placeholder="Search by code..."
+                    placeholder={t('dashboard.searchByCode')}
                     value={recipientVoucherSearch || ''}
                     onChange={(e) => setRecipientVoucherSearch(e.target.value)}
                     style={{...styles.input, width: '100%'}}
                   />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 Status Filter</label>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>📋 {t('dashboard.statusFilter')}</label>
                   <select
                     value={recipientVoucherStatus || 'all'}
                     onChange={(e) => setRecipientVoucherStatus(e.target.value)}
@@ -7230,7 +7230,7 @@ function RecipientDashboard({ user, onLogout }) {
                     }}
                     style={{...styles.secondaryButton, width: '100%'}}
                   >
-                    ✖️ Clear Filters
+                    ✖️ {t('dashboard.clearFilters')}
                   </button>
                 </div>
               </div>
