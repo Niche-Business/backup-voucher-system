@@ -166,7 +166,12 @@
     },
     "searchVouchers": "بحث القسائم",
     "statusFilter": "تصفية الحالة",
-    "clearFilters": "مسح الفلاتر"
+    "clearFilters": "مسح الفلاتر",
+    "totalVouchers": "إجمالي القسائم",
+    "activeValue": "القيمة النشطة",
+    "vcfseOrgs": "منظمات VCFSE",
+    "recipients": "المستفيدون",
+    "localShops": "المتاجر المحلية"
   },
   "landing": {
     "hero": {

@@ -166,7 +166,12 @@
     },
     "searchVouchers": "Căutare vouchere",
     "statusFilter": "Filtru stare",
-    "clearFilters": "Șterge filtre"
+    "clearFilters": "Șterge filtre",
+    "totalVouchers": "Total vouchere",
+    "activeValue": "Valoare activă",
+    "vcfseOrgs": "Organizații VCFSE",
+    "recipients": "Beneficiari",
+    "localShops": "Magazine locale"
   },
   "landing": {
     "hero": {

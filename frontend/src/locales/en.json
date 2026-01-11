@@ -109,7 +109,6 @@
     "globalSearch": "Global Search",
     "transactions": "Transactions",
     "broadcast": "Broadcast",
-    "fundAllocation": "Fund Allocation",
     "vcfseVerification": "VCFSE Verification",
     "vcfseOrganisations": "VCFSE Organisations",
     "recipients": "Recipients",
@@ -168,7 +167,12 @@
       "settings": "Settings",
       "localShopsWithToGo": "Local Shops with To Gos",
       "allToGoItems": "All To Go Items"
-    }
+    },
+    "totalVouchers": "Total Vouchers",
+    "activeValue": "Active Value",
+    "vcfseOrgs": "VCFSE Organizations",
+    "recipients": "Recipients",
+    "localShops": "Local Shops"
   },
   "landing": {
     "hero": {

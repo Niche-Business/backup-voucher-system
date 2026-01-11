@@ -166,7 +166,12 @@
     },
     "searchVouchers": "Szukaj voucherów",
     "statusFilter": "Filtr statusu",
-    "clearFilters": "Wyczyść filtry"
+    "clearFilters": "Wyczyść filtry",
+    "totalVouchers": "Łącznie voucherów",
+    "activeValue": "Wartość aktywna",
+    "vcfseOrgs": "Organizacje VCFSE",
+    "recipients": "Odbiorcy",
+    "localShops": "Lokalne sklepy"
   },
   "landing": {
     "hero": {
