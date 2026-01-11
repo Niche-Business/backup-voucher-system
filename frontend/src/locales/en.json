@@ -104,7 +104,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "activeBalance": "Active Balance",
-    "activeVouchers": "Active",
+    "totalVouchersIssued": "Total Vouchers Issued",
+    "activeVouchers": "Active Vouchers",
     "redeemed": "Redeemed",
     "emptyCart": "Your cart is empty",
     "noToGoItems": "No to go items available at the moment",
@@ -115,7 +116,7 @@
     "voucherHistory": "Voucher History",
     "searchByCode": "Search by voucher code...",
     "allVouchers": "All Vouchers",
-    "redeemedVouchers": "Redeemed",
+    "redeemedVouchers": "Redeemed Vouchers",
     "expiredVouchers": "Expired",
     "noVouchersFound": "No vouchers found",
     "tabs": {
@@ -337,6 +338,7 @@
     "title": "Vouchers",
     "balance": "Balance",
     "status": "Status",
+    "allStatus": "All Status",
     "active": "Active",
     "used": "Used",
     "expired": "Expired",
@@ -720,5 +722,11 @@
     "availableBalance": "Available balance",
     "enterAmount": "Enter amount",
     "maxAmount": "max"
+  },
+  "vcseWelcome": {
+    "title": "Welcome to the Northamptonshire Community E-Voucher Scheme",
+    "paragraph1": "Thank you for partnering with BAK UP CIC to support families and individuals facing hardship across Northamptonshire. As a VCFSE organization, you are at the heart of our community-led approach to tackling food insecurity.",
+    "paragraph2": "Our E-Voucher system replaces traditional food parcels with flexible, dignified support that respects cultural preferences and gives families real choice. Every voucher you issue helps strengthen local economies by supporting participating shops and retailers.",
+    "paragraph3": "Together, we're building a more inclusive, sustainable, and resilient community where everyone can thrive."
   }
 }

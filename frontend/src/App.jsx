@@ -2091,10 +2091,10 @@ function AdminDashboard({ user, onLogout }) {
                     onChange={(e) => setVoucherStatusFilter(e.target.value)}
                     style={{...styles.input, width: '100%'}}
                   >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="redeemed">Redeemed</option>
-                    <option value="expired">Expired</option>
+                    <option value="all">{t('voucher.allStatus')}</option>
+                    <option value="active">{t('voucher.active')}</option>
+                    <option value="redeemed">{t('voucher.redeemed')}</option>
+                    <option value="expired">{t('voucher.expired')}</option>
                   </select>
                 </div>
                 <div>
@@ -4305,15 +4305,15 @@ function VCSEDashboard({ user, onLogout }) {
             </div>
             
             <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '12px', marginTop: '20px', border: '2px solid #4CAF50'}}>
-              <h3 style={{marginTop: 0, color: '#2e7d32'}}>🤝 Welcome to the Northamptonshire Community E-Voucher Scheme</h3>
+              <h3 style={{marginTop: 0, color: '#2e7d32'}}>🤝 {t('vcseWelcome.title')}</h3>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                Thank you for partnering with <strong>BAK UP CIC</strong> to support families and individuals facing hardship across Northamptonshire. As a VCFSE organization, you are at the heart of our community-led approach to tackling food insecurity.
+                {t('vcseWelcome.paragraph1')}
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                Our E-Voucher system replaces traditional food parcels with <strong>flexible, dignified support</strong> that respects cultural preferences and gives families real choice. Every voucher you issue helps strengthen local economies by supporting participating shops and retailers.
+                {t('vcseWelcome.paragraph2')}
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', color: '#555'}}>
-                🌟 Together, we're building a more inclusive, sustainable, and resilient community where everyone can thrive.
+                🌟 {t('vcseWelcome.paragraph3')}
               </p>
             </div>
           </div>
@@ -5210,19 +5210,19 @@ function VCSEDashboard({ user, onLogout }) {
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '30px'}}>
               <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#1976d2'}}>{vouchers.length}</div>
-                <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.totalVouchersIssued')}</div>
               </div>
               <div style={{backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
-                <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.activeVouchers')}</div>
               </div>
               <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#2196F3'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
-                <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.redeemedVouchers')}</div>
               </div>
               <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
@@ -5900,7 +5900,7 @@ function VendorDashboard({ user, onLogout }) {
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#4CAF50'}}>£{totalSales.toFixed(2)}</div>
-                <div>💰 Total Sales</div>
+                <div>💰 {t('vendor.totalSales')}</div>
               </div>
               <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#FF9800'}}>{toGoCount}</div>
@@ -5913,15 +5913,15 @@ function VendorDashboard({ user, onLogout }) {
             </div>
             
             <div style={{backgroundColor: '#fff3e0', padding: '25px', borderRadius: '12px', marginBottom: '25px', border: '2px solid #FF9800'}}>
-              <h3 style={{marginTop: 0, color: '#e65100'}}>🏪 Welcome to the Northamptonshire Community E-Voucher Scheme</h3>
+              <h3 style={{marginTop: 0, color: '#e65100'}}>🏪 {t('vendor.welcomeTitle')}</h3>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                Thank you for joining <strong>BAK UP CIC</strong> as a participating shop or vendor! You are a vital partner in our community-led approach to supporting families facing hardship.
+                {t('vendor.welcomeThank')}
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                By accepting e-vouchers, you provide families with <strong>dignity, choice, and access</strong> to culturally appropriate food and essentials. At the same time, you benefit from increased footfall and support for your local business.
+                {t('vendor.welcomeDignity')}
               </p>
               <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', color: '#555'}}>
-                ♻️ You can also help reduce waste by notifying us about surplus food and goods for redistribution, strengthening our circular economy.
+                ♻️ {t('vendor.welcomeCircular')}
               </p>
             </div>
             
@@ -7216,10 +7216,10 @@ function RecipientDashboard({ user, onLogout }) {
                     onChange={(e) => setRecipientVoucherStatus(e.target.value)}
                     style={{...styles.input, width: '100%'}}
                   >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="redeemed">Redeemed</option>
-                    <option value="expired">Expired</option>
+                    <option value="all">{t('voucher.allStatus')}</option>
+                    <option value="active">{t('voucher.active')}</option>
+                    <option value="redeemed">{t('voucher.redeemed')}</option>
+                    <option value="expired">{t('voucher.expired')}</option>
                   </select>
                 </div>
                 <div style={{display: 'flex', alignItems: 'flex-end'}}>
@@ -8319,7 +8319,7 @@ function SchoolDashboard({ user, onLogout }) {
                 onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'}}
               >
                 <div style={{fontSize: '40px', fontWeight: 'bold', color: '#9C27B0'}}>{vouchers.length}</div>
-                <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.totalVouchersIssued')}</div>
               </div>
               <div 
                 onClick={() => setActiveTab('vouchers')}
@@ -8330,7 +8330,7 @@ function SchoolDashboard({ user, onLogout }) {
                 <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
-                <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.activeVouchers')}</div>
               </div>
               <div 
                 onClick={() => setActiveTab('vouchers')}
@@ -8341,7 +8341,7 @@ function SchoolDashboard({ user, onLogout }) {
                 <div style={{fontSize: '40px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>
-                <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
+                <div style={{color: '#666', marginTop: '5px'}}>{t('dashboard.redeemedVouchers')}</div>
               </div>
               <div 
                 onClick={() => setActiveTab('vouchers')}
