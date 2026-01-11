@@ -5860,6 +5860,16 @@ function VendorDashboard({ user, onLogout }) {
             <LanguageSelector />
           </div>
           
+          <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
+          
+          <button onClick={() => { setActiveTab('overview'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'overview' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>📋 {t('dashboard.overview')}</button>
+          <button onClick={() => { setActiveTab('vouchers'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'vouchers' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🎫 {t('dashboard.redeemVouchers')}</button>
+          <button onClick={() => { setActiveTab('history'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'history' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>📜 {t('shop.redemptionHistory')}</button>
+          <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
+          <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
+          
+          <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
+          
           <button
             onClick={() => {
               onLogout()
@@ -5876,7 +5886,8 @@ function VendorDashboard({ user, onLogout }) {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              color: '#d32f2f'
+              color: '#d32f2f',
+              fontWeight: 'bold'
             }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -5888,13 +5899,8 @@ function VendorDashboard({ user, onLogout }) {
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.redeemVouchers')}</button>
-          <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('shop.redemptionHistory')}</button>
-          <button onClick={() => setActiveTab('payout')} style={activeTab === 'payout' ? styles.activeTab : styles.tab}>💰 {t('payout.requestPayout')}</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
-        </div>
+        {/* Navigation tabs hidden - moved to hamburger menu */}
+        <div style={{display: 'none'}}></div>
         
         {activeTab === 'overview' && (
           <div>
