@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clearing Cache...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+        }
+        h1 { margin-bottom: 20px; }
+        .status {
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .success { color: #4CAF50; background: rgba(76, 175, 80, 0.2); }
+        .error { color: #f44336; background: rgba(244, 67, 54, 0.2); }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover { background: #45a049; }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Cache Clearing Tool</h1>
+        <p>This page will unregister all service workers and clear all caches.</p>
+        <div id="status" class="status">
+            <div class="spinner"></div>
+            <p>Working...</p>
+        </div>
+        <button id="goHome" style="display: none;">Go to Homepage</button>
+    </div>
+
+    <script>
+        async function clearEverything() {
+            const statusDiv = document.getElementById('status');
+            const goHomeBtn = document.getElementById('goHome');
+            let messages = [];
+
+            try {
+                // Unregister all service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        messages.push('✅ Service worker unregistered');
+                    }
+                    if (registrations.length === 0) {
+                        messages.push('ℹ️ No service workers found');
+                    }
+                }
+
+                // Clear all caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let cacheName of cacheNames) {
+                        await caches.delete(cacheName);
+                        messages.push(`✅ Deleted cache: ${cacheName}`);
+                    }
+                    if (cacheNames.length === 0) {
+                        messages.push('ℹ️ No caches found');
+                    }
+                }
+
+                // Clear localStorage
+                localStorage.clear();
+                messages.push('✅ LocalStorage cleared');
+
+                // Clear sessionStorage
+                sessionStorage.clear();
+                messages.push('✅ SessionStorage cleared');
+
+                // Success message
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `
+                    <h2>✅ All Clear!</h2>
+                    ${messages.map(m => `<p>${m}</p>`).join('')}
+                    <p style="margin-top: 20px; font-weight: bold;">You can now use the app normally.</p>
+                `;
+                goHomeBtn.style.display = 'inline-block';
+
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    <h2>❌ Error</h2>
+                    <p>${error.message}</p>
+                    <p>Please try manually clearing your browser cache.</p>
+                `;
+                goHomeBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Run on page load
+        clearEverything();
+
+        // Go home button
+        document.getElementById('goHome').addEventListener('click', () => {
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

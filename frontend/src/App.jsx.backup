@@ -1,0 +1,1595 @@
+import React, { useState, useEffect } from 'react'
+import LandingPage from './LandingPage'
+
+// API Helper Function
+const apiCall = async (endpoint, options = {}) => {
+  const response = await fetch(`/api${endpoint}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers
+    },
+    credentials: 'include'
+  })
+  
+  if (!response.ok && response.status !== 401) {
+    const error = await response.json()
+    throw new Error(error.error || 'Request failed')
+  }
+  
+  return response.json()
+}
+
+function App() {
+  const [currentView, setCurrentView] = useState('home')
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const data = await apiCall('/check-auth')
+      if (data.authenticated) {
+        setUser(data.user)
+        setCurrentView('dashboard')
+      }
+    } catch (error) {
+      console.log('Not authenticated')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogin = async (email, password) => {
+    try {
+      const data = await apiCall('/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      
+      if (data.user && data.user.user_type) {
+        setUser({
+          id: data.user.id,
+          email: data.user.email,
+          userType: data.user.user_type,
+          name: `${data.user.first_name} ${data.user.last_name}`
+        })
+        setCurrentView('dashboard')
+        return { success: true }
+      }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await apiCall('/logout', { method: 'POST' })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      setUser(null)
+      setCurrentView('home')
+    }
+  }
+
+  const handleRegister = async (formData) => {
+    try {
+      // Convert camelCase to snake_case for backend
+      const backendData = {
+        email: formData.email,
+        password: formData.password,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phone,
+        user_type: formData.userType,
+        organization_name: formData.organizationName || '',
+        shop_name: formData.shopName || '',
+        address: formData.address || '',
+        postcode: formData.postcode || '',
+        city: formData.city || ''
+      }
+      
+      const data = await apiCall('/register', {
+        method: 'POST',
+        body: JSON.stringify(backendData)
+      })
+      
+      if (data.message) {
+        return { success: true, message: data.message }
+      }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  }
+
+  if (loading) {
+    return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+      <h2>Loading...</h2>
+    </div>
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      {currentView === 'home' && <LandingPage onNavigate={setCurrentView} />}
+      {currentView === 'login' && <LoginPage onLogin={handleLogin} onNavigate={setCurrentView} />}
+      {currentView === 'register' && <RegisterPage onRegister={handleRegister} onNavigate={setCurrentView} />}
+      {currentView === 'dashboard' && user && (
+        <Dashboard user={user} onLogout={handleLogout} />
+      )}
+    </div>
+  )
+}
+
+// Home Page Component
+function HomePage({ onNavigate }) {
+  return (
+    <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '60px 20px', textAlign: 'center'}}>
+      <h1 style={{fontSize: '48px', marginBottom: '20px'}}>BAK UP E-Voucher System</h1>
+      <p style={{fontSize: '20px', marginBottom: '40px'}}>Reducing waste, supporting communities, strengthening local economies</p>
+      <div style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>
+        <button onClick={() => onNavigate('login')} style={styles.primaryButton}>Sign In</button>
+        <button onClick={() => onNavigate('register')} style={styles.secondaryButton}>Register</button>
+      </div>
+      
+      <div style={{marginTop: '80px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px', maxWidth: '1200px', margin: '80px auto 0'}}>
+        <FeatureCard icon="🎫" title="Digital Vouchers" description="Recipients receive digital vouchers via text or email to redeem at local shops" />
+        <FeatureCard icon="🏪" title="Local Vendors" description="Partner shops accept vouchers and notify about surplus food available for collection" />
+        <FeatureCard icon="🤝" title="VCSE Organizations" description="Charities issue vouchers and collect surplus food to support communities" />
+        <FeatureCard icon="📊" title="Impact Tracking" description="Comprehensive reporting for admins and VCSE organizations to measure community impact" />
+      </div>
+    </div>
+  )
+}
+
+function FeatureCard({ icon, title, description }) {
+  return (
+    <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', color: '#333'}}>
+      <div style={{fontSize: '48px', marginBottom: '15px'}}>{icon}</div>
+      <h3 style={{marginBottom: '10px'}}>{title}</h3>
+      <p style={{color: '#666', lineHeight: '1.6'}}>{description}</p>
+    </div>
+  )
+}
+
+// Login Page Component
+function LoginPage({ onLogin, onNavigate }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    
+    const result = await onLogin(email, password)
+    
+    if (!result.success) {
+      setError(result.error || 'Login failed')
+    }
+    setLoading(false)
+  }
+
+  return (
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50'}}>
+      <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>Sign In to BAK UP</h2>
+        
+        {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
+        
+        <form onSubmit={handleSubmit}>
+          <div style={{marginBottom: '20px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              style={styles.input}
+            />
+          </div>
+          
+          <div style={{marginBottom: '20px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              style={styles.input}
+            />
+          </div>
+          
+          <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+        
+        <div style={{textAlign: 'center'}}>
+          <p>Don't have an account? <button onClick={() => onNavigate('register')} style={styles.linkButton}>Register here</button></p>
+          <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Register Page Component  
+function RegisterPage({ onRegister, onNavigate }) {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    userType: 'recipient',
+    organizationName: '',
+    shopName: '',
+    address: '',
+    postcode: '',
+    city: ''
+  })
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+    
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    
+    setLoading(true)
+    const result = await onRegister(formData)
+    
+    if (result.success) {
+      setSuccess(result.message || 'Registration successful! Please sign in.')
+      setTimeout(() => onNavigate('login'), 2000)
+    } else {
+      setError(result.error || 'Registration failed')
+    }
+    setLoading(false)
+  }
+
+  return (
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50', padding: '20px'}}>
+      <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', width: '500px', maxWidth: '100%', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+        <h2 style={{textAlign: 'center', marginBottom: '30px'}}>Register for BAK UP</h2>
+        
+        {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{error}</div>}
+        {success && <div style={{backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{success}</div>}
+        
+        <form onSubmit={handleSubmit}>
+          <div style={{marginBottom: '15px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>User Type</label>
+            <select name="userType" value={formData.userType} onChange={handleChange} style={styles.input} required>
+              <option value="recipient">Recipient</option>
+              <option value="vendor">Vendor</option>
+              <option value="vcse">VCSE Organization</option>
+              <option value="school">School/Care Organization</option>
+            </select>
+          </div>
+          
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>First Name</label>
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={styles.input} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Last Name</label>
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={styles.input} required />
+            </div>
+          </div>
+          
+          <div style={{marginBottom: '15px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} required />
+          </div>
+          
+          <div style={{marginBottom: '15px'}}>
+            <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Phone</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} required />
+          </div>
+          
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Password</label>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} style={styles.input} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Confirm Password</label>
+              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} style={styles.input} required />
+            </div>
+          </div>
+          
+          {(formData.userType === 'vcse' || formData.userType === 'vendor' || formData.userType === 'recipient' || formData.userType === 'school') && (
+            <>
+              {formData.userType === 'vcse' && (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Organization Name</label>
+                  <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
+                </div>
+              )}
+              
+              {formData.userType === 'school' && (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>School/Organization Name</label>
+                  <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} style={styles.input} required />
+                </div>
+              )}
+              
+              {formData.userType === 'vendor' && (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop Name</label>
+                  <input type="text" name="shopName" value={formData.shopName} onChange={handleChange} style={styles.input} required />
+                </div>
+              )}
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+                <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} required />
+              </div>
+              
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Postcode</label>
+                  <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} style={styles.input} required />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>City</label>
+                  <input type="text" name="city" value={formData.city} onChange={handleChange} style={styles.input} required />
+                </div>
+              </div>
+            </>
+          )}
+          
+          <button type="submit" disabled={loading} style={{...styles.primaryButton, width: '100%', marginBottom: '15px'}}>
+            {loading ? 'Registering...' : 'Register'}
+          </button>
+        </form>
+        
+        <div style={{textAlign: 'center'}}>
+          <p>Already have an account? <button onClick={() => onNavigate('login')} style={styles.linkButton}>Sign in here</button></p>
+          <button onClick={() => onNavigate('home')} style={styles.linkButton}>Back to Home</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Dashboard Router Component
+function Dashboard({ user, onLogout }) {
+  if (user.userType === 'admin') return <AdminDashboard user={user} onLogout={onLogout} />
+  if (user.userType === 'vcse') return <VCSEDashboard user={user} onLogout={onLogout} />
+  if (user.userType === 'vendor') return <VendorDashboard user={user} onLogout={onLogout} />
+  if (user.userType === 'recipient') return <RecipientDashboard user={user} onLogout={onLogout} />
+  if (user.userType === 'school') return <SchoolDashboard user={user} onLogout={onLogout} />
+  return <div>Unknown user type</div>
+}
+
+// ADMIN DASHBOARD
+function AdminDashboard({ user, onLogout }) {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [vcseOrgs, setVcseOrgs] = useState([])
+  const [schools, setSchools] = useState([])
+  const [selectedVcse, setSelectedVcse] = useState('')
+  const [selectedSchool, setSelectedSchool] = useState('')
+  const [organizationType, setOrganizationType] = useState('vcse')
+  const [amount, setAmount] = useState('')
+  const [notes, setNotes] = useState('')
+  const [message, setMessage] = useState('')
+  const [vouchers, setVouchers] = useState([])
+  const [vendorShops, setVendorShops] = useState([])
+  const [surplusItems, setSurplusItems] = useState([])
+
+  useEffect(() => {
+    loadVcseOrgs()
+    loadSchools()
+    loadVouchers()
+    loadVendorShops()
+    loadSurplusItems()
+  }, [])
+
+  const loadVcseOrgs = async () => {
+    try {
+      const data = await apiCall('/admin/vcse-organizations')
+      setVcseOrgs(data)
+    } catch (error) {
+      console.error('Failed to load VCSE organizations:', error)
+    }
+  }
+
+  const loadSchools = async () => {
+    try {
+      const data = await apiCall('/admin/schools')
+      setSchools(Array.isArray(data) ? data : [])
+    } catch (error) {
+      console.error('Failed to load schools:', error)
+    }
+  }
+
+  const loadVouchers = async () => {
+    try {
+      const data = await apiCall('/admin/vouchers')
+      setVouchers(data.vouchers || [])
+    } catch (error) {
+      console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const loadVendorShops = async () => {
+    try {
+      const data = await apiCall('/admin/shops')
+      setVendorShops(data.shops || [])
+    } catch (error) {
+      console.error('Failed to load vendor shops:', error)
+    }
+  }
+
+  const loadSurplusItems = async () => {
+    try {
+      const data = await apiCall('/admin/surplus-items')
+      setSurplusItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load surplus items:', error)
+    }
+  }
+
+  const handleAllocateFunds = async (e) => {
+    e.preventDefault()
+    try {
+      const requestBody = {
+        amount: parseFloat(amount),
+        notes
+      }
+      
+      if (organizationType === 'vcse') {
+        requestBody.vcse_id = parseInt(selectedVcse)
+      } else {
+        requestBody.school_id = parseInt(selectedSchool)
+      }
+      
+      await apiCall('/admin/allocate-funds', {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      })
+      setMessage('Funds allocated successfully!')
+      setAmount('')
+      setNotes('')
+      loadVcseOrgs()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h1>Admin Portal</h1>
+        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      </div>
+      
+      <div style={{padding: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
+          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>Voucher Management</button>
+          <button onClick={() => setActiveTab('schools')} style={activeTab === 'schools' ? styles.activeTab : styles.tab}>Schools/Care Orgs</button>
+          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Vendor Shops</button>
+          <button onClick={() => setActiveTab('surplus')} style={activeTab === 'surplus' ? styles.activeTab : styles.tab}>All Surplus Items</button>
+        </div>
+        
+        {activeTab === 'overview' && (
+          <div>
+            <h2>Fund Allocation</h2>
+            {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
+            
+            <form onSubmit={handleAllocateFunds} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Organization Type</label>
+                <select value={organizationType} onChange={(e) => setOrganizationType(e.target.value)} style={styles.input}>
+                  <option value="vcse">VCSE Organization</option>
+                  <option value="school">School/Care Organization</option>
+                </select>
+              </div>
+              
+              {organizationType === 'vcse' ? (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Select VCSE Organization</label>
+                  <select value={selectedVcse} onChange={(e) => setSelectedVcse(e.target.value)} style={styles.input} required>
+                    <option value="">Choose a VCSE organization...</option>
+                    {vcseOrgs.map(org => (
+                      <option key={org.id} value={org.id}>
+                        {org.name} - Allocated: £{org.allocated_balance.toFixed(2)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div style={{marginBottom: '15px'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Select School/Care Organization</label>
+                  <select value={selectedSchool} onChange={(e) => setSelectedSchool(e.target.value)} style={styles.input} required>
+                    <option value="">Choose a school/care organization...</option>
+                    {schools.map(school => (
+                      <option key={school.id} value={school.id}>
+                        {school.organization_name} - Allocated: £{(school.allocated_balance || 0).toFixed(2)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Amount (£)</label>
+                <input type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g., 1000.00" style={styles.input} required />
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Notes (Optional)</label>
+                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} style={{...styles.input, minHeight: '80px'}} />
+              </div>
+              
+              <button type="submit" style={styles.primaryButton}>💸 Allocate Funds</button>
+            </form>
+            
+            <h3>VCSE Organizations</h3>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {vcseOrgs.map(org => (
+                <div key={org.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+                  <strong>{org.name}</strong> ({org.email})<br />
+                  Allocated Balance: £{org.allocated_balance.toFixed(2)}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'vouchers' && (
+          <div>
+            <h2>All Vouchers ({vouchers.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {vouchers.length === 0 ? (
+                <p>No vouchers found</p>
+              ) : (
+                vouchers.map(voucher => (
+                  <div key={voucher.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+                    <strong>Code: {voucher.code}</strong> - £{voucher.value.toFixed(2)}<br />
+                    Status: <span style={{color: voucher.status === 'active' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{voucher.status.toUpperCase()}</span><br />
+                    {voucher.recipient && (
+                      <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '5px'}}>
+                        <strong>📋 Recipient Details:</strong><br />
+                        Name: {voucher.recipient.name}<br />
+                        Email: {voucher.recipient.email}<br />
+                        Phone: {voucher.recipient.phone}<br />
+                        Address: {voucher.recipient.address}
+                      </div>
+                    )}<br />
+                    Issued by: {voucher.issued_by?.name || 'N/A'} ({voucher.issued_by?.organization || 'N/A'})<br />
+                    Expires: {new Date(voucher.expiry_date).toLocaleDateString()}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'shops' && (
+          <div>
+            <h2>🏪 Vendor Shops with Surplus Foods ({vendorShops.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {vendorShops.length === 0 ? (
+                <p>No vendor shops found</p>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
+                  {vendorShops.map(shop => (
+                    <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
+                      <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📞 Phone:</strong> {shop.phone}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>👤 Vendor:</strong> {shop.vendor_name}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📧 Email:</strong> {shop.vendor_email}
+                      </p>
+                      <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
+                        🍎 Surplus Items: {shop.surplus_items_count}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'schools' && (
+          <div>
+            <h2>🎓 Schools & Care Organizations ({schools.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {schools.length === 0 ? (
+                <p>No schools/care organizations registered yet</p>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                  {schools.map(school => (
+                    <div key={school.id} style={{padding: '20px', border: '2px solid #9C27B0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
+                      <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{school.organization_name}</h3>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>👤 Contact:</strong> {school.first_name} {school.last_name}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📧 Email:</strong> {school.email}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📞 Phone:</strong> {school.phone}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📍 Address:</strong> {school.address}, {school.city} {school.postcode}
+                      </p>
+                      <div style={{marginTop: '15px', padding: '15px', backgroundColor: '#E1BEE7', borderRadius: '8px'}}>
+                        <p style={{margin: '0', fontWeight: 'bold', fontSize: '18px', color: '#6A1B9A'}}>
+                          💰 Allocated Balance: £{(school.allocated_balance || 0).toFixed(2)}
+                        </p>
+                      </div>
+                      <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#F3E5F5', borderRadius: '8px'}}>
+                        <p style={{margin: '0', fontSize: '12px', color: '#6A1B9A', fontStyle: 'italic'}}>
+                          🎯 Supporting families from underrepresented communities
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'surplus' && (
+          <div>
+            <h2>🍎 All Surplus Food Items ({surplusItems.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {surplusItems.length === 0 ? (
+                <p>No surplus items found</p>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '15px'}}>
+                  {surplusItems.map(item => (
+                    <div key={item.id} style={{padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', backgroundColor: item.status === 'available' ? '#f1f8e9' : '#fafafa'}}>
+                      <h4 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>{item.item_name}</h4>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Quantity:</strong> {item.quantity} {item.unit}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Price:</strong> £{item.price.toFixed(2)} per {item.unit}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Category:</strong> {item.category}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Status:</strong> <span style={{color: item.status === 'available' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{item.status.toUpperCase()}</span>
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Description:</strong> {item.description || 'N/A'}
+                      </p>
+                      <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
+                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
+                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
+                        <p style={{margin: '2px 0', fontSize: '13px'}}><strong>👤 Vendor:</strong> {item.vendor_name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// VCSE DASHBOARD
+function VCSEDashboard({ user, onLogout }) {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [allocatedBalance, setAllocatedBalance] = useState(0)
+  const [voucherForm, setVoucherForm] = useState({
+    recipientEmail: '',
+    value: '',
+    expiryDays: '30'
+  })
+  const [message, setMessage] = useState('')
+  const [surplusItems, setSurplusItems] = useState([])
+
+  useEffect(() => {
+    loadBalance()
+    loadSurplusItems()
+  }, [])
+
+  const loadBalance = async () => {
+    try {
+      const data = await apiCall('/vcse/balance')
+      setAllocatedBalance(data.allocated_balance || 0)
+    } catch (error) {
+      console.error('Failed to load balance:', error)
+    }
+  }
+
+  const loadSurplusItems = async () => {
+    try {
+      const data = await apiCall('/items/available')
+      setSurplusItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load surplus items:', error)
+    }
+  }
+
+  const handleIssueVoucher = async (e) => {
+    e.preventDefault()
+    try {
+      await apiCall('/vcse/issue-voucher', {
+        method: 'POST',
+        body: JSON.stringify({
+          recipient_email: voucherForm.recipientEmail,
+          value: parseFloat(voucherForm.value),
+          expiry_days: parseInt(voucherForm.expiryDays)
+        })
+      })
+      setMessage('Voucher issued successfully!')
+      setVoucherForm({ recipientEmail: '', value: '', expiryDays: '30' })
+      loadBalance()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h1>VCSE Portal</h1>
+        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      </div>
+      
+      <div style={{padding: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
+          <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>Issue Vouchers</button>
+          <button onClick={() => setActiveTab('surplus')} style={activeTab === 'surplus' ? styles.activeTab : styles.tab}>Surplus Food</button>
+        </div>
+        
+        {activeTab === 'overview' && (
+          <div>
+            <div style={{backgroundColor: '#e3f2fd', padding: '30px', borderRadius: '15px', marginBottom: '30px'}}>
+              <h3 style={{marginTop: 0, color: '#1565c0'}}>💰 Funds Allocated by Administrator</h3>
+              <p>The System Administrator allocates funds to your organization. Use these funds to issue vouchers to recipients.</p>
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '12px', textAlign: 'center'}}>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#1976d2'}}>£{allocatedBalance.toFixed(2)}</div>
+                <div style={{fontSize: '18px', color: '#666'}}>Available Balance for Voucher Issuance</div>
+              </div>
+              <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px'}}>
+                <p style={{margin: 0, color: '#856404'}}>⚠️ <strong>Note:</strong> You cannot load money directly. Only the System Administrator can allocate funds to your organization.</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'issue' && (
+          <div>
+            <h2>Issue Vouchers</h2>
+            <div style={{backgroundColor: '#e3f2fd', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
+              <strong>💰 Allocated Funds from Admin: £{allocatedBalance.toFixed(2)}</strong>
+              <p style={{margin: '10px 0 0'}}>Use these funds to issue vouchers to recipients</p>
+            </div>
+            
+            {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
+            
+            <form onSubmit={handleIssueVoucher} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Recipient Email</label>
+                <input
+                  type="email"
+                  value={voucherForm.recipientEmail}
+                  onChange={(e) => setVoucherForm({...voucherForm, recipientEmail: e.target.value})}
+                  placeholder="recipient@example.com"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Voucher Value (£)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={voucherForm.value}
+                  onChange={(e) => setVoucherForm({...voucherForm, value: e.target.value})}
+                  placeholder="Enter amount"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Expiry (Days)</label>
+                <input
+                  type="number"
+                  value={voucherForm.expiryDays}
+                  onChange={(e) => setVoucherForm({...voucherForm, expiryDays: e.target.value})}
+                  style={styles.input}
+                  required
+                />
+              </div>
+              
+              <button type="submit" style={styles.primaryButton}>Issue Voucher</button>
+            </form>
+          </div>
+        )}
+        
+        {activeTab === 'surplus' && (
+          <div>
+            <h2>Available Surplus Food</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {surplusItems.length === 0 ? (
+                <p>No surplus items available</p>
+              ) : (
+                surplusItems.map(item => (
+                  <div key={item.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+                    <strong>{item.title}</strong><br />
+                    Category: {item.category}<br />
+                    Quantity: {item.quantity}<br />
+                    {item.description && <p>{item.description}</p>}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// VENDOR DASHBOARD - WITH FIXED SURPLUS COUNTER
+function VendorDashboard({ user, onLogout }) {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [shops, setShops] = useState([])
+  const [surplusItems, setSurplusItems] = useState([])
+  const [surplusCount, setSurplusCount] = useState(0)
+  const [surplusForm, setSurplusForm] = useState({
+    shopId: '',
+    itemName: '',
+    quantity: '',
+    category: 'Fresh Produce',
+    description: ''
+  })
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    loadShops()
+    loadSurplusItems()
+  }, [])
+
+  const loadShops = async () => {
+    try {
+      const data = await apiCall('/vendor/shops')
+      setShops(data.shops || [])
+      if (data.shops && data.shops.length > 0) {
+        setSurplusForm(prev => ({ ...prev, shopId: data.shops[0].id.toString() }))
+      }
+    } catch (error) {
+      console.error('Failed to load shops:', error)
+    }
+  }
+
+  const loadSurplusItems = async () => {
+    try {
+      const data = await apiCall('/vendor/surplus-items')
+      setSurplusItems(data.surplus_items || [])
+      setSurplusCount(data.total_count || 0)
+    } catch (error) {
+      console.error('Failed to load surplus items:', error)
+    }
+  }
+
+  const handlePostSurplus = async (e) => {
+    e.preventDefault()
+    try {
+      await apiCall('/items/post', {
+        method: 'POST',
+        body: JSON.stringify({
+          shop_id: parseInt(surplusForm.shopId),
+          item_name: surplusForm.itemName,
+          quantity: surplusForm.quantity,
+          category: surplusForm.category,
+          description: surplusForm.description
+        })
+      })
+      setMessage('Surplus item posted successfully!')
+      setSurplusForm({ ...surplusForm, itemName: '', quantity: '', description: '' })
+      loadSurplusItems()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h1>Vendor Portal</h1>
+        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      </div>
+      
+      <div style={{padding: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>Overview</button>
+          <button onClick={() => setActiveTab('surplus')} style={activeTab === 'surplus' ? styles.activeTab : styles.tab}>Surplus Food</button>
+        </div>
+        
+        {activeTab === 'overview' && (
+          <div>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px'}}>
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#FF9800'}}>{surplusCount}</div>
+                <div>Surplus Items Posted</div>
+              </div>
+              <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '48px', fontWeight: 'bold', color: '#4CAF50'}}>{shops.length}</div>
+                <div>Shops Registered</div>
+              </div>
+            </div>
+            
+            <h3>Your Shops</h3>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {shops.length === 0 ? (
+                <p>No shops registered</p>
+              ) : (
+                shops.map(shop => (
+                  <div key={shop.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+                    <strong>{shop.shop_name}</strong><br />
+                    {shop.address}, {shop.city} {shop.postcode}<br />
+                    Phone: {shop.phone}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'surplus' && (
+          <div>
+            <h2>Post Surplus Food</h2>
+            {message && <div style={{backgroundColor: message.includes('Error') ? '#ffebee' : '#e8f5e9', color: message.includes('Error') ? '#c62828' : '#2e7d32', padding: '10px', borderRadius: '5px', marginBottom: '20px'}}>{message}</div>}
+            
+            <form onSubmit={handlePostSurplus} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px'}}>
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Shop</label>
+                <select value={surplusForm.shopId} onChange={(e) => setSurplusForm({...surplusForm, shopId: e.target.value})} style={styles.input} required>
+                  {shops.map(shop => (
+                    <option key={shop.id} value={shop.id}>{shop.shop_name}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Item Name</label>
+                <input
+                  type="text"
+                  value={surplusForm.itemName}
+                  onChange={(e) => setSurplusForm({...surplusForm, itemName: e.target.value})}
+                  placeholder="e.g., Fresh Bread"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Quantity</label>
+                <input
+                  type="text"
+                  value={surplusForm.quantity}
+                  onChange={(e) => setSurplusForm({...surplusForm, quantity: e.target.value})}
+                  placeholder="e.g., 20 loaves"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Category</label>
+                <select value={surplusForm.category} onChange={(e) => setSurplusForm({...surplusForm, category: e.target.value})} style={styles.input} required>
+                  <option>Fresh Produce</option>
+                  <option>Bakery</option>
+                  <option>Dairy</option>
+                  <option>Meat & Fish</option>
+                  <option>Packaged Foods</option>
+                  <option>Non-Food Items</option>
+                </select>
+              </div>
+              
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Description</label>
+                <textarea
+                  value={surplusForm.description}
+                  onChange={(e) => setSurplusForm({...surplusForm, description: e.target.value})}
+                  placeholder="Additional details..."
+                  style={{...styles.input, minHeight: '80px'}}
+                />
+              </div>
+              
+              <button type="submit" style={styles.primaryButton}>Post Surplus Item</button>
+            </form>
+            
+            <h3>Your Surplus Items ({surplusCount})</h3>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {surplusItems.length === 0 ? (
+                <p>No surplus items posted yet</p>
+              ) : (
+                surplusItems.map(item => (
+                  <div key={item.id} style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+                    <strong>{item.item_name}</strong><br />
+                    Quantity: {item.quantity}<br />
+                    Category: {item.category}<br />
+                    Shop: {item.shop_name}<br />
+                    Status: {item.status}<br />
+                    {item.description && <p>{item.description}</p>}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// RECIPIENT DASHBOARD
+function RecipientDashboard({ user, onLogout }) {
+  const [activeTab, setActiveTab] = useState('vouchers')
+  const [vouchers, setVouchers] = useState([])
+  const [shops, setShops] = useState([])
+  const [surplusItems, setSurplusItems] = useState([])
+
+  useEffect(() => {
+    loadVouchers()
+    loadShops()
+    loadSurplusItems()
+  }, [])
+
+  const loadVouchers = async () => {
+    try {
+      const data = await apiCall('/recipient/vouchers')
+      setVouchers(data.vouchers || [])
+    } catch (error) {
+      console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const loadShops = async () => {
+    try {
+      const data = await apiCall('/recipient/shops')
+      setShops(data.shops || [])
+    } catch (error) {
+      console.error('Failed to load shops:', error)
+    }
+  }
+
+  const loadSurplusItems = async () => {
+    try {
+      const data = await apiCall('/recipient/surplus-items')
+      setSurplusItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load surplus items:', error)
+    }
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h1>Recipient Portal</h1>
+        <button onClick={onLogout} style={{...styles.primaryButton, backgroundColor: '#d32f2f'}}>Logout</button>
+      </div>
+      
+      <div style={{padding: '20px'}}>
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>Your Vouchers</button>
+          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>Participating Shops</button>
+          <button onClick={() => setActiveTab('surplus')} style={activeTab === 'surplus' ? styles.activeTab : styles.tab}>Browse Surplus Items</button>
+        </div>
+        
+        {activeTab === 'vouchers' && (
+          <div>
+            <h2>Your Vouchers</h2>
+        <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '30px'}}>
+          {vouchers.length === 0 ? (
+            <p>No vouchers available</p>
+          ) : (
+            vouchers.map(voucher => (
+              <div key={voucher.id} style={{padding: '20px', borderBottom: '1px solid #eee', backgroundColor: voucher.status === 'active' ? '#e8f5e9' : '#f5f5f5', marginBottom: '10px', borderRadius: '5px'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <div>
+                    <strong style={{fontSize: '24px', color: '#4CAF50'}}>£{voucher.value}</strong><br />
+                    Code: <strong>{voucher.code}</strong><br />
+                    Status: <span style={{color: voucher.status === 'active' ? '#4CAF50' : '#666'}}>{voucher.status}</span><br />
+                    Expires: {new Date(voucher.expiry_date).toLocaleDateString()}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+          </div>
+          </div>
+        )}
+        
+        {activeTab === 'shops' && (
+          <div>
+            <h2>🏪 Participating Shops ({shops.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {shops.length === 0 ? (
+                <p>No shops available</p>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
+                  {shops.map(shop => (
+                    <div key={shop.id} style={{padding: '20px', border: '1px solid #e0e0e0', borderRadius: '10px', backgroundColor: '#fafafa'}}>
+                      <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{shop.shop_name}</h3>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>📞 Phone:</strong> {shop.phone}
+                      </p>
+                      <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#f3e5f5', borderRadius: '5px', fontWeight: 'bold', color: '#9C27B0'}}>
+                        🍎 Available Surplus Items: {shop.surplus_items_count}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'surplus' && (
+          <div>
+            <h2>🍎 Browse Available Surplus Items ({surplusItems.length})</h2>
+            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+              {surplusItems.length === 0 ? (
+                <p>No surplus items available at the moment</p>
+              ) : (
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '15px'}}>
+                  {surplusItems.map(item => (
+                    <div key={item.id} style={{padding: '20px', border: '2px solid #9C27B0', borderRadius: '10px', backgroundColor: '#f3e5f5'}}>
+                      <h3 style={{margin: '0 0 10px 0', color: '#9C27B0'}}>{item.item_name}</h3>
+                      <p style={{margin: '8px 0', fontSize: '16px', fontWeight: 'bold', color: '#4CAF50'}}>
+                        💰 £{item.price.toFixed(2)} per {item.unit}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Available:</strong> {item.quantity} {item.unit}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Category:</strong> {item.category}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Description:</strong> {item.description || 'Fresh and ready for collection'}
+                      </p>
+                      <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
+                        <p style={{margin: '3px 0', fontSize: '14px', fontWeight: 'bold', color: '#1976d2'}}>
+                          🏪 {item.shop_name}
+                        </p>
+                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                          📍 {item.shop_address}
+                        </p>
+                        <p style={{margin: '3px 0', fontSize: '13px'}}>
+                          📞 {item.shop_phone}
+                        </p>
+                      </div>
+                      <div style={{marginTop: '10px', textAlign: 'center'}}>
+                        <p style={{fontSize: '12px', color: '#666', fontStyle: 'italic'}}>
+                          💳 Use your voucher to purchase this item at the shop
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// SCHOOL/CARE ORGANIZATION DASHBOARD
+function SchoolDashboard({ user, onLogout }) {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [balance, setBalance] = useState(0)
+  const [vouchers, setVouchers] = useState([])
+  const [organizationName, setOrganizationName] = useState('')
+  
+  // Issue voucher form state
+  const [recipientEmail, setRecipientEmail] = useState('')
+  const [recipientFirstName, setRecipientFirstName] = useState('')
+  const [recipientLastName, setRecipientLastName] = useState('')
+  const [recipientPhone, setRecipientPhone] = useState('')
+  const [recipientAddress, setRecipientAddress] = useState('')
+  const [voucherAmount, setVoucherAmount] = useState('')
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    loadBalance()
+    loadVouchers()
+  }, [])
+
+  const loadBalance = async () => {
+    try {
+      const data = await apiCall('/school/balance')
+      setBalance(data.allocated_balance || 0)
+      setOrganizationName(data.organization_name || '')
+    } catch (error) {
+      console.error('Failed to load balance:', error)
+    }
+  }
+
+  const loadVouchers = async () => {
+    try {
+      const data = await apiCall('/school/vouchers')
+      setVouchers(data.vouchers || [])
+    } catch (error) {
+      console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const handleIssueVoucher = async (e) => {
+    e.preventDefault()
+    setMessage('')
+    
+    try {
+      const data = await apiCall('/school/issue-voucher', {
+        method: 'POST',
+        body: JSON.stringify({
+          recipient_email: recipientEmail,
+          recipient_first_name: recipientFirstName,
+          recipient_last_name: recipientLastName,
+          recipient_phone: recipientPhone,
+          recipient_address: recipientAddress,
+          amount: parseFloat(voucherAmount)
+        })
+      })
+      
+      setMessage(`✅ Voucher issued successfully! Code: ${data.voucher_code}`)
+      setRecipientEmail('')
+      setRecipientFirstName('')
+      setRecipientLastName('')
+      setRecipientPhone('')
+      setRecipientAddress('')
+      setVoucherAmount('')
+      loadBalance()
+      loadVouchers()
+    } catch (error) {
+      setMessage(`❌ Error: ${error.message}`)
+    }
+  }
+
+  return (
+    <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
+      {/* Header */}
+      <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px'}}>
+        <div style={{maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <div>
+            <h1 style={{margin: '0 0 5px 0'}}>School/Care Organization Portal</h1>
+            <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
+          </div>
+          <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white'}}>Logout</button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div style={{maxWidth: '1200px', margin: '30px auto', padding: '0 20px'}}>
+        {/* Tabs */}
+        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          <button 
+            onClick={() => setActiveTab('overview')} 
+            style={activeTab === 'overview' ? styles.activeTab : styles.tab}
+          >
+            Overview
+          </button>
+          <button 
+            onClick={() => setActiveTab('issue')} 
+            style={activeTab === 'issue' ? styles.activeTab : styles.tab}
+          >
+            Issue Vouchers
+          </button>
+          <button 
+            onClick={() => setActiveTab('vouchers')} 
+            style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}
+          >
+            Voucher History
+          </button>
+        </div>
+
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div>
+            <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
+              <h2 style={{marginTop: 0, color: '#9C27B0'}}>Available Balance</h2>
+              <div style={{fontSize: '48px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '10px'}}>
+                £{balance.toFixed(2)}
+              </div>
+              <p style={{color: '#666', fontSize: '14px', marginBottom: 0}}>
+                💡 This balance is allocated by BAK UP administrators to support families in your community
+              </p>
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
+              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#9C27B0'}}>{vouchers.length}</div>
+                <div style={{color: '#666', marginTop: '5px'}}>Total Vouchers Issued</div>
+              </div>
+              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#4CAF50'}}>
+                  {vouchers.filter(v => v.status === 'active').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Active Vouchers</div>
+              </div>
+              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center'}}>
+                <div style={{fontSize: '36px', fontWeight: 'bold', color: '#FF9800'}}>
+                  {vouchers.filter(v => v.status === 'redeemed').length}
+                </div>
+                <div style={{color: '#666', marginTop: '5px'}}>Redeemed Vouchers</div>
+              </div>
+            </div>
+
+            <div style={{backgroundColor: '#E1BEE7', padding: '20px', borderRadius: '10px', marginTop: '20px'}}>
+              <h3 style={{marginTop: 0, color: '#6A1B9A'}}>🎓 Supporting Families Through Education & Care</h3>
+              <p style={{margin: '10px 0', lineHeight: '1.6'}}>
+                As a school or care organization, you play a vital role in identifying and supporting families from underrepresented communities who need assistance.
+              </p>
+              <p style={{margin: '10px 0', lineHeight: '1.6'}}>
+                Use your allocated balance to issue e-vouchers directly to families, giving them dignity and choice in accessing food from local vendors.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Issue Vouchers Tab */}
+        {activeTab === 'issue' && (
+          <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px'}}>
+            <h2 style={{marginTop: 0, color: '#9C27B0'}}>Issue E-Voucher to Family</h2>
+            <p style={{color: '#666', marginBottom: '20px'}}>
+              Available Balance: <strong>£{balance.toFixed(2)}</strong>
+            </p>
+
+            {message && (
+              <div style={{
+                backgroundColor: message.includes('✅') ? '#e8f5e9' : '#ffebee',
+                color: message.includes('✅') ? '#2e7d32' : '#c62828',
+                padding: '15px',
+                borderRadius: '5px',
+                marginBottom: '20px'
+              }}>
+                {message}
+              </div>
+            )}
+
+            <form onSubmit={handleIssueVoucher}>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>First Name</label>
+                  <input
+                    type="text"
+                    value={recipientFirstName}
+                    onChange={(e) => setRecipientFirstName(e.target.value)}
+                    style={styles.input}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Last Name</label>
+                  <input
+                    type="text"
+                    value={recipientLastName}
+                    onChange={(e) => setRecipientLastName(e.target.value)}
+                    style={styles.input}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Email Address</label>
+                <input
+                  type="email"
+                  value={recipientEmail}
+                  onChange={(e) => setRecipientEmail(e.target.value)}
+                  style={styles.input}
+                  required
+                />
+              </div>
+
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Phone Number</label>
+                <input
+                  type="tel"
+                  value={recipientPhone}
+                  onChange={(e) => setRecipientPhone(e.target.value)}
+                  style={styles.input}
+                  required
+                />
+              </div>
+
+              <div style={{marginBottom: '15px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Address</label>
+                <input
+                  type="text"
+                  value={recipientAddress}
+                  onChange={(e) => setRecipientAddress(e.target.value)}
+                  style={styles.input}
+                  required
+                  placeholder="Full address including postcode"
+                />
+              </div>
+
+              <div style={{marginBottom: '20px'}}>
+                <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold'}}>Voucher Amount (£)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max={balance}
+                  value={voucherAmount}
+                  onChange={(e) => setVoucherAmount(e.target.value)}
+                  style={styles.input}
+                  required
+                />
+              </div>
+
+              <button type="submit" style={{...styles.primaryButton, backgroundColor: '#9C27B0', width: '100%'}}>
+                Issue Voucher
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Voucher History Tab */}
+        {activeTab === 'vouchers' && (
+          <div>
+            <h2 style={{marginBottom: '20px', color: '#9C27B0'}}>Voucher History</h2>
+            {vouchers.length === 0 ? (
+              <div style={{backgroundColor: 'white', padding: '40px', borderRadius: '10px', textAlign: 'center'}}>
+                <p style={{color: '#666'}}>No vouchers issued yet</p>
+              </div>
+            ) : (
+              <div style={{display: 'grid', gap: '15px'}}>
+                {vouchers.map(voucher => (
+                  <div key={voucher.id} style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', border: '1px solid #e0e0e0'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+                      <div>
+                        <div style={{fontSize: '20px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '5px'}}>
+                          £{voucher.value.toFixed(2)}
+                        </div>
+                        <div style={{fontSize: '14px', color: '#666'}}>Code: {voucher.code}</div>
+                      </div>
+                      <div style={{
+                        padding: '5px 15px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        backgroundColor: voucher.status === 'active' ? '#e8f5e9' : voucher.status === 'redeemed' ? '#fff3e0' : '#ffebee',
+                        color: voucher.status === 'active' ? '#2e7d32' : voucher.status === 'redeemed' ? '#e65100' : '#c62828'
+                      }}>
+                        {voucher.status.toUpperCase()}
+                      </div>
+                    </div>
+                    <div style={{borderTop: '1px solid #e0e0e0', paddingTop: '15px'}}>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Recipient:</strong> {voucher.recipient_name}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Email:</strong> {voucher.recipient_email}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Phone:</strong> {voucher.recipient_phone}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px'}}>
+                        <strong>Address:</strong> {voucher.recipient_address}
+                      </p>
+                      <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}>
+                        <strong>Issued:</strong> {new Date(voucher.created_at).toLocaleDateString()}
+                      </p>
+                      {voucher.expiry_date && (
+                        <p style={{margin: '5px 0', fontSize: '14px', color: '#666'}}>
+                          <strong>Expires:</strong> {new Date(voucher.expiry_date).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Styles
+const styles = {
+  primaryButton: {
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    padding: '12px 24px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  },
+  secondaryButton: {
+    backgroundColor: 'white',
+    color: '#4CAF50',
+    border: '2px solid white',
+    padding: '12px 24px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  },
+  input: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ddd',
+    fontSize: '14px',
+    boxSizing: 'border-box'
+  },
+  linkButton: {
+    background: 'none',
+    border: 'none',
+    color: '#1976d2',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    fontSize: '14px'
+  },
+  tab: {
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '14px'
+  },
+  activeTab: {
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: '1px solid #4CAF50',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  }
+}
+
+export default App

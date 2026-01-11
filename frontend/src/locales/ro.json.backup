@@ -1,0 +1,193 @@
+{
+  "app": {
+    "title": "Sistemul de Vouchere Electronice BAK UP",
+    "tagline": "Conectând alimentele excedentare cu cei care au cea mai mare nevoie"
+  },
+  "common": {
+    "email": "Email",
+    "password": "Parolă",
+    "signIn": "Autentificare",
+    "signOut": "Deconectare",
+    "cancel": "Anulare",
+    "save": "Salvare",
+    "delete": "Ștergere",
+    "edit": "Editare",
+    "add": "Adăugare",
+    "remove": "Eliminare",
+    "close": "Închidere",
+    "search": "Căutare",
+    "filter": "Filtrare",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes",
+    "confirm": "Confirmare",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "submit": "Trimite"
+  },
+  "landing": {
+    "hero": {
+      "title": "Sistemul de Vouchere Electronice BAK UP",
+      "subtitle": "Conectând vânzătorii de alimente, organizațiile VCSE și familiile vulnerabile printr-o soluție digitală unificată",
+      "getStarted": "Începe",
+      "signIn": "Autentificare"
+    },
+    "features": {
+      "communities": {
+        "title": "Sprijinirea Comunităților",
+        "description": "Vouchere digitale pentru alimente care promovează demnitatea și alegerea pentru familiile vulnerabile"
+      },
+      "vcse": {
+        "title": "Parteneriat VCSE",
+        "description": "Organizațiile caritabile pot finanța și gestiona eficient distribuția de vouchere"
+      },
+      "vendors": {
+        "title": "Rețeaua de Vânzători",
+        "description": "Magazinele locale se alătură rețelei pentru a accepta vouchere și a-și sprijini comunitatea"
+      },
+      "surplus": {
+        "title": "Partajarea Alimentelor Excedentare",
+        "description": "Vânzătorii pot posta alimente excedentare pentru familii la preț redus și alimente excedentare gratuite pentru partenerii VCSE pentru a sprijini familiile pe care le servesc, reducând risipa alimentară"
+      }
+    },
+    "whoWeServe": {
+      "title": "Pe Cine Servim",
+      "recipients": {
+        "title": "Pentru Beneficiari",
+        "item1": "Primiți vouchere digitale pentru alimente cu demnitate",
+        "item2": "Alegeți ce aveți nevoie de la vânzătorii locali",
+        "item3": "Alimente de luat la reducere - Cumpărați alimente reduse de la vânzătorii participanți",
+        "item4": "Urmăriți cu ușurință soldul voucherului dumneavoastră"
+      },
+      "vendors": {
+        "title": "Pentru Vânzători",
+        "item1": "Acceptați vouchere digitale fără probleme",
+        "item2": "Postați articole alimentare reduse pentru beneficiari",
+        "item3": "Postați alimente excedentare gratuite pentru colectarea VCSE",
+        "item4": "Sprijiniți comunitatea locală",
+        "item5": "Gestionați mai multe locații de magazine"
+      },
+      "vcse": {
+        "title": "Pentru Organizațiile VCSE",
+        "item1": "Emiteți și gestionați vouchere eficient",
+        "item2": "Finanțați familiile digital",
+        "item3": "Colectați alimente excedentare gratuite pentru a le distribui familiilor pe care le serviți",
+        "item4": "Urmăriți utilizarea și impactul",
+        "item5": "Generați rapoarte detaliate"
+      },
+      "schools": {
+        "title": "Pentru Școli și Organizații de Îngrijire",
+        "item1": "Primiți vouchere electronice de la BAK UP pentru a sprijini familiile",
+        "item2": "Distribuiți vouchere familiilor din comunitățile subreprezentate",
+        "item3": "Urmăriți distribuția voucherelor și impactul",
+        "item4": "Sprijiniți elevii și familiile prin instituții de încredere",
+        "item5": "Generați rapoarte pentru responsabilitate"
+      },
+      "admins": {
+        "title": "Pentru Administratori",
+        "item1": "Supravegheați întreaga platformă",
+        "item2": "Gestionați utilizatorii și rolurile",
+        "item3": "Monitorizați programele de reduceri și alimente excedentare",
+        "item4": "Generați rapoarte cuprinzătoare",
+        "item5": "Asigurați integritatea sistemului"
+      }
+    },
+    "cta": {
+      "title": "Gata să Faceți o Diferență?",
+      "subtitle": "Alăturați-vă platformei noastre conduse de comunitate astăzi",
+      "button": "Creați Cont"
+    },
+    "footer": {
+      "adminAccess": "Acces Administrator"
+    }
+  },
+  "auth": {
+    "selectRole": "Selectați Rolul Dumneavoastră",
+    "vendor": "Vânzător de Alimente / Magazin",
+    "vcse": "Organizație VCSE",
+    "recipient": "Beneficiar de Vouchere",
+    "vendorDesc": "Donați alimente excedentare și acceptați vouchere",
+    "vcseDesc": "Gestionați vouchere pentru familiile vulnerabile",
+    "recipientDesc": "Răsfoiți și valorificați vouchere alimentare",
+    "loginTitle": "Autentificare",
+    "noAccount": "Nu aveți un cont?",
+    "registerHere": "Înregistrați-vă aici",
+    "forgotPassword": "Ați uitat parola?",
+    "name": "Nume",
+    "organizationName": "Numele Organizației",
+    "phoneNumber": "Număr de Telefon",
+    "register": "Înregistrare",
+    "alreadyHaveAccount": "Aveți deja un cont?",
+    "loginHere": "Autentificați-vă aici"
+  },
+  "dashboard": {
+    "welcome": "Bun venit",
+    "overview": "Prezentare generală",
+    "myVouchers": "Voucherele Mele",
+    "browseToGo": "Răsfoiți De Luat",
+    "shoppingCart": "Coș de Cumpărături",
+    "profile": "Profil",
+    "settings": "Setări",
+    "activeBalance": "Sold Activ",
+    "activeVouchers": "Vouchere Active",
+    "redeemed": "Valorificate",
+    "emptyCart": "Coșul dumneavoastră este gol",
+    "noToGoItems": "Niciun articol de luat disponibil momentan",
+    "redeemVouchers": "Valorificați Vouchere",
+    "toGo": "De Luat",
+    "issueVouchers": "Emiteți Vouchere"
+  },
+  "voucher": {
+    "title": "Vouchere",
+    "balance": "Sold",
+    "status": "Status",
+    "active": "Activ",
+    "used": "Folosit",
+    "expired": "Expirat",
+    "validUntil": "Valid Până La",
+    "qrCode": "Cod QR",
+    "showQR": "Afișați Codul QR",
+    "hideQR": "Ascundeți Codul QR"
+  },
+  "toGo": {
+    "title": "Răsfoiți Disponibile De Luat",
+    "noItems": "Niciun articol de luat disponibil momentan",
+    "addToCart": "Adăugați în Coș",
+    "quantity": "Cantitate",
+    "available": "disponibil",
+    "category": "Categorie",
+    "shop": "Magazin",
+    "description": "Descriere",
+    "price": "Preț",
+    "per": "per"
+  },
+  "cart": {
+    "title": "Coș de Cumpărături",
+    "empty": "Coșul dumneavoastră este gol",
+    "browseItems": "Răsfoiți Articole De Luat",
+    "continueShopping": "Continuați Cumpărăturile",
+    "viewVouchers": "Vizualizați Voucherele Mele",
+    "nextSteps": "Pașii Următori",
+    "step1": "Revizuiți articolele din coș de mai sus",
+    "step2": "Vizitați locațiile magazinelor pentru a colecta articolele",
+    "step3": "Arătați codul QR al voucherului la magazin pentru a finaliza achiziția",
+    "step4": "Soldul voucherului dumneavoastră va fi dedus la magazin"
+  },
+  "categories": {
+    "bakery": "Brutărie",
+    "fruits": "Fructe",
+    "vegetables": "Legume",
+    "dairy": "Lactate",
+    "meat": "Carne",
+    "cannedGoods": "Conserve",
+    "freshProduce": "Produse Proaspete",
+    "other": "Altele"
+  },
+  "language": {
+    "select": "Selectați Limba",
+    "en": "Engleză",
+    "ar": "Arabă",
+    "ro": "Română",
+    "pl": "Poloneză"
+  }
+}

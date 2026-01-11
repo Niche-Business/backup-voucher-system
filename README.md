@@ -1,230 +1,375 @@
-# BAK UP CIC Version 1.0.2
+# BAK UP E-Voucher System
 
-**Feature:** SUPER ADMIN Impersonation System  
-**Status:** 🔄 IN PROGRESS  
-**Started:** 2026-01-11  
-**Target Completion:** 2026-01-15
+**Version:** 1.0  
+**Date:** November 14, 2025
 
 ---
 
-## 📁 Folder Structure
+## 📖 Overview
+
+The BAK UP E-Voucher System is a comprehensive digital platform connecting food vendors, VCSE (Voluntary, Community and Social Enterprise) organizations, schools, and vulnerable families through a unified digital voucher solution.
+
+### **Key Features:**
+
+- ✅ Digital food voucher issuance and redemption
+- ✅ "To Go" surplus food posting by vendors
+- ✅ Multi-user role management (Admin, VCSE, Schools, Vendors, Recipients)
+- ✅ Real-time voucher tracking and balance management
+- ✅ Admin dashboard for fund allocation
+- ✅ Vendor portal for shop management and item posting
+- ✅ Recipient portal for voucher redemption and shopping
+
+---
+
+## 🏗️ System Architecture
+
+### **Frontend:**
+- **Framework:** React (Vite)
+- **Language:** JavaScript
+- **Build Tool:** Vite + pnpm
+- **Styling:** Inline CSS (custom)
+
+### **Backend:**
+- **Framework:** Flask (Python 3.11)
+- **Database:** SQLite (upgradeable to PostgreSQL)
+- **ORM:** SQLAlchemy
+- **API:** RESTful JSON API
+
+### **Deployment:**
+- **Web Server:** Nginx
+- **WSGI Server:** Gunicorn
+- **Process Manager:** Supervisor
+- **SSL:** Let's Encrypt (Certbot)
+
+---
+
+## 📁 Project Structure
 
 ```
-BAK UP CIC Version 1.0.2/
-├── README.md                    # This file - Overview
-├── TASKS.md                     # Task checklist
-├── CHANGES.md                   # Detailed changes documentation
-├── TESTING.md                   # Testing checklist
-├── code-changes/                # Code snippets and files
-│   ├── impersonation.py        # Impersonation system module
-│   ├── impersonation_api.py    # API endpoints
-│   ├── ImpersonationBanner.jsx # Frontend banner component
-│   └── admin_dashboard_updates.jsx  # Dashboard modifications
-├── documentation/               # Additional documentation
-│   └── user-guide.md           # User guide for super admins
-└── assets/                      # Screenshots and images
-    └── (screenshots will be added during testing)
+bakup-clean/
+├── backend/
+│   ├── src/
+│   │   └── main.py              # Main Flask application
+│   ├── instance/
+│   │   └── vcse_charity.db      # SQLite database
+│   ├── venv/                    # Python virtual environment
+│   ├── requirements.txt         # Python dependencies
+│   ├── gunicorn_config.py       # Gunicorn configuration
+│   ├── .env.example             # Environment variables template
+│   └── .env                     # Environment variables (create this)
+├── frontend/
+│   ├── src/
+│   │   └── App.jsx              # Main React application
+│   ├── dist/                    # Production build output
+│   ├── package.json             # Node.js dependencies
+│   └── vite.config.js           # Vite configuration
+├── logs/                        # Application logs
+├── deploy.sh                    # Deployment automation script
+├── backup-database.sh           # Database backup script
+├── nginx.conf                   # Nginx configuration template
+├── supervisor.conf              # Supervisor configuration template
+├── DEPLOYMENT_GUIDE.md          # Comprehensive deployment guide
+└── README.md                    # This file
 ```
 
 ---
 
-## 🎯 Feature Overview
+## 🚀 Quick Start (Development)
 
-The **SUPER ADMIN Impersonation** feature allows designated super administrators to temporarily view the system from another user's perspective. This is essential for:
+### **Prerequisites:**
+- Python 3.11+
+- Node.js 18+
+- pnpm
 
-- **Testing:** Verify features work correctly for different user types
-- **Support:** Debug user-reported issues by seeing exactly what they see
-- **Training:** Demonstrate features to new users
-- **Quality Assurance:** Ensure all user types have proper access and functionality
+### **1. Backend Setup:**
 
----
+```bash
+cd backend
+python3.11 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python3.11 src/main.py
+```
 
-## 🔑 Key Components
+Backend will run on: http://localhost:5000
 
-### Backend
-1. **New User Type:** `super_admin`
-2. **Impersonation Module:** `backend/src/impersonation.py`
-3. **Audit Logging:** `impersonation_log` database table
-4. **API Endpoints:**
-   - `POST /api/admin/impersonate`
-   - `POST /api/admin/end-impersonation`
-   - `GET /api/admin/impersonation-status`
-   - `GET /api/admin/users-list`
-   - `GET /api/admin/impersonation-logs`
+### **2. Frontend Setup:**
 
-### Frontend
-1. **Impersonation Banner:** Shows when viewing as another user
-2. **User Selector:** Modal to choose which user to impersonate
-3. **Dashboard Updates:** "Switch User" button in admin dashboard
-4. **Session Management:** Maintains super admin session in background
+```bash
+cd frontend
+pnpm install
+pnpm run dev
+```
 
----
-
-## 🚀 Quick Start
-
-### For Developers
-
-1. **Read the documentation:**
-   - Start with `TASKS.md` to see what needs to be done
-   - Read `CHANGES.md` for detailed technical specifications
-   - Review `TESTING.md` for testing requirements
-
-2. **Implement the feature:**
-   - Follow the code examples in `CHANGES.md`
-   - Save code snippets in `code-changes/` folder
-   - Update `TASKS.md` as you complete tasks
-
-3. **Test thoroughly:**
-   - Follow `TESTING.md` checklist
-   - Document results and screenshots
-   - Fix any issues found
-
-4. **Deploy:**
-   - Update version files (version.json, CHANGELOG.md)
-   - Commit and push to GitHub
-   - Deploy to Render
-   - Verify on production
-
-### For Testers
-
-1. Open `TESTING.md`
-2. Follow each test case
-3. Document results
-4. Take screenshots and save to `assets/`
-5. Report issues to developers
+Frontend will run on: http://localhost:5173
 
 ---
 
-## 📋 Current Status
+## 🌐 Production Deployment
 
-### Progress Overview
-- **Planning:** ✅ COMPLETE
-- **Backend Development:** ⏳ PENDING
-- **Frontend Development:** ⏳ PENDING
-- **Testing:** ⏳ PENDING
-- **Documentation:** ⏳ PENDING
-- **Deployment:** ⏳ PENDING
+**For detailed production deployment instructions, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**
 
-### Task Completion
-- **Total Tasks:** 50
-- **Completed:** 0
-- **In Progress:** 0
-- **Pending:** 50
+### **Quick Deployment Steps:**
 
----
+1. **Upload files to server:**
+   ```bash
+   scp -r bakup-clean bakup@your-server:/home/bakup/
+   ```
 
-## 🔒 Security Considerations
+2. **Run deployment script:**
+   ```bash
+   cd /home/bakup/bakup-clean
+   ./deploy.sh
+   ```
 
-### Access Control
-- Only users with `user_type='super_admin'` can impersonate
-- Cannot impersonate other super admins
-- All impersonation attempts are logged
+3. **Configure services:**
+   ```bash
+   sudo cp supervisor.conf /etc/supervisor/conf.d/bakup.conf
+   sudo cp nginx.conf /etc/nginx/sites-available/bakup
+   sudo ln -s /etc/nginx/sites-available/bakup /etc/nginx/sites-enabled/
+   ```
 
-### Audit Trail
-- Every impersonation is logged with:
-  - Who impersonated whom
-  - When it started and ended
-  - Duration of impersonation
-  - Reason (optional)
+4. **Start services:**
+   ```bash
+   sudo supervisorctl reread && sudo supervisorctl update
+   sudo nginx -t && sudo systemctl restart nginx
+   ```
 
-### Session Management
-- Original super admin session maintained in background
-- Impersonation session can be ended at any time
-- Session timeout applies to impersonated sessions
+5. **Set up SSL:**
+   ```bash
+   sudo certbot --nginx -d your-domain.com
+   ```
 
 ---
 
-## 📚 Documentation Files
+## 👥 User Roles
 
-### TASKS.md
-Complete task checklist with:
-- Backend tasks (database, API, security)
-- Frontend tasks (UI components, state management)
-- Testing tasks (unit, integration, manual)
-- Documentation tasks
-- Deployment tasks
+### **1. Administrator**
+- Manage all users and organizations
+- Allocate funds to VCSE and Schools
+- View system-wide reports
+- Edit/delete organizations
 
-### CHANGES.md
-Detailed technical documentation including:
-- Database schema changes
-- Code examples for all new modules
-- API endpoint specifications
-- Frontend component designs
-- Security implementation details
+### **2. VCSE Organizations**
+- Issue vouchers to recipients
+- View voucher usage reports
+- Manage recipient accounts
 
-### TESTING.md
-Comprehensive testing checklist with:
-- 33 test cases covering all functionality
-- Authentication and authorization tests
-- Impersonation flow tests
-- Security tests
-- Audit logging tests
-- UI/UX tests
-- Performance tests
-- Browser compatibility tests
-- Edge case tests
+### **3. Schools & Care Organizations**
+- Receive funds from admin
+- Issue vouchers to families
+- Track distribution and impact
 
----
+### **4. Local Shop Vendors**
+- Create shop profiles
+- Post "To Go" surplus food items
+- Redeem vouchers from recipients
+- Track sales and earnings
 
-## 🛠️ Development Workflow
-
-1. **Plan** (✅ Complete)
-   - Created TASKS.md
-   - Created CHANGES.md
-   - Created TESTING.md
-
-2. **Develop** (⏳ Current Phase)
-   - Implement backend features
-   - Implement frontend features
-   - Save code to code-changes/
-
-3. **Test** (⏳ Pending)
-   - Run all tests from TESTING.md
-   - Document results
-   - Fix bugs
-
-4. **Document** (⏳ Pending)
-   - Update user guide
-   - Update version files
-   - Create release notes
-
-5. **Deploy** (⏳ Pending)
-   - Push to GitHub
-   - Deploy to Render
-   - Verify on production
+### **5. Recipients**
+- Receive digital vouchers
+- Browse and purchase from vendors
+- View voucher balance
+- Access "To Go" discounted items
 
 ---
 
-## 📞 Contact
+## 🔐 Default Credentials
 
-**Developer:** Prince  
-**Project:** BAK UP E-Voucher System  
-**Version:** 1.0.2  
-**Feature:** SUPER ADMIN Impersonation
+**Admin Account:**
+- Email: prince.caesar@bakup.org
+- Password: Prince@2024
 
----
-
-## 📅 Timeline
-
-- **Day 1 (2026-01-11):** Planning and backend development
-- **Day 2 (2026-01-12):** Frontend development
-- **Day 3 (2026-01-13):** Testing and bug fixes
-- **Day 4 (2026-01-14):** Documentation and deployment prep
-- **Day 5 (2026-01-15):** Deploy and verify
+**⚠️ IMPORTANT:** Change the admin password immediately after deployment!
 
 ---
 
-## ✅ Completion Checklist
+## 🗄️ Database Schema
 
-- [ ] All tasks in TASKS.md completed
-- [ ] All tests in TESTING.md passed
-- [ ] Code documented in CHANGES.md
-- [ ] User guide created
-- [ ] Version files updated
-- [ ] Deployed to production
-- [ ] Verified working on live site
+### **Main Tables:**
+- `user` - All system users
+- `voucher` - Digital vouchers
+- `vendor_shop` - Shop information
+- `surplus_item` - "To Go" food items
+- `transaction` - Voucher redemptions
+- `login_session` - User sessions
+- `notification` - System notifications
 
 ---
 
-**Last Updated:** 2026-01-11  
-**Status:** 📝 READY TO START DEVELOPMENT
+## 🔧 Configuration
+
+### **Environment Variables (.env):**
+
+```bash
+FLASK_ENV=production
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=sqlite:///instance/vcse_charity.db
+SESSION_COOKIE_SECURE=True
+```
+
+Generate a secure secret key:
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
+```
+
+---
+
+## 📊 API Endpoints
+
+### **Authentication:**
+- `POST /api/register` - User registration
+- `POST /api/login` - User login
+- `POST /api/logout` - User logout
+- `POST /api/forgot-password` - Password reset
+
+### **Admin:**
+- `GET /api/admin/schools` - List schools
+- `POST /api/admin/allocate-funds` - Allocate funds
+- `PUT /api/admin/schools/<id>` - Edit school
+- `DELETE /api/admin/schools/<id>` - Delete school
+- `GET /api/admin/vcse` - List VCSE organizations
+- `PUT /api/admin/vcse/<id>` - Edit VCSE
+- `DELETE /api/admin/vcse/<id>` - Delete VCSE
+
+### **Vendors:**
+- `GET /api/vendor/shops` - List vendor shops
+- `POST /api/vendor/shops` - Create shop
+- `POST /api/items/post` - Post "To Go" item
+- `GET /api/vendor/to-go-items` - List vendor's items
+
+### **Vouchers:**
+- `POST /api/vouchers/issue` - Issue voucher
+- `POST /api/vouchers/redeem` - Redeem voucher
+- `GET /api/vouchers/balance` - Check balance
+
+---
+
+## 🛠️ Maintenance
+
+### **View Logs:**
+```bash
+# Backend logs
+tail -f /home/bakup/bakup-clean/logs/backend-output.log
+
+# Nginx logs
+sudo tail -f /var/log/nginx/bakup-access.log
+```
+
+### **Restart Services:**
+```bash
+# Restart backend
+sudo supervisorctl restart bakup-backend
+
+# Restart Nginx
+sudo systemctl restart nginx
+```
+
+### **Database Backup:**
+```bash
+# Manual backup
+./backup-database.sh
+
+# Automated daily backup (add to crontab)
+crontab -e
+# Add: 0 2 * * * /home/bakup/bakup-clean/backup-database.sh
+```
+
+### **Update Application:**
+```bash
+cd /home/bakup/bakup-clean
+
+# Backend
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Frontend
+cd ../frontend
+pnpm install
+pnpm run build
+
+# Restart services
+sudo supervisorctl restart bakup-backend
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### **Backend won't start:**
+```bash
+# Check logs
+tail -f /home/bakup/bakup-clean/logs/backend-error.log
+
+# Check if port is in use
+sudo lsof -i :5000
+
+# Restart
+sudo supervisorctl restart bakup-backend
+```
+
+### **502 Bad Gateway:**
+```bash
+# Check backend status
+sudo supervisorctl status bakup-backend
+
+# Check Nginx config
+sudo nginx -t
+
+# Restart both
+sudo supervisorctl restart bakup-backend
+sudo systemctl restart nginx
+```
+
+### **Database locked:**
+```bash
+# Check processes
+sudo lsof /home/bakup/bakup-clean/backend/instance/vcse_charity.db
+
+# Restart backend
+sudo supervisorctl restart bakup-backend
+```
+
+---
+
+## 📞 Support
+
+For issues, questions, or feature requests:
+1. Check the [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+2. Review application logs
+3. Contact your development team
+
+---
+
+## 📝 License
+
+Proprietary - BAK UP Organization
+
+---
+
+## 🎯 Roadmap
+
+### **Upcoming Features:**
+- [ ] QR code voucher redemption
+- [ ] SMS code voucher redemption
+- [ ] Printable vouchers
+- [ ] Shopping cart notifications
+- [ ] VCSE reporting dashboard
+- [ ] Local shop reporting dashboard
+- [ ] Email notifications
+- [ ] Mobile app
+
+---
+
+## 🙏 Acknowledgments
+
+Developed with ❤️ by Manus AI for BAK UP Organization
+
+**Version:** 1.0  
+**Last Updated:** November 14, 2025
+
+---
+
+**For detailed deployment instructions, please refer to [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**
+# Force rebuild Wed Nov 26 05:19:01 EST 2025

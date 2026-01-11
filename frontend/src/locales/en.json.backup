@@ -1,0 +1,193 @@
+{
+  "app": {
+    "title": "BAK UP E-Voucher System",
+    "tagline": "Connecting surplus food with those who need it most"
+  },
+  "common": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "landing": {
+    "hero": {
+      "title": "BAK UP E-Voucher System",
+      "subtitle": "Connecting food vendors, VCSE organizations, and vulnerable families through a unified digital solution",
+      "getStarted": "Get Started",
+      "signIn": "Sign In"
+    },
+    "features": {
+      "communities": {
+        "title": "Supporting Communities",
+        "description": "Digital food vouchers promoting dignity and choice for vulnerable families"
+      },
+      "vcse": {
+        "title": "VCSE Partnership",
+        "description": "Charitable organizations can fund and manage voucher distributions efficiently"
+      },
+      "vendors": {
+        "title": "Vendor Network",
+        "description": "Local shops join the network to accept vouchers and support their community"
+      },
+      "surplus": {
+        "title": "Surplus Food Sharing",
+        "description": "Vendors can post surplus food items for families as discount and free food surplus to VCSE partners to support the families they serve, reducing food waste"
+      }
+    },
+    "whoWeServe": {
+      "title": "Who We Serve",
+      "recipients": {
+        "title": "For Recipients",
+        "item1": "Receive digital food vouchers with dignity",
+        "item2": "Choose what you need from local vendors",
+        "item3": "Food to Go at a discount - Buy discounted food from participating vendors",
+        "item4": "Track your voucher balance easily"
+      },
+      "vendors": {
+        "title": "For Vendors",
+        "item1": "Accept digital vouchers seamlessly",
+        "item2": "Post discounted food items for recipients",
+        "item3": "Post free surplus food for VCSE collection",
+        "item4": "Support your local community",
+        "item5": "Manage multiple shop locations"
+      },
+      "vcse": {
+        "title": "For VCSE Organizations",
+        "item1": "Issue and manage vouchers efficiently",
+        "item2": "Fund families digitally",
+        "item3": "Collect free surplus food to distribute to families you serve",
+        "item4": "Track usage and impact",
+        "item5": "Generate detailed reports"
+      },
+      "schools": {
+        "title": "For Schools & Care Organizations",
+        "item1": "Receive e-vouchers from BAK UP to support families",
+        "item2": "Distribute vouchers to families from underrepresented communities",
+        "item3": "Track voucher distribution and impact",
+        "item4": "Support students and families through trusted institutions",
+        "item5": "Generate reports for accountability"
+      },
+      "admins": {
+        "title": "For Administrators",
+        "item1": "Oversee the entire platform",
+        "item2": "Manage users and roles",
+        "item3": "Monitor discount and surplus food programs",
+        "item4": "Generate comprehensive reports",
+        "item5": "Ensure system integrity"
+      }
+    },
+    "cta": {
+      "title": "Ready to Make a Difference?",
+      "subtitle": "Join our community-driven platform today",
+      "button": "Create Account"
+    },
+    "footer": {
+      "adminAccess": "Administrator Access"
+    }
+  },
+  "auth": {
+    "selectRole": "Select Your Role",
+    "vendor": "Food Vendor / Shop",
+    "vcse": "VCSE Organization",
+    "recipient": "Voucher Recipient",
+    "vendorDesc": "Donate surplus food and accept vouchers",
+    "vcseDesc": "Manage vouchers for vulnerable families",
+    "recipientDesc": "Browse and redeem food vouchers",
+    "loginTitle": "Login",
+    "noAccount": "Don't have an account?",
+    "registerHere": "Register here",
+    "forgotPassword": "Forgot Password?",
+    "name": "Name",
+    "organizationName": "Organization Name",
+    "phoneNumber": "Phone Number",
+    "register": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Login here"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "myVouchers": "My Vouchers",
+    "browseToGo": "Browse To Go",
+    "shoppingCart": "Shopping Cart",
+    "profile": "Profile",
+    "settings": "Settings",
+    "activeBalance": "Active Balance",
+    "activeVouchers": "Active Vouchers",
+    "redeemed": "Redeemed",
+    "emptyCart": "Your cart is empty",
+    "noToGoItems": "No to go items available at the moment",
+    "redeemVouchers": "Redeem Vouchers",
+    "toGo": "To Go",
+    "issueVouchers": "Issue Vouchers"
+  },
+  "voucher": {
+    "title": "Vouchers",
+    "balance": "Balance",
+    "status": "Status",
+    "active": "Active",
+    "used": "Used",
+    "expired": "Expired",
+    "validUntil": "Valid Until",
+    "qrCode": "QR Code",
+    "showQR": "Show QR Code",
+    "hideQR": "Hide QR Code"
+  },
+  "toGo": {
+    "title": "Browse Available To Go",
+    "noItems": "No to go items available at the moment",
+    "addToCart": "Add to Cart",
+    "quantity": "Quantity",
+    "available": "available",
+    "category": "Category",
+    "shop": "Shop",
+    "description": "Description",
+    "price": "Price",
+    "per": "per"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "browseItems": "Browse To Go Items",
+    "continueShopping": "Continue Shopping",
+    "viewVouchers": "View My Vouchers",
+    "nextSteps": "Next Steps",
+    "step1": "Review your cart items above",
+    "step2": "Visit the shop locations to collect your items",
+    "step3": "Show your voucher QR code at the shop to complete purchase",
+    "step4": "Your voucher balance will be deducted at the shop"
+  },
+  "categories": {
+    "bakery": "Bakery",
+    "fruits": "Fruits",
+    "vegetables": "Vegetables",
+    "dairy": "Dairy",
+    "meat": "Meat",
+    "cannedGoods": "Canned Goods",
+    "freshProduce": "Fresh Produce",
+    "other": "Other"
+  },
+  "language": {
+    "select": "Select Language",
+    "en": "English",
+    "ar": "Arabic",
+    "ro": "Romanian",
+    "pl": "Polish"
+  }
+}
