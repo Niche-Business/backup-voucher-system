@@ -1,0 +1,407 @@
+{
+  "version": "1.0.2",
+  "lastUpdated": "2026-01-11",
+  "changes": [
+    {
+      "id": 1,
+      "date": "2026-01-11",
+      "commit": "93022cd",
+      "category": "Bug Fix",
+      "priority": "Critical",
+      "title": "Notification System - Text Visibility, Badge Display, and API URLs",
+      "description": "Fixed critical notification system issues preventing users from viewing notifications",
+      "details": [
+        "Fixed incorrect API URLs preventing notifications from loading (/notifications/* → /api/notifications/*)",
+        "Changed notification message color from #333 to #000 (black) for better readability",
+        "Changed subtitle/metadata color from #666 to #555 (darker gray)",
+        "Enhanced notification badge: brighter red (#ff0000), white border, box shadow, increased size to 22px",
+        "Added dynamic width for '9+' display on badge",
+        "Fixed empty notification panel issue - notifications now load from database correctly"
+      ],
+      "impact": "All user types (Admin, VCSE, Recipient, School) can now properly view and manage notifications",
+      "affectedComponents": ["NotificationSystem.jsx"],
+      "userTypes": ["admin", "vcse", "recipient", "school"]
+    },
+    {
+      "id": 2,
+      "date": "2026-01-11",
+      "commit": "1752495",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "VCSE and School Dashboard Stat Cards Translation",
+      "description": "Fixed hardcoded English text in VCSE and School dashboard overview stat cards",
+      "details": [
+        "Replaced 'Total Vouchers Issued' with translation key",
+        "Replaced 'Total Value Distributed' with translation key",
+        "Replaced 'Active Vouchers' with translation key",
+        "Replaced 'Redeemed Vouchers' with translation key",
+        "Added translations for all 4 languages: English, Arabic, Romanian, Polish"
+      ],
+      "impact": "VCSE and School dashboard stat cards now fully translate when language is changed",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["vcse", "school"]
+    },
+    {
+      "id": 3,
+      "date": "2026-01-11",
+      "commit": "451fffe",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "AdminDashboard Overview Stat Cards Translation",
+      "description": "Fixed hardcoded English text in Admin dashboard overview stat cards",
+      "details": [
+        "Replaced 'Total Vouchers' with t('dashboard.totalVouchers')",
+        "Replaced 'Active Value' with t('dashboard.activeValue')",
+        "Replaced 'VCFSE Organizations' with t('dashboard.vcfseOrganizations')",
+        "Replaced 'Local Shops' with t('dashboard.localShops')",
+        "Ensured all stat card titles translate properly across all 4 languages"
+      ],
+      "impact": "Admin dashboard overview cards now fully support language switching",
+      "affectedComponents": ["App.jsx"],
+      "userTypes": ["admin"]
+    },
+    {
+      "id": 4,
+      "date": "2026-01-11",
+      "commit": "4e5f9f9",
+      "category": "Internationalization",
+      "priority": "Medium",
+      "title": "Dashboard Overview Stat Card Translations",
+      "description": "Added missing translation keys for dashboard stat cards",
+      "details": [
+        "Added totalVouchers, activeValue, vcfseOrganizations, localShops keys",
+        "Added totalVouchersIssued, activeVouchers, redeemedVouchers keys",
+        "Translated to Polish, Arabic, and Romanian",
+        "Ensured consistency across all language files"
+      ],
+      "impact": "Complete translation coverage for all dashboard stat cards",
+      "affectedComponents": ["translation files"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 5,
+      "date": "2026-01-11",
+      "commit": "7d3e9e3",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "AdminDashboard Sidebar Navigation Translations",
+      "description": "Comprehensive fix for AdminDashboard sidebar navigation translations",
+      "details": [
+        "Fixed 'Overview' → t('navigation.overview')",
+        "Fixed 'Recipient Management' → t('navigation.recipientManagement')",
+        "Fixed 'VCFSE Verification' → t('navigation.vcfseVerification')",
+        "Fixed 'Analytics' → t('navigation.analytics')",
+        "Fixed 'Global Search' → t('navigation.globalSearch')",
+        "Fixed 'Transaction Search' → t('navigation.transactionSearch')",
+        "Fixed 'Broadcast Messages' → t('navigation.broadcastMessages')",
+        "Fixed 'Fund Allocation' → t('navigation.fundAllocation')",
+        "Added all translations to Arabic, Romanian, and Polish"
+      ],
+      "impact": "Complete sidebar navigation now translates properly for Admin users",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["admin"]
+    },
+    {
+      "id": 6,
+      "date": "2026-01-11",
+      "commit": "6d04e4e",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "AdminDashboard Recipient Management Translation",
+      "description": "Fixed translation issues in Admin recipient management section",
+      "details": [
+        "Fixed 'Add New Recipient' button translation",
+        "Fixed 'Search recipients...' placeholder translation",
+        "Fixed 'Filter by Status' dropdown translation",
+        "Fixed 'All Statuses' option translation",
+        "Fixed table headers: Name, Email, Phone, Vouchers, Status, Actions",
+        "Fixed 'Edit', 'Deactivate', 'Activate' button translations",
+        "Added all missing translations to Polish, Arabic, and Romanian"
+      ],
+      "impact": "Complete recipient management interface now supports all 4 languages",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["admin"]
+    },
+    {
+      "id": 7,
+      "date": "2026-01-11",
+      "commit": "25041e5",
+      "category": "Internationalization",
+      "priority": "Medium",
+      "title": "VCFSE Portal Discounted Items Translation",
+      "description": "Fixed translation issues in VCFSE discounted items section",
+      "details": [
+        "Fixed 'Discounted Items from Local Shops' title translation",
+        "Fixed 'Search discounted items...' placeholder translation",
+        "Fixed 'Filter by Category' dropdown translation",
+        "Fixed 'All Categories' option translation",
+        "Fixed 'No discounted items available' message translation",
+        "Added translations to all 4 languages"
+      ],
+      "impact": "VCFSE discounted items section now fully translates",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["vcse"]
+    },
+    {
+      "id": 8,
+      "date": "2026-01-11",
+      "commit": "c0f3d2c",
+      "category": "Configuration",
+      "priority": "Low",
+      "title": "Footer Email Update",
+      "description": "Updated footer contact email address",
+      "details": [
+        "Changed from prince@bakupcic.co.uk to admin@bakupcic.co.uk",
+        "Updated across all dashboards and pages"
+      ],
+      "impact": "Users now see correct admin contact email in footer",
+      "affectedComponents": ["App.jsx"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 9,
+      "date": "2026-01-11",
+      "commit": "c5922ef",
+      "category": "Internationalization",
+      "priority": "Medium",
+      "title": "Search and Filter Elements Translation",
+      "description": "Fixed remaining untranslated search and filter elements",
+      "details": [
+        "Fixed search placeholders across all dashboards",
+        "Fixed filter dropdowns and options",
+        "Fixed 'No results found' messages",
+        "Added translations for all interactive search/filter elements"
+      ],
+      "impact": "All search and filter UI elements now translate properly",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 10,
+      "date": "2026-01-11",
+      "commit": "9d834d7",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "Missing Translations - Arabic, Romanian, Polish",
+      "description": "Added missing translation keys to non-English language files",
+      "details": [
+        "Added 50+ missing translation keys to Arabic translation file",
+        "Added 50+ missing translation keys to Romanian translation file",
+        "Added 50+ missing translation keys to Polish translation file",
+        "Ensured parity with English translation file"
+      ],
+      "impact": "Complete translation coverage across all 4 supported languages",
+      "affectedComponents": ["translation files"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 11,
+      "date": "2026-01-11",
+      "commit": "f273bf0",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "Incomplete Translations Across All Dashboards",
+      "description": "Fixed incomplete translations found across multiple dashboards",
+      "details": [
+        "Fixed RecipientDashboard translation gaps",
+        "Fixed VendorDashboard translation gaps",
+        "Fixed SchoolDashboard translation gaps",
+        "Fixed common UI elements (buttons, labels, messages)",
+        "Added missing keys to all language files"
+      ],
+      "impact": "Comprehensive translation coverage across entire application",
+      "affectedComponents": ["App.jsx", "translation files"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 12,
+      "date": "2026-01-11",
+      "commit": "0a8e668",
+      "category": "UI Enhancement",
+      "priority": "High",
+      "title": "Responsive Hamburger Menus for All Dashboards",
+      "description": "Implemented mobile-responsive hamburger navigation menus",
+      "details": [
+        "Added hamburger menu to AdminDashboard",
+        "Added hamburger menu to VCSEDashboard",
+        "Added hamburger menu to RecipientDashboard",
+        "Added hamburger menu to SchoolDashboard",
+        "Added hamburger menu to VendorDashboard",
+        "Menus collapse automatically on mobile devices",
+        "Smooth animations and transitions",
+        "Fully translated menu items"
+      ],
+      "impact": "All dashboards now mobile-friendly with responsive navigation",
+      "affectedComponents": ["App.jsx"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 13,
+      "date": "2026-01-11",
+      "commit": "728ea75",
+      "category": "Bug Fix",
+      "priority": "Medium",
+      "title": "QR Scanner - Fallback Translations and Camera Detection",
+      "description": "Fixed QR scanner translation issues and improved camera detection",
+      "details": [
+        "Added fallback translations for missing QR scanner keys",
+        "Improved camera permission detection",
+        "Enhanced error messages with translations",
+        "Fixed camera initialization issues on mobile devices"
+      ],
+      "impact": "QR scanner now works reliably across all devices and languages",
+      "affectedComponents": ["QRScanner component"],
+      "userTypes": ["vendor", "vcse"]
+    },
+    {
+      "id": 14,
+      "date": "2026-01-11",
+      "commit": "84c4990",
+      "category": "UI Enhancement",
+      "priority": "Low",
+      "title": "RegisterPage UI Improvements",
+      "description": "Improved RegisterPage layout and functionality",
+      "details": [
+        "Removed About section for cleaner design",
+        "Replaced social buttons with Forgot Password link",
+        "Added Back to Home button",
+        "Added green background to LoginPage for consistency"
+      ],
+      "impact": "Cleaner, more focused registration experience",
+      "affectedComponents": ["RegisterPage", "LoginPage"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 15,
+      "date": "2026-01-11",
+      "commit": "80d37cf",
+      "category": "UI Enhancement",
+      "priority": "Medium",
+      "title": "VendorDashboard Hamburger Menu",
+      "description": "Added mobile-responsive hamburger menu to VendorDashboard",
+      "details": [
+        "Implemented collapsible navigation menu",
+        "Added smooth animations",
+        "Included all vendor navigation tabs",
+        "Fully translated menu items"
+      ],
+      "impact": "VendorDashboard now mobile-friendly",
+      "affectedComponents": ["App.jsx"],
+      "userTypes": ["vendor"]
+    },
+    {
+      "id": 16,
+      "date": "2026-01-11",
+      "commit": "16ccd87",
+      "category": "UI Enhancement",
+      "priority": "Medium",
+      "title": "LoginPage Redesign",
+      "description": "Redesigned LoginPage with modern, attractive styling",
+      "details": [
+        "Added gradient background",
+        "Improved form layout and spacing",
+        "Added social login options (Google, Facebook)",
+        "Enhanced button styling",
+        "Improved mobile responsiveness"
+      ],
+      "impact": "More professional and user-friendly login experience",
+      "affectedComponents": ["LoginPage"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 17,
+      "date": "2026-01-11",
+      "commit": "0b49b20",
+      "category": "UI Enhancement",
+      "priority": "Low",
+      "title": "LoginPage About Section Removal",
+      "description": "Removed About section from LoginPage for minimal design",
+      "details": [
+        "Removed unnecessary About section",
+        "Streamlined login page layout",
+        "Focused user attention on login form"
+      ],
+      "impact": "Cleaner, more focused login page",
+      "affectedComponents": ["LoginPage"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 18,
+      "date": "2026-01-11",
+      "commit": "5426a42",
+      "category": "UI Enhancement",
+      "priority": "Low",
+      "title": "LandingPage Font Size Hierarchy",
+      "description": "Fixed font size hierarchy on LandingPage",
+      "details": [
+        "H1: 40px (main headings)",
+        "H2: 32px (section headings)",
+        "H3: 24px (subsection headings)",
+        "P: 16px (body text)",
+        "Footer: 13px (footer text)",
+        "Proper visual hierarchy established"
+      ],
+      "impact": "Better readability and visual hierarchy on landing page",
+      "affectedComponents": ["LandingPage"],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 19,
+      "date": "2026-01-11",
+      "commit": "89c9f1d",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Admin Auto-Recreation Bug Fix",
+      "description": "Fixed bug causing admin account to be auto-recreated",
+      "details": [
+        "Removed automatic admin creation logic",
+        "Fixed footer font size hierarchy",
+        "Prevented duplicate admin accounts"
+      ],
+      "impact": "Admin accounts no longer auto-recreate on every deployment",
+      "affectedComponents": ["Backend initialization"],
+      "userTypes": ["admin"]
+    },
+    {
+      "id": 20,
+      "date": "2026-01-11",
+      "commit": "d74bb07",
+      "category": "UI Enhancement",
+      "priority": "Medium",
+      "title": "Font Size Increase Across All Dashboards",
+      "description": "Increased font sizes across entire application for better readability",
+      "details": [
+        "Increased body text from 14px to 16px",
+        "Increased headings by 2-4px",
+        "Increased button text for better visibility",
+        "Improved readability on all screen sizes"
+      ],
+      "impact": "Better readability and accessibility across entire application",
+      "affectedComponents": ["All dashboards and components"],
+      "userTypes": ["all"]
+    }
+  ],
+  "summary": {
+    "totalChanges": 20,
+    "categories": {
+      "Bug Fix": 4,
+      "Internationalization": 10,
+      "UI Enhancement": 5,
+      "Configuration": 1
+    },
+    "priorities": {
+      "Critical": 1,
+      "High": 9,
+      "Medium": 7,
+      "Low": 3
+    },
+    "affectedUserTypes": {
+      "all": 15,
+      "admin": 5,
+      "vcse": 3,
+      "recipient": 2,
+      "school": 2,
+      "vendor": 2
+    }
+  }
+}

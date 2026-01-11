@@ -1498,6 +1498,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('analytics'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'analytics' ? '#e3f2fd' : 'transparent'}}>📈 {t('admin.analytics')}</button>
           <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
+          <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 System Changelog</button>
         </div>
       )}
       
@@ -2957,6 +2958,10 @@ function AdminDashboard({ user, onLogout }) {
         {activeTab === 'settings' && (
           <AdminSettingsTab user={user} />
         )}
+        
+        {activeTab === 'changelog' && (
+          <SystemChangelogTab />
+        )}
       </div>
     </div>
   )
@@ -3353,6 +3358,274 @@ function AdminSettingsTab({ user }) {
           ) : (
             <p>Loading statistics...</p>
           )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// SYSTEM CHANGELOG TAB COMPONENT
+function SystemChangelogTab() {
+  const [changelog, setChangelog] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedPriority, setSelectedPriority] = useState('all')
+  
+  useEffect(() => {
+    // Load changelog data
+    fetch('/SYSTEM_CHANGELOG.json')
+      .then(res => res.json())
+      .then(data => {
+        setChangelog(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to load changelog:', err)
+        setLoading(false)
+      })
+  }, [])
+  
+  if (loading) {
+    return (
+      <div style={{textAlign: 'center', padding: '60px'}}>
+        <div style={{fontSize: '48px', marginBottom: '20px'}}>⏳</div>
+        <p style={{fontSize: '20px', color: '#666'}}>Loading changelog...</p>
+      </div>
+    )
+  }
+  
+  if (!changelog) {
+    return (
+      <div style={{textAlign: 'center', padding: '60px'}}>
+        <div style={{fontSize: '48px', marginBottom: '20px'}}>❌</div>
+        <p style={{fontSize: '20px', color: '#666'}}>Failed to load changelog</p>
+      </div>
+    )
+  }
+  
+  // Filter changes
+  const filteredChanges = changelog.changes.filter(change => {
+    if (selectedCategory !== 'all' && change.category !== selectedCategory) return false
+    if (selectedPriority !== 'all' && change.priority !== selectedPriority) return false
+    return true
+  })
+  
+  const getCategoryColor = (category) => {
+    const colors = {
+      'Bug Fix': '#f44336',
+      'Internationalization': '#2196F3',
+      'UI Enhancement': '#4CAF50',
+      'Configuration': '#FF9800',
+      'Feature': '#9C27B0'
+    }
+    return colors[category] || '#666'
+  }
+  
+  const getPriorityIcon = (priority) => {
+    const icons = {
+      'Critical': '🔴',
+      'High': '🟠',
+      'Medium': '🟡',
+      'Low': '🟢'
+    }
+    return icons[priority] || '⚪'
+  }
+  
+  return (
+    <div>
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        padding: '40px',
+        borderRadius: '15px',
+        marginBottom: '30px',
+        boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+      }}>
+        <h1 style={{margin: '0 0 10px 0', fontSize: '36px', fontWeight: 'bold'}}>📝 System Changelog</h1>
+        <p style={{margin: '0 0 20px 0', fontSize: '18px', opacity: 0.9}}>Version {changelog.version} - Last Updated: {changelog.lastUpdated}</p>
+        <div style={{display: 'flex', gap: '30px', flexWrap: 'wrap', marginTop: '20px'}}>
+          <div>
+            <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.totalChanges}</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>Total Changes</div>
+          </div>
+          <div>
+            <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['Bug Fix'] || 0}</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>Bug Fixes</div>
+          </div>
+          <div>
+            <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['Internationalization'] || 0}</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>i18n Updates</div>
+          </div>
+          <div>
+            <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['UI Enhancement'] || 0}</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>UI Enhancements</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Filters */}
+      <div style={{
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '10px',
+        marginBottom: '20px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        display: 'flex',
+        gap: '20px',
+        flexWrap: 'wrap',
+        alignItems: 'center'
+      }}>
+        <div>
+          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>Filter by Category:</label>
+          <select 
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            style={{
+              padding: '10px 15px',
+              borderRadius: '5px',
+              border: '1px solid #ddd',
+              fontSize: '16px',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="all">All Categories</option>
+            <option value="Bug Fix">Bug Fix</option>
+            <option value="Internationalization">Internationalization</option>
+            <option value="UI Enhancement">UI Enhancement</option>
+            <option value="Configuration">Configuration</option>
+          </select>
+        </div>
+        
+        <div>
+          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>Filter by Priority:</label>
+          <select 
+            value={selectedPriority}
+            onChange={(e) => setSelectedPriority(e.target.value)}
+            style={{
+              padding: '10px 15px',
+              borderRadius: '5px',
+              border: '1px solid #ddd',
+              fontSize: '16px',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="all">All Priorities</option>
+            <option value="Critical">🔴 Critical</option>
+            <option value="High">🟠 High</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="Low">🟢 Low</option>
+          </select>
+        </div>
+        
+        <div style={{marginLeft: 'auto', fontSize: '16px', color: '#666'}}>
+          Showing {filteredChanges.length} of {changelog.changes.length} changes
+        </div>
+      </div>
+      
+      {/* Changes List */}
+      <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+        {filteredChanges.map((change) => (
+          <div 
+            key={change.id}
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '25px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              borderLeft: `5px solid ${getCategoryColor(change.category)}`,
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+          >
+            {/* Header */}
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px', flexWrap: 'wrap', gap: '10px'}}>
+              <div style={{flex: 1}}>
+                <h3 style={{margin: '0 0 8px 0', fontSize: '22px', color: '#000'}}>
+                  {getPriorityIcon(change.priority)} {change.title}
+                </h3>
+                <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center'}}>
+                  <span style={{
+                    display: 'inline-block',
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    backgroundColor: getCategoryColor(change.category),
+                    color: 'white'
+                  }}>
+                    {change.category}
+                  </span>
+                  <span style={{fontSize: '15px', color: '#666'}}>
+                    📅 {change.date}
+                  </span>
+                  <span style={{fontSize: '15px', color: '#666'}}>
+                    🔖 {change.commit}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Description */}
+            <p style={{fontSize: '17px', color: '#333', marginBottom: '15px', lineHeight: '1.6'}}>
+              {change.description}
+            </p>
+            
+            {/* Details */}
+            {change.details && change.details.length > 0 && (
+              <div style={{marginBottom: '15px'}}>
+                <h4 style={{fontSize: '18px', marginBottom: '10px', color: '#000'}}>Details:</h4>
+                <ul style={{margin: 0, paddingLeft: '20px', color: '#555'}}>
+                  {change.details.map((detail, idx) => (
+                    <li key={idx} style={{marginBottom: '8px', fontSize: '16px', lineHeight: '1.5'}}>{detail}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {/* Impact */}
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '15px',
+              borderRadius: '8px',
+              marginBottom: '15px'
+            }}>
+              <h4 style={{fontSize: '16px', marginBottom: '8px', color: '#000'}}>💡 Impact:</h4>
+              <p style={{margin: 0, fontSize: '16px', color: '#555', lineHeight: '1.5'}}>{change.impact}</p>
+            </div>
+            
+            {/* Affected Components & User Types */}
+            <div style={{display: 'flex', gap: '20px', flexWrap: 'wrap', fontSize: '15px', color: '#666'}}>
+              <div>
+                <strong>📦 Components:</strong> {change.affectedComponents.join(', ')}
+              </div>
+              <div>
+                <strong>👥 User Types:</strong> {change.userTypes.join(', ')}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {filteredChanges.length === 0 && (
+        <div style={{
+          textAlign: 'center',
+          padding: '60px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{fontSize: '64px', marginBottom: '20px'}}>🔍</div>
+          <h3 style={{fontSize: '24px', color: '#666', margin: 0}}>No changes match your filters</h3>
+          <p style={{fontSize: '18px', color: '#999', marginTop: '10px'}}>Try adjusting your filter criteria</p>
         </div>
       )}
     </div>
