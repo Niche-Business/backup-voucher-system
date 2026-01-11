@@ -12,6 +12,7 @@ import QRScanner from './components/QRScanner'
 import VoucherPrint from './components/VoucherPrint'
 import Pagination from './components/Pagination'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
+import MobileNavTabs from './components/MobileNavTabs'
 import { QRCodeSVG } from 'qrcode.react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
@@ -4246,16 +4247,21 @@ function VCSEDashboard({ user, onLogout }) {
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       
       <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
-          <button onClick={() => setActiveTab('overview')} style={activeTab === 'overview' ? styles.activeTab : styles.tab}>{t('dashboard.overview')}</button>
-          <button onClick={() => setActiveTab('payment')} style={activeTab === 'payment' ? styles.activeTab : styles.tab}>💳 {t('tabs.loadFunds')}</button>
-          <button onClick={() => setActiveTab('orders')} style={activeTab === 'orders' ? styles.activeTab : styles.tab}>📋 {t('tabs.voucherOrders')}</button>
-          <button onClick={() => setActiveTab('reports')} style={activeTab === 'reports' ? styles.activeTab : styles.tab}>📈 {t('tabs.reports')}</button>
-          <button onClick={() => setActiveTab('issue')} style={activeTab === 'issue' ? styles.activeTab : styles.tab}>{t('dashboard.issueVouchers')}</button>
-          <button onClick={() => setActiveTab('recipients')} style={activeTab === 'recipients' ? styles.activeTab : styles.tab}>👥 Recipients & Vouchers</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.toGo')}</button>
-          <button onClick={() => setActiveTab('discounted')} style={activeTab === 'discounted' ? styles.activeTab : styles.tab}>💰 Discounted Items</button>
-        </div>
+        <MobileNavTabs
+          tabs={[
+            {label: t('dashboard.overview'), value: 'overview', icon: '📊'},
+            {label: t('tabs.loadFunds'), value: 'payment', icon: '💳'},
+            {label: t('tabs.voucherOrders'), value: 'orders', icon: '📋'},
+            {label: t('tabs.reports'), value: 'reports', icon: '📈'},
+            {label: t('dashboard.issueVouchers'), value: 'issue', icon: '🎫'},
+            {label: 'Recipients & Vouchers', value: 'recipients', icon: '👥'},
+            {label: t('dashboard.toGo'), value: 'togo', icon: '📦'},
+            {label: 'Discounted Items', value: 'discounted', icon: '💰'}
+          ]}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          backgroundColor="#4CAF50"
+        />
         
         {activeTab === 'overview' && (
           <div>
@@ -7172,33 +7178,19 @@ function RecipientDashboard({ user, onLogout }) {
       )}
       
       <div style={{padding: '20px'}}>
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
-          <button onClick={() => setActiveTab('vouchers')} style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}>{t('dashboard.myVouchers')}</button>
-          <button onClick={() => setActiveTab('shops')} style={activeTab === 'shops' ? styles.activeTab : styles.tab}>{t('dashboard.participatingShops')}</button>
-          <button onClick={() => setActiveTab('discounted')} style={activeTab === 'discounted' ? styles.activeTab : styles.tab}>🎁 Discounted Items</button>
-          <button onClick={() => setActiveTab('togo')} style={activeTab === 'togo' ? styles.activeTab : styles.tab}>{t('dashboard.browseToGo')}</button>
-          <button onClick={() => setActiveTab('history')} style={activeTab === 'history' ? styles.activeTab : styles.tab}>📜 {t('dashboard.voucherHistory')}</button>
-          <button onClick={() => setActiveTab('cart')} style={{...(activeTab === 'cart' ? styles.activeTab : styles.tab), position: 'relative'}}>
-            🛒 {t('dashboard.shoppingCart')}
-            {cartCount > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '-8px',
-                right: '-8px',
-                backgroundColor: '#f44336',
-                color: 'white',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px',
-                fontWeight: 'bold'
-              }}>{cartCount}</span>
-            )}
-          </button>
-        </div>
+        <MobileNavTabs
+          tabs={[
+            {label: t('dashboard.myVouchers'), value: 'vouchers', icon: '💳'},
+            {label: t('dashboard.participatingShops'), value: 'shops', icon: '🏪'},
+            {label: 'Discounted Items', value: 'discounted', icon: '🎁'},
+            {label: t('dashboard.browseToGo'), value: 'togo', icon: '📱'},
+            {label: t('dashboard.voucherHistory'), value: 'history', icon: '📜'},
+            {label: t('dashboard.shoppingCart') + (cartCount > 0 ? ` (${cartCount})` : ''), value: 'cart', icon: '🛒'}
+          ]}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          backgroundColor="#9C27B0"
+        />
         
         {activeTab === 'vouchers' && (
           <div>
@@ -8291,51 +8283,20 @@ function SchoolDashboard({ user, onLogout }) {
       {/* Main Content */}
       <div style={{maxWidth: '1200px', margin: '30px auto', padding: '0 20px'}}>
         {/* Tabs */}
-        <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-          <button 
-            onClick={() => setActiveTab('overview')} 
-            style={activeTab === 'overview' ? styles.activeTab : styles.tab}
-          >
-            Overview
-          </button>
-          <button 
-            onClick={() => setActiveTab('issue')} 
-            style={activeTab === 'issue' ? styles.activeTab : styles.tab}
-          >
-            Issue Vouchers
-          </button>
-          <button 
-            onClick={() => setActiveTab('vouchers')} 
-            style={activeTab === 'vouchers' ? styles.activeTab : styles.tab}
-          >
-            {t('dashboard.voucherHistory')}
-          </button>
-          <button 
-            onClick={() => setActiveTab('togo')} 
-            style={activeTab === 'togo' ? styles.activeTab : styles.tab}
-          >
-            🛒️ {t('tabs.foodToGo')}
-          </button>
-          <button 
-            onClick={() => setActiveTab('wallet')} 
-            style={activeTab === 'wallet' ? styles.activeTab : styles.tab}
-          >
-            💰 Wallet Management
-          </button>
-          {/* Load Funds button removed - schools receive allocated funds from administrators, not self-funded */}
-          <button 
-            onClick={() => setActiveTab('orders')} 
-            style={activeTab === 'orders' ? styles.activeTab : styles.tab}
-          >
-            📋 {t('tabs.voucherOrders')}
-          </button>
-          <button 
-            onClick={() => setActiveTab('reports')} 
-            style={activeTab === 'reports' ? styles.activeTab : styles.tab}
-          >
-            📈 {t('tabs.reports')}
-          </button>
-        </div>
+        <MobileNavTabs
+          tabs={[
+            {label: 'Overview', value: 'overview', icon: '📊'},
+            {label: 'Issue Vouchers', value: 'issue', icon: '🎫'},
+            {label: t('dashboard.voucherHistory'), value: 'vouchers', icon: '📜'},
+            {label: t('tabs.foodToGo'), value: 'togo', icon: '🛒'},
+            {label: 'Wallet Management', value: 'wallet', icon: '💰'},
+            {label: t('tabs.voucherOrders'), value: 'orders', icon: '📋'},
+            {label: t('tabs.reports'), value: 'reports', icon: '📈'}
+          ]}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          backgroundColor="#9C27B0"
+        />
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
