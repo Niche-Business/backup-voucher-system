@@ -452,30 +452,21 @@ const LandingPage = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Version and Admin Access */}
+      {/* Copyright Footer */}
       <div style={{
         textAlign: 'center',
         padding: '20px',
         backgroundColor: '#f5f5f5',
-        borderTop: '1px solid #ddd'
+        borderTop: '1px solid #ddd',
+        fontSize: '0.85em',
+        color: '#999'
       }}>
-        <div style={{ marginBottom: '15px', fontSize: '0.85em', color: '#666' }}>
-          <strong>BAK UP E-Voucher System</strong> v1.0.2 | SUPER ADMIN Impersonation System
-        </div>
-        <button
-          onClick={() => onNavigate('admin-login')}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#999',
-            fontSize: '0.85em',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-            padding: '5px 10px'
-          }}
-        >
-          {t('landing.footer.adminAccess')}
-        </button>
+        <p style={{ margin: '0' }}>
+          © 2024 BAK UP CIC. All rights reserved. | Northamptonshire Community E-Voucher Scheme
+        </p>
+        <p style={{ margin: '5px 0 0 0', fontSize: '0.8em' }}>
+          Charity Company Registration Number: 12994379
+        </p>
       </div>
     </div>
   );
