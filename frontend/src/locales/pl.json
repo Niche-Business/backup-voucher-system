@@ -565,7 +565,8 @@
   },
   "vcse": {
     "portal": "Portal Organizacji VCSE",
-    "description": "Zarządzaj voucherami i wspieraj rodziny w potrzebie w swojej społeczności"
+    "description": "Zarządzaj voucherami i wspieraj rodziny w potrzebie w swojej społeczności",
+    "totalValueDistributed": "Całkowita wartość rozdystrybuowana"
   },
   "wallet": {
     "management": "Zarządzanie portfelem",

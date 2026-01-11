@@ -4452,19 +4452,19 @@ function VCSEDashboard({ user, onLogout }) {
                 {/* Key Metrics Cards */}
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Total Vouchers Issued</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>{t('dashboard.totalVouchersIssued')}</div>
                     <div style={{fontSize: '40px', fontWeight: 'bold', color: '#4CAF50'}}>{analytics.total_vouchers}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Total Value Distributed</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>{t('vcse.totalValueDistributed')}</div>
                     <div style={{fontSize: '40px', fontWeight: 'bold', color: '#1976d2'}}>£{analytics.total_value.toFixed(2)}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Active Vouchers</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>{t('dashboard.activeVouchers')}</div>
                     <div style={{fontSize: '40px', fontWeight: 'bold', color: '#2e7d32'}}>{analytics.active_vouchers}</div>
                   </div>
                   <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>Redeemed Vouchers</div>
+                    <div style={{fontSize: '18px', color: '#666', marginBottom: '8px'}}>{t('dashboard.redeemedVouchers')}</div>
                     <div style={{fontSize: '40px', fontWeight: 'bold', color: '#1565c0'}}>{analytics.redeemed_vouchers}</div>
                   </div>
                 </div>
@@ -8917,26 +8917,26 @@ function SchoolDashboard({ user, onLogout }) {
             
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px'}}>
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Total Vouchers Issued</h3>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>{t('dashboard.totalVouchersIssued')}</h3>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#4CAF50'}}>{vouchers.length}</div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Total Value Distributed</h3>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>{t('vcse.totalValueDistributed')}</h3>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#2196F3'}}>
                   £{vouchers.reduce((sum, v) => sum + v.value, 0).toFixed(2)}
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Active Vouchers</h3>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>{t('dashboard.activeVouchers')}</h3>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#FF9800'}}>
                   {vouchers.filter(v => v.status === 'active').length}
                 </div>
               </div>
               
               <div style={{backgroundColor: 'white', padding: '25px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>Redeemed Vouchers</h3>
+                <h3 style={{marginTop: 0, fontSize: '20px', color: '#666'}}>{t('dashboard.redeemedVouchers')}</h3>
                 <div style={{fontSize: '52px', fontWeight: 'bold', color: '#9C27B0'}}>
                   {vouchers.filter(v => v.status === 'redeemed').length}
                 </div>

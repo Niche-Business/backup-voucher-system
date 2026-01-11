@@ -579,7 +579,8 @@
   },
   "vcse": {
     "portal": "VCFSE Organization Portal",
-    "description": "Manage vouchers and support vulnerable families in your community"
+    "description": "Manage vouchers and support vulnerable families in your community",
+    "totalValueDistributed": "Total Value Distributed"
   },
   "wallet": {
     "management": "Wallet Management",

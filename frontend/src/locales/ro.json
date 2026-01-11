@@ -577,7 +577,8 @@
   },
   "vcse": {
     "portal": "Portalul Organizației VCSE",
-    "description": "Gestionează voucherele și sprijină familiile vulnerabile din comunitatea ta"
+    "description": "Gestionează voucherele și sprijină familiile vulnerabile din comunitatea ta",
+    "totalValueDistributed": "Valoare totală distribuită"
   },
   "wallet": {
     "management": "Gestionarea Portofelului",
