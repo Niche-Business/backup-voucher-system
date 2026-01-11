@@ -1,6 +1,38 @@
 import { useEffect, useRef, useState } from 'react'
 import { Html5Qrcode } from 'html5-qrcode'
 
+// Default translations if i18n is not available
+const DEFAULT_TRANSLATIONS = {
+  'qrScanner.title': 'QR Code Scanner',
+  'qrScanner.recommendedTitle': '💡 Manual Entry Recommended',
+  'qrScanner.recommendedText': 'For best results, we recommend manually entering the voucher code instead of scanning. This is faster and more reliable.',
+  'qrScanner.useManualEntry': 'Use Manual Entry',
+  'qrScanner.or': 'OR',
+  'qrScanner.tryQRScanner': 'Try QR Scanner',
+  'qrScanner.instruction1': 'Allow camera access when prompted',
+  'qrScanner.instruction2': 'Position the QR code in the frame',
+  'qrScanner.instruction3': 'Keep the code steady for 2-3 seconds',
+  'qrScanner.instruction4': 'The code will scan automatically',
+  'qrScanner.enableCamera': 'Enable Camera',
+  'qrScanner.errorTitle': 'Camera Error',
+  'qrScanner.errorPermissionBlocked': 'Camera permission was blocked. Please allow camera access in your browser settings.',
+  'qrScanner.errorNoCamera': 'No camera found on this device. Please use manual entry instead.',
+  'qrScanner.errorCameraInUse': 'Camera is already in use by another application. Please close other apps using the camera.',
+  'qrScanner.errorFailed': 'Failed to start camera. Please check your browser settings and try again.',
+  'qrScanner.fixTitle': 'How to Fix This',
+  'qrScanner.fixInstructions': 'Follow these steps to enable camera access:',
+  'qrScanner.fixStep1': 'Look for the camera icon in your browser\'s address bar',
+  'qrScanner.fixStep2': 'Click it and select "Allow" for this website',
+  'qrScanner.fixStep3': 'Refresh the page and try again',
+  'qrScanner.openSettings': 'Open Camera Settings',
+  'qrScanner.tryAgain': 'Try Again',
+  'qrScanner.useManualEntryRecommended': 'Use Manual Entry Instead',
+  'qrScanner.cameraActive': 'Camera Active ✓',
+  'qrScanner.positionQR': 'Position QR code in the frame',
+  'qrScanner.initializing': 'Initializing camera...',
+  'common.close': 'Close'
+}
+
 export default function QRScanner({ onScan, onClose, t }) {
   const [scanning, setScanning] = useState(false)
   const [error, setError] = useState('')
@@ -12,8 +44,15 @@ export default function QRScanner({ onScan, onClose, t }) {
 
   // Fallback function if t is not provided
   const translate = (key) => {
-    if (!t) return key
-    return t(key)
+    if (t && typeof t === 'function') {
+      const result = t(key)
+      // If translation returns the key itself (not translated), use default
+      if (result === key || !result) {
+        return DEFAULT_TRANSLATIONS[key] || key
+      }
+      return result
+    }
+    return DEFAULT_TRANSLATIONS[key] || key
   }
 
   useEffect(() => {
@@ -51,6 +90,17 @@ export default function QRScanner({ onScan, onClose, t }) {
       setShowInstructions(false)
       setPermissionBlocked(false)
       
+      // Check if camera is available
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const hasCamera = devices.some(device => device.kind === 'videoinput')
+      
+      if (!hasCamera) {
+        setError(translate('qrScanner.errorNoCamera'))
+        setCameraEnabled(false)
+        setScanning(false)
+        return
+      }
+
       const html5QrCode = new Html5Qrcode("qr-reader")
       html5QrCodeRef.current = html5QrCode
 
