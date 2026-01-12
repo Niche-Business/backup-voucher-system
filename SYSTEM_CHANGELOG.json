@@ -1,7 +1,39 @@
 {
-  "version": "1.0.4",
+  "version": "1.0.5",
   "lastUpdated": "2026-01-12",
   "changes": [
+    {
+      "id": 33,
+      "date": "2026-01-12",
+      "commit": "e9eca5a",
+      "category": "Feature",
+      "priority": "High",
+      "title": "VCSE Surplus Food Acceptance Workflow Complete",
+      "description": "Implemented complete VCSE acceptance workflow for surplus food items with collection time scheduling, status tracking, and real-time notifications",
+      "details": [
+        "Added new 'Surplus Food Collection' tab to VCSE dashboard",
+        "VCSE can view all available surplus food items from vendors",
+        "Accept button allows VCSE to claim items for collection",
+        "Collection time picker modal for scheduling pickup",
+        "Real-time notifications to vendor when item accepted",
+        "VCSE can view accepted items with collection details",
+        "Mark as Collected button to confirm pickup",
+        "Admin dashboard shows acceptance status and VCSE organization",
+        "Vendor receives notification when items collected",
+        "Database migration adds 4 new fields to surplus_item table",
+        "Complete status workflow: available → accepted → collected",
+        "Full audit trail of acceptance and collection"
+      ],
+      "impact": "VCSE organizations can now accept surplus food items from vendors, schedule collection times, and coordinate food distribution to beneficiaries. Completes user feature request #7 at 100%.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - VCSEDashboard (new tab + modal)",
+        "frontend/src/App.jsx - AdminDashboard (acceptance status)",
+        "backend/src/main.py - 3 new API endpoints",
+        "backend/src/main.py - SurplusItem model (4 new fields)",
+        "backend/migrations/add_food_acceptance_fields.py"
+      ],
+      "userTypes": ["vcse", "vendor", "admin"]
+    },
     {
       "id": 32,
       "date": "2026-01-12",
@@ -681,20 +713,20 @@
     }
   ],
   "summary": {
-    "totalChanges": 32,
+    "totalChanges": 33,
     "categories": {
       "Bug Fix": 7,
+      "Feature": 3,
       "Internationalization": 11,
       "UI Enhancement": 9,
       "Configuration": 1,
-      "Feature": 2,
       "Security": 1,
       "Deployment": 1
     },
     "priorities": {
       "Critical": 5,
-      "High": 15,
-      "Medium": 7,
+      "High": 16,
+      "Medium": 12,
       "Low": 5
     },
     "affectedUserTypes": {
