@@ -3245,8 +3245,23 @@ function AdminDashboard({ user, onLogout }) {
                         <strong>{t('discount.category')}:</strong> {item.category}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Status:</strong> <span style={{color: item.status === 'available' ? '#2e7d32' : '#757575', fontWeight: 'bold'}}>{item.status.toUpperCase()}</span>
+                        <strong>Status:</strong> <span style={{color: item.collection_status === 'available' ? '#2e7d32' : item.collection_status === 'accepted' ? '#FF9800' : '#2196F3', fontWeight: 'bold'}}>{(item.collection_status || item.status || 'available').toUpperCase()}</span>
                       </p>
+                      {item.collection_status === 'accepted' && (
+                        <div style={{margin: '10px 0', padding: '10px', backgroundColor: '#FFF3E0', borderRadius: '5px', borderLeft: '4px solid #FF9800'}}>
+                          <p style={{margin: '2px 0', fontSize: '17px', fontWeight: 'bold', color: '#E65100'}}>✅ Accepted for Collection</p>
+                          <p style={{margin: '2px 0', fontSize: '16px'}}><strong>By:</strong> {item.accepted_by_vcse_name || 'VCSE Organization'}</p>
+                          {item.collection_time && (
+                            <p style={{margin: '2px 0', fontSize: '16px'}}><strong>Collection Time:</strong> {new Date(item.collection_time).toLocaleString()}</p>
+                          )}
+                        </div>
+                      )}
+                      {item.collection_status === 'collected' && (
+                        <div style={{margin: '10px 0', padding: '10px', backgroundColor: '#E3F2FD', borderRadius: '5px', borderLeft: '4px solid #2196F3'}}>
+                          <p style={{margin: '2px 0', fontSize: '17px', fontWeight: 'bold', color: '#1565C0'}}>✓ Collected</p>
+                          <p style={{margin: '2px 0', fontSize: '16px'}}><strong>By:</strong> {item.accepted_by_vcse_name || 'VCSE Organization'}</p>
+                        </div>
+                      )}
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
                         <strong>Description:</strong> {item.description || 'N/A'}
                       </p>
@@ -4848,11 +4863,17 @@ function VCSEDashboard({ user, onLogout }) {
   const [lastItemCount, setLastItemCount] = useState(0)
   const [townFilter, setTownFilter] = useState('all')
   const [filteredToGoItems, setFilteredToGoItems] = useState([])
+  const [showAcceptModal, setShowAcceptModal] = useState(false)
+  const [acceptingItem, setAcceptingItem] = useState(null)
+  const [collectionDate, setCollectionDate] = useState('')
+  const [collectionTime, setCollectionTime] = useState('')
+  const [acceptedItems, setAcceptedItems] = useState([])
 
   useEffect(() => {
     loadBalance()
     loadToGoItems()
     loadDiscountedItems()
+    loadAcceptedItems()
     loadVouchers()
     loadAnalytics()
     loadVendorShops()
@@ -4989,6 +5010,74 @@ function VCSEDashboard({ user, onLogout }) {
       setDiscountedItems(data.items || [])
     } catch (error) {
       console.error('Failed to load discounted items:', error)
+    }
+  }
+  
+  const loadAcceptedItems = async () => {
+    try {
+      const data = await apiCall('/vcse/accepted-items')
+      setAcceptedItems(data.items || [])
+    } catch (error) {
+      console.error('Failed to load accepted items:', error)
+    }
+  }
+  
+  const handleAcceptItem = (item) => {
+    setAcceptingItem(item)
+    // Set default collection date to today
+    const today = new Date().toISOString().split('T')[0]
+    setCollectionDate(today)
+    // Set default collection time to 2 hours from now
+    const twoHoursLater = new Date(Date.now() + 2 * 60 * 60 * 1000)
+    const hours = String(twoHoursLater.getHours()).padStart(2, '0')
+    const minutes = String(twoHoursLater.getMinutes()).padStart(2, '0')
+    setCollectionTime(`${hours}:${minutes}`)
+    setShowAcceptModal(true)
+  }
+  
+  const handleConfirmAcceptance = async () => {
+    if (!collectionDate || !collectionTime) {
+      setMessage('Please select collection date and time')
+      return
+    }
+    
+    try {
+      const collectionDateTime = `${collectionDate}T${collectionTime}:00`
+      await apiCall('/vcse/accept-food-item', {
+        method: 'POST',
+        body: JSON.stringify({
+          item_id: acceptingItem.id,
+          collection_time: collectionDateTime
+        })
+      })
+      
+      setMessage(`Successfully accepted ${acceptingItem.item_name} for collection!`)
+      setShowAcceptModal(false)
+      setAcceptingItem(null)
+      setCollectionDate('')
+      setCollectionTime('')
+      loadToGoItems()
+      loadAcceptedItems()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+    }
+  }
+  
+  const handleMarkCollected = async (itemId) => {
+    if (!confirm('Mark this item as collected?')) return
+    
+    try {
+      await apiCall('/vcse/mark-collected', {
+        method: 'POST',
+        body: JSON.stringify({ item_id: itemId })
+      })
+      
+      setMessage('Item marked as collected!')
+      loadAcceptedItems()
+      setTimeout(() => setMessage(''), 3000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
     }
   }
 
@@ -5218,7 +5307,8 @@ function VCSEDashboard({ user, onLogout }) {
             {label: t('dashboard.issueVouchers'), value: 'issue', icon: '🎫'},
             {label: t('tabs.recipientsVouchers'), value: 'recipients', icon: '👥'},
             {label: t('dashboard.toGo'), value: 'togo', icon: '📦'},
-            {label: t('tabs.discountedItems'), value: 'discounted', icon: '💰'}
+            {label: t('tabs.discountedItems'), value: 'discounted', icon: '💰'},
+            {label: 'Surplus Food Collection', value: 'surplus-collection', icon: '🍞'}
           ]}
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -6173,6 +6263,137 @@ function VCSEDashboard({ user, onLogout }) {
           </div>
         )}
         
+        {activeTab === 'surplus-collection' && (
+          <div>
+            <h2 style={{marginBottom: '20px'}}>🍞 Surplus Food Collection</h2>
+            <p style={{marginBottom: '20px', color: '#666'}}>Accept surplus food items from local vendors for collection and distribution to your beneficiaries</p>
+            
+            {/* Available Items Section */}
+            <div style={{marginBottom: '30px'}}>
+              <h3 style={{color: '#2e7d32'}}>✅ Available for Collection</h3>
+              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+                {toGoItems.filter(item => !item.collection_status || item.collection_status === 'available').length === 0 ? (
+                  <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                    <p>No surplus food items available at the moment</p>
+                    <p style={{fontSize: '18px'}}>Check back later for new items from local vendors</p>
+                  </div>
+                ) : (
+                  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                    {toGoItems.filter(item => !item.collection_status || item.collection_status === 'available').map(item => (
+                      <div key={item.id} style={{padding: '20px', border: '2px solid #4CAF50', borderRadius: '10px', backgroundColor: '#f1f8e9'}}>
+                        <h4 style={{margin: '0 0 10px 0', color: '#2e7d32'}}>🍞 {item.item_name}</h4>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
+                          <strong>Quantity:</strong> {item.quantity} {item.unit}
+                        </p>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
+                          <strong>Category:</strong> {item.category}
+                        </p>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
+                          <strong>Description:</strong> {item.description || 'N/A'}
+                        </p>
+                        <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📞 Phone:</strong> {item.shop_phone}</p>
+                        </div>
+                        <button
+                          onClick={() => handleAcceptItem(item)}
+                          style={{
+                            width: '100%',
+                            marginTop: '15px',
+                            padding: '12px',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = '#4CAF50'}
+                        >
+                          ✅ Accept for Collection
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Accepted Items Section */}
+            <div>
+              <h3 style={{color: '#FF9800'}}>📦 My Accepted Items</h3>
+              <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+                {acceptedItems.length === 0 ? (
+                  <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+                    <p>You haven't accepted any items yet</p>
+                    <p style={{fontSize: '18px'}}>Accept items from the "Available for Collection" section above</p>
+                  </div>
+                ) : (
+                  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px'}}>
+                    {acceptedItems.map(item => (
+                      <div key={item.id} style={{
+                        padding: '20px',
+                        border: item.collection_status === 'collected' ? '2px solid #2196F3' : '2px solid #FF9800',
+                        borderRadius: '10px',
+                        backgroundColor: item.collection_status === 'collected' ? '#e3f2fd' : '#fff3e0'
+                      }}>
+                        <div style={{
+                          backgroundColor: item.collection_status === 'collected' ? '#2196F3' : '#FF9800',
+                          color: 'white',
+                          padding: '8px 12px',
+                          borderRadius: '5px',
+                          marginBottom: '10px',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          textAlign: 'center'
+                        }}>
+                          {item.collection_status === 'collected' ? '✓ COLLECTED' : '⏰ PENDING COLLECTION'}
+                        </div>
+                        <h4 style={{margin: '0 0 10px 0', color: '#333'}}>🍞 {item.item_name}</h4>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
+                          <strong>Quantity:</strong> {item.quantity} {item.unit}
+                        </p>
+                        <p style={{margin: '5px 0', fontSize: '18px'}}>
+                          <strong>Collection Time:</strong> {new Date(item.collection_time).toLocaleString()}
+                        </p>
+                        <div style={{marginTop: '10px', padding: '10px', backgroundColor: 'white', borderRadius: '5px'}}>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📍 Address:</strong> {item.shop_address}</p>
+                          <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📞 Phone:</strong> {item.shop_phone}</p>
+                        </div>
+                        {item.collection_status === 'accepted' && (
+                          <button
+                            onClick={() => handleMarkCollected(item.id)}
+                            style={{
+                              width: '100%',
+                              marginTop: '15px',
+                              padding: '12px',
+                              backgroundColor: '#2196F3',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '8px',
+                              fontSize: '18px',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#1976d2'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = '#2196F3'}
+                          >
+                            ✓ Mark as Collected
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        
         {activeTab === 'recipients' && (
           <div>
             <h2 style={{marginBottom: '20px'}}>👥 Recipients & Voucher Management</h2>
@@ -6432,6 +6653,129 @@ function VCSEDashboard({ user, onLogout }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      
+      {/* Collection Time Picker Modal */}
+      {showAcceptModal && acceptingItem && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000,
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '15px',
+            padding: '30px',
+            maxWidth: '500px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <h2 style={{marginTop: 0, color: '#4CAF50'}}>🍞 Accept Food Item for Collection</h2>
+            
+            <div style={{backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '8px', marginBottom: '20px'}}>
+              <h3 style={{margin: '0 0 10px 0', color: '#333'}}>{acceptingItem.item_name}</h3>
+              <p style={{margin: '5px 0'}}><strong>Quantity:</strong> {acceptingItem.quantity} {acceptingItem.unit}</p>
+              <p style={{margin: '5px 0'}}><strong>Shop:</strong> {acceptingItem.shop_name}</p>
+              <p style={{margin: '5px 0'}}><strong>Location:</strong> {acceptingItem.shop_address}</p>
+            </div>
+            
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '18px'}}>
+                📅 Collection Date
+              </label>
+              <input
+                type="date"
+                value={collectionDate}
+                onChange={(e) => setCollectionDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '18px',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px'
+                }}
+              />
+            </div>
+            
+            <div style={{marginBottom: '20px'}}>
+              <label style={{display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '18px'}}>
+                ⏰ Collection Time
+              </label>
+              <input
+                type="time"
+                value={collectionTime}
+                onChange={(e) => setCollectionTime(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '18px',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px'
+                }}
+              />
+            </div>
+            
+            <div style={{backgroundColor: '#e3f2fd', padding: '15px', borderRadius: '8px', marginBottom: '20px'}}>
+              <p style={{margin: 0, color: '#1565c0', fontSize: '16px'}}>
+                ℹ️ <strong>Note:</strong> The vendor will be notified of your collection time. Please arrive promptly to collect the items.
+              </p>
+            </div>
+            
+            <div style={{display: 'flex', gap: '10px'}}>
+              <button
+                onClick={() => {
+                  setShowAcceptModal(false)
+                  setAcceptingItem(null)
+                  setCollectionDate('')
+                  setCollectionTime('')
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  backgroundColor: '#757575',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#616161'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#757575'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmAcceptance}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#4CAF50'}
+              >
+                ✅ Confirm Acceptance
+              </button>
+            </div>
           </div>
         </div>
       )}

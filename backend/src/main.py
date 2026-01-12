@@ -310,6 +310,11 @@ class SurplusItem(db.Model):
     claimed_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     claimed_at = db.Column(db.DateTime)
     collected_at = db.Column(db.DateTime)
+    # VCSE acceptance fields
+    accepted_by_vcse_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    accepted_at = db.Column(db.DateTime)
+    collection_time = db.Column(db.DateTime)
+    collection_status = db.Column(db.String(20), default='available')  # available, accepted, collected, expired
     
     vendor = db.relationship('User', foreign_keys=[vendor_id], backref='surplus_posted_items')
     shop = db.relationship('VendorShop', backref='shop_surplus_items')
@@ -5265,9 +5270,214 @@ def vcse_get_discounted_items():
             'total_count': len(items_data)
         }), 200
         
-    except Exception as e:
+      except Exception as e:
         return jsonify({'error': f'Failed to get discounted items: {str(e)}'}), 500
 
+@app.route('/api/vcse/accept-food-item', methods=['POST'])
+def vcse_accept_food_item():
+    """VCSE endpoint to accept a Food to Go item for collection"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCSE access required'}), 403
+        
+        data = request.get_json()
+        item_id = data.get('item_id')
+        collection_time = data.get('collection_time')
+        
+        if not item_id or not collection_time:
+            return jsonify({'error': 'Item ID and collection time required'}), 400
+        
+        # Get the item
+        item = SurplusItem.query.get(item_id)
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        # Check if item is still available
+        if item.collection_status != 'available':
+            return jsonify({'error': 'Item is no longer available'}), 400
+        
+        # Parse collection time
+        from datetime import datetime
+        try:
+            collection_dt = datetime.fromisoformat(collection_time.replace('Z', '+00:00'))
+        except:
+            return jsonify({'error': 'Invalid collection time format'}), 400
+        
+        # Update item
+        item.accepted_by_vcse_id = user_id
+        item.accepted_at = datetime.utcnow()
+        item.collection_time = collection_dt
+        item.collection_status = 'accepted'
+        
+        db.session.commit()
+        
+        # Get shop and vendor info for notification
+        shop = VendorShop.query.get(item.shop_id)
+        vendor = User.query.get(shop.vendor_id) if shop else None
+        
+        # Send real-time notification to vendor
+        if vendor:
+            socketio.emit('food_item_accepted', {
+                'item_id': item.id,
+                'item_name': item.item_name,
+                'vcse_name': f"{user.first_name} {user.last_name}",
+                'vcse_org': user.organization_name if hasattr(user, 'organization_name') else 'VCSE Organization',
+                'collection_time': collection_dt.isoformat(),
+                'message': f"{user.first_name} {user.last_name} will collect {item.item_name} at {collection_dt.strftime('%I:%M %p')}"
+            }, room=f'vendor_{vendor.id}')
+        
+        # Send notification to admin
+        socketio.emit('food_item_accepted', {
+            'item_id': item.id,
+            'item_name': item.item_name,
+            'vcse_name': f"{user.first_name} {user.last_name}",
+            'shop_name': shop.shop_name if shop else 'Unknown',
+            'collection_time': collection_dt.isoformat()
+        }, room='admin')
+        
+        return jsonify({
+            'success': True,
+            'message': 'Food item accepted for collection',
+            'item': {
+                'id': item.id,
+                'item_name': item.item_name,
+                'collection_time': collection_dt.isoformat(),
+                'collection_status': item.collection_status
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to accept food item: {str(e)}'}), 500
+
+@app.route('/api/vcse/mark-collected', methods=['POST'])
+def vcse_mark_collected():
+    """VCSE endpoint to mark a food item as collected"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCSE access required'}), 403
+        
+        data = request.get_json()
+        item_id = data.get('item_id')
+        
+        if not item_id:
+            return jsonify({'error': 'Item ID required'}), 400
+        
+        # Get the item
+        item = SurplusItem.query.get(item_id)
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+        
+        # Check if this VCSE accepted the item
+        if item.accepted_by_vcse_id != user_id:
+            return jsonify({'error': 'You did not accept this item'}), 403
+        
+        # Check if item is in accepted status
+        if item.collection_status != 'accepted':
+            return jsonify({'error': 'Item is not in accepted status'}), 400
+        
+        # Update item status
+        from datetime import datetime
+        item.collection_status = 'collected'
+        item.status = 'collected'  # Also update main status
+        
+        db.session.commit()
+        
+        # Get shop and vendor info for notification
+        shop = VendorShop.query.get(item.shop_id)
+        vendor = User.query.get(shop.vendor_id) if shop else None
+        
+        # Send real-time notification to vendor
+        if vendor:
+            socketio.emit('food_item_collected', {
+                'item_id': item.id,
+                'item_name': item.item_name,
+                'vcse_name': f"{user.first_name} {user.last_name}",
+                'message': f"{user.first_name} {user.last_name} collected {item.item_name}"
+            }, room=f'vendor_{vendor.id}')
+        
+        # Send notification to admin
+        socketio.emit('food_item_collected', {
+            'item_id': item.id,
+            'item_name': item.item_name,
+            'vcse_name': f"{user.first_name} {user.last_name}",
+            'shop_name': shop.shop_name if shop else 'Unknown'
+        }, room='admin')
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item marked as collected',
+            'item': {
+                'id': item.id,
+                'item_name': item.item_name,
+                'collection_status': item.collection_status
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to mark item as collected: {str(e)}'}), 500
+
+@app.route('/api/vcse/accepted-items', methods=['GET'])
+def vcse_get_accepted_items():
+    """VCSE endpoint to view their accepted Food to Go items"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'vcse':
+            return jsonify({'error': 'VCSE access required'}), 403
+        
+        # Get items accepted by this VCSE
+        items = SurplusItem.query.filter_by(
+            accepted_by_vcse_id=user_id
+        ).filter(
+            SurplusItem.collection_status.in_(['accepted', 'collected'])
+        ).order_by(SurplusItem.collection_time.asc()).all()
+        
+        items_data = []
+        for item in items:
+            shop = VendorShop.query.get(item.shop_id)
+            vendor = User.query.get(shop.vendor_id) if shop else None
+            
+            items_data.append({
+                'id': item.id,
+                'item_name': item.item_name,
+                'quantity': item.quantity,
+                'unit': item.unit,
+                'category': item.category,
+                'description': item.description,
+                'collection_status': item.collection_status,
+                'collection_time': item.collection_time.isoformat() if item.collection_time else None,
+                'accepted_at': item.accepted_at.isoformat() if item.accepted_at else None,
+                'shop_name': shop.shop_name if shop else 'Unknown',
+                'shop_address': shop.address if shop else 'N/A',
+                'shop_phone': shop.phone if shop else 'N/A',
+                'shop_city': shop.city if shop else None,
+                'shop_postcode': shop.postcode if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown',
+                'vendor_phone': vendor.phone if vendor else 'N/A'
+            })
+        
+        return jsonify({
+            'items': items_data,
+            'total_count': len(items_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get accepted items: {str(e)}'}), 500
 
 @app.route('/api/recipient/shops', methods=['GET'])
 def get_shops_for_recipient():
