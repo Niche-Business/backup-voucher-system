@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -29,6 +30,7 @@ ChartJS.register(
 );
 
 export function AnalyticsDashboard({ apiCall }) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState(null);
   const [error, setError] = useState(null);
@@ -148,7 +150,7 @@ export function AnalyticsDashboard({ apiCall }) {
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h2 style={{ margin: 0 }}>📊 System Analytics Dashboard</h2>
+        <h2 style={{ margin: 0 }}>📊 {t('common.systemAnalyticsDashboard')}</h2>
         <button 
           onClick={loadAnalyticsData}
           style={{
@@ -161,37 +163,37 @@ export function AnalyticsDashboard({ apiCall }) {
             cursor: 'pointer'
           }}
         >
-          🔄 Refresh
+          🔄 {t('common.refresh')}
         </button>
       </div>
 
       {/* Key Metrics Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px' }}>
         <MetricCard 
-          title="Total Users" 
+          title={t('common.totalUsers')} 
           value={analytics.users?.total || 0} 
           icon="👥" 
           color="#4CAF50"
-          subtitle={`${analytics.users?.recipients || 0} recipients`}
+          subtitle={`${analytics.users?.recipients || 0} ${t('common.recipients').toLowerCase()}`}
         />
         <MetricCard 
-          title="Total Vouchers" 
+          title={t('common.totalVouchers')} 
           value={analytics.total_vouchers || 0} 
-          subtitle={`£${(analytics.total_value || 0).toFixed(2)} total value`}
+          subtitle={`£${(analytics.total_value || 0).toFixed(2)} ${t('common.totalValue').toLowerCase()}`}
           icon="🎫" 
           color="#2196F3"
         />
         <MetricCard 
-          title="Active Vouchers" 
+          title={t('common.activeVouchers')} 
           value={analytics.active_vouchers || 0} 
           subtitle={`£${(analytics.value_by_status?.active || 0).toFixed(2)}`}
           icon="✅" 
           color="#4CAF50"
         />
         <MetricCard 
-          title="Redemption Rate" 
+          title={t('common.redemptionRate')} 
           value={`${analytics.vouchers?.redemption_rate || 0}%`} 
-          subtitle={`${analytics.redeemed_vouchers || 0} redeemed`}
+          subtitle={`${analytics.redeemed_vouchers || 0} ${t('common.redeemed').toLowerCase()}`}
           icon="📈" 
           color="#9C27B0"
         />
@@ -199,24 +201,24 @@ export function AnalyticsDashboard({ apiCall }) {
 
       {/* System Overview */}
       <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '10px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <h3 style={{ marginTop: 0, marginBottom: '20px' }}>🌐 System Overview</h3>
+        <h3 style={{ marginTop: 0, marginBottom: '20px' }}>🌐 {t('common.systemOverview')}</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
-          <FinancialMetric label="VCFSE Organizations" value={analytics.users?.vcses || 0} />
-          <FinancialMetric label="Schools" value={analytics.users?.schools || 0} />
-          <FinancialMetric label="Vendors" value={analytics.users?.vendors || 0} />
-          <FinancialMetric label="Recipients" value={analytics.users?.recipients || 0} />
+          <FinancialMetric label={t('common.vcfseOrganizations')} value={analytics.users?.vcses || 0} />
+          <FinancialMetric label={t('common.schools')} value={analytics.users?.schools || 0} />
+          <FinancialMetric label={t('common.vendors')} value={analytics.users?.vendors || 0} />
+          <FinancialMetric label={t('common.recipients')} value={analytics.users?.recipients || 0} />
         </div>
       </div>
 
       {/* Marketplace Stats */}
       {analytics.marketplace && (
         <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '10px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '20px' }}>🏪 Marketplace Statistics</h3>
+          <h3 style={{ marginTop: 0, marginBottom: '20px' }}>🏪 {t('common.marketplaceStatistics')}</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
-            <FinancialMetric label="Active Shops" value={analytics.marketplace.total_shops || 0} color="#4CAF50" />
-            <FinancialMetric label="Total Items" value={analytics.marketplace.total_items || 0} color="#2196F3" />
-            <FinancialMetric label="Available Items" value={analytics.marketplace.available_items || 0} color="#FF9800" />
-            <FinancialMetric label="Claimed Items" value={analytics.marketplace.claimed_items || 0} color="#9C27B0" />
+            <FinancialMetric label={t('common.activeShops')} value={analytics.marketplace.total_shops || 0} color="#4CAF50" />
+            <FinancialMetric label={t('common.totalItems')} value={analytics.marketplace.total_items || 0} color="#2196F3" />
+            <FinancialMetric label={t('common.availableItems')} value={analytics.marketplace.available_items || 0} color="#FF9800" />
+            <FinancialMetric label={t('common.claimedItems')} value={analytics.marketplace.claimed_items || 0} color="#9C27B0" />
           </div>
         </div>
       )}
