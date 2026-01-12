@@ -4255,7 +4255,7 @@ function SystemChangelogTab() {
                     {change.category}
                   </span>
                   <span style={{fontSize: '15px', color: '#666', fontWeight: '600'}}>
-                    Version {changelog.version}
+                    Version {change.version}
                   </span>
                   <span style={{fontSize: '15px', color: '#666'}}>
                     📅 {change.date}
