@@ -5270,7 +5270,7 @@ def vcse_get_discounted_items():
             'total_count': len(items_data)
         }), 200
         
-      except Exception as e:
+    except Exception as e:
         return jsonify({'error': f'Failed to get discounted items: {str(e)}'}), 500
 
 @app.route('/api/vcse/accept-food-item', methods=['POST'])
