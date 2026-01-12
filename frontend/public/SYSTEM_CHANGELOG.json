@@ -3,6 +3,31 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 27,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Language Persistence and Auto-Reload on Language Change",
+      "description": "Fixed language preference persistence and added automatic page reload when users change language to ensure all data labels are displayed in the selected language",
+      "details": [
+        "Language preference already stored in localStorage via i18next-browser-languagedetector",
+        "Added window.location.reload() when language changes to refresh all data with new translations",
+        "Updated AdminDashboard language selector to reload page on change",
+        "Updated SchoolDashboard language selector to reload page on change",
+        "Ensures all database content labels (Address, Phone, Email, etc.) display in selected language",
+        "Language selection now persists across browser sessions",
+        "Users see immediate translation updates when switching languages"
+      ],
+      "impact": "Users can now switch languages and immediately see all UI labels and data labels translated. Language preference is saved and automatically applied on next visit.",
+      "affectedComponents": [
+        "App.jsx - AdminDashboard language selector",
+        "App.jsx - SchoolDashboard language selector",
+        "i18n.js - Language detection configuration"
+      ],
+      "userTypes": ["all"]
+    },
+    {
       "id": 26,
       "date": "2026-01-12",
       "commit": "TBD",
@@ -525,9 +550,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 26,
+    "totalChanges": 27,
     "categories": {
-      "Bug Fix": 4,
+      "Bug Fix": 5,
       "Internationalization": 12,
       "UI Enhancement": 7,
       "Configuration": 1,

@@ -8004,6 +8004,8 @@ function RecipientDashboard({ user, onLogout }) {
                   onChange={(e) => {
                     i18n.changeLanguage(e.target.value)
                     setShowMenuDropdown(false)
+                    // Reload current data to apply translations
+                    window.location.reload()
                   }}
                   style={{
                     width: '100%',
@@ -9221,7 +9223,10 @@ function SchoolDashboard({ user, onLogout }) {
             <NotificationBell apiCall={apiCall} userType="school" />
             <select 
               value={i18n.language} 
-              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              onChange={(e) => {
+                i18n.changeLanguage(e.target.value)
+                window.location.reload()
+              }}
               style={{
                 padding: '8px 12px',
                 borderRadius: '5px',
