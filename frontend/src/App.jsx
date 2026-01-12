@@ -1721,7 +1721,6 @@ function RegisterPage({ onRegister, onNavigate }) {
     </div>
   )
 }
-}
 
 // Dashboard Router Component
 function Dashboard({ user, onLogout }) {
