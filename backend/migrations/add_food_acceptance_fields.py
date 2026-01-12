@@ -46,7 +46,7 @@ def run_migration():
         cur.execute("""
             SELECT column_name 
             FROM information_schema.columns 
-            WHERE table_name = 'to_go_item' 
+            WHERE table_name = 'surplus_item' 
             AND column_name IN ('accepted_by_vcse_id', 'accepted_at', 'collection_time', 'collection_status')
         """)
         existing_columns = [row[0] for row in cur.fetchall()]
@@ -60,12 +60,12 @@ def run_migration():
                 return False
         
         # Add new columns
-        print("\nAdding new columns to to_go_item table...")
+        print("Adding new columns to surplus_item table...")
         
         # Add accepted_by_vcse_id column
         if 'accepted_by_vcse_id' not in existing_columns:
             cur.execute("""
-                ALTER TABLE to_go_item 
+                ALTER TABLE surplus_item 
                 ADD COLUMN accepted_by_vcse_id INTEGER REFERENCES "user"(id) ON DELETE SET NULL
             """)
             print("✓ Added accepted_by_vcse_id column")
@@ -75,7 +75,7 @@ def run_migration():
         # Add accepted_at column
         if 'accepted_at' not in existing_columns:
             cur.execute("""
-                ALTER TABLE to_go_item 
+                ALTER TABLE surplus_item 
                 ADD COLUMN accepted_at TIMESTAMP
             """)
             print("✓ Added accepted_at column")
@@ -85,7 +85,7 @@ def run_migration():
         # Add collection_time column
         if 'collection_time' not in existing_columns:
             cur.execute("""
-                ALTER TABLE to_go_item 
+                ALTER TABLE surplus_item 
                 ADD COLUMN collection_time TIMESTAMP
             """)
             print("✓ Added collection_time column")
@@ -95,7 +95,7 @@ def run_migration():
         # Add collection_status column
         if 'collection_status' not in existing_columns:
             cur.execute("""
-                ALTER TABLE to_go_item 
+                ALTER TABLE surplus_item 
                 ADD COLUMN collection_status VARCHAR(20) DEFAULT 'available'
             """)
             print("✓ Added collection_status column")
@@ -107,8 +107,8 @@ def run_migration():
         
         try:
             cur.execute("""
-                CREATE INDEX IF NOT EXISTS idx_to_go_item_accepted_by_vcse 
-                ON to_go_item(accepted_by_vcse_id)
+                CREATE INDEX IF NOT EXISTS idx_surplus_item_accepted_by_vcse 
+                ON surplus_item(accepted_by_vcse_id)
             """)
             print("✓ Created index on accepted_by_vcse_id")
         except Exception as e:
@@ -116,8 +116,8 @@ def run_migration():
         
         try:
             cur.execute("""
-                CREATE INDEX IF NOT EXISTS idx_to_go_item_collection_status 
-                ON to_go_item(collection_status)
+                CREATE INDEX IF NOT EXISTS idx_surplus_item_collection_status 
+                ON surplus_item(collection_status)
             """)
             print("✓ Created index on collection_status")
         except Exception as e:
@@ -125,8 +125,8 @@ def run_migration():
         
         try:
             cur.execute("""
-                CREATE INDEX IF NOT EXISTS idx_to_go_item_collection_time 
-                ON to_go_item(collection_time)
+                CREATE INDEX IF NOT EXISTS idx_surplus_item_collection_time 
+                ON surplus_item(collection_time)
             """)
             print("✓ Created index on collection_time")
         except Exception as e:
@@ -135,7 +135,7 @@ def run_migration():
         # Update existing items to have 'available' status
         print("\nUpdating existing items...")
         cur.execute("""
-            UPDATE to_go_item 
+            UPDATE surplus_item 
             SET collection_status = 'available' 
             WHERE collection_status IS NULL
         """)
@@ -155,7 +155,7 @@ def run_migration():
         cur.execute("""
             SELECT column_name, data_type, column_default
             FROM information_schema.columns 
-            WHERE table_name = 'to_go_item' 
+            WHERE table_name = 'surplus_item' 
             AND column_name IN ('accepted_by_vcse_id', 'accepted_at', 'collection_time', 'collection_status')
             ORDER BY column_name
         """)
@@ -168,10 +168,10 @@ def run_migration():
         cur.execute("""
             SELECT COUNT(*) 
             FROM information_schema.columns 
-            WHERE table_name = 'to_go_item'
+            WHERE table_name = 'surplus_item'
         """)
         total_columns = cur.fetchone()[0]
-        print(f"\n✓ Total columns in to_go_item table: {total_columns}")
+        print(f"\n✓ Total columns in surplus_item table: {total_columns}")
         
         # Close connection
         cur.close()
@@ -197,7 +197,7 @@ def run_migration():
         print("Troubleshooting:")
         print("1. Check that DATABASE_URL is set correctly")
         print("2. Verify database connection is working")
-        print("3. Check that to_go_item table exists")
+        print("3. Check that surplus_item table exists")
         print("4. Review error message above for details")
         print()
         
