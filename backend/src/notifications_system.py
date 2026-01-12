@@ -449,3 +449,128 @@ def broadcast_new_item_notification(socketio_instance, item_type, shop_id, item_
         traceback.print_exc()
         return False
 
+
+
+# ========================================
+# REDEMPTION REQUEST NOTIFICATIONS
+# ========================================
+
+def broadcast_redemption_request_notification(recipient_id, request_id, shop_name, amount, voucher_code):
+    """
+    Broadcast redemption request notification to recipient
+    
+    Args:
+        recipient_id: ID of the recipient who needs to approve
+        request_id: ID of the redemption request
+        shop_name: Name of the shop requesting redemption
+        amount: Amount to be redeemed
+        voucher_code: Voucher code
+    """
+    try:
+        if not _socketio:
+            print("Socket.IO not initialized")
+            return
+        
+        notification_data = {
+            'type': 'redemption_request',
+            'request_id': request_id,
+            'shop_name': shop_name,
+            'amount': float(amount),
+            'voucher_code': voucher_code,
+            'message': f"{shop_name} wants to redeem £{amount:.2f} from your voucher {voucher_code}",
+            'timestamp': datetime.now().isoformat(),
+            'expires_in_minutes': 5
+        }
+        
+        # Broadcast to recipient's room
+        _socketio.emit('redemption_request', notification_data, room=f'user_{recipient_id}')
+        
+        print(f"✓ Redemption request notification sent to recipient {recipient_id}")
+        
+    except Exception as e:
+        print(f"Failed to broadcast redemption request notification: {str(e)}")
+
+
+def broadcast_redemption_approved_notification(vendor_id, recipient_id, shop_name, amount, voucher_code, new_balance):
+    """
+    Broadcast redemption approved notification to vendor and recipient
+    
+    Args:
+        vendor_id: ID of the vendor whose request was approved
+        recipient_id: ID of the recipient who approved
+        shop_name: Name of the shop
+        amount: Amount that was redeemed
+        voucher_code: Voucher code
+        new_balance: New voucher balance after redemption
+    """
+    try:
+        if not _socketio:
+            print("Socket.IO not initialized")
+            return
+        
+        # Notification to vendor
+        vendor_notification = {
+            'type': 'redemption_approved',
+            'shop_name': shop_name,
+            'amount': float(amount),
+            'voucher_code': voucher_code,
+            'message': f"Redemption approved! £{amount:.2f} has been added to your balance.",
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Notification to recipient
+        recipient_notification = {
+            'type': 'redemption_completed',
+            'shop_name': shop_name,
+            'amount': float(amount),
+            'voucher_code': voucher_code,
+            'new_balance': float(new_balance),
+            'message': f"£{amount:.2f} redeemed at {shop_name}. Remaining balance: £{new_balance:.2f}",
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Broadcast to both parties
+        if vendor_id:
+            _socketio.emit('redemption_approved', vendor_notification, room=f'user_{vendor_id}')
+        _socketio.emit('redemption_completed', recipient_notification, room=f'user_{recipient_id}')
+        
+        print(f"✓ Redemption approved notifications sent")
+        
+    except Exception as e:
+        print(f"Failed to broadcast redemption approved notification: {str(e)}")
+
+
+def broadcast_redemption_rejected_notification(vendor_id, shop_name, amount, voucher_code, reason=''):
+    """
+    Broadcast redemption rejected notification to vendor
+    
+    Args:
+        vendor_id: ID of the vendor whose request was rejected
+        shop_name: Name of the shop
+        amount: Amount that was requested
+        voucher_code: Voucher code
+        reason: Rejection reason (optional)
+    """
+    try:
+        if not _socketio:
+            print("Socket.IO not initialized")
+            return
+        
+        notification_data = {
+            'type': 'redemption_rejected',
+            'shop_name': shop_name,
+            'amount': float(amount),
+            'voucher_code': voucher_code,
+            'reason': reason,
+            'message': f"Redemption request for £{amount:.2f} was rejected by the recipient.",
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Broadcast to vendor's room
+        if vendor_id:
+            _socketio.emit('redemption_rejected', notification_data, room=f'user_{vendor_id}')
+        
+        print(f"✓ Redemption rejected notification sent to vendor {vendor_id}")
+        
+    except Exception as e:
+        print(f"Failed to broadcast redemption rejected notification: {str(e)}")

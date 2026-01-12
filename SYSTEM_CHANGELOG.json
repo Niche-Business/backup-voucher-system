@@ -1,7 +1,44 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "lastUpdated": "2026-01-12",
   "changes": [
+    {
+      "id": 29,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Feature",
+      "priority": "Critical",
+      "title": "2-Step Voucher Redemption Workflow with Recipient Approval",
+      "description": "Complete redesign of voucher redemption system based on critical user feedback - shop owners can now request partial redemptions, and recipients must approve each redemption request in real-time",
+      "details": [
+        "Added RedemptionRequest database model to track pending redemption requests",
+        "Shop owners can now enter custom redemption amount (partial redemption support)",
+        "Modified /vendor/redeem-voucher endpoint to create pending requests instead of immediate redemption",
+        "Added /api/recipient/redemption-requests endpoint to fetch pending requests",
+        "Added /api/recipient/redemption-requests/<id>/respond endpoint for approve/reject actions",
+        "Implemented real-time Socket.IO event 'redemption_request' to notify recipients instantly",
+        "Created beautiful redemption approval modal in RecipientDashboard with shop details, amount, and balance info",
+        "Added approve/reject buttons with reason input for rejections",
+        "Added auto-expiration timer (5 minutes) for pending requests",
+        "Recipients can see time remaining for each request",
+        "Vendor receives real-time notification when recipient approves/rejects",
+        "Updated VendorDashboard success message to indicate 'request sent' instead of 'redeemed'",
+        "Added pending redemption requests counter in RecipientDashboard",
+        "Implemented queue system for multiple simultaneous redemption requests",
+        "Added database migration script for RedemptionRequest table"
+      ],
+      "impact": "CRITICAL USER FEEDBACK ADDRESSED: (1) Shop owners can now redeem only actual purchase amount instead of full voucher, (2) Recipients have full control and must approve each redemption, (3) Prevents unauthorized full-voucher redemptions. This fundamentally changes the redemption workflow to be recipient-centric and secure.",
+      "affectedComponents": [
+        "backend/models.py - Added RedemptionRequest model",
+        "backend/app.py - Modified redemption endpoints and added approval endpoints",
+        "frontend/src/App.jsx - RecipientDashboard redemption approval UI",
+        "frontend/src/App.jsx - VendorDashboard partial amount input",
+        "Socket.IO - Added redemption_request and redemption_response events"
+      ],
+      "userTypes": ["recipient", "vendor"],
+      "breakingChange": true,
+      "migrationRequired": true
+    },
     {
       "id": 28,
       "date": "2026-01-12",

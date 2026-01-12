@@ -6731,7 +6731,7 @@ function VendorDashboard({ user, onLogout }) {
         })
       })
       
-      setRedemptionMessage(`Success! £${purchaseAmount} redeemed. Remaining balance: £${data.remaining_balance.toFixed(2)}`)
+      setRedemptionMessage(`Redemption request sent! Waiting for recipient approval...`)
       setVoucherCode('')
       setVoucherValidation(null)
       setPurchaseAmount('')
@@ -7670,9 +7670,13 @@ function RecipientDashboard({ user, onLogout }) {
   const [discountedItems, setDiscountedItems] = useState([])
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [lastItemCount, setLastItemCount] = useState(0)
+  const [redemptionRequests, setRedemptionRequests] = useState([])
+  const [showRedemptionModal, setShowRedemptionModal] = useState(false)
+  const [activeRedemptionRequest, setActiveRedemptionRequest] = useState(null)
 
   useEffect(() => {
     loadVouchers()
+    loadRedemptionRequests()
     // loadShops() removed - townFilter useEffect handles this
     loadToGoItems()
     loadCart()
@@ -7720,9 +7724,34 @@ function RecipientDashboard({ user, onLogout }) {
       loadToGoItems()
     })
     
+    // Listen for redemption requests
+    socket.on('redemption_request', (notification) => {
+      console.log('Received redemption request:', notification)
+      
+      // Play sound if enabled
+      if (soundEnabled) {
+        playNotificationSound()
+      }
+      
+      // Show visual notification
+      const notificationDiv = document.createElement('div')
+      notificationDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #FF5722; color: white; padding: 15px 20px; borderRadius: 8px; boxShadow: 0 4px 12px rgba(0,0,0,0.3); zIndex: 10000; fontSize: 20px; fontWeight: bold; cursor: pointer;'
+      notificationDiv.textContent = `📢 ${notification.message}`
+      notificationDiv.onclick = () => {
+        loadRedemptionRequests()
+        notificationDiv.remove()
+      }
+      document.body.appendChild(notificationDiv)
+      setTimeout(() => notificationDiv.remove(), 10000)
+      
+      // Reload redemption requests
+      loadRedemptionRequests()
+    })
+    
     // Cleanup on unmount
     return () => {
       socket.off('new_item_notification')
+      socket.off('redemption_request')
       socket.emit('leave_room', { user_type: 'recipient' })
     }
   }, [soundEnabled])
@@ -7775,6 +7804,53 @@ function RecipientDashboard({ user, onLogout }) {
       setVoucherSummary(data.summary || null)
     } catch (error) {
       console.error('Failed to load vouchers:', error)
+    }
+  }
+
+  const loadRedemptionRequests = async () => {
+    try {
+      const data = await apiCall('/recipient/redemption-requests')
+      setRedemptionRequests(data.requests || [])
+      
+      // Auto-show modal if there are pending requests
+      if (data.requests && data.requests.length > 0 && !showRedemptionModal) {
+        setActiveRedemptionRequest(data.requests[0])
+        setShowRedemptionModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to load redemption requests:', error)
+    }
+  }
+
+  const handleRedemptionResponse = async (requestId, action, reason = '') => {
+    try {
+      const data = await apiCall(`/recipient/redemption-requests/${requestId}/respond`, {
+        method: 'POST',
+        body: JSON.stringify({ action, reason })
+      })
+      
+      // Show success message
+      const message = action === 'approve' 
+        ? `Approved! £${data.redeemed_amount?.toFixed(2)} redeemed. Remaining: £${data.remaining_balance?.toFixed(2)}`
+        : 'Redemption request rejected'
+      
+      alert(message)
+      
+      // Reload data
+      loadRedemptionRequests()
+      loadVouchers()
+      
+      // Close modal and move to next request if any
+      setShowRedemptionModal(false)
+      setActiveRedemptionRequest(null)
+      
+      // Check if there are more requests
+      setTimeout(() => {
+        loadRedemptionRequests()
+      }, 500)
+      
+    } catch (error) {
+      alert('Error: ' + error.message)
     }
   }
 
@@ -9027,6 +9103,182 @@ function RecipientDashboard({ user, onLogout }) {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Redemption Approval Modal */}
+      {showRedemptionModal && activeRedemptionRequest && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 10000,
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '20px',
+            padding: '30px',
+            maxWidth: '500px',
+            width: '100%',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '20px'
+            }}>
+              <div style={{
+                fontSize: '60px',
+                marginBottom: '10px'
+              }}>💳</div>
+              <h2 style={{
+                margin: 0,
+                fontSize: '24px',
+                color: '#333'
+              }}>Redemption Request</h2>
+            </div>
+
+            <div style={{
+              backgroundColor: '#f5f5f5',
+              padding: '20px',
+              borderRadius: '10px',
+              marginBottom: '20px'
+            }}>
+              <div style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#666' }}>Shop:</strong>
+                <div style={{ fontSize: '18px', color: '#333', marginTop: '5px' }}>
+                  {activeRedemptionRequest.shop_name}
+                </div>
+                <div style={{ fontSize: '14px', color: '#999' }}>
+                  {activeRedemptionRequest.shop_address}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#666' }}>Voucher Code:</strong>
+                <div style={{ fontSize: '18px', color: '#333', marginTop: '5px', fontFamily: 'monospace' }}>
+                  {activeRedemptionRequest.voucher_code}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#666' }}>Amount to Redeem:</strong>
+                <div style={{ fontSize: '32px', color: '#FF5722', marginTop: '5px', fontWeight: 'bold' }}>
+                  £{activeRedemptionRequest.amount.toFixed(2)}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <strong style={{ color: '#666' }}>Current Balance:</strong>
+                <div style={{ fontSize: '18px', color: '#333', marginTop: '5px' }}>
+                  £{activeRedemptionRequest.current_voucher_balance.toFixed(2)}
+                </div>
+              </div>
+
+              <div>
+                <strong style={{ color: '#666' }}>Remaining After:</strong>
+                <div style={{ fontSize: '18px', color: '#4CAF50', marginTop: '5px', fontWeight: 'bold' }}>
+                  £{activeRedemptionRequest.remaining_after.toFixed(2)}
+                </div>
+              </div>
+            </div>
+
+            <div style={{
+              backgroundColor: '#FFF3E0',
+              padding: '15px',
+              borderRadius: '10px',
+              marginBottom: '20px',
+              border: '2px solid #FFB74D'
+            }}>
+              <div style={{ fontSize: '14px', color: '#E65100' }}>
+                ⚠️ <strong>Time Remaining:</strong> {Math.floor(activeRedemptionRequest.time_remaining_seconds / 60)} minutes {activeRedemptionRequest.time_remaining_seconds % 60} seconds
+              </div>
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                This request will expire automatically if not responded to.
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              gap: '10px',
+              marginBottom: '15px'
+            }}>
+              <button
+                onClick={() => handleRedemptionResponse(activeRedemptionRequest.id, 'approve')}
+                style={{
+                  flex: 1,
+                  padding: '15px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 8px rgba(76,175,80,0.3)'
+                }}
+              >
+                ✅ Approve
+              </button>
+
+              <button
+                onClick={() => {
+                  const reason = prompt('Reason for rejection (optional):');
+                  handleRedemptionResponse(activeRedemptionRequest.id, 'reject', reason || '');
+                }}
+                style={{
+                  flex: 1,
+                  padding: '15px',
+                  backgroundColor: '#f44336',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 8px rgba(244,67,54,0.3)'
+                }}
+              >
+                ❌ Reject
+              </button>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowRedemptionModal(false);
+                setActiveRedemptionRequest(null);
+              }}
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: '#f5f5f5',
+                color: '#666',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              Close (Decide Later)
+            </button>
+
+            {redemptionRequests.length > 1 && (
+              <div style={{
+                textAlign: 'center',
+                marginTop: '15px',
+                fontSize: '14px',
+                color: '#999'
+              }}>
+                {redemptionRequests.length - 1} more request(s) pending
+              </div>
+            )}
           </div>
         </div>
       )}

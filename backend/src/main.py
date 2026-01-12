@@ -236,6 +236,28 @@ class UserNotification(db.Model):
     
     user = db.relationship('User', backref='user_notifications')
 
+class RedemptionRequest(db.Model):
+    """Model for pending voucher redemption requests requiring recipient approval"""
+    __tablename__ = 'redemption_request'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    voucher_id = db.Column(db.Integer, db.ForeignKey('voucher.id'), nullable=False)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    shop_id = db.Column(db.Integer, db.ForeignKey('vendor_shop.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)  # Amount shop owner wants to redeem
+    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected, expired
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    responded_at = db.Column(db.DateTime)  # When recipient approved/rejected
+    expires_at = db.Column(db.DateTime)  # Auto-expire after 5 minutes if no response
+    rejection_reason = db.Column(db.Text)  # If recipient rejects, they can provide reason
+    
+    # Relationships
+    voucher = db.relationship('Voucher', backref='redemption_requests')
+    vendor = db.relationship('User', foreign_keys=[vendor_id], backref='vendor_redemption_requests')
+    shop = db.relationship('VendorShop', backref='redemption_requests')
+    recipient = db.relationship('User', foreign_keys=[recipient_id], backref='recipient_redemption_requests')
+
 class LoginSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -5684,77 +5706,84 @@ def vendor_redeem_voucher():
         # Get recipient details
         recipient = User.query.get(voucher.recipient_id) if voucher.recipient_id else None
         
-        # NEW: Partial redemption - deduct amount from voucher balance
-        # Round to 2 decimal places to avoid floating point precision errors
-        new_voucher_balance = round(current_voucher_value - redemption_amount, 2)
-        voucher.value = new_voucher_balance
+        if not recipient:
+            return jsonify({'error': 'Voucher has no assigned recipient'}), 400
         
-        # NEW: Only mark as fully redeemed if balance is zero
-        if new_voucher_balance <= 0:
-            voucher.status = 'redeemed'
-            voucher.redeemed_at = datetime.now()
-        # Note: Don't change status if balance remains - keep current status
+        # Get shop details
+        shop = VendorShop.query.filter_by(vendor_id=user_id, is_active=True).first()
+        if not shop:
+            return jsonify({'error': 'No active shop found for this vendor'}), 400
         
-        voucher.redeemed_by_vendor = user_id
+        # NEW WORKFLOW: Create redemption request instead of immediate redemption
+        # Check if there's already a pending request for this voucher
+        existing_request = RedemptionRequest.query.filter_by(
+            voucher_id=voucher.id,
+            status='pending'
+        ).first()
         
-        # Update vendor balance with redemption amount (not full voucher value)
-        current_balance = float(user.balance) if user.balance else 0.0
-        user.balance = round(current_balance + redemption_amount, 2)
+        if existing_request:
+            return jsonify({'error': 'A redemption request is already pending for this voucher'}), 400
+        
+        # Create redemption request
+        redemption_request = RedemptionRequest(
+            voucher_id=voucher.id,
+            vendor_id=user_id,
+            shop_id=shop.id,
+            recipient_id=recipient.id,
+            amount=redemption_amount,
+            status='pending',
+            expires_at=datetime.now() + timedelta(minutes=5)  # Auto-expire after 5 minutes
+        )
+        
+        db.session.add(redemption_request)
         
         try:
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            return jsonify({'error': f'Failed to process redemption: {str(e)}'}), 500
+            return jsonify({'error': f'Failed to create redemption request: {str(e)}'}), 500
         
-        # Optional: Send SMS to recipient confirming redemption
-        if recipient and recipient.phone:
-            if new_voucher_balance > 0:
-                redemption_message = f"""BAK UP Voucher Update
+        # Send notification to recipient via Socket.IO
+        from notifications_system import broadcast_redemption_request_notification
+        broadcast_redemption_request_notification(
+            recipient_id=recipient.id,
+            request_id=redemption_request.id,
+            shop_name=shop.shop_name,
+            amount=redemption_amount,
+            voucher_code=voucher_code
+        )
+        
+        # Send SMS to recipient for approval
+        if recipient.phone:
+            approval_message = f"""BAK UP Redemption Request
 
-Your voucher {voucher_code}: £{redemption_amount:.2f} redeemed at {user.shop_name or 'a vendor shop'}.
+{shop.shop_name} wants to redeem £{redemption_amount:.2f} from your voucher {voucher_code}.
 
-Remaining balance: £{new_voucher_balance:.2f}
+Current balance: £{current_voucher_value:.2f}
+Remaining after: £{round(current_voucher_value - redemption_amount, 2):.2f}
+
+Please approve or reject in your app within 5 minutes.
 
 BAK UP Team"""
-            else:
-                redemption_message = f"""BAK UP Voucher Update
-
-Your voucher {voucher_code} (£{redemption_amount:.2f}) has been fully redeemed at {user.shop_name or 'a vendor shop'}.
-
-Thank you for using BAK UP!
-
-BAK UP Team"""
-            sms_result = sms_service.send_sms(recipient.phone, redemption_message)
+            sms_result = sms_service.send_sms(recipient.phone, approval_message)
             if not sms_result.get('success'):
-                print(f"Failed to send redemption SMS to recipient: {sms_result.get('error')}")
-        
-        # Send email receipt to recipient
-        if recipient and recipient.email:
-            email_result = email_service.send_redemption_receipt_email(
-                recipient.email,
-                f"{recipient.first_name} {recipient.last_name}",
-                voucher_code,
-                redemption_amount,  # Amount redeemed
-                new_voucher_balance,  # Remaining balance
-                user.shop_name or 'Local Food Shop'
-            )
-            if not email_result:
-                print(f"Failed to send redemption email to {recipient.email}")
+                print(f"Failed to send approval SMS to recipient: {sms_result.get('error')}")
         
         return jsonify({
-            'message': 'Voucher redeemed successfully',
+            'message': 'Redemption request sent to recipient for approval',
+            'request_id': redemption_request.id,
+            'status': 'pending',
             'voucher': {
                 'code': voucher.code,
-                'value': float(voucher.value),
+                'current_balance': float(voucher.value),
                 'recipient': {
-                    'name': f"{recipient.first_name} {recipient.last_name}" if recipient else 'N/A',
-                    'phone': recipient.phone if recipient else 'N/A'
-                } if recipient else None
+                    'name': f"{recipient.first_name} {recipient.last_name}",
+                    'phone': recipient.phone
+                }
             },
             'redemption_amount': redemption_amount,
-            'remaining_balance': new_voucher_balance,
-            'new_balance': float(user.balance)
+            'remaining_balance_after': round(current_voucher_value - redemption_amount, 2),
+            'expires_in_minutes': 5
         }), 200
         
     except Exception as e:
@@ -8028,6 +8057,234 @@ def run_wallet_migration():
             'details': results
         }), 500
 
+# ========================================
+# REDEMPTION APPROVAL ENDPOINTS
+# ========================================
+
+@app.route('/api/recipient/redemption-requests', methods=['GET'])
+def get_recipient_redemption_requests():
+    """Get all pending redemption requests for the logged-in recipient"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        # Get all pending requests for this recipient
+        requests = RedemptionRequest.query.filter_by(
+            recipient_id=user_id,
+            status='pending'
+        ).order_by(RedemptionRequest.created_at.desc()).all()
+        
+        # Auto-expire requests older than 5 minutes
+        now = datetime.now()
+        expired_count = 0
+        
+        for req in requests:
+            if req.expires_at and now > req.expires_at:
+                req.status = 'expired'
+                expired_count += 1
+        
+        if expired_count > 0:
+            db.session.commit()
+        
+        # Re-query to get only active pending requests
+        active_requests = [r for r in requests if r.status == 'pending']
+        
+        # Format response
+        requests_data = []
+        for req in active_requests:
+            vendor = User.query.get(req.vendor_id)
+            shop = VendorShop.query.get(req.shop_id)
+            voucher = Voucher.query.get(req.voucher_id)
+            
+            requests_data.append({
+                'id': req.id,
+                'amount': float(req.amount),
+                'voucher_code': voucher.code if voucher else 'N/A',
+                'current_voucher_balance': float(voucher.value) if voucher else 0.0,
+                'remaining_after': round(float(voucher.value) - float(req.amount), 2) if voucher else 0.0,
+                'shop_name': shop.shop_name if shop else 'Unknown Shop',
+                'shop_address': shop.address if shop else 'N/A',
+                'vendor_name': f"{vendor.first_name} {vendor.last_name}" if vendor else 'Unknown Vendor',
+                'created_at': req.created_at.isoformat() if req.created_at else None,
+                'expires_at': req.expires_at.isoformat() if req.expires_at else None,
+                'time_remaining_seconds': int((req.expires_at - now).total_seconds()) if req.expires_at and req.expires_at > now else 0
+            })
+        
+        return jsonify({
+            'requests': requests_data,
+            'total': len(requests_data)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch redemption requests: {str(e)}'}), 500
+
+
+@app.route('/api/recipient/redemption-requests/<int:request_id>/respond', methods=['POST'])
+def respond_to_redemption_request(request_id):
+    """Recipient approves or rejects a redemption request"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'recipient':
+            return jsonify({'error': 'Recipient access required'}), 403
+        
+        data = request.get_json()
+        action = data.get('action')  # 'approve' or 'reject'
+        rejection_reason = data.get('reason', '')
+        
+        if action not in ['approve', 'reject']:
+            return jsonify({'error': 'Invalid action. Must be "approve" or "reject"'}), 400
+        
+        # Get redemption request
+        redemption_req = RedemptionRequest.query.get(request_id)
+        
+        if not redemption_req:
+            return jsonify({'error': 'Redemption request not found'}), 404
+        
+        # Verify this request belongs to the logged-in recipient
+        if redemption_req.recipient_id != user_id:
+            return jsonify({'error': 'Unauthorized to respond to this request'}), 403
+        
+        # Check if request is still pending
+        if redemption_req.status != 'pending':
+            return jsonify({'error': f'Request is no longer pending (status: {redemption_req.status})'}), 400
+        
+        # Check if request has expired
+        if redemption_req.expires_at and datetime.now() > redemption_req.expires_at:
+            redemption_req.status = 'expired'
+            db.session.commit()
+            return jsonify({'error': 'Request has expired'}), 400
+        
+        # Get voucher
+        voucher = Voucher.query.get(redemption_req.voucher_id)
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Get vendor and shop
+        vendor = User.query.get(redemption_req.vendor_id)
+        shop = VendorShop.query.get(redemption_req.shop_id)
+        
+        if action == 'approve':
+            # Process redemption
+            current_voucher_value = float(voucher.value)
+            redemption_amount = float(redemption_req.amount)
+            
+            # Validate amount still valid
+            if redemption_amount > current_voucher_value:
+                return jsonify({'error': f'Redemption amount £{redemption_amount:.2f} exceeds current voucher balance £{current_voucher_value:.2f}'}), 400
+            
+            # Deduct amount from voucher
+            new_voucher_balance = round(current_voucher_value - redemption_amount, 2)
+            voucher.value = new_voucher_balance
+            
+            # Mark as fully redeemed if balance is zero
+            if new_voucher_balance <= 0:
+                voucher.status = 'redeemed'
+                voucher.redeemed_at = datetime.now()
+            
+            voucher.redeemed_by_vendor = redemption_req.vendor_id
+            voucher.redeemed_at_shop_id = redemption_req.shop_id
+            
+            # Update vendor balance
+            if vendor:
+                current_balance = float(vendor.balance) if vendor.balance else 0.0
+                vendor.balance = round(current_balance + redemption_amount, 2)
+            
+            # Update request status
+            redemption_req.status = 'approved'
+            redemption_req.responded_at = datetime.now()
+            
+            db.session.commit()
+            
+            # Send notifications
+            from notifications_system import broadcast_redemption_approved_notification
+            try:
+                broadcast_redemption_approved_notification(
+                    vendor_id=vendor.id if vendor else None,
+                    recipient_id=user_id,
+                    shop_name=shop.shop_name if shop else 'Shop',
+                    amount=redemption_amount,
+                    voucher_code=voucher.code,
+                    new_balance=new_voucher_balance
+                )
+            except Exception as notif_error:
+                print(f"Failed to send notification: {notif_error}")
+            
+            # Send SMS to vendor
+            if vendor and vendor.phone:
+                approval_sms = f"""BAK UP Redemption Approved\n\nYour redemption request for £{redemption_amount:.2f} has been approved by the recipient.\n\nVoucher: {voucher.code}\nNew balance: £{vendor.balance:.2f}\n\nBAK UP Team"""
+                sms_service.send_sms(vendor.phone, approval_sms)
+            
+            # Send email receipt to recipient
+            if user.email:
+                try:
+                    email_service.send_redemption_receipt_email(
+                        user.email,
+                        f"{user.first_name} {user.last_name}",
+                        voucher.code,
+                        redemption_amount,
+                        new_voucher_balance,
+                        shop.shop_name if shop else 'Local Shop'
+                    )
+                except Exception as email_error:
+                    print(f"Failed to send email: {email_error}")
+            
+            return jsonify({
+                'message': 'Redemption approved successfully',
+                'voucher_code': voucher.code,
+                'redeemed_amount': redemption_amount,
+                'remaining_balance': new_voucher_balance,
+                'shop_name': shop.shop_name if shop else 'N/A'
+            }), 200
+            
+        else:  # action == 'reject'
+            # Reject redemption request
+            redemption_req.status = 'rejected'
+            redemption_req.responded_at = datetime.now()
+            redemption_req.rejection_reason = rejection_reason
+            
+            db.session.commit()
+            
+            # Send notification to vendor
+            from notifications_system import broadcast_redemption_rejected_notification
+            try:
+                broadcast_redemption_rejected_notification(
+                    vendor_id=vendor.id if vendor else None,
+                    shop_name=shop.shop_name if shop else 'Shop',
+                    amount=redemption_req.amount,
+                    voucher_code=voucher.code,
+                    reason=rejection_reason
+                )
+            except Exception as notif_error:
+                print(f"Failed to send notification: {notif_error}")
+            
+            # Send SMS to vendor
+            if vendor and vendor.phone:
+                rejection_sms = f"""BAK UP Redemption Rejected\n\nYour redemption request for £{redemption_req.amount:.2f} was rejected by the recipient.\n\nVoucher: {voucher.code}\n"""
+                if rejection_reason:
+                    rejection_sms += f"Reason: {rejection_reason}\n\n"
+                rejection_sms += "BAK UP Team"
+                sms_service.send_sms(vendor.phone, rejection_sms)
+            
+            return jsonify({
+                'message': 'Redemption request rejected',
+                'voucher_code': voucher.code,
+                'amount': float(redemption_req.amount)
+            }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to respond to redemption request: {str(e)}'}), 500
+
+
 # Auto-migration on startup
 def check_and_migrate_database():
     """Check and add missing database columns on startup"""
@@ -8046,8 +8303,34 @@ def check_and_migrate_database():
                 ))
                 db.session.commit()
                 print("✓ Successfully added 'redeemed_at_shop_id' column")
-            else:
-                print("✓ Database schema is up to date")
+            
+            # Check if redemption_request table exists
+            tables = inspector.get_table_names()
+            if 'redemption_request' not in tables:
+                print("⚠ Missing table 'redemption_request' - creating now...")
+                db.session.execute(text("""
+                    CREATE TABLE redemption_request (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        voucher_id INTEGER NOT NULL,
+                        vendor_id INTEGER NOT NULL,
+                        shop_id INTEGER NOT NULL,
+                        recipient_id INTEGER NOT NULL,
+                        amount FLOAT NOT NULL,
+                        status VARCHAR(20) DEFAULT 'pending',
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        responded_at TIMESTAMP,
+                        expires_at TIMESTAMP,
+                        rejection_reason TEXT,
+                        FOREIGN KEY (voucher_id) REFERENCES voucher (id),
+                        FOREIGN KEY (vendor_id) REFERENCES user (id),
+                        FOREIGN KEY (shop_id) REFERENCES vendor_shop (id),
+                        FOREIGN KEY (recipient_id) REFERENCES user (id)
+                    )
+                """))
+                db.session.commit()
+                print("✓ Successfully created 'redemption_request' table")
+            
+            print("✓ Database schema is up to date")
                 
         except Exception as e:
             print(f"⚠ Migration check failed: {str(e)}")
