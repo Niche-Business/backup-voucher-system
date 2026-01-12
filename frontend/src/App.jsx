@@ -2059,7 +2059,7 @@ function AdminDashboard({ user, onLogout }) {
           </button>
           <div>
             <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.4</p>
+            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.5</p>
           </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
@@ -7103,7 +7103,7 @@ function VendorDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div>
           <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.4</p>
+          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.5</p>
         </div>
         <button 
           onClick={() => setMenuOpen(!menuOpen)}
@@ -8336,7 +8336,7 @@ function RecipientDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <div>
           <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.4</p>
+          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.5</p>
         </div>
         <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', position: 'relative'}}>
           <NotificationBell apiCall={apiCall} userType="recipient" />
