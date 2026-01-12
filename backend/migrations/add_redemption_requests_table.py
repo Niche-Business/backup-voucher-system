@@ -28,16 +28,18 @@ engine = create_engine(DATABASE_URL)
 
 # SQL to create redemption_requests table
 CREATE_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS redemption_requests (
+CREATE TABLE IF NOT EXISTS redemption_request (
     id SERIAL PRIMARY KEY,
-    voucher_id INTEGER NOT NULL REFERENCES vouchers(id) ON DELETE CASCADE,
-    vendor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    voucher_id INTEGER NOT NULL REFERENCES voucher(id) ON DELETE CASCADE,
+    vendor_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    shop_id INTEGER NOT NULL REFERENCES vendor_shop(id) ON DELETE CASCADE,
+    recipient_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     rejection_reason TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     responded_at TIMESTAMP,
+    expires_at TIMESTAMP,
     CONSTRAINT valid_status CHECK (status IN ('pending', 'approved', 'rejected', 'expired')),
     CONSTRAINT positive_amount CHECK (amount > 0)
 );
@@ -45,14 +47,16 @@ CREATE TABLE IF NOT EXISTS redemption_requests (
 
 # SQL to create indexes for better query performance
 CREATE_INDEXES_SQL = """
-CREATE INDEX IF NOT EXISTS idx_redemption_requests_recipient 
-    ON redemption_requests(recipient_id, status);
-CREATE INDEX IF NOT EXISTS idx_redemption_requests_vendor 
-    ON redemption_requests(vendor_id, status);
-CREATE INDEX IF NOT EXISTS idx_redemption_requests_voucher 
-    ON redemption_requests(voucher_id);
-CREATE INDEX IF NOT EXISTS idx_redemption_requests_created 
-    ON redemption_requests(created_at);
+CREATE INDEX IF NOT EXISTS idx_redemption_request_recipient 
+    ON redemption_request(recipient_id, status);
+CREATE INDEX IF NOT EXISTS idx_redemption_request_vendor 
+    ON redemption_request(vendor_id, status);
+CREATE INDEX IF NOT EXISTS idx_redemption_request_voucher 
+    ON redemption_request(voucher_id);
+CREATE INDEX IF NOT EXISTS idx_redemption_request_shop 
+    ON redemption_request(shop_id);
+CREATE INDEX IF NOT EXISTS idx_redemption_request_created 
+    ON redemption_request(created_at);
 """
 
 def run_migration():
@@ -63,7 +67,7 @@ def run_migration():
             trans = conn.begin()
             
             try:
-                print("Creating redemption_requests table...")
+                print("Creating redemption_request table...")
                 conn.execute(text(CREATE_TABLE_SQL))
                 print("✓ Table created successfully")
                 
@@ -73,8 +77,8 @@ def run_migration():
                 
                 # Commit transaction
                 trans.commit()
-                print("\n✅ Migration completed successfully!")
-                print("The redemption_requests table is now ready.")
+                print("✅ Migration completed successfully!")
+                print("The redemption_request table is now ready.")
                 
             except Exception as e:
                 # Rollback on error
@@ -94,7 +98,7 @@ def verify_migration():
             result = conn.execute(text("""
                 SELECT EXISTS (
                     SELECT FROM information_schema.tables 
-                    WHERE table_name = 'redemption_requests'
+                    WHERE table_name = 'redemption_request'
                 );
             """))
             exists = result.scalar()
@@ -104,25 +108,25 @@ def verify_migration():
                 result = conn.execute(text("""
                     SELECT COUNT(*) 
                     FROM information_schema.columns 
-                    WHERE table_name = 'redemption_requests';
+                    WHERE table_name = 'redemption_request';
                 """))
                 column_count = result.scalar()
                 
                 print(f"\n✓ Verification successful:")
-                print(f"  - Table 'redemption_requests' exists")
+                print(f"  - Table 'redemption_request' exists")
                 print(f"  - Columns: {column_count}")
                 
                 # Get index count
                 result = conn.execute(text("""
                     SELECT COUNT(*) 
                     FROM pg_indexes 
-                    WHERE tablename = 'redemption_requests';
+                    WHERE tablename = 'redemption_request';
                 """))
                 index_count = result.scalar()
                 print(f"  - Indexes: {index_count}")
                 
             else:
-                print("\n❌ Verification failed: Table does not exist")
+                print("\n❌ Verification failed: Table 'redemption_request' does not exist")
                 sys.exit(1)
                 
     except Exception as e:
@@ -132,7 +136,7 @@ def verify_migration():
 if __name__ == '__main__':
     print("=" * 60)
     print("BAK UP CIC E-Voucher System - Database Migration")
-    print("Version 1.0.4 - Add redemption_requests table")
+    print("Version 1.0.4 - Add redemption_request table")
     print("=" * 60)
     print()
     
