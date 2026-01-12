@@ -7673,6 +7673,8 @@ function RecipientDashboard({ user, onLogout }) {
   const [redemptionRequests, setRedemptionRequests] = useState([])
   const [showRedemptionModal, setShowRedemptionModal] = useState(false)
   const [activeRedemptionRequest, setActiveRedemptionRequest] = useState(null)
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
 
   useEffect(() => {
     loadVouchers()
