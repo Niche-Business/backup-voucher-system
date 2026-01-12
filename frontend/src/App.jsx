@@ -929,14 +929,14 @@ function RegisterPage({ onRegister, onNavigate }) {
         width: '48px',
         height: '48px',
         borderRadius: '12px',
-        background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : isCompleted ? '#4CAF50' : '#e0e0e0',
+        background: isActive ? 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)' : isCompleted ? '#4CAF50' : '#e0e0e0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '24px',
         color: 'white',
         fontWeight: 'bold',
-        boxShadow: isActive ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none',
+        boxShadow: isActive ? '0 4px 12px rgba(76, 175, 80, 0.4)' : 'none',
         transition: 'all 0.3s ease'
       }}>
         {isCompleted ? '✓' : icon}
@@ -961,7 +961,7 @@ function RegisterPage({ onRegister, onNavigate }) {
     <div style={{
       display: 'flex',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)'
     }}>
       {/* Left side - Illustration/Branding */}
       <div style={{
@@ -976,8 +976,8 @@ function RegisterPage({ onRegister, onNavigate }) {
         color: 'white',
         display: window.innerWidth < 768 ? 'none' : 'flex'
       }}>
-        <div style={{fontSize: '80px', marginBottom: '30px'}}>🎫</div>
-        <h1 style={{fontSize: '36px', marginBottom: '20px', textAlign: 'center'}}>BAK UP E-Voucher</h1>
+        <h1 style={{fontSize: '48px', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold'}}>BAK UP</h1>
+        <h2 style={{fontSize: '28px', marginBottom: '20px', textAlign: 'center', fontWeight: '400'}}>E-Voucher System</h2>
         <p style={{fontSize: '20px', textAlign: 'center', opacity: 0.9, lineHeight: '1.6'}}>
           Join our community and start making a difference today
         </p>
@@ -1110,7 +1110,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       transition: 'border-color 0.3s',
                       backgroundColor: 'white'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                    onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                     onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                     required
                   >
@@ -1140,7 +1140,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       outline: 'none',
                       transition: 'border-color 0.3s'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                    onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                     onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                     required
                   />
@@ -1168,7 +1168,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           outline: 'none',
                           transition: 'border-color 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       />
@@ -1213,7 +1213,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           outline: 'none',
                           transition: 'border-color 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       />
@@ -1263,7 +1263,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         outline: 'none',
                         transition: 'border-color 0.3s'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                       required
                     />
@@ -1287,7 +1287,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         outline: 'none',
                         transition: 'border-color 0.3s'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                       required
                     />
@@ -1313,7 +1313,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       outline: 'none',
                       transition: 'border-color 0.3s'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                    onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                     onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                     required
                   />
@@ -1341,7 +1341,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           outline: 'none',
                           transition: 'border-color 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       />
@@ -1368,7 +1368,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           outline: 'none',
                           transition: 'border-color 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       />
@@ -1403,7 +1403,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         outline: 'none',
                         transition: 'border-color 0.3s'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                       required
                     />
@@ -1432,7 +1432,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           outline: 'none',
                           transition: 'border-color 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       />
@@ -1455,7 +1455,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                           transition: 'border-color 0.3s',
                           backgroundColor: 'white'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                         required
                       >
@@ -1495,7 +1495,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       outline: 'none',
                       transition: 'border-color 0.3s'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                    onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                     onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                     required
                   />
@@ -1521,7 +1521,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         outline: 'none',
                         transition: 'border-color 0.3s'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                       required
                     />
@@ -1545,7 +1545,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         outline: 'none',
                         transition: 'border-color 0.3s'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                     />
                   </div>
@@ -1571,7 +1571,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         transition: 'border-color 0.3s',
                         backgroundColor: 'white'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                       onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
                       required
                     >
@@ -1620,8 +1620,8 @@ function RegisterPage({ onRegister, onNavigate }) {
                     transition: 'all 0.3s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.borderColor = '#667eea'
-                    e.target.style.color = '#667eea'
+                    e.target.style.borderColor = '#4CAF50'
+                    e.target.style.color = '#4CAF50'
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.borderColor = '#e0e0e0'
@@ -1643,19 +1643,19 @@ function RegisterPage({ onRegister, onNavigate }) {
                     fontWeight: '600',
                     border: 'none',
                     borderRadius: '10px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
                     color: 'white',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)'
+                    boxShadow: '0 4px 12px rgba(76, 175, 80, 0.4)'
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.transform = 'translateY(-2px)'
-                    e.target.style.boxShadow = '0 6px 16px rgba(102, 126, 234, 0.5)'
+                    e.target.style.boxShadow = '0 6px 16px rgba(76, 175, 80, 0.5)'
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.transform = 'translateY(0)'
-                    e.target.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)'
+                    e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)'
                   }}
                 >
                   Next →
@@ -1671,22 +1671,22 @@ function RegisterPage({ onRegister, onNavigate }) {
                     fontWeight: '600',
                     border: 'none',
                     borderRadius: '10px',
-                    background: loading ? '#ccc' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: loading ? '#ccc' : 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
                     color: 'white',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     transition: 'all 0.3s ease',
-                    boxShadow: loading ? 'none' : '0 4px 12px rgba(102, 126, 234, 0.4)'
+                    boxShadow: loading ? 'none' : '0 4px 12px rgba(76, 175, 80, 0.4)'
                   }}
                   onMouseEnter={(e) => {
                     if (!loading) {
                       e.target.style.transform = 'translateY(-2px)'
-                      e.target.style.boxShadow = '0 6px 16px rgba(102, 126, 234, 0.5)'
+                      e.target.style.boxShadow = '0 6px 16px rgba(76, 175, 80, 0.5)'
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!loading) {
                       e.target.style.transform = 'translateY(0)'
-                      e.target.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)'
+                      e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)'
                     }
                   }}
                 >
@@ -1705,7 +1705,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#667eea',
+                  color: '#4CAF50',
                   fontWeight: '600',
                   fontSize: '16px',
                   cursor: 'pointer',
@@ -4098,7 +4098,7 @@ function SystemChangelogTab() {
     <div>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
         color: 'white',
         padding: '40px',
         borderRadius: '15px',
