@@ -1,7 +1,26 @@
 {
-  "version": "1.0.2",
-  "lastUpdated": "2026-01-11",
+  "version": "1.0.3",
+  "lastUpdated": "2026-01-12",
   "changes": [
+    {
+      "id": 21,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "UI Enhancement",
+      "priority": "Low",
+      "title": "LoginPage Duplicate Links Removal",
+      "description": "Removed duplicate 'Forgot Password' and 'Back to Home' links at bottom of LoginPage",
+      "details": [
+        "Removed duplicate 'Forgot Password?' link at bottom (kept button version above)",
+        "Removed duplicate 'Back to Home' link at bottom (kept button version above)",
+        "Kept only 'Sign Up' link at bottom for cleaner design",
+        "Improved visual hierarchy and reduced clutter",
+        "Maintained all functionality with button versions above sign-in form"
+      ],
+      "impact": "Cleaner, less cluttered login page with better user experience and no duplicate navigation options",
+      "affectedComponents": ["App.jsx - LoginPage component"],
+      "userTypes": ["all"]
+    },
     {
       "id": 1,
       "date": "2026-01-11",
@@ -382,18 +401,18 @@
     }
   ],
   "summary": {
-    "totalChanges": 20,
+    "totalChanges": 21,
     "categories": {
       "Bug Fix": 4,
       "Internationalization": 10,
-      "UI Enhancement": 5,
+      "UI Enhancement": 6,
       "Configuration": 1
     },
     "priorities": {
       "Critical": 1,
       "High": 9,
       "Medium": 7,
-      "Low": 3
+      "Low": 4
     },
     "affectedUserTypes": {
       "all": 15,

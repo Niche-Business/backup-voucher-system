@@ -470,9 +470,7 @@ function LoginPage({ onLogin, onNavigate }) {
         </div>
         
         <div style={{textAlign: 'center', paddingTop: '15px', borderTop: '1px solid #eee'}}>
-          <p style={{fontSize: '14px', color: '#666', marginBottom: '10px'}}>Don't have an account? <button onClick={() => onNavigate('register')} style={{background: 'none', border: 'none', color: '#7c3aed', fontWeight: '600', fontSize: '14px', cursor: 'pointer', textDecoration: 'underline'}}>Sign Up</button></p>
-          <p style={{fontSize: '13px', color: '#999', marginBottom: '8px'}}><button onClick={() => onNavigate('forgot-password')} style={{background: 'none', border: 'none', color: '#7c3aed', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline'}}>Forgot Password?</button></p>
-          <p style={{fontSize: '13px', color: '#999'}}><button onClick={() => onNavigate('home')} style={{background: 'none', border: 'none', color: '#7c3aed', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline'}}>Back to Home</button></p>
+          <p style={{fontSize: '14px', color: '#666'}}>Don't have an account? <button onClick={() => onNavigate('register')} style={{background: 'none', border: 'none', color: '#7c3aed', fontWeight: '600', fontSize: '14px', cursor: 'pointer', textDecoration: 'underline'}}>Sign Up</button></p>
         </div>
       </div>
     </div>
@@ -1396,7 +1394,7 @@ function AdminDashboard({ user, onLogout }) {
           </button>
           <div>
             <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.2</p>
+            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.3</p>
           </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
