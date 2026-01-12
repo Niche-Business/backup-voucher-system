@@ -7979,9 +7979,6 @@ function RecipientDashboard({ user, onLogout }) {
     }
   }
 
-  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
-  const [showProfileModal, setShowProfileModal] = useState(false)
-
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
