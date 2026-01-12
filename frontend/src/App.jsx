@@ -4076,10 +4076,12 @@ function SystemChangelogTab() {
   const getCategoryColor = (category) => {
     const colors = {
       'Bug Fix': '#f44336',
+      'Feature': '#9C27B0',
       'Internationalization': '#2196F3',
       'UI Enhancement': '#4CAF50',
       'Configuration': '#FF9800',
-      'Feature': '#9C27B0'
+      'Security': '#E91E63',
+      'Deployment': '#607D8B'
     }
     return colors[category] || '#666'
   }
@@ -4154,9 +4156,12 @@ function SystemChangelogTab() {
           >
             <option value="all">All Categories</option>
             <option value="Bug Fix">Bug Fix</option>
+            <option value="Feature">Feature</option>
             <option value="Internationalization">Internationalization</option>
             <option value="UI Enhancement">UI Enhancement</option>
             <option value="Configuration">Configuration</option>
+            <option value="Security">Security</option>
+            <option value="Deployment">Deployment</option>
           </select>
         </div>
         
