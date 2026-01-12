@@ -3,6 +3,75 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 32,
+      "date": "2026-01-12",
+      "commit": "e08032a",
+      "category": "Deployment",
+      "priority": "Critical",
+      "title": "Database Migration Successfully Completed",
+      "description": "Successfully ran database migration to create redemption_request table with all required fields and indexes",
+      "details": [
+        "Migration script executed successfully in production",
+        "Created redemption_request table with 11 columns",
+        "Created 6 indexes for optimal query performance",
+        "Verified table structure matches SQLAlchemy model",
+        "All foreign key references validated",
+        "2-step redemption workflow now fully operational"
+      ],
+      "impact": "The 2-step voucher redemption workflow is now live in production. Recipients can approve/reject redemption requests, and shop owners can request partial redemptions.",
+      "affectedComponents": [
+        "Database - redemption_request table",
+        "Database - 6 performance indexes"
+      ],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 31,
+      "date": "2026-01-12",
+      "commit": "e08032a",
+      "category": "Bug Fix",
+      "priority": "Critical",
+      "title": "Fixed Duplicate Variable Declarations Causing Deployment Failure",
+      "description": "Removed duplicate state variable declarations in RecipientDashboard that caused build failure and prevented deployment",
+      "details": [
+        "Removed duplicate showMenuDropdown and showProfileModal declarations",
+        "Variables were already declared earlier in the component (lines 7676-7677)",
+        "Duplicate declarations at lines 7982-7983 caused 'symbol already declared' error",
+        "Build error prevented Render deployment from succeeding",
+        "Fixed syntax error that blocked production deployment",
+        "Build now completes successfully without errors"
+      ],
+      "impact": "Fixed critical deployment blocker. System can now deploy successfully to production.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - RecipientDashboard component"
+      ],
+      "userTypes": ["all"]
+    },
+    {
+      "id": 30,
+      "date": "2026-01-12",
+      "commit": "0ec3567",
+      "category": "Bug Fix",
+      "priority": "Critical",
+      "title": "Fixed Database Migration Script Table Name References",
+      "description": "Corrected table name references in migration script to match SQLAlchemy model definitions and PostgreSQL schema",
+      "details": [
+        "Changed table name from 'redemption_requests' (plural) to 'redemption_request' (singular)",
+        "Fixed foreign key reference from 'vouchers(id)' to 'voucher(id)' (singular)",
+        "Fixed foreign key reference from 'users(id)' to '\"user\"(id)' (singular with quotes for reserved keyword)",
+        "Added missing 'shop_id' field that exists in RedemptionRequest model",
+        "Added missing 'expires_at' field for auto-expiration functionality",
+        "Updated all index names to match singular table name",
+        "Fixed syntax error (extra parenthesis in print statement)",
+        "Added shop_id index for query optimization"
+      ],
+      "impact": "Migration script now matches actual database schema. Fixed 'relation does not exist' error that prevented table creation.",
+      "affectedComponents": [
+        "backend/migrations/add_redemption_requests_table.py"
+      ],
+      "userTypes": ["all"]
+    },
+    {
       "id": 29,
       "date": "2026-01-12",
       "commit": "TBD",
