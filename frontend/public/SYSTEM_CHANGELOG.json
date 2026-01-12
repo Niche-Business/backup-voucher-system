@@ -681,20 +681,21 @@
     }
   ],
   "summary": {
-    "totalChanges": 28,
+    "totalChanges": 32,
     "categories": {
-      "Bug Fix": 6,
-      "Internationalization": 12,
-      "UI Enhancement": 7,
+      "Bug Fix": 7,
+      "Internationalization": 11,
+      "UI Enhancement": 9,
       "Configuration": 1,
-      "Feature": 1,
-      "Security": 1
+      "Feature": 2,
+      "Security": 1,
+      "Deployment": 1
     },
     "priorities": {
-      "Critical": 1,
-      "High": 12,
+      "Critical": 5,
+      "High": 15,
       "Medium": 7,
-      "Low": 4
+      "Low": 5
     },
     "affectedUserTypes": {
       "all": 15,
