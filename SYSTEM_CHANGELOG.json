@@ -3,6 +3,36 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 25,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Internationalization",
+      "priority": "High",
+      "title": "Comprehensive i18n Coverage for Data UI Elements",
+      "description": "Applied translations to all data-related UI elements including table headers, form labels, status labels, and action buttons across all dashboards",
+      "details": [
+        "Added translation keys: address, phone, shopOwner, foodToGoItems, view, actions, status, name, organization, date, amount, description, category, quantity, price, total",
+        "Updated shop/vendor cards to use t() for all labels (Address, Phone, Email, Shop Owner, Food to Go Items)",
+        "Updated school/organization cards to use t() for all labels",
+        "Updated form labels in edit modals to use translations",
+        "Updated payout and voucher display labels",
+        "Applied translations to all Edit and Delete buttons",
+        "Added Arabic translations: العنوان, الهاتف, صاحب المتجر, عناصر الطعام للذهاب",
+        "Ensured consistent translation coverage across English, Arabic, Polish, and Romanian"
+      ],
+      "impact": "Arabic, Polish, and Romanian speakers now see fully translated data displays and forms, not just navigation. This provides a truly localized experience for non-English users.",
+      "affectedComponents": [
+        "App.jsx - AdminDashboard Shop Cards",
+        "App.jsx - AdminDashboard School Cards",
+        "App.jsx - Edit Forms",
+        "App.jsx - VCSEDashboard Data Displays",
+        "App.jsx - VendorDashboard Payout Displays",
+        "locales/en.json",
+        "locales/ar.json"
+      ],
+      "userTypes": ["all"]
+    },
+    {
       "id": 24,
       "date": "2026-01-12",
       "commit": "TBD",
@@ -469,10 +499,10 @@
     }
   ],
   "summary": {
-    "totalChanges": 24,
+    "totalChanges": 25,
     "categories": {
       "Bug Fix": 4,
-      "Internationalization": 10,
+      "Internationalization": 11,
       "UI Enhancement": 7,
       "Configuration": 1,
       "Feature": 1,

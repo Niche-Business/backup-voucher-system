@@ -2557,7 +2557,7 @@ function AdminDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div style={{marginBottom: '10px'}}>
-                            <label>Email:</label><br />
+                            <label>{t('common.email')}:</label><br />
                             <input 
                               type="email" 
                               value={editFormData.email || ''} 
@@ -2566,7 +2566,7 @@ function AdminDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div style={{marginBottom: '10px'}}>
-                            <label>Phone:</label><br />
+                            <label>{t('common.phone')}:</label><br />
                             <input 
                               type="text" 
                               value={editFormData.phone || ''} 
@@ -2575,7 +2575,7 @@ function AdminDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div style={{marginBottom: '10px'}}>
-                            <label>Address:</label><br />
+                            <label>{t('common.address')}:</label><br />
                             <input 
                               type="text" 
                               value={editFormData.address || ''} 
@@ -2898,7 +2898,7 @@ function AdminDashboard({ user, onLogout }) {
                             />
                           </div>
                           <div style={{marginBottom: '10px'}}>
-                            <label>Address:</label><br />
+                            <label>{t('common.address')}:</label><br />
                             <input 
                               type="text" 
                               value={editFormData.address || ''} 
@@ -2954,7 +2954,7 @@ function AdminDashboard({ user, onLogout }) {
                             </select>
                           </div>
                           <div style={{marginBottom: '10px'}}>
-                            <label>Phone:</label><br />
+                            <label>{t('common.phone')}:</label><br />
                             <input 
                               type="text" 
                               value={editFormData.phone || ''} 
@@ -2971,19 +2971,19 @@ function AdminDashboard({ user, onLogout }) {
                         <div>
                           <h3 style={{margin: '0 0 10px 0', color: '#1976d2'}}>{shop.shop_name}</h3>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📍 Address:</strong> {shop.address}, {shop.city} {shop.postcode}
+                            <strong>📍 {t('common.address')}:</strong> {shop.address}, {shop.city} {shop.postcode}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📞 Phone:</strong> {shop.phone}
+                            <strong>📞 {t('common.phone')}:</strong> {shop.phone}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                             <strong>👤 Shop Owner:</strong> {shop.vendor_name}
+                             <strong>👤 {t('common.shopOwner')}:</strong> {shop.vendor_name}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📧 Email:</strong> {shop.vendor_email}
+                            <strong>📧 {t('common.email')}:</strong> {shop.vendor_email}
                           </p>
                           <p style={{margin: '10px 0 0 0', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px', fontWeight: 'bold', color: '#1976d2'}}>
-                            🍎 Food to Go Items: {shop.to_go_items_count}
+                            🍎 {t('common.foodToGoItems')}: {shop.to_go_items_count}
                           </p>
                           <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
                             <button 
@@ -2999,7 +2999,7 @@ function AdminDashboard({ user, onLogout }) {
                                 flex: 1
                               }}
                             >
-                              ✏️ Edit
+                              ✏️ {t('common.edit')}
                             </button>
                             <button 
                               onClick={() => handleDeleteShop(shop.id, shop.shop_name)}
@@ -3014,7 +3014,7 @@ function AdminDashboard({ user, onLogout }) {
                                 flex: 1
                               }}
                             >
-                              🗑️ Delete
+                              🗑️ {t('common.delete')}
                             </button>
                           </div>
                         </div>
@@ -3156,13 +3156,13 @@ function AdminDashboard({ user, onLogout }) {
                             <strong>👤 Contact:</strong> {school.first_name} {school.last_name}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📧 Email:</strong> {school.email}
+                            <strong>📧 {t('common.email')}:</strong> {school.email}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📞 Phone:</strong> {school.phone}
+                            <strong>📞 {t('common.phone')}:</strong> {school.phone}
                           </p>
                           <p style={{margin: '5px 0', fontSize: '18px'}}>
-                            <strong>📍 Address:</strong> {school.address}, {school.city} {school.postcode}
+                            <strong>📍 {t('common.address')}:</strong> {school.address}, {school.city} {school.postcode}
                           </p>
                           <div style={{marginTop: '15px', padding: '15px', backgroundColor: '#E1BEE7', borderRadius: '8px'}}>
                             <p style={{margin: '0', fontWeight: 'bold', fontSize: '22px', color: '#6A1B9A'}}>
@@ -3253,7 +3253,7 @@ function AdminDashboard({ user, onLogout }) {
                       <div style={{marginTop: '10px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '5px'}}>
                         <p style={{margin: '2px 0', fontSize: '17px'}}><strong>🏪 Shop:</strong> {item.shop_name}</p>
                         <p style={{margin: '2px 0', fontSize: '17px'}}><strong>📍 Location:</strong> {item.shop_address}</p>
-                         <p style={{margin: '2px 0', fontSize: '17px'}}><strong>👤 Shop Owner:</strong> {item.vendor_name}</p>
+                         <p style={{margin: '2px 0', fontSize: '17px'}}><strong>👤 {t('common.shopOwner')}:</strong> {item.vendor_name}</p>
                       </div>
                     </div>
                   ))}
@@ -3531,8 +3531,8 @@ function AdminDashboard({ user, onLogout }) {
                         </div>
                         <div>
                           <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.vendorName')}:</strong> {payout.vendor_name}</p>
-                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>Email:</strong> {payout.vendor_email}</p>
-                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>Phone:</strong> {payout.vendor_phone}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('common.email')}:</strong> {payout.vendor_email}</p>
+                          <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('common.phone')}:</strong> {payout.vendor_phone}</p>
                           <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}><strong>{t('payout.requestedAt')}:</strong> {new Date(payout.requested_at).toLocaleString()}</p>
                         </div>
                       </div>
@@ -9549,13 +9549,13 @@ function SchoolDashboard({ user, onLogout }) {
                         <strong>Recipient:</strong> {voucher.recipient_name}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Email:</strong> {voucher.recipient_email}
+                        <strong>{t('common.email')}:</strong> {voucher.recipient_email}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Phone:</strong> {voucher.recipient_phone}
+                        <strong>{t('common.phone')}:</strong> {voucher.recipient_phone}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>Address:</strong> {voucher.recipient_address}
+                        <strong>{t('common.address')}:</strong> {voucher.recipient_address}
                       </p>
                       <p style={{margin: '5px 0', fontSize: '18px', color: '#666'}}>
                         <strong>Issued:</strong> {new Date(voucher.created_at).toLocaleDateString()}
