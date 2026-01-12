@@ -1930,7 +1930,7 @@ function AdminDashboard({ user, onLogout }) {
         method: 'PUT',
         body: JSON.stringify(editFormData)
       })
-      alert('School updated successfully')
+      alert(t('alerts.schoolUpdated'))
       setEditingSchool(null)
       setEditFormData({})
       loadSchools()
@@ -1955,7 +1955,7 @@ function AdminDashboard({ user, onLogout }) {
         method: 'PUT',
         body: JSON.stringify(editFormData)
       })
-      alert('VCFSE organization updated successfully')
+      alert(t('alerts.vcfseUpdated'))
       setEditingVcse(null)
       setEditFormData({})
       loadVcseOrgs()
@@ -1981,7 +1981,7 @@ function AdminDashboard({ user, onLogout }) {
         method: 'PUT',
         body: JSON.stringify(editFormData)
       })
-      alert('Shop updated successfully')
+      alert(t('alerts.shopUpdated'))
       setEditingShop(null)
       setEditFormData({})
       loadVendorShops()
@@ -1997,7 +1997,7 @@ function AdminDashboard({ user, onLogout }) {
       await apiCall(`/admin/shops/${shopId}`, {
         method: 'DELETE'
       })
-      alert('Shop deleted successfully')
+      alert(t('alerts.shopDeleted'))
       loadVendorShops()
     } catch (error) {
       alert('Error deleting shop: ' + error.message)
@@ -2010,7 +2010,7 @@ function AdminDashboard({ user, onLogout }) {
         method: 'PUT',
         body: JSON.stringify(editFormData)
       })
-      alert('Recipient updated successfully')
+      alert(t('alerts.recipientUpdated'))
       setEditingRecipient(null)
       setEditFormData({})
       loadRecipients()
@@ -2026,7 +2026,7 @@ function AdminDashboard({ user, onLogout }) {
       await apiCall(`/admin/recipient/${recipientId}`, {
         method: 'DELETE'
       })
-      alert('Recipient account deactivated successfully')
+      alert(t('alerts.recipientDeactivated'))
       loadRecipients()
     } catch (error) {
       alert('Error deactivating recipient: ' + error.message)
@@ -2430,7 +2430,7 @@ function AdminDashboard({ user, onLogout }) {
                             if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
                               try {
                                 await apiCall(`/admin/vcse/${org.id}`, { method: 'DELETE' })
-                                alert('VCFSE organization deleted successfully')
+                                alert(t('alerts.vcfseDeleted'))
                                 loadVcseOrgs()
                               } catch (error) {
                                 alert('Error deleting VCFSE organization: ' + error.message)
@@ -3194,7 +3194,7 @@ function AdminDashboard({ user, onLogout }) {
                                 if (window.confirm(`Are you sure you want to delete ${school.organization_name}?`)) {
                                   try {
                                     await apiCall(`/admin/schools/${school.id}`, { method: 'DELETE' })
-                                    alert('School deleted successfully')
+                                    alert(t('alerts.schoolDeleted'))
                                     loadSchools()
                                   } catch (error) {
                                     alert('Error deleting school: ' + error.message)
@@ -3313,10 +3313,10 @@ function AdminDashboard({ user, onLogout }) {
                       
                       if (response.ok) {
                         const data = await response.json()
-                        alert('Report generated successfully!')
+                        alert(t('alerts.reportGenerated'))
                         console.log('Admin Report Data:', data)
                       } else {
-                        alert('Failed to generate report')
+                        alert(t('alerts.reportFailed'))
                       }
                     } catch (error) {
                       alert('Error generating report: ' + error.message)
@@ -3348,7 +3348,7 @@ function AdminDashboard({ user, onLogout }) {
                         window.URL.revokeObjectURL(url)
                         document.body.removeChild(a)
                       } else {
-                        alert('Failed to download financial report')
+                        alert(t('alerts.financialReportFailed'))
                       }
                     } catch (error) {
                       alert('Error downloading report: ' + error.message)
@@ -3377,7 +3377,7 @@ function AdminDashboard({ user, onLogout }) {
                         window.URL.revokeObjectURL(url)
                         document.body.removeChild(a)
                       } else {
-                        alert('Failed to download impact report')
+                        alert(t('alerts.impactReportFailed'))
                       }
                     } catch (error) {
                       alert('Error downloading report: ' + error.message)
@@ -3430,7 +3430,7 @@ function AdminDashboard({ user, onLogout }) {
                       alert(`Expired Vouchers Report:\n\nTotal Expired: ${data.total_expired}\nTotal Value Lost: £${data.total_value_lost}\n\nCheck console for details.`)
                       console.log('Expired Vouchers Report:', data)
                     } else {
-                      alert('Failed to generate expired vouchers report')
+                      alert(t('alerts.expiredVouchersReportFailed'))
                     }
                   } catch (error) {
                     alert('Error generating report: ' + error.message)
@@ -3548,7 +3548,7 @@ function AdminDashboard({ user, onLogout }) {
                         <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
                           <button
                             onClick={() => {
-                              const notes = prompt('Admin notes (optional):') || ''
+                              const notes = prompt(t('prompts.adminNotes')) || ''
                               handleReviewPayout(payout.id, 'approve', notes)
                             }}
                             style={{
@@ -3566,7 +3566,7 @@ function AdminDashboard({ user, onLogout }) {
                           </button>
                           <button
                             onClick={() => {
-                              const notes = prompt('Reason for rejection:') || ''
+                              const notes = prompt(t('prompts.rejectionReason')) || ''
                               handleReviewPayout(payout.id, 'reject', notes)
                             }}
                             style={{
@@ -5579,7 +5579,7 @@ function VCSEDashboard({ user, onLogout }) {
                             alert('Report generated successfully! Check the console for details.')
                             console.log('Report Data:', data)
                           } else {
-                            alert('Failed to generate report')
+                            alert(t('alerts.reportFailed'))
                           }
                         } catch (error) {
                           alert('Error generating report: ' + error.message)

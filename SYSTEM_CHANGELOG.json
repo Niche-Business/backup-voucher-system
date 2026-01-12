@@ -3,6 +3,31 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 28,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Alert and Prompt Messages Translation",
+      "description": "Fixed hardcoded English alert and prompt messages to use translation keys, ensuring they display in user's selected language",
+      "details": [
+        "Added 15 new translation keys for alert messages (success/error notifications)",
+        "Added 2 new translation keys for prompt messages (admin notes, rejection reason)",
+        "Replaced all hardcoded English alert() calls with t('alerts.*') translation keys",
+        "Replaced all hardcoded English prompt() calls with t('prompts.*') translation keys",
+        "Added Arabic translations for all alert and prompt messages",
+        "Alerts now display: 'تم تحديث المدرسة بنجاح' instead of 'School updated successfully' in Arabic",
+        "Prompts now display: 'ملاحظات المسؤول (اختياري):' instead of 'Admin notes (optional):' in Arabic"
+      ],
+      "impact": "All system notifications and prompts now display in user's selected language. No more English-only alert messages when using Arabic, Polish, or Romanian.",
+      "affectedComponents": [
+        "App.jsx - All alert() and prompt() calls",
+        "en.json - Added alerts and prompts sections",
+        "ar.json - Added alerts and prompts sections"
+      ],
+      "userTypes": ["all"]
+    },
+    {
       "id": 27,
       "date": "2026-01-12",
       "commit": "TBD",
@@ -550,9 +575,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 27,
+    "totalChanges": 28,
     "categories": {
-      "Bug Fix": 5,
+      "Bug Fix": 6,
       "Internationalization": 12,
       "UI Enhancement": 7,
       "Configuration": 1,

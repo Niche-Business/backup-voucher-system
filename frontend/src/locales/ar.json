@@ -61,6 +61,27 @@
     "totalItems": "إجمالي العناصر",
     "activeShops": "المتاجر النشطة"
   },
+  "alerts": {
+    "schoolUpdated": "تم تحديث المدرسة بنجاح",
+    "vcfseUpdated": "تم تحديث منظمة VCFSE بنجاح",
+    "shopUpdated": "تم تحديث المتجر بنجاح",
+    "shopDeleted": "تم حذف المتجر بنجاح",
+    "recipientUpdated": "تم تحديث المستفيد بنجاح",
+    "recipientDeactivated": "تم إلغاء تفعيل حساب المستفيد بنجاح",
+    "vcfseDeleted": "تم حذف منظمة VCFSE بنجاح",
+    "schoolDeleted": "تم حذف المدرسة بنجاح",
+    "reportGenerated": "تم إنشاء التقرير بنجاح!",
+    "reportFailed": "فشل في إنشاء التقرير",
+    "financialReportFailed": "فشل في تنزيل التقرير المالي",
+    "impactReportFailed": "فشل في تنزيل تقرير التأثير",
+    "expiredVouchersReportFailed": "فشل في إنشاء تقرير القسائم المنتهية",
+    "pdfReportFailed": "فشل في تنزيل تقرير PDF",
+    "csvReportFailed": "فشل في إنشاء تقرير CSV"
+  },
+  "prompts": {
+    "adminNotes": "ملاحظات المسؤول (اختياري):",
+    "rejectionReason": "سبب الرفض:"
+  },
   "login": {
     "title": "تسجيل الدخول إلى BAK UP",
     "emailLabel": "عنوان البريد الإلكتروني",

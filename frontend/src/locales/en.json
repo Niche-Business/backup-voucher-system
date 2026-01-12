@@ -61,6 +61,27 @@
     "totalItems": "Total Items",
     "activeShops": "Active Shops"
   },
+  "alerts": {
+    "schoolUpdated": "School updated successfully",
+    "vcfseUpdated": "VCFSE organization updated successfully",
+    "shopUpdated": "Shop updated successfully",
+    "shopDeleted": "Shop deleted successfully",
+    "recipientUpdated": "Recipient updated successfully",
+    "recipientDeactivated": "Recipient account deactivated successfully",
+    "vcfseDeleted": "VCFSE organization deleted successfully",
+    "schoolDeleted": "School deleted successfully",
+    "reportGenerated": "Report generated successfully!",
+    "reportFailed": "Failed to generate report",
+    "financialReportFailed": "Failed to download financial report",
+    "impactReportFailed": "Failed to download impact report",
+    "expiredVouchersReportFailed": "Failed to generate expired vouchers report",
+    "pdfReportFailed": "Failed to download PDF report",
+    "csvReportFailed": "Failed to generate CSV report"
+  },
+  "prompts": {
+    "adminNotes": "Admin notes (optional):",
+    "rejectionReason": "Reason for rejection:"
+  },
   "login": {
     "title": "Sign In to BAK UP",
     "emailLabel": "Email Address",
