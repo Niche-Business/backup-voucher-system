@@ -4239,16 +4239,7 @@ function SystemChangelogTab() {
             {/* Header */}
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px', flexWrap: 'wrap', gap: '10px'}}>
               <div style={{flex: 1}}>
-                <div style={{marginBottom: '10px'}}>
-                  <span style={{fontSize: '19px', fontWeight: 'bold', color: '#333'}}>
-                    Version {changelog.version}
-                  </span>
-                  <span style={{fontSize: '19px', color: '#999', margin: '0 8px'}}>–</span>
-                  <span style={{fontSize: '19px', color: '#666'}}>
-                    {formatDate(change.date)}
-                  </span>
-                </div>
-                <h3 style={{margin: '0 0 10px 0', fontSize: '22px', color: '#000'}}>
+                <h3 style={{margin: '0 0 8px 0', fontSize: '22px', color: '#000'}}>
                   {getPriorityIcon(change.priority)} {change.title}
                 </h3>
                 <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center'}}>
@@ -4262,6 +4253,15 @@ function SystemChangelogTab() {
                     color: 'white'
                   }}>
                     {change.category}
+                  </span>
+                  <span style={{fontSize: '15px', color: '#666', fontWeight: '600'}}>
+                    Version {changelog.version}
+                  </span>
+                  <span style={{fontSize: '15px', color: '#666'}}>
+                    📅 {change.date}
+                  </span>
+                  <span style={{fontSize: '15px', color: '#666'}}>
+                    🔖 {change.commit}
                   </span>
                 </div>
               </div>
