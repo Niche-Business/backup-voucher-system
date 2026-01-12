@@ -4419,6 +4419,28 @@ function VCSEDashboard({ user, onLogout }) {
     }
   }
 
+  const handleUnassignVoucher = async (voucher) => {
+    if (!confirm(`Are you sure you want to unassign voucher ${voucher.code}?\n\nThis will:\n- Cancel the voucher\n- Return £${voucher.value.toFixed(2)} to your wallet\n- Remove access from ${voucher.recipient.name}\n\nThis action cannot be undone.`)) {
+      return
+    }
+    
+    try {
+      await apiCall('/voucher/unassign', {
+        method: 'POST',
+        body: JSON.stringify({
+          voucher_id: voucher.id
+        })
+      })
+      setMessage(`Voucher ${voucher.code} unassigned successfully! £${voucher.value.toFixed(2)} returned to wallet.`)
+      loadVouchers()
+      loadBalance()
+      setTimeout(() => setMessage(''), 5000)
+    } catch (error) {
+      setMessage('Error: ' + error.message)
+      setTimeout(() => setMessage(''), 5000)
+    }
+  }
+
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -4521,7 +4543,6 @@ function VCSEDashboard({ user, onLogout }) {
         <MobileNavTabs
           tabs={[
             {label: t('dashboard.overview'), value: 'overview', icon: '📊'},
-            {label: t('tabs.loadFunds'), value: 'payment', icon: '💳'},
             {label: t('tabs.voucherOrders'), value: 'orders', icon: '📋'},
             {label: t('tabs.reports'), value: 'reports', icon: '📈'},
             {label: t('dashboard.issueVouchers'), value: 'issue', icon: '🎫'},
@@ -4695,6 +4716,15 @@ function VCSEDashboard({ user, onLogout }) {
                                   style={{...styles.primaryButton, fontSize: '16px', padding: '6px 12px', backgroundColor: '#FF9800'}}
                                 >
                                   🔄 Reassign
+                                </button>
+                              )}
+                              {voucher.status === 'active' && (
+                                <button
+                                  onClick={() => handleUnassignVoucher(voucher)}
+                                  style={{...styles.primaryButton, fontSize: '16px', padding: '6px 12px', backgroundColor: '#f44336'}}
+                                  title="Unassign voucher and return funds to wallet"
+                                >
+                                  ❌ Unassign
                                 </button>
                               )}
                             </div>
@@ -5658,9 +5688,7 @@ function VCSEDashboard({ user, onLogout }) {
           </div>
         )}
         
-        {activeTab === 'payment' && (
-          <PaymentTab user={user} onBalanceUpdate={loadBalance} />
-        )}
+        {/* Payment tab removed - only Admin can add funds to organization wallets */}
       </div>
       
       {/* Reassign Voucher Modal */}
@@ -8947,44 +8975,30 @@ function SchoolDashboard({ user, onLogout }) {
               </div>
             </div>
 
-            {/* Add Funds Section - Payment Integration */}
+            {/* Add Funds Section - Admin Only */}
             <div style={{backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
-              <h3 style={{marginTop: 0, color: '#9C27B0'}}>💰 Load Funds to Wallet</h3>
-              <p style={{color: '#666', marginBottom: '20px'}}>
-                Add funds to your wallet using a debit or credit card. Funds will be available immediately after payment.
-              </p>
-              
-              <div style={{padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', marginBottom: '20px'}}>
-                <div style={{display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px'}}>
-                  <div style={{fontSize: '52px'}}>💳</div>
+              <h3 style={{marginTop: 0, color: '#9C27B0'}}>🔒 Fund Loading</h3>
+              <div style={{padding: '20px', backgroundColor: '#FFF3E0', borderRadius: '8px', border: '2px solid #FF9800'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+                  <div style={{fontSize: '52px'}}>ℹ️</div>
                   <div>
-                    <div style={{fontSize: '22px', fontWeight: 'bold', marginBottom: '5px'}}>Secure Payment Required</div>
-                    <div style={{fontSize: '18px', color: '#666'}}>All funds must be paid for via debit/credit card before being credited to your wallet</div>
+                    <div style={{fontSize: '22px', fontWeight: 'bold', marginBottom: '5px', color: '#E65100'}}>Admin-Only Feature</div>
+                    <div style={{fontSize: '18px', color: '#666'}}>
+                      Only system administrators can add funds to organization wallets. 
+                      Please contact the admin team to request fund allocation.
+                    </div>
                   </div>
                 </div>
-                
-                <button 
-                  onClick={() => setActiveTab('payment')}
-                  style={{
-                    ...styles.primaryButton,
-                    width: '100%',
-                    backgroundColor: '#4CAF50',
-                    fontSize: '20px',
-                    padding: '15px'
-                  }}
-                >
-                  💳 Go to Payment Page
-                </button>
               </div>
               
-              <div style={{padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '18px'}}>
-                💡 <strong>How it works:</strong>
+              <div style={{padding: '15px', backgroundColor: '#E3F2FD', borderRadius: '5px', fontSize: '18px', marginTop: '20px'}}>
+                💡 <strong>How to request funds:</strong>
                 <ul style={{marginTop: '10px', marginBottom: '0', paddingLeft: '20px'}}>
-                  <li>Click "Go to Payment Page" above</li>
-                  <li>Enter the amount you want to load (£1 - £10,000)</li>
-                  <li>Complete payment with your debit or credit card</li>
-                  <li>Funds will be credited to your wallet immediately</li>
-                  <li>Use your wallet balance to issue vouchers to families</li>
+                  <li>Contact your system administrator</li>
+                  <li>Provide the amount needed and justification</li>
+                  <li>Admin will review and approve fund allocation</li>
+                  <li>Funds will be credited to your wallet by admin</li>
+                  <li>You can then use your balance to issue vouchers</li>
                 </ul>
               </div>
             </div>
@@ -9067,9 +9081,7 @@ function SchoolDashboard({ user, onLogout }) {
         )}
         
         {/* Payment/Load Funds Tab */}
-        {activeTab === 'payment' && (
-          <PaymentTab user={user} onBalanceUpdate={loadBalance} />
-        )}
+        {/* Payment tab removed - only Admin can add funds to organization wallets */}
         
         {/* Voucher Orders Tab */}
         {activeTab === 'orders' && (

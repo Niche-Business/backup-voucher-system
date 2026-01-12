@@ -7149,6 +7149,73 @@ def reassign_voucher():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/voucher/unassign', methods=['POST'])
+def unassign_voucher():
+    """Unassign (cancel) a voucher and return funds to organization wallet"""
+    try:
+        data = request.json
+        voucher_id = data.get('voucher_id')
+        user_id = session.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Get voucher
+        voucher = Voucher.query.get(voucher_id)
+        if not voucher:
+            return jsonify({'error': 'Voucher not found'}), 404
+        
+        # Check if user owns this voucher (VCSE or School)
+        if user.user_type == 'vcse':
+            if voucher.issuer_id != user.id:
+                return jsonify({'error': 'You do not have permission to unassign this voucher'}), 403
+        elif user.user_type == 'school':
+            if voucher.issuer_id != user.id:
+                return jsonify({'error': 'You do not have permission to unassign this voucher'}), 403
+        else:
+            return jsonify({'error': 'Only VCSE and School users can unassign vouchers'}), 403
+        
+        # Check if voucher can be unassigned
+        if voucher.status != 'active':
+            return jsonify({'error': f'Cannot unassign {voucher.status} voucher. Only active vouchers can be unassigned.'}), 400
+        
+        # Return funds to wallet
+        voucher_value = voucher.value
+        
+        # Create wallet credit transaction
+        from models import WalletTransaction
+        wallet_transaction = WalletTransaction(
+            user_id=user.id,
+            transaction_type='credit',
+            amount=voucher_value,
+            description=f'Voucher unassigned: {voucher.code}',
+            reference=f'UNASSIGN-{voucher.code}',
+            status='completed'
+        )
+        db.session.add(wallet_transaction)
+        
+        # Mark voucher as cancelled/unassigned
+        voucher.status = 'cancelled'
+        voucher.cancelled_at = datetime.utcnow()
+        voucher.cancellation_reason = 'Unassigned by issuer - funds returned to wallet'
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Voucher unassigned successfully',
+            'voucher_code': voucher.code,
+            'refunded_amount': voucher_value,
+            'status': 'cancelled'
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/vendor/shops/all', methods=['GET'])
 def get_all_vendor_shops():
     """Get all vendor shops for dropdown selection"""

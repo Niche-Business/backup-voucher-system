@@ -3,6 +3,49 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 23,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Feature",
+      "priority": "High",
+      "title": "Voucher Unassign Feature - Return Funds to Wallet",
+      "description": "Added ability for VCSE and School users to unassign active vouchers and return funds to their wallet",
+      "details": [
+        "Added 'Unassign' button (❌) next to 'Reassign' button in Voucher Orders",
+        "Unassign button only appears for active vouchers",
+        "Confirmation dialog warns user about consequences before unassigning",
+        "Backend API endpoint /api/voucher/unassign created",
+        "Funds automatically returned to organization wallet upon unassignment",
+        "Voucher status changed to 'cancelled' with reason tracked",
+        "Wallet transaction created with type 'credit' for audit trail",
+        "Permission checks ensure only voucher issuer can unassign"
+      ],
+      "impact": "Organizations can now recall vouchers from recipients and recover funds, providing flexibility in voucher management and budget control",
+      "affectedComponents": ["App.jsx - VCSEDashboard", "main.py - unassign_voucher endpoint"],
+      "userTypes": ["vcse", "school"]
+    },
+    {
+      "id": 22,
+      "date": "2026-01-12",
+      "commit": "TBD",
+      "category": "Security",
+      "priority": "High",
+      "title": "Fund Loading Restricted to Admin Only",
+      "description": "Removed direct fund loading capability from VCSE and School dashboards - only Admin can add funds to organization wallets",
+      "details": [
+        "Removed 'Load Funds' tab from VCSE mobile navigation",
+        "Removed PaymentTab component rendering from VCSE and School dashboards",
+        "Replaced payment form in School wallet with admin-only notice",
+        "Added informational message explaining admin-only fund allocation",
+        "Added instructions on how to request funds from administrator",
+        "Organizations can still view wallet balance and transaction history",
+        "Payment processing now centralized through admin for better financial control"
+      ],
+      "impact": "Improved financial security and control - all fund allocations now require admin approval, preventing unauthorized fund loading",
+      "affectedComponents": ["App.jsx - VCSEDashboard", "App.jsx - SchoolDashboard"],
+      "userTypes": ["vcse", "school", "admin"]
+    },
+    {
       "id": 21,
       "date": "2026-01-12",
       "commit": "TBD",
@@ -401,25 +444,27 @@
     }
   ],
   "summary": {
-    "totalChanges": 21,
+    "totalChanges": 23,
     "categories": {
       "Bug Fix": 4,
       "Internationalization": 10,
       "UI Enhancement": 6,
-      "Configuration": 1
+      "Configuration": 1,
+      "Feature": 1,
+      "Security": 1
     },
     "priorities": {
       "Critical": 1,
-      "High": 9,
+      "High": 11,
       "Medium": 7,
       "Low": 4
     },
     "affectedUserTypes": {
       "all": 15,
-      "admin": 5,
-      "vcse": 3,
+      "admin": 6,
+      "vcse": 5,
       "recipient": 2,
-      "school": 2,
+      "school": 4,
       "vendor": 2
     }
   }
