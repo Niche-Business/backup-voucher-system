@@ -62,21 +62,10 @@
     "activeShops": "المتاجر النشطة"
   },
   "alerts": {
-    "schoolUpdated": "تم تحديث المدرسة بنجاح",
-    "vcfseUpdated": "تم تحديث منظمة VCFSE بنجاح",
-    "shopUpdated": "تم تحديث المتجر بنجاح",
-    "shopDeleted": "تم حذف المتجر بنجاح",
-    "recipientUpdated": "تم تحديث المستفيد بنجاح",
-    "recipientDeactivated": "تم إلغاء تفعيل حساب المستفيد بنجاح",
-    "vcfseDeleted": "تم حذف منظمة VCFSE بنجاح",
-    "schoolDeleted": "تم حذف المدرسة بنجاح",
-    "reportGenerated": "تم إنشاء التقرير بنجاح!",
-    "reportFailed": "فشل في إنشاء التقرير",
-    "financialReportFailed": "فشل في تنزيل التقرير المالي",
-    "impactReportFailed": "فشل في تنزيل تقرير التأثير",
-    "expiredVouchersReportFailed": "فشل في إنشاء تقرير القسائم المنتهية",
-    "pdfReportFailed": "فشل في تنزيل تقرير PDF",
-    "csvReportFailed": "فشل في إنشاء تقرير CSV"
+    "itemAddedToCart": "تمت إضافة العنصر إلى السلة بنجاح!",
+    "failedToAddToCart": "فشل في إضافة العنصر إلى السلة:",
+    "itemRemoved": "تمت إزالة العنصر من السلة",
+    "failedToRemove": "فشل في إزالة العنصر:"
   },
   "prompts": {
     "adminNotes": "ملاحظات المسؤول (اختياري):",
@@ -484,12 +473,6 @@
     "per": "لكل",
     "at": "في"
   },
-  "alerts": {
-    "itemAddedToCart": "تمت إضافة العنصر إلى السلة بنجاح!",
-    "failedToAddToCart": "فشل في إضافة العنصر إلى السلة:",
-    "itemRemoved": "تمت إزالة العنصر من السلة",
-    "failedToRemove": "فشل في إزالة العنصر:"
-  },
   "categories": {
     "bakery": "مخبز",
     "fruits": "فواكه",
@@ -814,5 +797,41 @@
     "category": "الفئة",
     "freshAndReady": "طازج وجاهز",
     "contactShop": "اتصل بالمتجر مباشرة لشراء هذا العنصر باستخدام أموالك المخصصة"
+  },
+  "changelog": {
+    "title": "سجل تغييرات النظام",
+    "version": "الإصدار",
+    "lastUpdated": "آخر تحديث",
+    "totalChanges": "إجمالي التغييرات",
+    "bugFixes": "إصلاحات الأخطاء",
+    "i18nUpdates": "تحديثات الترجمة",
+    "uiEnhancements": "تحسينات الواجهة",
+    "filterByCategory": "تصفية حسب الفئة",
+    "filterByPriority": "تصفية حسب الأولوية",
+    "allCategories": "جميع الفئات",
+    "allPriorities": "جميع الأولويات",
+    "showing": "عرض",
+    "of": "من",
+    "changes": "تغييرات",
+    "noChangesMatch": "لا توجد تغييرات تطابق الفلاتر الخاصة بك",
+    "details": "التفاصيل",
+    "impact": "التأثير",
+    "components": "المكونات",
+    "userTypes": "أنواع المستخدمين",
+    "categories": {
+      "bugFix": "إصلاح خطأ",
+      "feature": "ميزة جديدة",
+      "internationalization": "الترجمة",
+      "uiEnhancement": "تحسين الواجهة",
+      "configuration": "الإعدادات",
+      "security": "الأمان",
+      "deployment": "النشر"
+    },
+    "priorities": {
+      "critical": "حرج",
+      "high": "عالي",
+      "medium": "متوسط",
+      "low": "منخفض"
+    }
   }
 }

@@ -759,5 +759,41 @@
     "category": "Kategoria",
     "freshAndReady": "Świeże i gotowe",
     "contactShop": "Skontaktuj się bezpośrednio ze sklepem, aby kupić ten produkt za pomocą przydzielonych środków"
+  },
+  "changelog": {
+    "title": "Dziennik zmian systemu",
+    "version": "Wersja",
+    "lastUpdated": "Ostatnia aktualizacja",
+    "totalChanges": "Wszystkie zmiany",
+    "bugFixes": "Poprawki błędów",
+    "i18nUpdates": "Aktualizacje tłumaczeń",
+    "uiEnhancements": "Ulepszenia interfejsu",
+    "filterByCategory": "Filtruj według kategorii",
+    "filterByPriority": "Filtruj według priorytetu",
+    "allCategories": "Wszystkie kategorie",
+    "allPriorities": "Wszystkie priorytety",
+    "showing": "Pokazywanie",
+    "of": "z",
+    "changes": "zmian",
+    "noChangesMatch": "Brak zmian pasujących do filtrów",
+    "details": "Szczegóły",
+    "impact": "Wpływ",
+    "components": "Komponenty",
+    "userTypes": "Typy użytkowników",
+    "categories": {
+      "bugFix": "Poprawka błędu",
+      "feature": "Nowa funkcja",
+      "internationalization": "Tłumaczenie",
+      "uiEnhancement": "Ulepszenie interfejsu",
+      "configuration": "Konfiguracja",
+      "security": "Bezpieczeństwo",
+      "deployment": "Wdrożenie"
+    },
+    "priorities": {
+      "critical": "Krytyczny",
+      "high": "Wysoki",
+      "medium": "Średni",
+      "low": "Niski"
+    }
   }
 }

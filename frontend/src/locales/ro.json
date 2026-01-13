@@ -759,5 +759,41 @@
     "category": "Categorie",
     "freshAndReady": "Proaspăt și gata",
     "contactShop": "Contactați magazinul direct pentru a cumpăra acest articol folosind fondurile alocate"
+  },
+  "changelog": {
+    "title": "Jurnalul modificărilor sistemului",
+    "version": "Versiune",
+    "lastUpdated": "Ultima actualizare",
+    "totalChanges": "Total modificări",
+    "bugFixes": "Remedieri de erori",
+    "i18nUpdates": "Actualizări traduceri",
+    "uiEnhancements": "Îmbunătățiri interfață",
+    "filterByCategory": "Filtrare după categorie",
+    "filterByPriority": "Filtrare după prioritate",
+    "allCategories": "Toate categoriile",
+    "allPriorities": "Toate prioritățile",
+    "showing": "Se afișează",
+    "of": "din",
+    "changes": "modificări",
+    "noChangesMatch": "Nicio modificare nu corespunde filtrelor",
+    "details": "Detalii",
+    "impact": "Impact",
+    "components": "Componente",
+    "userTypes": "Tipuri de utilizatori",
+    "categories": {
+      "bugFix": "Remediere eroare",
+      "feature": "Funcție nouă",
+      "internationalization": "Traducere",
+      "uiEnhancement": "Îmbunătățire interfață",
+      "configuration": "Configurare",
+      "security": "Securitate",
+      "deployment": "Implementare"
+    },
+    "priorities": {
+      "critical": "Critic",
+      "high": "Ridicat",
+      "medium": "Mediu",
+      "low": "Scăzut"
+    }
   }
 }

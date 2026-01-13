@@ -2161,7 +2161,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('analytics'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'analytics' ? '#e3f2fd' : 'transparent'}}>📈 {t('admin.analytics')}</button>
           <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
-          <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 System Changelog</button>
+          <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 {t('changelog.title')}</button>
         </div>
       )}
       
@@ -4129,24 +4129,24 @@ function SystemChangelogTab() {
         marginBottom: '30px',
         boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
       }}>
-        <h1 style={{margin: '0 0 10px 0', fontSize: '36px', fontWeight: 'bold'}}>📝 System Changelog</h1>
-        <p style={{margin: '0 0 20px 0', fontSize: '18px', opacity: 0.9}}>Version {changelog.version} - Last Updated: {changelog.lastUpdated}</p>
+        <h1 style={{margin: '0 0 10px 0', fontSize: '36px', fontWeight: 'bold'}}>📝 {t('changelog.title')}</h1>
+        <p style={{margin: '0 0 20px 0', fontSize: '18px', opacity: 0.9}}>{t('changelog.version')} {changelog.version} - {t('changelog.lastUpdated')}: {changelog.lastUpdated}</p>
         <div style={{display: 'flex', gap: '30px', flexWrap: 'wrap', marginTop: '20px'}}>
           <div>
             <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.totalChanges}</div>
-            <div style={{fontSize: '16px', opacity: 0.9}}>Total Changes</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>{t('changelog.totalChanges')}</div>
           </div>
           <div>
             <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['Bug Fix'] || 0}</div>
-            <div style={{fontSize: '16px', opacity: 0.9}}>Bug Fixes</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>{t('changelog.bugFixes')}</div>
           </div>
           <div>
             <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['Internationalization'] || 0}</div>
-            <div style={{fontSize: '16px', opacity: 0.9}}>i18n Updates</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>{t('changelog.i18nUpdates')}</div>
           </div>
           <div>
             <div style={{fontSize: '32px', fontWeight: 'bold'}}>{changelog.summary.categories['UI Enhancement'] || 0}</div>
-            <div style={{fontSize: '16px', opacity: 0.9}}>UI Enhancements</div>
+            <div style={{fontSize: '16px', opacity: 0.9}}>{t('changelog.uiEnhancements')}</div>
           </div>
         </div>
       </div>
@@ -4164,7 +4164,7 @@ function SystemChangelogTab() {
         alignItems: 'center'
       }}>
         <div>
-          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>Filter by Category:</label>
+          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>{t('changelog.filterByCategory')}:</label>
           <select 
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -4176,19 +4176,19 @@ function SystemChangelogTab() {
               cursor: 'pointer'
             }}
           >
-            <option value="all">All Categories</option>
-            <option value="Bug Fix">Bug Fix</option>
-            <option value="Feature">Feature</option>
-            <option value="Internationalization">Internationalization</option>
-            <option value="UI Enhancement">UI Enhancement</option>
-            <option value="Configuration">Configuration</option>
-            <option value="Security">Security</option>
-            <option value="Deployment">Deployment</option>
+            <option value="all">{t('changelog.allCategories')}</option>
+            <option value="Bug Fix">{t('changelog.categories.bugFix')}</option>
+            <option value="Feature">{t('changelog.categories.feature')}</option>
+            <option value="Internationalization">{t('changelog.categories.internationalization')}</option>
+            <option value="UI Enhancement">{t('changelog.categories.uiEnhancement')}</option>
+            <option value="Configuration">{t('changelog.categories.configuration')}</option>
+            <option value="Security">{t('changelog.categories.security')}</option>
+            <option value="Deployment">{t('changelog.categories.deployment')}</option>
           </select>
         </div>
         
         <div>
-          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>Filter by Priority:</label>
+          <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '16px'}}>{t('changelog.filterByPriority')}:</label>
           <select 
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
@@ -4200,16 +4200,16 @@ function SystemChangelogTab() {
               cursor: 'pointer'
             }}
           >
-            <option value="all">All Priorities</option>
-            <option value="Critical">🔴 Critical</option>
-            <option value="High">🟠 High</option>
-            <option value="Medium">🟡 Medium</option>
-            <option value="Low">🟢 Low</option>
+            <option value="all">{t('changelog.allPriorities')}</option>
+            <option value="Critical">🔴 {t('changelog.priorities.critical')}</option>
+            <option value="High">🟠 {t('changelog.priorities.high')}</option>
+            <option value="Medium">🟡 {t('changelog.priorities.medium')}</option>
+            <option value="Low">🟢 {t('changelog.priorities.low')}</option>
           </select>
         </div>
         
         <div style={{marginLeft: 'auto', fontSize: '16px', color: '#666'}}>
-          Showing {filteredChanges.length} of {changelog.changes.length} changes
+          {t('changelog.showing')} {filteredChanges.length} {t('changelog.of')} {changelog.changes.length} {t('changelog.changes')}
         </div>
       </div>
       
@@ -4252,10 +4252,10 @@ function SystemChangelogTab() {
                     backgroundColor: getCategoryColor(change.category),
                     color: 'white'
                   }}>
-                    {change.category}
+                    {t(`changelog.categories.${change.category.replace(' ', '').replace(/^(.)/, (m) => m.toLowerCase())}`) || change.category}
                   </span>
                   <span style={{fontSize: '15px', color: '#666', fontWeight: '600'}}>
-                    Version {change.version}
+                    {t('changelog.version')} {change.version}
                   </span>
                   <span style={{fontSize: '15px', color: '#666'}}>
                     📅 {change.date}
@@ -4275,7 +4275,7 @@ function SystemChangelogTab() {
             {/* Details */}
             {change.details && change.details.length > 0 && (
               <div style={{marginBottom: '15px'}}>
-                <h4 style={{fontSize: '18px', marginBottom: '10px', color: '#000'}}>Details:</h4>
+                <h4 style={{fontSize: '18px', marginBottom: '10px', color: '#000'}}>{t('changelog.details')}:</h4>
                 <ul style={{margin: 0, paddingLeft: '20px', color: '#555'}}>
                   {change.details.map((detail, idx) => (
                     <li key={idx} style={{marginBottom: '8px', fontSize: '16px', lineHeight: '1.5'}}>{detail}</li>
@@ -4291,17 +4291,17 @@ function SystemChangelogTab() {
               borderRadius: '8px',
               marginBottom: '15px'
             }}>
-              <h4 style={{fontSize: '16px', marginBottom: '8px', color: '#000'}}>💡 Impact:</h4>
+              <h4 style={{fontSize: '16px', marginBottom: '8px', color: '#000'}}>💡 {t('changelog.impact')}:</h4>
               <p style={{margin: 0, fontSize: '16px', color: '#555', lineHeight: '1.5'}}>{change.impact}</p>
             </div>
             
             {/* Affected Components & User Types */}
             <div style={{display: 'flex', gap: '20px', flexWrap: 'wrap', fontSize: '15px', color: '#666'}}>
               <div>
-                <strong>📦 Components:</strong> {change.affectedComponents.join(', ')}
+                <strong>📦 {t('changelog.components')}:</strong> {change.affectedComponents.join(', ')}
               </div>
               <div>
-                <strong>👥 User Types:</strong> {change.userTypes.join(', ')}
+                <strong>👥 {t('changelog.userTypes')}:</strong> {change.userTypes.join(', ')}
               </div>
             </div>
           </div>
@@ -4317,7 +4317,7 @@ function SystemChangelogTab() {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
           <div style={{fontSize: '64px', marginBottom: '20px'}}>🔍</div>
-          <h3 style={{fontSize: '24px', color: '#666', margin: 0}}>No changes match your filters</h3>
+          <h3 style={{fontSize: '24px', color: '#666', margin: 0}}>{t('changelog.noChangesMatch')}</h3>
           <p style={{fontSize: '18px', color: '#999', marginTop: '10px'}}>Try adjusting your filter criteria</p>
         </div>
       )}

@@ -3,6 +3,33 @@
   "lastUpdated": "2026-01-12",
   "changes": [
     {
+      "id": 34,
+      "date": "2026-01-13",
+      "commit": "5c4dc66",
+      "category": "Bug Fix",
+      "priority": "Medium",
+      "title": "Fixed Changelog Version Display to Show Individual Entry Versions",
+      "description": "Corrected changelog display bug where all entries showed system version (1.0.5) instead of their individual implementation versions",
+      "details": [
+        "Fixed line 4258 in App.jsx to use change.version instead of changelog.version",
+        "Each changelog entry now displays its actual implementation version",
+        "Entry #33 displays v1.0.5 (latest)",
+        "Entries #29-32 display v1.0.4",
+        "Entries #21-28 display v1.0.3",
+        "Entries #1-20 display v1.0.2",
+        "Provides accurate version history for stakeholder presentations",
+        "Verified working in production deployment"
+      ],
+      "impact": "Changelog now provides accurate version tracking, showing when each feature was actually implemented rather than displaying the current system version for all entries. This improves transparency and makes it easier to track feature evolution across versions.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - Changelog display component (line 4258)"
+      ],
+      "userTypes": [
+        "admin"
+      ],
+      "version": "1.0.5"
+    },
+    {
       "id": 33,
       "date": "2026-01-12",
       "commit": "e9eca5a",
@@ -21,7 +48,7 @@
         "Admin dashboard shows acceptance status and VCSE organization",
         "Vendor receives notification when items collected",
         "Database migration adds 4 new fields to surplus_item table",
-        "Complete status workflow: available \u2192 accepted \u2192 collected",
+        "Complete status workflow: available → accepted → collected",
         "Full audit trail of acceptance and collection"
       ],
       "impact": "VCSE organizations can now accept surplus food items from vendors, schedule collection times, and coordinate food distribution to beneficiaries. Completes user feature request #7 at 100%.",
@@ -172,8 +199,8 @@
         "Replaced all hardcoded English alert() calls with t('alerts.*') translation keys",
         "Replaced all hardcoded English prompt() calls with t('prompts.*') translation keys",
         "Added Arabic translations for all alert and prompt messages",
-        "Alerts now display: '\u062a\u0645 \u062a\u062d\u062f\u064a\u062b \u0627\u0644\u0645\u062f\u0631\u0633\u0629 \u0628\u0646\u062c\u0627\u062d' instead of 'School updated successfully' in Arabic",
-        "Prompts now display: '\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0627\u0644\u0645\u0633\u0624\u0648\u0644 (\u0627\u062e\u062a\u064a\u0627\u0631\u064a):' instead of 'Admin notes (optional):' in Arabic"
+        "Alerts now display: 'تم تحديث المدرسة بنجاح' instead of 'School updated successfully' in Arabic",
+        "Prompts now display: 'ملاحظات المسؤول (اختياري):' instead of 'Admin notes (optional):' in Arabic"
       ],
       "impact": "All system notifications and prompts now display in user's selected language. No more English-only alert messages when using Arabic, Polish, or Romanian.",
       "affectedComponents": [
@@ -224,7 +251,7 @@
       "description": "Translated all analytics dashboard elements including metrics, statistics, and chart labels to support full multilingual experience",
       "details": [
         "Added translation keys: systemAnalyticsDashboard, systemOverview, marketplaceStatistics, redemptionRate, activeVouchers, totalVouchers, totalUsers, redeemed, totalValue",
-        "Translated dashboard title: System Analytics Dashboard \u2192 \u0644\u0648\u062d\u0629 \u062a\u062d\u0644\u064a\u0644\u0627\u062a \u0627\u0644\u0646\u0638\u0627\u0645",
+        "Translated dashboard title: System Analytics Dashboard → لوحة تحليلات النظام",
         "Translated metric cards: Total Users, Total Vouchers, Active Vouchers, Redemption Rate",
         "Translated System Overview section: Recipients, Vendors, Schools, VCFSE Organizations",
         "Translated Marketplace Statistics: Active Shops, Total Items, Available Items, Claimed Items",
@@ -258,7 +285,7 @@
         "Updated form labels in edit modals to use translations",
         "Updated payout and voucher display labels",
         "Applied translations to all Edit and Delete buttons",
-        "Added Arabic translations: \u0627\u0644\u0639\u0646\u0648\u0627\u0646, \u0627\u0644\u0647\u0627\u062a\u0641, \u0635\u0627\u062d\u0628 \u0627\u0644\u0645\u062a\u062c\u0631, \u0639\u0646\u0627\u0635\u0631 \u0627\u0644\u0637\u0639\u0627\u0645 \u0644\u0644\u0630\u0647\u0627\u0628",
+        "Added Arabic translations: العنوان, الهاتف, صاحب المتجر, عناصر الطعام للذهاب",
         "Ensured consistent translation coverage across English, Arabic, Polish, and Romanian"
       ],
       "impact": "Arabic, Polish, and Romanian speakers now see fully translated data displays and forms, not just navigation. This provides a truly localized experience for non-English users.",
@@ -315,7 +342,7 @@
       "title": "Voucher Unassign Feature - Return Funds to Wallet",
       "description": "Added ability for VCSE and School users to unassign active vouchers and return funds to their wallet",
       "details": [
-        "Added 'Unassign' button (\u274c) next to 'Reassign' button in Voucher Orders",
+        "Added 'Unassign' button (❌) next to 'Reassign' button in Voucher Orders",
         "Unassign button only appears for active vouchers",
         "Confirmation dialog warns user about consequences before unassigning",
         "Backend API endpoint /api/voucher/unassign created",
@@ -397,7 +424,7 @@
       "title": "Notification System - Text Visibility, Badge Display, and API URLs",
       "description": "Fixed critical notification system issues preventing users from viewing notifications",
       "details": [
-        "Fixed incorrect API URLs preventing notifications from loading (/notifications/* \u2192 /api/notifications/*)",
+        "Fixed incorrect API URLs preventing notifications from loading (/notifications/* → /api/notifications/*)",
         "Changed notification message color from #333 to #000 (black) for better readability",
         "Changed subtitle/metadata color from #666 to #555 (darker gray)",
         "Enhanced notification badge: brighter red (#ff0000), white border, box shadow, increased size to 22px",
@@ -498,14 +525,14 @@
       "title": "AdminDashboard Sidebar Navigation Translations",
       "description": "Comprehensive fix for AdminDashboard sidebar navigation translations",
       "details": [
-        "Fixed 'Overview' \u2192 t('navigation.overview')",
-        "Fixed 'Recipient Management' \u2192 t('navigation.recipientManagement')",
-        "Fixed 'VCFSE Verification' \u2192 t('navigation.vcfseVerification')",
-        "Fixed 'Analytics' \u2192 t('navigation.analytics')",
-        "Fixed 'Global Search' \u2192 t('navigation.globalSearch')",
-        "Fixed 'Transaction Search' \u2192 t('navigation.transactionSearch')",
-        "Fixed 'Broadcast Messages' \u2192 t('navigation.broadcastMessages')",
-        "Fixed 'Fund Allocation' \u2192 t('navigation.fundAllocation')",
+        "Fixed 'Overview' → t('navigation.overview')",
+        "Fixed 'Recipient Management' → t('navigation.recipientManagement')",
+        "Fixed 'VCFSE Verification' → t('navigation.vcfseVerification')",
+        "Fixed 'Analytics' → t('navigation.analytics')",
+        "Fixed 'Global Search' → t('navigation.globalSearch')",
+        "Fixed 'Transaction Search' → t('navigation.transactionSearch')",
+        "Fixed 'Broadcast Messages' → t('navigation.broadcastMessages')",
+        "Fixed 'Fund Allocation' → t('navigation.fundAllocation')",
         "Added all translations to Arabic, Romanian, and Polish"
       ],
       "impact": "Complete sidebar navigation now translates properly for Admin users",
@@ -880,9 +907,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 33,
+    "totalChanges": 34,
     "categories": {
-      "Bug Fix": 7,
+      "Bug Fix": 8,
       "Feature": 3,
       "Internationalization": 11,
       "UI Enhancement": 9,
