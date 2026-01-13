@@ -1,5 +1,5 @@
 {
-  "version": "1.0.5",
+  "version": "1.0.6",
   "lastUpdated": "2026-01-12",
   "changes": [
     {
@@ -9,7 +9,7 @@
       "category": "Bug Fix",
       "priority": "Medium",
       "title": "Fixed Changelog Version Display to Show Individual Entry Versions",
-      "description": "Corrected changelog display bug where all entries showed system version (1.0.5) instead of their individual implementation versions",
+      "description": "Corrected changelog display bug where all entries showed system version (1.0.6) instead of their individual implementation versions",
       "details": [
         "Fixed line 4258 in App.jsx to use change.version instead of changelog.version",
         "Each changelog entry now displays its actual implementation version",
@@ -27,7 +27,7 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.5"
+      "version": "1.0.6"
     },
     {
       "id": 33,
