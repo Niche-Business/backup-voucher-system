@@ -36,11 +36,11 @@ export function GlobalSearchTab({ apiCall }) {
 
   return (
     <div>
-      <h2 style={{ marginBottom: '20px' }}>🔍 Global Search</h2>
+      <h2 style={{ marginBottom: '20px' }}>🔍 {t('adminEnhancements.globalSearch.title')}</h2>
       
       <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '10px', marginBottom: '20px' }}>
         <p style={{ marginBottom: '15px', color: '#666' }}>
-          Search across VCFSE Organizations, Schools/Care Organizations, and Local Shops by name, email, town, ID, or registration number.
+          {t('adminEnhancements.globalSearch.description')}
         </p>
         
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -49,7 +49,7 @@ export function GlobalSearchTab({ apiCall }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Enter search query..."
+            placeholder={t('adminEnhancements.globalSearch.placeholder')}
             style={{
               flex: 1,
               padding: '12px',
@@ -72,7 +72,7 @@ export function GlobalSearchTab({ apiCall }) {
               fontWeight: 'bold'
             }}
           >
-            {isSearching ? 'Searching...' : 'Search'}
+            {isSearching ? t('adminEnhancements.globalSearch.searching') : t('adminEnhancements.globalSearch.searchButton')}
           </button>
         </div>
       </div>
@@ -389,7 +389,7 @@ export function TransactionSearchTab({ apiCall }) {
               fontWeight: 'bold'
             }}
           >
-            {isSearching ? 'Searching...' : 'Search Transactions'}
+            {isSearching ? t('adminEnhancements.globalSearch.searching') : 'Search Transactions'}
           </button>
 
           <button
@@ -756,15 +756,15 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
 
   return (
     <div>
-      <h2 style={{ marginBottom: '20px' }}>💰 Fund Allocation</h2>
+      <h2 style={{ marginBottom: '20px' }}>💰 {t('adminEnhancements.fundAllocation.title')}</h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', marginBottom: '20px' }}>
         {/* Allocation Form */}
         <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '10px' }}>
-          <h3 style={{ marginBottom: '20px' }}>Allocate Funds</h3>
+          <h3 style={{ marginBottom: '20px' }}>{t('adminEnhancements.fundAllocation.allocateFunds')}</h3>
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Organization Type</label>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>{t('adminEnhancements.fundAllocation.organizationType')}</label>
             <select
               value={organizationType}
               onChange={handleOrgTypeChange}
@@ -776,13 +776,13 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
                 borderRadius: '5px'
               }}
             >
-              <option value="vcse">VCFSE Organization</option>
-              <option value="school">School/Care Organization</option>
+              <option value="vcse">{t('adminEnhancements.fundAllocation.vcseOrganization')}</option>
+              <option value="school">{t('adminEnhancements.fundAllocation.schoolOrganization')}</option>
             </select>
           </div>
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Select Organization</label>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>{t('adminEnhancements.fundAllocation.selectOrganization')}</label>
             <select
               key={`org-select-${organizationType}`}
               value={selectedOrg}
@@ -795,7 +795,7 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
                 borderRadius: '5px'
               }}
             >
-              <option value="">-- Select Organization --</option>
+              <option value="">{t('adminEnhancements.fundAllocation.selectOrgPlaceholder')}</option>
               {organizations.map(org => (
                 <option key={org.id} value={org.id}>
                   {org.organization_name} (Balance: £{(org.balance || 0).toFixed(2)})
@@ -811,18 +811,18 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               borderRadius: '5px',
               marginBottom: '15px'
             }}>
-              <p style={{ margin: '5px 0' }}><strong>Current Balance:</strong> £{(selectedOrgData.balance || 0).toFixed(2)}</p>
+              <p style={{ margin: '5px 0' }}><strong>{t('adminEnhancements.fundAllocation.currentBalance')}:</strong> £{(selectedOrgData.balance || 0).toFixed(2)}</p>
               <p style={{ margin: '5px 0' }}><strong>Email:</strong> {selectedOrgData.email}</p>
             </div>
           )}
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Amount (£)</label>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>{t('adminEnhancements.fundAllocation.amount')}</label>
             <input
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              placeholder="0.00"
+              placeholder={t('adminEnhancements.fundAllocation.amountPlaceholder')}
               step="0.01"
               min="0"
               style={{
@@ -844,17 +844,17 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               border: '2px solid #4CAF50'
             }}>
               <p style={{ margin: '5px 0', fontSize: '20px' }}>
-                <strong>New Balance:</strong> £{((selectedOrgData.balance || 0) + parseFloat(amount)).toFixed(2)}
+                <strong>{t('adminEnhancements.fundAllocation.newBalance')}:</strong> £{((selectedOrgData.balance || 0) + parseFloat(amount)).toFixed(2)}
               </p>
             </div>
           )}
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Notes (Optional)</label>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>{t('adminEnhancements.fundAllocation.notes')}</label>
             <textarea
               value={notes}
               onChange={handleNotesChange}
-              placeholder="Add any notes about this allocation..."
+              placeholder={t('adminEnhancements.fundAllocation.notesPlaceholder')}
               rows="3"
               style={{
                 width: '100%',
@@ -883,13 +883,13 @@ export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, lo
               width: '100%'
             }}
           >
-            {isAllocating ? 'Allocating...' : 'Allocate Funds'}
+            {isAllocating ? t('adminEnhancements.fundAllocation.allocating') : 'Allocate Funds'}
           </button>
         </div>
 
         {/* Allocation History */}
         <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '10px' }}>
-          <h3 style={{ marginBottom: '20px' }}>Allocation History</h3>
+          <h3 style={{ marginBottom: '15px' }}>{t('adminEnhancements.fundAllocation.allocationHistory')}</h3>
           
           {allocationHistory.length === 0 ? (
             <p style={{ color: '#666', textAlign: 'center', padding: '40px 0' }}>
