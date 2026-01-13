@@ -4241,7 +4241,7 @@ function SystemChangelogTab() {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px', flexWrap: 'wrap', gap: '10px'}}>
               <div style={{flex: 1}}>
                 <h3 style={{margin: '0 0 8px 0', fontSize: '22px', color: '#000'}}>
-                  {getPriorityIcon(change.priority)} {change.title}
+                  {getPriorityIcon(change.priority)} {i18n.language === 'ar' && change.title_ar ? change.title_ar : change.title}
                 </h3>
                 <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center'}}>
                   <span style={{
@@ -4270,7 +4270,7 @@ function SystemChangelogTab() {
             
             {/* Description */}
             <p style={{fontSize: '17px', color: '#333', marginBottom: '15px', lineHeight: '1.6'}}>
-              {change.description}
+              {i18n.language === 'ar' && change.description_ar ? change.description_ar : change.description}
             </p>
             
             {/* Details */}
@@ -4278,7 +4278,7 @@ function SystemChangelogTab() {
               <div style={{marginBottom: '15px'}}>
                 <h4 style={{fontSize: '18px', marginBottom: '10px', color: '#000'}}>{t('changelog.details')}:</h4>
                 <ul style={{margin: 0, paddingLeft: '20px', color: '#555'}}>
-                  {change.details.map((detail, idx) => (
+                  {(i18n.language === 'ar' && change.details_ar ? change.details_ar : change.details).map((detail, idx) => (
                     <li key={idx} style={{marginBottom: '8px', fontSize: '16px', lineHeight: '1.5'}}>{detail}</li>
                   ))}
                 </ul>
@@ -4293,13 +4293,13 @@ function SystemChangelogTab() {
               marginBottom: '15px'
             }}>
               <h4 style={{fontSize: '16px', marginBottom: '8px', color: '#000'}}>💡 {t('changelog.impact')}:</h4>
-              <p style={{margin: 0, fontSize: '16px', color: '#555', lineHeight: '1.5'}}>{change.impact}</p>
+              <p style={{margin: 0, fontSize: '16px', color: '#555', lineHeight: '1.5'}}>{i18n.language === 'ar' && change.impact_ar ? change.impact_ar : change.impact}</p>
             </div>
             
             {/* Affected Components & User Types */}
             <div style={{display: 'flex', gap: '20px', flexWrap: 'wrap', fontSize: '15px', color: '#666'}}>
               <div>
-                <strong>📦 {t('changelog.components')}:</strong> {change.affectedComponents.join(', ')}
+                <strong>📦 {t('changelog.components')}:</strong> {i18n.language === 'ar' && change.affectedComponents_ar ? change.affectedComponents_ar : change.affectedComponents.join(', ')}
               </div>
               <div>
                 <strong>👥 {t('changelog.userTypes')}:</strong> {change.userTypes.join(', ')}
