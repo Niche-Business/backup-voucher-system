@@ -2062,7 +2062,6 @@ function AdminDashboard({ user, onLogout }) {
           </button>
           <div>
             <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-            <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.6</p>
           </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
@@ -2108,6 +2107,8 @@ function AdminDashboard({ user, onLogout }) {
             <LanguageSelector />
           </div>
           
+          <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>v1.0.6</div>
+          
           <button
             onClick={() => {
               onLogout()
@@ -2129,7 +2130,7 @@ function AdminDashboard({ user, onLogout }) {
             onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
           >
-            🚪 {t('common.signOut')}
+            🚺 {t('common.signOut')}
           </button>
         </div>
       )}
@@ -2165,6 +2166,7 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
           <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 {t('changelog.title')}</button>
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>v1.0.6</div>
         </div>
       )}
       
@@ -7117,7 +7119,6 @@ function VendorDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div>
           <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.6</p>
         </div>
         <button 
           onClick={() => setMenuOpen(!menuOpen)}
@@ -7190,6 +7191,8 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('history'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'history' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>📜 {t('shop.redemptionHistory')}</button>
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
+          
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>v1.0.6</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8350,7 +8353,6 @@ function RecipientDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <div>
           <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-          <p style={{margin: '5px 0 0 0', fontSize: '1.15em', opacity: 0.9}}>BAK UP E-Voucher System v1.0.6</p>
         </div>
         <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', position: 'relative'}}>
           <NotificationBell apiCall={apiCall} userType="recipient" />
@@ -8467,6 +8469,8 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>v1.0.6</div>
+
               <button
                 onClick={() => {
                   setShowMenuDropdown(false)
@@ -8489,7 +8493,7 @@ function RecipientDashboard({ user, onLogout }) {
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
               >
-                🚪 Sign Out
+                🚺 Sign Out
               </button>
             </div>
           )}
@@ -9862,6 +9866,7 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
+            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>v1.0.6</span>
             <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
             <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>
