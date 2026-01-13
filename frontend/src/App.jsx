@@ -406,7 +406,7 @@ function LoginPage({ onLogin, onNavigate }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={t('common.enterEmail')}
               required
               style={{width: '100%', fontSize: '14px', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box'}}
             />
@@ -419,7 +419,7 @@ function LoginPage({ onLogin, onNavigate }) {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder={t('common.enterPassword')}
                 required
                 style={{width: '100%', fontSize: '14px', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box'}}
               />
@@ -538,7 +538,7 @@ function AdminLoginPage({ onLogin, onNavigate }) {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
+                placeholder={t('common.enterAdminPassword')}
                 required
                 style={styles.input}
               />
@@ -625,7 +625,7 @@ function ForgotPasswordPage({ onNavigate }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={t('common.enterEmail')}
               style={styles.input}
               required
             />
@@ -709,7 +709,7 @@ function ResetPasswordPage({ token, onNavigate }) {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter new password"
+                placeholder={t('common.enterNewPassword')}
                 style={styles.input}
                 required
               />
@@ -740,7 +740,7 @@ function ResetPasswordPage({ token, onNavigate }) {
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
+              placeholder={t('common.confirmNewPassword')}
               style={styles.input}
               required
             />
@@ -1133,7 +1133,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="john.doe@email.com"
+                    placeholder={t('common.emailPlaceholder')}
                     style={{
                       width: '100%',
                       padding: '14px',
@@ -1256,7 +1256,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      placeholder="John"
+                      placeholder={t('common.firstNamePlaceholder')}
                       style={{
                         width: '100%',
                         padding: '14px',
@@ -1280,7 +1280,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      placeholder="Doe"
+                      placeholder={t('common.lastNamePlaceholder')}
                       style={{
                         width: '100%',
                         padding: '14px',
@@ -1306,7 +1306,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+44 7700 900000"
+                    placeholder={t('common.phonePlaceholder')}
                     style={{
                       width: '100%',
                       padding: '14px',
@@ -1334,7 +1334,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         name="organizationName"
                         value={formData.organizationName}
                         onChange={handleChange}
-                        placeholder="Enter EXACT registered charity name"
+                        placeholder={t('common.charityNamePlaceholder')}
                         style={{
                           width: '100%',
                           padding: '14px',
@@ -1361,7 +1361,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         name="charityCommissionNumber"
                         value={formData.charityCommissionNumber || ''}
                         onChange={handleChange}
-                        placeholder="e.g., 1234567"
+                        placeholder={t('common.charityNumberPlaceholder')}
                         style={{
                           width: '100%',
                           padding: '14px',
@@ -1396,7 +1396,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       name="organizationName"
                       value={formData.organizationName}
                       onChange={handleChange}
-                      placeholder="Enter school or organization name"
+                      placeholder={t('common.schoolNamePlaceholder')}
                       style={{
                         width: '100%',
                         padding: '14px',
@@ -1425,7 +1425,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                         name="shopName"
                         value={formData.shopName}
                         onChange={handleChange}
-                        placeholder="Enter your shop name"
+                        placeholder={t('common.shopNamePlaceholder')}
                         style={{
                           width: '100%',
                           padding: '14px',
@@ -1488,7 +1488,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="123 Main Street"
+                    placeholder={t('common.addressPlaceholder')}
                     style={{
                       width: '100%',
                       padding: '14px',
@@ -1514,7 +1514,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                       name="postcode"
                       value={formData.postcode}
                       onChange={handleChange}
-                      placeholder="NN8 1AA"
+                      placeholder={t('common.postcodePlaceholder')}
                       style={{
                         width: '100%',
                         padding: '14px',
@@ -1994,7 +1994,7 @@ function AdminDashboard({ user, onLogout }) {
   }
 
   const handleDeleteShop = async (shopId, shopName) => {
-    if (!confirm(`Are you sure you want to delete "${shopName}"?`)) return
+    if (!confirm(t('common.confirmDeleteShop', { name: shopName }))) return
     
     try {
       await apiCall(`/admin/shops/${shopId}`, {
@@ -2003,7 +2003,7 @@ function AdminDashboard({ user, onLogout }) {
       alert(t('alerts.shopDeleted'))
       loadVendorShops()
     } catch (error) {
-      alert('Error deleting shop: ' + error.message)
+      alert(t('common.errorDeleting') + ': ' + error.message)
     }
   }
 
@@ -2023,7 +2023,7 @@ function AdminDashboard({ user, onLogout }) {
   }
 
   const handleDeleteRecipient = async (recipientId) => {
-    if (!confirm('Are you sure you want to deactivate this recipient account?')) return
+    if (!confirm(t('common.confirmDeactivate'))) return
     
     try {
       await apiCall(`/admin/recipient/${recipientId}`, {
@@ -2391,7 +2391,7 @@ function AdminDashboard({ user, onLogout }) {
                         <label style={{fontWeight: 'bold', color: '#856404'}}>🔐 {t('admin.resetPassword')}:</label><br />
                         <input 
                           type="text" 
-                          placeholder="Enter new password (leave blank to keep current)"
+                          placeholder={t('common.enterNewPasswordOptional')}
                           value={editFormData.new_password || ''} 
                           onChange={(e) => setEditFormData({...editFormData, new_password: e.target.value})}
                           style={{width: '100%', padding: '8px', marginTop: '5px'}}
@@ -2430,13 +2430,13 @@ function AdminDashboard({ user, onLogout }) {
                         </button>
                         <button 
                           onClick={async () => {
-                            if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
+                            if (window.confirm(t('common.confirmDelete', { name: org.name }))) {
                               try {
                                 await apiCall(`/admin/vcse/${org.id}`, { method: 'DELETE' })
                                 alert(t('alerts.vcfseDeleted'))
                                 loadVcseOrgs()
                               } catch (error) {
-                                alert('Error deleting VCFSE organization: ' + error.message)
+                                alert(t('common.errorDeleting') + ': ' + error.message)
                               }
                             }
                           }}
@@ -2610,7 +2610,7 @@ function AdminDashboard({ user, onLogout }) {
                               type="text" 
                               value={editFormData.reset_password || ''} 
                               onChange={(e) => setEditFormData({...editFormData, reset_password: e.target.value})}
-                              placeholder="Enter new password (leave blank to keep current)"
+                              placeholder={t('common.enterNewPasswordOptional')}
                               style={{width: '100%', padding: '8px', marginTop: '5px'}}
                             />
                           </div>
@@ -2745,7 +2745,7 @@ function AdminDashboard({ user, onLogout }) {
                   <label style={{display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '18px'}}>🔍 {t('dashboard.searchVouchers')}</label>
                   <input
                     type="text"
-                    placeholder="Search by code, recipient..."
+                    placeholder={t('common.searchPlaceholder')}
                     value={voucherSearchQuery || ''}
                     onChange={(e) => setVoucherSearchQuery(e.target.value)}
                     style={{...styles.input, width: '100%'}}
@@ -3140,7 +3140,7 @@ function AdminDashboard({ user, onLogout }) {
                             <label style={{fontWeight: 'bold', color: '#856404'}}>🔐 {t('admin.resetPassword')}:</label><br />
                             <input 
                               type="text" 
-                              placeholder="Enter new password (leave blank to keep current)"
+                              placeholder={t('common.enterNewPasswordOptional')}
                               value={editFormData.new_password || ''} 
                               onChange={(e) => setEditFormData({...editFormData, new_password: e.target.value})}
                               style={{width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ffc107'}}
@@ -5936,7 +5936,7 @@ function VCSEDashboard({ user, onLogout }) {
                     type="text"
                     value={voucherForm.recipientFirstName}
                     onChange={(e) => setVoucherForm({...voucherForm, recipientFirstName: e.target.value})}
-                    placeholder="John"
+                    placeholder={t('common.firstNamePlaceholder')}
                     style={styles.input}
                     required
                   />
