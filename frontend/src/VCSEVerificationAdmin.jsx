@@ -22,7 +22,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       const data = await apiCall('/admin/vcse-verifications/pending');
       setPendingVCSEs(data.pending_vcses || []);
     } catch (error) {
-      setMessage('t('vcfseVerification.error_loading') + ': '' + error.message);
+      setMessage(`${t('vcfseVerification.error_loading')}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('t('vcfseVerification.error_approving') + ': '' + error.message);
+      setMessage(`${t('vcfseVerification.error_approving')}: ${error.message}`);
     }
   };
 
@@ -80,7 +80,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('t('vcfseVerification.error_rejecting') + ': '' + error.message);
+      setMessage(`${t('vcfseVerification.error_rejecting')}: ${error.message}`);
     }
   };
 
