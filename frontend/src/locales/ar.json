@@ -542,7 +542,12 @@
     "reportType": "نوع التقرير",
     "voucherActivity": "نشاط القسائم",
     "financialSummary": "ملخص مالي",
-    "impactReport": "تقرير التأثير"
+    "impactReport": "تقرير التأثير",
+    "reports": "التقارير",
+    "generate": "إنشاء",
+    "export": "تصدير",
+    "download": "تنزيل",
+    "view": "عرض"
   },
   "pagination": {
     "previous": "السابق",
@@ -917,5 +922,80 @@
       "preview": "معاينة",
       "recipientCount": "سيتم إرسال هذه الرسالة إلى {{count}} مستخدمًا"
     }
+  },
+  "vcfseVerification": {
+    "vcfse_verification": "التحقق من VCFSE",
+    "verify": "تحقق",
+    "approve": "اعتمد",
+    "reject": "رفض",
+    "pending": "قيد الانتظار",
+    "verified": "تم التحقق"
+  },
+  "vcfseOrgs": {
+    "vcfse_organizations": "منظمات VCFSE",
+    "organization": "المنظمة",
+    "contact": "جهة الاتصال",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "address": "العنوان"
+  },
+  "recipients": {
+    "recipients": "المستلمون",
+    "recipient": "المستلم",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "vouchers": "القسائم",
+    "balance": "الرصيد"
+  },
+  "vouchers": {
+    "voucher_management": "إدارة القسائم",
+    "voucher": "قسيمة",
+    "code": "الرمز",
+    "value": "القيمة",
+    "status": "الحالة",
+    "assign": "تعيين",
+    "unassign": "إلغاء التعيين"
+  },
+  "schools": {
+    "schools": "المدارس",
+    "care_organizations": "منظمات الرعاية",
+    "school": "المدرسة",
+    "organization": "المنظمة",
+    "students": "الطلاب"
+  },
+  "vendors": {
+    "local_shops": "المتاجر المحلية",
+    "vendor": "البائع",
+    "shop": "المتجر",
+    "location": "الموقع",
+    "products": "المنتجات"
+  },
+  "allToGo": {
+    "all_to_go": "الكل للذهاب",
+    "surplus_food": "الطعام الفائض",
+    "available": "متاح",
+    "collected": "تم الجمع"
+  },
+  "payouts": {
+    "manage_payouts": "إدارة المدفوعات",
+    "payout": "المدفوعات",
+    "amount": "المبلغ",
+    "date": "التاريخ",
+    "status": "الحالة",
+    "process": "معالجة"
+  },
+  "analytics": {
+    "analytics": "التحليلات",
+    "statistics": "الإحصائيات",
+    "charts": "الرسوم البيانية",
+    "reports": "التقارير",
+    "data": "البيانات"
+  },
+  "settings": {
+    "settings": "الإعدادات",
+    "configuration": "التكوين",
+    "preferences": "التفضيلات",
+    "account": "الحساب",
+    "system": "النظام"
   }
 }

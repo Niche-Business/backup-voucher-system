@@ -516,7 +516,12 @@
     "reportType": "Tip Raport",
     "voucherActivity": "Activitate Vouchere",
     "financialSummary": "Rezumat Financiar",
-    "impactReport": "Raport de Impact"
+    "impactReport": "Raport de Impact",
+    "reports": "Rapoarte",
+    "generate": "Generează",
+    "export": "Exportă",
+    "download": "Descarcă",
+    "view": "Vizualizează"
   },
   "pagination": {
     "previous": "Anterior",
@@ -879,5 +884,80 @@
       "preview": "Previzualizare",
       "recipientCount": "Acest mesaj va fi trimis către {{count}} utilizatori"
     }
+  },
+  "vcfseVerification": {
+    "vcfse_verification": "Verificare VCFSE",
+    "verify": "Verifică",
+    "approve": "Aprobă",
+    "reject": "Respinge",
+    "pending": "În așteptare",
+    "verified": "Verificat"
+  },
+  "vcfseOrgs": {
+    "vcfse_organizations": "Organizații VCFSE",
+    "organization": "Organizație",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Telefon",
+    "address": "Adresă"
+  },
+  "recipients": {
+    "recipients": "Destinatari",
+    "recipient": "Destinatar",
+    "name": "Nume",
+    "email": "Email",
+    "vouchers": "Vouchere",
+    "balance": "Sold"
+  },
+  "vouchers": {
+    "voucher_management": "Gestionare Vouchere",
+    "voucher": "Voucher",
+    "code": "Cod",
+    "value": "Valoare",
+    "status": "Stare",
+    "assign": "Atribuire",
+    "unassign": "Eliberare"
+  },
+  "schools": {
+    "schools": "Școli",
+    "care_organizations": "Organizații de Îngrijire",
+    "school": "Școală",
+    "organization": "Organizație",
+    "students": "Elevi"
+  },
+  "vendors": {
+    "local_shops": "Magazine Locale",
+    "vendor": "Furnizor",
+    "shop": "Magazin",
+    "location": "Locație",
+    "products": "Produse"
+  },
+  "allToGo": {
+    "all_to_go": "Tot de luat",
+    "surplus_food": "Mâncare în exces",
+    "available": "Disponibil",
+    "collected": "Colectat"
+  },
+  "payouts": {
+    "manage_payouts": "Gestionare Plăți",
+    "payout": "Plată",
+    "amount": "Sumă",
+    "date": "Dată",
+    "status": "Stare",
+    "process": "Procesează"
+  },
+  "analytics": {
+    "analytics": "Analitice",
+    "statistics": "Statistici",
+    "charts": "Grafice",
+    "reports": "Rapoarte",
+    "data": "Date"
+  },
+  "settings": {
+    "settings": "Setări",
+    "configuration": "Configurare",
+    "preferences": "Preferințe",
+    "account": "Cont",
+    "system": "Sistem"
   }
 }

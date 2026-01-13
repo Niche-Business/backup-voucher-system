@@ -504,7 +504,12 @@
     "reportType": "Typ Raportu",
     "voucherActivity": "Aktywność Voucherów",
     "financialSummary": "Podsumowanie Finansowe",
-    "impactReport": "Raport Wpływu"
+    "impactReport": "Raport Wpływu",
+    "reports": "Raporty",
+    "generate": "Generuj",
+    "export": "Eksportuj",
+    "download": "Pobierz",
+    "view": "Wyświetl"
   },
   "pagination": {
     "previous": "Poprzedni",
@@ -879,5 +884,80 @@
       "preview": "Podgląd",
       "recipientCount": "Ta wiadomość zostanie wysłana do {{count}} użytkowników"
     }
+  },
+  "vcfseVerification": {
+    "vcfse_verification": "Weryfikacja VCFSE",
+    "verify": "Weryfikuj",
+    "approve": "Zatwierdź",
+    "reject": "Odrzuć",
+    "pending": "Oczekujące",
+    "verified": "Zweryfikowano"
+  },
+  "vcfseOrgs": {
+    "vcfse_organizations": "Organizacje VCFSE",
+    "organization": "Organizacja",
+    "contact": "Kontakt",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "address": "Adres"
+  },
+  "recipients": {
+    "recipients": "Odbiorcy",
+    "recipient": "Odbiorca",
+    "name": "Nazwa",
+    "email": "E-mail",
+    "vouchers": "Kupony",
+    "balance": "Saldo"
+  },
+  "vouchers": {
+    "voucher_management": "Zarządzanie voucherami",
+    "voucher": "Voucher",
+    "code": "Kod",
+    "value": "Wartość",
+    "status": "Status",
+    "assign": "Przypisz",
+    "unassign": "Od przypisz"
+  },
+  "schools": {
+    "schools": "Szkoły",
+    "care_organizations": "Organizacje opiekuńcze",
+    "school": "Szkoła",
+    "organization": "Organizacja",
+    "students": "Uczniowie"
+  },
+  "vendors": {
+    "local_shops": "Sklepy lokalne",
+    "vendor": "Dostawca",
+    "shop": "Sklep",
+    "location": "Lokalizacja",
+    "products": "Produkty"
+  },
+  "allToGo": {
+    "all_to_go": "Wszystko na wynos",
+    "surplus_food": "Nadwyżka żywności",
+    "available": "Dostępne",
+    "collected": "Zebrane"
+  },
+  "payouts": {
+    "manage_payouts": "Zarządzaj Wypłatami",
+    "payout": "Wypłata",
+    "amount": "Kwota",
+    "date": "Data",
+    "status": "Status",
+    "process": "Przetwórz"
+  },
+  "analytics": {
+    "analytics": "Analizy",
+    "statistics": "Statystyki",
+    "charts": "Wykresy",
+    "reports": "Raporty",
+    "data": "Dane"
+  },
+  "settings": {
+    "settings": "Ustawienia",
+    "configuration": "Konfiguracja",
+    "preferences": "Preferencje",
+    "account": "Konto",
+    "system": "System"
   }
 }

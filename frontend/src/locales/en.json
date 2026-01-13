@@ -556,7 +556,12 @@
     "reportType": "Report Type",
     "voucherActivity": "Voucher Activity",
     "financialSummary": "Financial Summary",
-    "impactReport": "Impact Report"
+    "impactReport": "Impact Report",
+    "reports": "Reports",
+    "generate": "Generate",
+    "export": "Export",
+    "download": "Download",
+    "view": "View"
   },
   "pagination": {
     "previous": "Previous",
@@ -935,5 +940,80 @@
       "preview": "Preview",
       "recipientCount": "This message will be sent to {{count}} users"
     }
+  },
+  "vcfseVerification": {
+    "vcfse_verification": "VCFSE Verification",
+    "verify": "Verify",
+    "approve": "Approve",
+    "reject": "Reject",
+    "pending": "Pending",
+    "verified": "Verified"
+  },
+  "vcfseOrgs": {
+    "vcfse_organizations": "VCFSE Organizations",
+    "organization": "Organization",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "recipients": {
+    "recipients": "Recipients",
+    "recipient": "Recipient",
+    "name": "Name",
+    "email": "Email",
+    "vouchers": "Vouchers",
+    "balance": "Balance"
+  },
+  "vouchers": {
+    "voucher_management": "Voucher Management",
+    "voucher": "Voucher",
+    "code": "Code",
+    "value": "Value",
+    "status": "Status",
+    "assign": "Assign",
+    "unassign": "Unassign"
+  },
+  "schools": {
+    "schools": "Schools",
+    "care_organizations": "Care Organizations",
+    "school": "School",
+    "organization": "Organization",
+    "students": "Students"
+  },
+  "vendors": {
+    "local_shops": "Local Shops",
+    "vendor": "Vendor",
+    "shop": "Shop",
+    "location": "Location",
+    "products": "Products"
+  },
+  "allToGo": {
+    "all_to_go": "All To Go",
+    "surplus_food": "Surplus Food",
+    "available": "Available",
+    "collected": "Collected"
+  },
+  "payouts": {
+    "manage_payouts": "Manage Payouts",
+    "payout": "Payout",
+    "amount": "Amount",
+    "date": "Date",
+    "status": "Status",
+    "process": "Process"
+  },
+  "analytics": {
+    "analytics": "Analytics",
+    "statistics": "Statistics",
+    "charts": "Charts",
+    "reports": "Reports",
+    "data": "Data"
+  },
+  "settings": {
+    "settings": "Settings",
+    "configuration": "Configuration",
+    "preferences": "Preferences",
+    "account": "Account",
+    "system": "System"
   }
 }
