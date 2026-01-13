@@ -1,7 +1,90 @@
 {
-  "version": "1.0.6",
-  "lastUpdated": "2026-01-12",
+  "version": "1.0.7",
+  "lastUpdated": "2026-01-13",
   "changes": [
+    {
+      "id": 35,
+      "date": "2026-01-13",
+      "commit": "8e7cd02",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Menu Conflict Bug and Updated Version Display to Full System Name",
+      "description": "Resolved UI conflict where left sidebar and right dropdown menu could open simultaneously, and updated version display from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.7' across all dashboards",
+      "details": [
+        "Fixed menu conflict in Admin dashboard - left sidebar now closes when right menu opens, and vice versa",
+        "Fixed menu conflict in VCFSE dashboard - left sidebar now closes when right menu opens, and vice versa",
+        "Updated version text from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.7' in all sidebar/menu locations",
+        "Admin: Version displays at bottom of collapsible sidebar after System Changelog button",
+        "VCFSE: Version displays in dropdown menu before logout button",
+        "Vendor: Version displays in dropdown menu after Food To Go button",
+        "Recipient: Version displays in dropdown menu before logout button",
+        "School: Version displays in header area near logout button",
+        "Implemented mutual exclusion logic: setSidebarOpen closes menuOpen and vice versa",
+        "Prevents UI overlap and improves user experience"
+      ],
+      "impact": "Eliminates confusing UI behavior where multiple menus could overlap, improving navigation clarity. Full system name in version display provides better branding and clearer version identification for all user types.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - Admin dashboard menu handlers",
+        "frontend/src/App.jsx - VCFSE dashboard menu handlers",
+        "frontend/src/App.jsx - All version display text (5 locations)"
+      ],
+      "userTypes": [
+        "admin",
+        "vcse",
+        "vendor",
+        "recipient",
+        "school"
+      ],
+      "version": "1.0.7",
+      "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
+      "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.7' عبر جميع لوحات المعلومات",
+      "details_ar": [
+        "تم إصلاح تعارض القائمة في لوحة الإدارة - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
+        "تم إصلاح تعارض القائمة في لوحة VCFSE - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
+        "تم تحديث نص الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.7' في جميع مواقع الشريط الجانبي/القائمة",
+        "المسؤول: يعرض الإصدار في أسفل الشريط الجانبي القابل للطي بعد زر سجل تغييرات النظام",
+        "VCFSE: يعرض الإصدار في القائمة المنسدلة قبل زر تسجيل الخروج",
+        "البائع: يعرض الإصدار في القائمة المنسدلة بعد زر الطعام للذهاب",
+        "المستلم: يعرض الإصدار في القائمة المنسدلة قبل زر تسجيل الخروج",
+        "المدرسة: يعرض الإصدار في منطقة الرأس بالقرب من زر تسجيل الخروج",
+        "تم تنفيذ منطق الاستبعاد المتبادل: setSidebarOpen يغلق menuOpen والعكس صحيح",
+        "يمنع تداخل واجهة المستخدم ويحسن تجربة المستخدم"
+      ],
+      "impact_ar": "يزيل سلوك واجهة المستخدم المربك حيث يمكن أن تتداخل قوائم متعددة، مما يحسن وضوح التنقل. الاسم الكامل للنظام في عرض الإصدار يوفر علامة تجارية أفضل وتحديد إصدار أوضح لجميع أنواع المستخدمين.",
+      "affectedComponents_ar": "frontend/src/App.jsx - معالجات قائمة لوحة الإدارة، معالجات قائمة لوحة VCFSE، جميع نصوص عرض الإصدار (5 مواقع)",
+      "title_pl": "Naprawiono błąd konfliktu menu i zaktualizowano wyświetlanie wersji do pełnej nazwy systemu",
+      "description_pl": "Rozwiązano konflikt interfejsu użytkownika, w którym lewy pasek boczny i prawe menu rozwijane mogły otworzyć się jednocześnie, oraz zaktualizowano wyświetlanie wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.7' we wszystkich pulpitach",
+      "details_pl": [
+        "Naprawiono konflikt menu w pulpicie administratora - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
+        "Naprawiono konflikt menu w pulpicie VCFSE - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
+        "Zaktualizowano tekst wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.7' we wszystkich lokalizacjach paska bocznego/menu",
+        "Administrator: Wersja wyświetla się na dole zwijane go paska bocznego po przycisku System Changelog",
+        "VCFSE: Wersja wyświetla się w menu rozwijanym przed przyciskiem wylogowania",
+        "Sprzedawca: Wersja wyświetla się w menu rozwijanym po przycisku Food To Go",
+        "Odbiorca: Wersja wyświetla się w menu rozwijanym przed przyciskiem wylogowania",
+        "Szkoła: Wersja wyświetla się w obszarze nagłówka w pobliżu przycisku wylogowania",
+        "Zaimplementowano logikę wzajemnego wykluczania: setSidebarOpen zamyka menuOpen i odwrotnie",
+        "Zapobiega nakładaniu się interfejsu użytkownika i poprawia doświadczenie użytkownika"
+      ],
+      "impact_pl": "Eliminuje mylące zachowanie interfejsu użytkownika, w którym wiele menu mogło się nakładać, poprawiając przejrzystość nawigacji. Pełna nazwa systemu w wyświetlaniu wersji zapewnia lepszy branding i wyraźniejszą identyfikację wersji dla wszystkich typów użytkowników.",
+      "affectedComponents_pl": "frontend/src/App.jsx - obsługa menu pulpitu administratora, obsługa menu pulpitu VCFSE, wszystkie teksty wyświetlania wersji (5 lokalizacji)",
+      "title_ro": "Remediat bug-ul de conflict de meniu și actualizat afișarea versiunii la numele complet al sistemului",
+      "description_ro": "Rezolvat conflictul UI unde bara laterală stângă și meniul drop-down drept puteau fi deschise simultan, și actualizat afișarea versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.7' pe toate panourile de control",
+      "details_ro": [
+        "Remediat conflictul de meniu în panoul de administrare - bara laterală stângă se închide acum când se deschide meniul drept și invers",
+        "Remediat conflictul de meniu în panoul VCFSE - bara laterală stângă se închide acum când se deschide meniul drept și invers",
+        "Actualizat textul versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.7' în toate locațiile barei laterale/meniului",
+        "Administrator: Versiunea se afișează în partea de jos a barei laterale pliabile după butonul System Changelog",
+        "VCFSE: Versiunea se afișează în meniul drop-down înainte de butonul de deconectare",
+        "Vânzător: Versiunea se afișează în meniul drop-down după butonul Food To Go",
+        "Destinatar: Versiunea se afișează în meniul drop-down înainte de butonul de deconectare",
+        "Școală: Versiunea se afișează în zona antetului lângă butonul de deconectare",
+        "Implementată logica de excludere mutuală: setSidebarOpen închide menuOpen și invers",
+        "Previne suprapunerea UI și îmbunătățește experiența utilizatorului"
+      ],
+      "impact_ro": "Elimină comportamentul confuz al UI unde mai multe meniuri se puteau suprapune, îmbunătățind claritatea navigării. Numele complet al sistemului în afișarea versiunii oferă un branding mai bun și o identificare mai clară a versiunii pentru toate tipurile de utilizatori.",
+      "affectedComponents_ro": "frontend/src/App.jsx - gestionare meniu panou administrare, gestionare meniu panou VCFSE, toate textele de afișare versiune (5 locații)"
+    },
     {
       "id": 34,
       "date": "2026-01-13",
