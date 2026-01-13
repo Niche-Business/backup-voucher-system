@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const VCSEVerificationAdmin = ({ apiCall }) => {
+  const { t } = useTranslation();
   const [pendingVCSEs, setPendingVCSEs] = useState([]);
   const [stats, setStats] = useState({ pending: 0, active: 0, rejected: 0, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       const data = await apiCall('/admin/vcse-verifications/pending');
       setPendingVCSEs(data.pending_vcses || []);
     } catch (error) {
-      setMessage('Error loading pending verifications: ' + error.message);
+      setMessage('t('vcfseVerification.error_loading') + ': '' + error.message);
     } finally {
       setLoading(false);
     }
@@ -31,7 +33,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       const data = await apiCall('/admin/vcse-verifications/stats');
       setStats(data);
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error('t('vcfseVerification.error_loading_stats') + ':'', error);
     }
   };
 
@@ -44,24 +46,24 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       const result = await apiCall(`/admin/vcse-verifications/${vcse.id}/approve`, {
         method: 'POST'
       });
-      setMessage(`✅ ${vcse.organization_name} has been approved! Approval email sent to ${vcse.email}`);
+      setMessage(`✅ ${t('vcfseVerification.approved_success', { name: vcse.organization_name, email: vcse.email })}`);
       loadPendingVCSEs();
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('Error approving VCFSE: ' + error.message);
+      setMessage('t('vcfseVerification.error_approving') + ': '' + error.message);
     }
   };
 
   const handleRejectClick = (vcse) => {
     setSelectedVCSE(vcse);
-    setRejectionReason('Charity Commission number not found or details do not match');
+    setRejectionReason(t('vcfseVerification.default_rejection_reason'));
     setShowRejectModal(true);
   };
 
   const handleRejectConfirm = async () => {
     if (!rejectionReason.trim()) {
-      alert('Please provide a rejection reason');
+      alert(t('vcfseVerification.provide_reason'));
       return;
     }
 
@@ -70,7 +72,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
         method: 'POST',
         body: JSON.stringify({ rejection_reason: rejectionReason })
       });
-      setMessage(`❌ ${selectedVCSE.organization_name} has been rejected. Notification email sent.`);
+      setMessage(`❌ ${t('vcfseVerification.rejected_success', { name: selectedVCSE.organization_name })}`);
       setShowRejectModal(false);
       setSelectedVCSE(null);
       setRejectionReason('');
@@ -78,12 +80,12 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       loadStats();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage('Error rejecting VCFSE: ' + error.message);
+      setMessage('t('vcfseVerification.error_rejecting') + ': '' + error.message);
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return t('common.na');
     return new Date(dateString).toLocaleString();
   };
 
@@ -337,7 +339,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
               <div style={styles.detailItem}>
                 <div style={styles.detailLabel}>🏙️ City / Postcode</div>
                 <div style={styles.detailValue}>
-                  {vcse.city || 'N/A'} {vcse.postcode ? `• ${vcse.postcode}` : ''}
+                  {vcse.city || t('common.na')} {vcse.postcode ? `• ${vcse.postcode}` : ''}
                 </div>
               </div>
             </div>
