@@ -8445,8 +8445,8 @@ function RecipientDashboard({ user, onLogout }) {
                 <div style={{fontSize: '17px', color: '#666', marginBottom: '8px'}}>🌐 Change Language</div>
                 <select 
                   value={i18n.language} 
-                  onChange={(e) => {
-                    i18n.changeLanguage(e.target.value)
+                  onChange={async (e) => {
+                    await i18n.changeLanguage(e.target.value)
                     setShowMenuDropdown(false)
                     // Reload current data to apply translations
                     window.location.reload()
@@ -9843,8 +9843,8 @@ function SchoolDashboard({ user, onLogout }) {
             <NotificationBell apiCall={apiCall} userType="school" />
             <select 
               value={i18n.language} 
-              onChange={(e) => {
-                i18n.changeLanguage(e.target.value)
+              onChange={async (e) => {
+                await i18n.changeLanguage(e.target.value)
                 window.location.reload()
               }}
               style={{
