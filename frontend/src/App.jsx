@@ -4044,6 +4044,7 @@ function AdminSettingsTab({ user }) {
 
 // SYSTEM CHANGELOG TAB COMPONENT
 function SystemChangelogTab() {
+  const { t } = useTranslation()
   const [changelog, setChangelog] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
