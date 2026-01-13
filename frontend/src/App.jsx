@@ -391,7 +391,10 @@ function LoginPage({ onLogin, onNavigate }) {
   return (
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#4CAF50', padding: '20px'}}>
       <div style={{backgroundColor: 'white', padding: '50px', borderRadius: '12px', width: '100%', maxWidth: '450px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)'}}>
-        <h2 style={{textAlign: 'center', marginBottom: '10px', fontSize: '28px', fontWeight: '700', color: '#333'}}>Sign In</h2>
+        <div style={{textAlign: 'center', marginBottom: '10px'}}>
+          <h1 style={{fontSize: '32px', fontWeight: '800', color: '#4CAF50', marginBottom: '5px'}}>BAK UP CIC</h1>
+          <h2 style={{fontSize: '24px', fontWeight: '600', color: '#333', marginBottom: '10px'}}>Sign In</h2>
+        </div>
         <p style={{textAlign: 'center', marginBottom: '30px', fontSize: '14px', color: '#666'}}>Enter your email and password to login</p>
         
         {error && <div style={{backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '14px'}}>{error}</div>}

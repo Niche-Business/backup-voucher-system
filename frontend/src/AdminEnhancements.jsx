@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // ============================================
 // 1. GLOBAL SEARCH COMPONENT
 // ============================================
 
 export function GlobalSearchTab({ apiCall }) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -197,6 +199,7 @@ export function GlobalSearchTab({ apiCall }) {
 // ============================================
 
 export function TransactionSearchTab({ apiCall }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState({
     shop_name: '',
     shop_id: '',
@@ -493,6 +496,7 @@ export function TransactionSearchTab({ apiCall }) {
 // ============================================
 
 export function BroadcastTab({ apiCall }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [audiences, setAudiences] = useState([]);
@@ -651,6 +655,7 @@ export function BroadcastTab({ apiCall }) {
 // ============================================
 
 export function FundAllocationTab({ apiCall, vcseOrgs, schools, loadVcseOrgs, loadSchools }) {
+  const { t } = useTranslation();
   const [organizationType, setOrganizationType] = useState('vcse');
   const [selectedOrg, setSelectedOrg] = useState('');
   const [amount, setAmount] = useState('');
