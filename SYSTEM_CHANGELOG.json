@@ -41,7 +41,35 @@
         "تم التحقق من العمل في النشر الإنتاجي"
       ],
       "impact_ar": "يوفر سجل التغييرات الآن تتبعًا دقيقًا للإصدارات، ويظهر متى تم تنفيذ كل ميزة فعليًا بدلاً من عرض إصدار النظام الحالي لجميع الإدخالات. يحسن هذا الشفافية ويسهل تتبع تطور الميزات عبر الإصدارات.",
-      "affectedComponents_ar": "frontend/src/App.jsx - مكون عرض سجل التغييرات (السطر 4258)"
+      "affectedComponents_ar": "frontend/src/App.jsx - مكون عرض سجل التغييرات (السطر 4258)",
+      "title_pl": "Naprawiono wyświetlanie wersji w Changelog, aby pokazywało wersje poszczególnych wpisów",
+      "description_pl": "Poprawiono błąd wyświetlania changelogu, w którym wszystkie wpisy pokazywały wersję systemu (1.0.6) zamiast ich indywidualnych wersji implementacji",
+      "details_pl": [
+        "Naprawiono linię 4258 w pliku App.jsx, aby używała change.version zamiast changelog.version",
+        "Każdy wpis w changelogu teraz wyświetla swoją rzeczywistą wersję implementacji",
+        "Wpis #33 wyświetla wersję v1.0.5 (najnowsza)",
+        "Wpisy #29-32 wyświetlają wersję v1.0.4",
+        "Wpisy #21-28 wyświetlają wersję v1.0.3",
+        "Wpisy #1-20 wyświetlają wersję v1.0.2",
+        "Zapewnia dokładną historię wersji do prezentacji dla interesariuszy",
+        "Zweryfikowano działanie w środowisku produkcyjnym"
+      ],
+      "impact_pl": "Changelog teraz zapewnia dokładne śledzenie wersji, pokazując, kiedy każda funkcja została faktycznie zaimplementowana, zamiast wyświetlać bieżącą wersję systemu dla wszystkich wpisów. Poprawia to przejrzystość i ułatwia śledzenie ewolucji funkcji w kolejnych wersjach.",
+      "affectedComponents_pl": "frontend/src/App.jsx - Komponent wyświetlający changelog (linia 4258)",
+      "title_ro": "Corectat afișarea versiunii în Changelog pentru a arăta versiunile individuale ale intrărilor",
+      "description_ro": "Corectată eroarea de afișare a changelog-ului unde toate intrările afișau versiunea sistemului (1.0.6) în loc de versiunile lor individuale de implementare",
+      "impact_ro": "Changelog-ul oferă acum o urmărire precisă a versiunilor, arătând când a fost implementată efectiv fiecare funcționalitate, în loc să afișeze versiunea curentă a sistemului pentru toate intrările. Aceasta îmbunătățește transparența și facilitează urmărirea evoluției funcționalităților între versiuni.",
+      "details_ro": [
+        "Fixat linia 4258 în App.jsx pentru a folosi change.version în loc de changelog.version",
+        "Fiecare intrare din changelog afișează acum versiunea sa reală de implementare",
+        "Intrarea #33 afișează v1.0.5 (ultima)",
+        "Intrările #29-32 afișează v1.0.4",
+        "Intrările #21-28 afișează v1.0.3",
+        "Intrările #1-20 afișează v1.0.2",
+        "Oferă o istorie precisă a versiunilor pentru prezentările către stakeholderi",
+        "Verificat funcționarea în implementarea de producție"
+      ],
+      "affectedComponents_ro": "frontend/src/App.jsx - componenta de afișare a changelog-ului (linia 4258)"
     },
     {
       "id": 33,
@@ -96,7 +124,43 @@
         "مسار تدقيق كامل للقبول والتحصيل"
       ],
       "impact_ar": "يمكن لمنظمات VCSE الآن قبول عناصر الطعام الفائض من البائعين وجدولة أوقات التحصيل وتنسيق توزيع الطعام للمستفيدين. يكمل طلب ميزة المستخدم رقم 7 بنسبة 100٪.",
-      "affectedComponents_ar": "frontend/src/App.jsx - VCSEDashboard (علامة تبويب جديدة + نافذة منبثقة), frontend/src/App.jsx - AdminDashboard (حالة القبول), backend/src/main.py - 3 نقاط نهاية API جديدة, backend/src/main.py - نموذج SurplusItem (4 حقول جديدة), backend/migrations/add_food_acceptance_fields.py"
+      "affectedComponents_ar": "frontend/src/App.jsx - VCSEDashboard (علامة تبويب جديدة + نافذة منبثقة), frontend/src/App.jsx - AdminDashboard (حالة القبول), backend/src/main.py - 3 نقاط نهاية API جديدة, backend/src/main.py - نموذج SurplusItem (4 حقول جديدة), backend/migrations/add_food_acceptance_fields.py",
+      "title_pl": "Workflow Akceptacji Nadwyżek Żywności VCSE Zakończony",
+      "description_pl": "Wdrożono kompletny workflow akceptacji VCSE dla nadwyżek żywności z harmonogramowaniem czasu odbioru, śledzeniem statusu oraz powiadomieniami w czasie rzeczywistym",
+      "details_pl": [
+        "Dodano nową zakładkę 'Surplus Food Collection' do panelu VCSE",
+        "VCSE może przeglądać wszystkie dostępne nadwyżki żywności od dostawców",
+        "Przycisk Accept pozwala VCSE na zgłaszanie przedmiotów do odbioru",
+        "Modal wyboru czasu odbioru dla planowania odbioru",
+        "Powiadomienia w czasie rzeczywistym do vendor po zaakceptowaniu itemu",
+        "VCSE może przeglądać zaakceptowane elementy wraz ze szczegółami kolekcji",
+        "Przycisk Mark as Collected do potwierdzenia odbioru",
+        "Panel administracyjny wyświetla status akceptacji oraz organizację VCSE",
+        "Dostawca otrzymuje powiadomienie, gdy przedmioty zostaną odebrane",
+        "Migracja bazy danych dodaje 4 nowe pola do tabeli surplus_item",
+        "Kompletny workflow statusu: available → accepted → collected",
+        "Pełny audyt ścieżki akceptacji i zbierania danych"
+      ],
+      "impact_pl": "Organizacje VCSE mogą teraz przyjmować nadwyżki żywności od dostawców, planować terminy odbioru oraz koordynować dystrybucję żywności do beneficjentów. Realizacja żądania funkcji użytkownika #7 została ukończona w 100%.",
+      "affectedComponents_pl": "frontend/src/App.jsx - VCSEDashboard (nowa karta + modal), frontend/src/App.jsx - AdminDashboard (status akceptacji), backend/src/main.py - 3 nowe API endpoints, backend/src/main.py - model SurplusItem (4 nowe pola), backend/migrations/add_food_acceptance_fields.py",
+      "title_ro": "Fluxul de lucru pentru acceptarea surplusului de alimente VCSE complet",
+      "description_ro": "Implementat fluxul complet de acceptare VCSE pentru articolele de surplus alimentar cu programarea orei de colectare, urmărirea stadiului și notificări în timp real",
+      "impact_ro": "Organizațiile VCSE pot acum accepta articole de surplus alimentar de la furnizori, pot programa orele de colectare și pot coordona distribuția alimentelor către beneficiari. Finalizează cererea de funcționalitate a utilizatorului #7 în proporție de 100%.",
+      "details_ro": [
+        "Adăugat noul tab 'Surplus Food Collection' în dashboard-ul VCSE",
+        "VCSE poate vizualiza toate articolele disponibile de surplus alimentar de la furnizori",
+        "Butonul Accept permite VCSE să revendice articole pentru colectare",
+        "Modal pentru alegerea orei de colectare pentru programarea ridicării",
+        "Notificări în timp real către furnizor când un articol este acceptat",
+        "VCSE poate vizualiza articolele acceptate cu detalii despre colectare",
+        "Butonul Mark as Collected pentru confirmarea ridicării",
+        "Dashboard-ul Admin afișează stadiul acceptării și organizația VCSE",
+        "Furnizorul primește notificare când articolele sunt colectate",
+        "Migrarea bazei de date adaugă 4 câmpuri noi în tabelul surplus_item",
+        "Flux complet al stadiilor: available → accepted → collected",
+        "Traseu complet de audit pentru acceptare și colectare"
+      ],
+      "affectedComponents_ro": "frontend/src/App.jsx - VCSEDashboard (tab nou + modal), frontend/src/App.jsx - AdminDashboard (stadiu acceptare), backend/src/main.py - 3 noi API endpoints, backend/src/main.py - model SurplusItem (4 câmpuri noi), backend/migrations/add_food_acceptance_fields.py"
     },
     {
       "id": 32,
@@ -134,7 +198,31 @@
         "سير عمل الاسترداد المكون من خطوتين يعمل الآن بالكامل"
       ],
       "impact_ar": "سير عمل استرداد القسيمة المكون من خطوتين متاح الآن في الإنتاج. يمكن للمستلمين الموافقة على طلبات الاسترداد أو رفضها، ويمكن لأصحاب المتاجر طلب استردادات جزئية.",
-      "affectedComponents_ar": "Database - جدول redemption_request, Database - 6 فهارس أداء"
+      "affectedComponents_ar": "Database - جدول redemption_request, Database - 6 فهارس أداء",
+      "title_pl": "Migracja bazy danych zakończona pomyślnie",
+      "description_pl": "Pomyślnie przeprowadzono migrację bazy danych w celu utworzenia tabeli redemption_request ze wszystkimi wymaganymi polami i indeksami.",
+      "details_pl": [
+        "Skrypt migracji został pomyślnie wykonany w środowisku produkcyjnym",
+        "Utworzono tabelę redemption_request z 11 kolumnami",
+        "Utworzono 6 indeksów dla optymalnej wydajności zapytań",
+        "Zweryfikowano, że struktura tabeli odpowiada modelowi SQLAlchemy",
+        "Wszystkie odwołania do kluczy obcych zostały zweryfikowane",
+        "Dwustopniowy proces realizacji teraz w pełni operacyjny"
+      ],
+      "impact_pl": "Dwustopniowy proces realizacji voucherów jest teraz dostępny w produkcji. Odbiorcy mogą zatwierdzać lub odrzucać prośby o realizację, a właściciele sklepów mogą zgłaszać częściowe realizacje.",
+      "affectedComponents_pl": "Baza danych - tabela redemption_request, Baza danych - 6 indeksów wydajnościowych",
+      "title_ro": "Migrarea bazei de date a fost finalizată cu succes",
+      "description_ro": "Migrarea bazei de date pentru crearea tabelului redemption_request cu toate câmpurile și indexurile necesare a fost realizată cu succes",
+      "impact_ro": "Fluxul de lucru în 2 pași pentru răscumpărarea voucherelor este acum activ în producție. Beneficiarii pot aproba/resping solicitările de răscumpărare, iar proprietarii magazinelor pot solicita răscumpărări parțiale.",
+      "details_ro": [
+        "Scriptul de migrare a fost executat cu succes în producție",
+        "Tabelul redemption_request a fost creat cu 11 coloane",
+        "Au fost create 6 indexuri pentru performanță optimă a interogărilor",
+        "Structura tabelului a fost verificată și corespunde modelului SQLAlchemy",
+        "Toate referințele cheilor externe au fost validate",
+        "Fluxul de lucru în 2 pași pentru răscumpărare este acum complet operațional"
+      ],
+      "affectedComponents_ro": "Database - tabelul redemption_request, Database - 6 indexuri de performanță"
     },
     {
       "id": 31,
@@ -171,7 +259,31 @@
         "يكتمل البناء الآن بنجاح بدون أخطاء"
       ],
       "impact_ar": "تم إصلاح عائق النشر الحرج. يمكن للنظام الآن النشر بنجاح إلى الإنتاج.",
-      "affectedComponents_ar": "frontend/src/App.jsx - مكون RecipientDashboard"
+      "affectedComponents_ar": "frontend/src/App.jsx - مكون RecipientDashboard",
+      "title_pl": "Naprawiono powielone deklaracje zmiennych powodujące błąd wdrożenia",
+      "description_pl": "Usunięto zduplikowane deklaracje zmiennych stanu w RecipientDashboard, które powodowały błąd kompilacji i uniemożliwiały wdrożenie",
+      "details_pl": [
+        "Usunięto zduplikowane deklaracje showMenuDropdown oraz showProfileModal",
+        "Zmienne zostały już zadeklarowane wcześniej w komponencie (linie 7676-7677)",
+        "Duplikaty deklaracji w liniach 7982-7983 spowodowały błąd 'symbol already declared'",
+        "Błąd kompilacji uniemożliwił pomyślne wdrożenie Render.",
+        "Naprawiono błąd składniowy, który blokował wdrożenie na produkcję",
+        "Kompilacja teraz kończy się pomyślnie bez błędów"
+      ],
+      "impact_pl": "Naprawiono krytyczny problem blokujący wdrożenie. System może teraz pomyślnie wdrożyć się do produkcji.",
+      "affectedComponents_pl": "frontend/src/App.jsx - komponent RecipientDashboard",
+      "title_ro": "Corectate declarațiile duplicate de variabile care cauzau eșecul implementării",
+      "description_ro": "Eliminate declarațiile duplicate ale variabilelor de stare în RecipientDashboard care cauzau eșecul build-ului și împiedicau implementarea",
+      "impact_ro": "Blocator critic de implementare rezolvat. Sistemul poate acum să implementeze cu succes în producție.",
+      "details_ro": [
+        "Eliminate declarațiile duplicate showMenuDropdown și showProfileModal",
+        "Variabilele erau deja declarate anterior în componentă (liniile 7676-7677)",
+        "Declarațiile duplicate de la liniile 7982-7983 au cauzat eroarea 'symbol already declared'",
+        "Eroarea de build a împiedicat succesul implementării Render",
+        "Corectată eroarea de sintaxă care bloca implementarea în producție",
+        "Build-ul se finalizează acum cu succes, fără erori"
+      ],
+      "affectedComponents_ro": "frontend/src/App.jsx - componenta RecipientDashboard"
     },
     {
       "id": 30,
@@ -212,7 +324,35 @@
         "تمت إضافة فهرس shop_id لتحسين الاستعلام"
       ],
       "impact_ar": "يتطابق نص الترحيل الآن مع مخطط قاعدة البيانات الفعلي. تم إصلاح خطأ 'العلاقة غير موجودة' الذي منع إنشاء الجدول.",
-      "affectedComponents_ar": "backend/migrations/add_redemption_requests_table.py"
+      "affectedComponents_ar": "backend/migrations/add_redemption_requests_table.py",
+      "title_pl": "Naprawiono odwołania do nazw tabel w skrypcie migracji bazy danych",
+      "description_pl": "Poprawiono odniesienia do nazw tabel w skrypcie migracyjnym, aby odpowiadały definicjom modeli SQLAlchemy oraz schematowi PostgreSQL",
+      "details_pl": [
+        "Zmieniono nazwę tabeli z 'redemption_requests' (liczba mnoga) na 'redemption_request' (liczba pojedyncza)",
+        "Naprawiono odwołanie klucza obcego z 'vouchers(id)' na 'voucher(id)' (liczba pojedyncza)",
+        "Naprawiono odwołanie klucza obcego z 'users(id)' na '\"user\"(id)' (liczba pojedyncza z cudzysłowami dla zarezerwowanego słowa)",
+        "Dodano brakujące pole 'shop_id', które istnieje w modelu RedemptionRequest",
+        "Dodano brakujące pole 'expires_at' dla funkcji automatycznego wygasania",
+        "Zaktualizowano wszystkie nazwy indeksów, aby odpowiadały nazwie tabeli w liczbie pojedynczej",
+        "Naprawiono błąd składniowy (nadmiarowy nawias w instrukcji print)",
+        "Dodano indeks shop_id w celu optymalizacji zapytań"
+      ],
+      "impact_pl": "Skrypt migracji jest teraz zgodny z aktualnym schematem bazy danych. Naprawiono błąd „relation does not exist”, który uniemożliwiał tworzenie tabeli.",
+      "affectedComponents_pl": "backend/migrations/add_redemption_requests_table.py",
+      "title_ro": "Script de migrare a bazei de date: corectarea referințelor la numele tabelelor",
+      "description_ro": "Corectate referințele la numele tabelelor în scriptul de migrare pentru a corespunde definițiilor modelelor SQLAlchemy și schemei PostgreSQL",
+      "impact_ro": "Scriptul de migrare corespunde acum schemei reale a bazei de date. Corectată eroarea 'relation does not exist' care împiedica crearea tabelului.",
+      "details_ro": [
+        "Numele tabelului schimbat din 'redemption_requests' (plural) în 'redemption_request' (singular)",
+        "Corectată referința cheii externe de la 'vouchers(id)' la 'voucher(id)' (singular)",
+        "Corectată referința cheii externe de la 'users(id)' la '\"user\"(id)' (singular cu ghilimele pentru cuvânt rezervat)",
+        "Adăugat câmpul lipsă 'shop_id' care există în modelul RedemptionRequest",
+        "Adăugat câmpul lipsă 'expires_at' pentru funcționalitatea de expirare automată",
+        "Actualizate toate numele indexurilor pentru a corespunde numelui tabelului la singular",
+        "Corectată eroarea de sintaxă (paranteză suplimentară în instrucțiunea print)",
+        "Adăugat index pentru shop_id pentru optimizarea interogărilor"
+      ],
+      "affectedComponents_ro": "backend/migrations/add_redemption_requests_table.py"
     },
     {
       "id": 29,
@@ -253,7 +393,70 @@
       ],
       "breakingChange": true,
       "migrationRequired": true,
-      "version": "1.0.4"
+      "version": "1.0.4",
+      "title_ar": "سير عمل استرداد القسيمة بخطوتين مع موافقة المستلم",
+      "description_ar": "إعادة تصميم كاملة لنظام استرداد القسائم بناءً على ملاحظات المستخدمين الهامة - يمكن لأصحاب المتاجر الآن طلب استردادات جزئية، ويجب على المستلمين الموافقة على كل طلب استرداد في الوقت الفعلي",
+      "details_ar": [
+        "تمت إضافة نموذج قاعدة بيانات RedemptionRequest لتتبع طلبات الاسترداد المعلقة",
+        "يمكن لأصحاب المتاجر الآن إدخال مبلغ استرداد مخصص (دعم الاسترداد الجزئي)",
+        "تم تعديل نقطة النهاية /vendor/redeem-voucher لإنشاء طلبات معلقة بدلاً من الاسترداد الفوري",
+        "تمت إضافة نقطة النهاية /api/recipient/redemption-requests لجلب الطلبات المعلقة",
+        "تمت إضافة نقطة النهاية /api/recipient/redemption-requests/<id>/respond لإجراءات الموافقة/الرفض",
+        "تم تنفيذ حدث Socket.IO في الوقت الحقيقي 'redemption_request' لإخطار المستلمين فورًا",
+        "تم إنشاء نافذة موافقة استرداد جميلة في RecipientDashboard تحتوي على تفاصيل المتجر، المبلغ، ومعلومات الرصيد",
+        "تمت إضافة أزرار approve/reject مع حقل إدخال السبب لعمليات الرفض",
+        "تمت إضافة مؤقت انتهاء تلقائي (5 دقائق) للطلبات المعلقة",
+        "يمكن للمستلمين رؤية الوقت المتبقي لكل طلب",
+        "يتلقى البائع إشعارًا في الوقت الفعلي عندما يوافق المستلم أو يرفض",
+        "تم تحديث رسالة النجاح في VendorDashboard لتشير إلى \"تم إرسال الطلب\" بدلاً من \"تم الاسترداد\"",
+        "تمت إضافة عداد طلبات الاسترداد المعلقة في RecipientDashboard",
+        "تم تنفيذ نظام قائمة انتظار لطلبات الاسترداد المتعددة المتزامنة",
+        "تمت إضافة سكريبت ترحيل قاعدة البيانات لجدول RedemptionRequest"
+      ],
+      "impact_ar": "تم معالجة ملاحظات المستخدمين الحرجة: (1) يمكن لأصحاب المتاجر الآن استرداد مبلغ الشراء الفعلي فقط بدلاً من قيمة القسيمة الكاملة، (2) يمتلك المستلمون السيطرة الكاملة ويجب عليهم الموافقة على كل عملية استرداد، (3) يمنع الاستردادات غير المصرح بها للقسائم الكاملة. هذا يغير بشكل جذري سير عمل الاسترداد ليكون مركزًا حول المستلم وآمنًا.",
+      "affectedComponents_ar": "backend/models.py - تم إضافة نموذج RedemptionRequest  \nbackend/app.py - تم تعديل نقاط نهاية redemption وإضافة نقاط نهاية approval  \nfrontend/src/App.jsx - واجهة مستخدم الموافقة على redemption في RecipientDashboard  \nfrontend/src/App.jsx - إدخال المبلغ الجزئي في VendorDashboard  \nSocket.IO - تم إضافة أحداث redemption_request و redemption_response",
+      "title_pl": "Dwustopniowy proces realizacji vouchera z zatwierdzeniem odbiorcy",
+      "description_pl": "Całkowity redesign systemu voucher redemption oparty na kluczowych opiniach użytkowników – właściciele sklepów mogą teraz żądać częściowych realizacji, a odbiorcy muszą zatwierdzać każde żądanie realizacji w czasie rzeczywistym.",
+      "details_pl": [
+        "Dodano model bazy danych RedemptionRequest do śledzenia oczekujących żądań realizacji",
+        "Właściciele sklepów mogą teraz wprowadzać niestandardową kwotę realizacji (obsługa częściowej realizacji)",
+        "Zmodyfikowano endpoint /vendor/redeem-voucher, aby tworzył żądania oczekujące zamiast natychmiastowego realizowania voucherów",
+        "Dodano endpoint /api/recipient/redemption-requests do pobierania oczekujących żądań",
+        "Dodano endpoint /api/recipient/redemption-requests/<id>/respond do akcji zatwierdzania/odrzucania",
+        "Wdrożono zdarzenie Socket.IO w czasie rzeczywistym 'redemption_request' do natychmiastowego powiadamiania odbiorców",
+        "Utworzono estetyczne okno modalne zatwierdzania realizacji w RecipientDashboard z danymi sklepu, kwotą oraz informacjami o saldzie",
+        "Dodano przyciski approve/reject z polem na podanie powodu odrzucenia",
+        "Dodano automatyczny timer wygasania (5 minut) dla oczekujących żądań",
+        "Odbiorcy mogą zobaczyć pozostały czas dla każdego żądania",
+        "Dostawca otrzymuje powiadomienie w czasie rzeczywistym, gdy odbiorca zatwierdzi lub odrzuci",
+        "Zaktualizowano komunikat sukcesu w VendorDashboard, aby wskazywał \"request sent\" zamiast \"redeemed\"",
+        "Dodano licznik oczekujących żądań realizacji w RecipientDashboard",
+        "Wdrożono system kolejkowania dla wielu jednoczesnych żądań realizacji",
+        "Dodano skrypt migracji bazy danych dla tabeli RedemptionRequest"
+      ],
+      "impact_pl": "KRYTYCZNE OPINIE UŻYTKOWNIKÓW ROZWIĄZANE: (1) Właściciele sklepów mogą teraz realizować tylko rzeczywistą kwotę zakupu zamiast pełnej wartości vouchera, (2) Odbiorcy mają pełną kontrolę i muszą zatwierdzić każdą realizację, (3) Zapobiega nieautoryzowanym realizacjom pełnych voucherów. To zasadniczo zmienia proces realizacji na odbiorcę zorientowany i bezpieczny.",
+      "affectedComponents_pl": "backend/models.py - Dodano model RedemptionRequest, backend/app.py - Zmodyfikowano redemption endpoints i dodano approval endpoints, frontend/src/App.jsx - UI zatwierdzania redemption w RecipientDashboard, frontend/src/App.jsx - Częściowe wprowadzanie kwoty w VendorDashboard, Socket.IO - Dodano zdarzenia redemption_request i redemption_response",
+      "title_ro": "Flux de lucru în 2 pași pentru răscumpărarea voucherelor cu aprobare de la destinatar",
+      "description_ro": "Redesign complet al sistemului de răscumpărare a voucherelor bazat pe feedback critic de la utilizatori - proprietarii de magazine pot acum solicita răscumpărări parțiale, iar destinatarii trebuie să aprobe fiecare cerere de răscumpărare în timp real",
+      "impact_ro": "FEEDBACK CRITIC DE LA UTILIZATORI ADRESAT: (1) Proprietarii de magazine pot răscumpăra acum doar suma efectivă a achiziției în loc de întregul voucher, (2) Destinatarii au control total și trebuie să aprobe fiecare răscumpărare, (3) Previne răscumpărările neautorizate ale întregului voucher. Aceasta schimbă fundamental fluxul de lucru al răscumpărării pentru a fi centrat pe destinatar și sigur.",
+      "details_ro": [
+        "Adăugat modelul de bază de date RedemptionRequest pentru a urmări cererile de răscumpărare în așteptare",
+        "Proprietarii de magazine pot introduce acum suma personalizată pentru răscumpărare (suport pentru răscumpărare parțială)",
+        "Modificat endpoint-ul /vendor/redeem-voucher pentru a crea cereri în așteptare în loc de răscumpărare imediată",
+        "Adăugat endpoint-ul /api/recipient/redemption-requests pentru a prelua cererile în așteptare",
+        "Adăugat endpoint-ul /api/recipient/redemption-requests/<id>/respond pentru acțiuni de aprobare/respingere",
+        "Implementat evenimentul în timp real Socket.IO 'redemption_request' pentru a notifica destinatarii instantaneu",
+        "Creat modal frumos pentru aprobarea răscumpărării în RecipientDashboard cu detalii despre magazin, sumă și informații despre sold",
+        "Adăugate butoane de aprobare/respingere cu câmp pentru motiv în cazul respingerilor",
+        "Adăugat temporizator de expirare automată (5 minute) pentru cererile în așteptare",
+        "Destinatarii pot vedea timpul rămas pentru fiecare cerere",
+        "Vendorul primește notificare în timp real când destinatarul aprobă/respinge",
+        "Actualizat mesajul de succes din VendorDashboard pentru a indica 'cerere trimisă' în loc de 'răscumpărat'",
+        "Adăugat contor pentru cererile de răscumpărare în așteptare în RecipientDashboard",
+        "Implementat sistem de coadă pentru cereri multiple simultane de răscumpărare",
+        "Adăugat script de migrare a bazei de date pentru tabela RedemptionRequest"
+      ],
+      "affectedComponents_ro": "backend/models.py - Adăugat modelul RedemptionRequest, backend/app.py - Modificat endpoint-urile de răscumpărare și adăugat endpoint-urile de aprobare, frontend/src/App.jsx - UI pentru aprobarea răscumpărării în RecipientDashboard, frontend/src/App.jsx - Input pentru suma parțială în VendorDashboard, Socket.IO - Adăugate evenimentele redemption_request și redemption_response"
     },
     {
       "id": 28,
@@ -281,7 +484,46 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "تم إصلاح ترجمة رسائل Alert و Prompt",
+      "description_ar": "تم إصلاح رسائل التنبيه والإشعارات المكتوبة باللغة الإنجليزية بشكل ثابت لاستخدام مفاتيح الترجمة، مما يضمن عرضها بلغة المستخدم المختارة",
+      "details_ar": [
+        "تمت إضافة 15 مفتاح ترجمة جديد لرسائل التنبيه (إشعارات النجاح/الخطأ)",
+        "تمت إضافة مفتاحي ترجمة جديدين لرسائل prompt (ملاحظات المسؤول، سبب الرفض)",
+        "تم استبدال جميع استدعاءات alert() المكتوبة باللغة الإنجليزية بشكل ثابت بمفاتيح الترجمة t('alerts.*')",
+        "تم استبدال جميع استدعاءات prompt() المكتوبة باللغة الإنجليزية بشكل ثابت بمفاتيح الترجمة t('prompts.*')",
+        "تمت إضافة الترجمات العربية لجميع رسائل التنبيه والمطالبات",
+        "التنبيهات الآن تعرض: 'تم تحديث المدرسة بنجاح' بدلاً من 'School updated successfully' باللغة العربية",
+        "تعرض Prompts الآن: 'ملاحظات المسؤول (اختياري):' بدلاً من 'Admin notes (optional):' باللغة العربية"
+      ],
+      "impact_ar": "جميع إشعارات النظام والتنبيهات الآن تُعرض باللغة التي يختارها المستخدم. لم تعد هناك رسائل تنبيه باللغة الإنجليزية فقط عند استخدام اللغة العربية أو البولندية أو الرومانية.",
+      "affectedComponents_ar": "App.jsx - جميع استدعاءات alert() و prompt()، en.json - تمت إضافة أقسام التنبيهات والتنبيهات التفاعلية، ar.json - تمت إضافة أقسام التنبيهات والتنبيهات التفاعلية",
+      "title_pl": "Naprawiono tłumaczenie komunikatów Alert i Prompt",
+      "description_pl": "Naprawiono twardo zakodowane angielskie komunikaty alert i prompt, aby używały kluczy tłumaczeń, zapewniając wyświetlanie w wybranym przez użytkownika języku",
+      "details_pl": [
+        "Dodano 15 nowych kluczy tłumaczeń dla komunikatów alertów (powiadomienia o sukcesie/błędzie)",
+        "Dodano 2 nowe klucze tłumaczeń dla komunikatów prompt (admin notes, rejection reason)",
+        "Zamieniono wszystkie na stałe zakodowane wywołania alert() w języku angielskim na klucze tłumaczeń t('alerts.*')",
+        "Zamieniono wszystkie na stałe zakodowane wywołania prompt() w języku angielskim na klucze tłumaczeń t('prompts.*')",
+        "Dodano tłumaczenia na arabski dla wszystkich komunikatów alert i prompt",
+        "Alerty teraz wyświetlają: 'تم تحديث المدرسة بنجاح' zamiast 'School updated successfully' w języku arabskim",
+        "Podpowiedzi teraz wyświetlają: 'ملاحظات المسؤول (اختياري):' zamiast 'Admin notes (optional):' w języku arabskim"
+      ],
+      "impact_pl": "Wszystkie powiadomienia systemowe i komunikaty wyświetlają się teraz w wybranym przez użytkownika języku. Koniec z komunikatami ostrzegawczymi wyłącznie w języku angielskim podczas korzystania z języka arabskiego, polskiego czy rumuńskiego.",
+      "affectedComponents_pl": "App.jsx - Wszystkie wywołania alert() i prompt(), en.json - Dodano sekcje alerts i prompts, ar.json - Dodano sekcje alerts i prompts",
+      "title_ro": "Mesaje de alertă și prompt fixate pentru traducere",
+      "description_ro": "Mesaje de alertă și prompt în limba engleză hardcodate fixate pentru a folosi chei de traducere, asigurând afișarea în limba selectată de utilizator",
+      "impact_ro": "Toate notificările și prompturile sistemului se afișează acum în limba selectată de utilizator. Nu mai există mesaje de alertă doar în engleză când se folosește araba, poloneza sau româna.",
+      "details_ro": [
+        "Adăugate 15 chei noi de traducere pentru mesaje de alertă (notificări de succes/eroare)",
+        "Adăugate 2 chei noi de traducere pentru mesaje de prompt (note admin, motivul respingerii)",
+        "Înlocuite toate apelurile hardcodate în engleză alert() cu chei de traducere t('alerts.*')",
+        "Înlocuite toate apelurile hardcodate în engleză prompt() cu chei de traducere t('prompts.*')",
+        "Adăugate traduceri în arabă pentru toate mesajele de alertă și prompt",
+        "Alerta afișează acum: 'تم تحديث المدرسة بنجاح' în loc de 'School updated successfully' în arabă",
+        "Promptul afișează acum: 'ملاحظات المسؤول (اختياري):' în loc de 'Admin notes (optional):' în arabă"
+      ],
+      "affectedComponents_ro": "App.jsx - Toate apelurile alert() și prompt(), en.json - Secțiuni adăugate pentru alerts și prompts, ar.json - Secțiuni adăugate pentru alerts și prompts"
     },
     {
       "id": 27,
@@ -309,7 +551,46 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "الاحتفاظ باللغة وإعادة التحميل التلقائي عند تغيير اللغة",
+      "description_ar": "تم إصلاح استمرار تفضيل اللغة وإضافة إعادة تحميل الصفحة تلقائيًا عند تغيير المستخدمين للغة لضمان عرض جميع تسميات البيانات باللغة المختارة",
+      "details_ar": [
+        "تفضيل اللغة مخزن بالفعل في localStorage عبر i18next-browser-languagedetector",
+        "تمت إضافة window.location.reload() عند تغيير اللغة لتحديث جميع البيانات مع الترجمات الجديدة",
+        "تم تحديث محدد اللغة في AdminDashboard لإعادة تحميل الصفحة عند التغيير",
+        "تم تحديث محدد اللغة في SchoolDashboard لإعادة تحميل الصفحة عند التغيير",
+        "يضمن عرض جميع تسميات محتوى قاعدة البيانات (Address, Phone, Email، إلخ) باللغة المختارة",
+        "يتم الآن حفظ اختيار اللغة عبر جلسات المتصفح المتعددة",
+        "يرى المستخدمون تحديثات الترجمة الفورية عند التبديل بين اللغات"
+      ],
+      "impact_ar": "يمكن للمستخدمين الآن تبديل اللغات ورؤية جميع تسميات واجهة المستخدم وتسميات البيانات مترجمة على الفور. يتم حفظ تفضيل اللغة وتطبيقه تلقائيًا عند الزيارة التالية.",
+      "affectedComponents_ar": "App.jsx - محدد اللغة في AdminDashboard، App.jsx - محدد اللغة في SchoolDashboard، i18n.js - تكوين اكتشاف اللغة",
+      "title_pl": "Utrzymanie Wybranego Języka i Automatyczne Przeładowanie przy Zmianie Języka",
+      "description_pl": "Naprawiono zachowanie preferencji językowej oraz dodano automatyczne przeładowanie strony po zmianie języka przez użytkowników, aby zapewnić wyświetlanie wszystkich etykiet danych w wybranym języku.",
+      "details_pl": [
+        "Preferencje językowe już zapisane w localStorage za pomocą i18next-browser-languagedetector",
+        "Dodano window.location.reload() przy zmianie języka, aby odświeżyć wszystkie dane z nowymi tłumaczeniami.",
+        "Zaktualizowano selektor języka w AdminDashboard, aby przeładowywał stronę po zmianie",
+        "Zaktualizowano selektor języka w SchoolDashboard, aby przeładowywał stronę po zmianie",
+        "Zapewnia wyświetlanie wszystkich etykiet zawartości bazy danych (Address, Phone, Email itp.) w wybranym języku",
+        "Wybór języka jest teraz zapamiętywany między sesjami przeglądarki",
+        "Użytkownicy widzą natychmiastowe aktualizacje tłumaczeń podczas zmiany języków"
+      ],
+      "impact_pl": "Użytkownicy mogą teraz zmieniać języki i od razu zobaczyć wszystkie etykiety UI oraz etykiety danych przetłumaczone. Preferencje językowe są zapisywane i automatycznie stosowane przy kolejnej wizycie.",
+      "affectedComponents_pl": "App.jsx - selektor języka w AdminDashboard, App.jsx - selektor języka w SchoolDashboard, i18n.js - konfiguracja wykrywania języka",
+      "title_ro": "Persistența limbii și reîncărcarea automată la schimbarea limbii",
+      "description_ro": "S-a remediat persistența preferinței limbii și s-a adăugat reîncărcarea automată a paginii când utilizatorii schimbă limba pentru a asigura afișarea tuturor etichetelor de date în limba selectată",
+      "impact_ro": "Utilizatorii pot acum să schimbe limbile și să vadă imediat toate etichetele UI și etichetele de date traduse. Preferința limbii este salvată și aplicată automat la următoarea vizită.",
+      "details_ro": [
+        "Preferința limbii este deja stocată în localStorage prin i18next-browser-languagedetector",
+        "S-a adăugat window.location.reload() când limba se schimbă pentru a reîmprospăta toate datele cu noile traduceri",
+        "Selectorul de limbă din AdminDashboard a fost actualizat pentru a reîncărca pagina la schimbare",
+        "Selectorul de limbă din SchoolDashboard a fost actualizat pentru a reîncărca pagina la schimbare",
+        "Asigură afișarea tuturor etichetelor de conținut din baza de date (Address, Phone, Email etc.) în limba selectată",
+        "Selecția limbii persistă acum între sesiunile browserului",
+        "Utilizatorii văd actualizările de traducere imediat când schimbă limbile"
+      ],
+      "affectedComponents_ro": "App.jsx - AdminDashboard language selector, App.jsx - SchoolDashboard language selector, i18n.js - Language detection configuration"
     },
     {
       "id": 26,
@@ -338,7 +619,49 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "لوحة تحليلات Analytics Dashboard تغطي i18n بشكل كامل",
+      "description_ar": "تمت ترجمة جميع عناصر لوحة تحكم التحليلات بما في ذلك المقاييس والإحصائيات وتسميات المخططات لدعم تجربة متعددة اللغات كاملة",
+      "details_ar": [
+        "تمت إضافة مفاتيح الترجمة: systemAnalyticsDashboard، systemOverview، marketplaceStatistics، redemptionRate، activeVouchers، totalVouchers، totalUsers، redeemed، totalValue",
+        "Translated dashboard title: System Analytics Dashboard → لوحة تحليلات النظام",
+        "بطاقات المقاييس المترجمة: Total Users، Total Vouchers، Active Vouchers، Redemption Rate",
+        "نظرة عامة على النظام المترجم: Recipients، Vendors، Schools، VCFSE Organizations",
+        "إحصائيات السوق المترجمة: Active Shops، Total Items، Available Items، Claimed Items",
+        "تمت ترجمة زر Refresh وجميع تسميات البيانات",
+        "تمت إضافة الترجمات العربية لجميع مصطلحات analytics",
+        "تم ضمان الترجمة المتسقة عبر English و Arabic و Polish و Romanian"
+      ],
+      "impact_ar": "لوحة تحليلات Analytics تدعم الآن العرض متعدد اللغات بشكل كامل. يمكن للمتحدثين بالعربية، البولندية، والرومانية عرض جميع إحصائيات النظام ومقاييسه بلغتهم.",
+      "affectedComponents_ar": "AnalyticsDashboard.jsx، locales/en.json، locales/ar.json",
+      "title_pl": "Kompleksowe wsparcie i18n dla Analytics Dashboard",
+      "description_pl": "Przetłumaczono wszystkie elementy panelu analitycznego, w tym metryki, statystyki oraz etykiety wykresów, aby zapewnić pełne wsparcie dla doświadczenia wielojęzycznego.",
+      "details_pl": [
+        "Dodano klucze tłumaczeń: systemAnalyticsDashboard, systemOverview, marketplaceStatistics, redemptionRate, activeVouchers, totalVouchers, totalUsers, redeemed, totalValue",
+        "Przetłumaczony tytuł dashboardu: System Analytics Dashboard → لوحة تحليلات النظام",
+        "Przetłumaczone karty metryk: Total Users, Total Vouchers, Active Vouchers, Redemption Rate",
+        "Przetłumaczona sekcja Przegląd systemu: Recipients, Vendors, Schools, VCFSE Organizations",
+        "Przetłumaczone statystyki Marketplace: Active Shops, Total Items, Available Items, Claimed Items",
+        "Przetłumaczono przycisk Refresh oraz wszystkie etykiety danych",
+        "Dodano tłumaczenia na język arabski dla wszystkich terminów związanych z analytics",
+        "Zapewniono spójną translację w językach English, Arabic, Polish oraz Romanian"
+      ],
+      "impact_pl": "Panel analityczny w pełni obsługuje teraz wyświetlanie wielojęzyczne. Użytkownicy mówiący po arabsku, polsku i rumuńsku mogą przeglądać wszystkie statystyki i metryki systemu w swoim języku.",
+      "affectedComponents_pl": "AnalyticsDashboard.jsx, locales/en.json, locales/ar.json",
+      "title_ro": "Acoperire completă i18n pentru Analytics Dashboard",
+      "description_ro": "Au fost traduse toate elementele din analytics dashboard, inclusiv metrici, statistici și etichetele graficelor pentru a susține o experiență complet multilingvă",
+      "impact_ro": "Analytics dashboard suportă acum afișarea complet multilingvă. Vorbitorii de arabă, poloneză și română pot vizualiza toate statisticile și metricile sistemului în limba lor.",
+      "details_ro": [
+        "Chei de traducere adăugate: systemAnalyticsDashboard, systemOverview, marketplaceStatistics, redemptionRate, activeVouchers, totalVouchers, totalUsers, redeemed, totalValue",
+        "Titlul dashboard-ului tradus: System Analytics Dashboard → لوحة تحليلات النظام",
+        "Cardurile de metrici traduse: Total Users, Total Vouchers, Active Vouchers, Redemption Rate",
+        "Secțiunea System Overview tradusă: Recipients, Vendors, Schools, VCFSE Organizations",
+        "Marketplace Statistics traduse: Active Shops, Total Items, Available Items, Claimed Items",
+        "Butonul Refresh și toate etichetele de date traduse",
+        "Traduceri în arabă adăugate pentru toți termenii de analytics",
+        "S-a asigurat traducerea consistentă în engleză, arabă, poloneză și română"
+      ],
+      "affectedComponents_ro": "AnalyticsDashboard.jsx, locales/en.json, locales/ar.json"
     },
     {
       "id": 25,
@@ -371,7 +694,49 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "تغطية شاملة لـ i18n لعناصر واجهة المستخدم الخاصة بالبيانات",
+      "description_ar": "تم تطبيق الترجمات على جميع عناصر واجهة المستخدم المتعلقة بالبيانات بما في ذلك رؤوس الجداول، تسميات النماذج، تسميات الحالة، وأزرار الإجراءات عبر جميع لوحات المعلومات",
+      "details_ar": [
+        "تمت إضافة مفاتيح الترجمة: address, phone, shopOwner, foodToGoItems, view, actions, status, name, organization, date, amount, description, category, quantity, price, total",
+        "تم تحديث بطاقات المتجر/البائع لاستخدام t() لجميع التسميات (Address, Phone, Email, Shop Owner, Food to Go Items)",
+        "تم تحديث بطاقات المدارس/المنظمات لاستخدام t() لجميع التسميات",
+        "تم تحديث تسميات النماذج في نوافذ التعديل لاستخدام الترجمات",
+        "تم تحديث تسميات عرض payout و voucher",
+        "تم تطبيق الترجمات على جميع أزرار Edit و Delete",
+        "تمت إضافة الترجمات العربية: العنوان, الهاتف, صاحب المتجر, عناصر الطعام للذهاب",
+        "تم ضمان تغطية ترجمة متسقة عبر English و Arabic و Polish و Romanian"
+      ],
+      "impact_ar": "المتحدثون بالعربية والبولندية والرومانية يرون الآن عروض البيانات والنماذج مترجمة بالكامل، وليس فقط التنقل. هذا يوفر تجربة محلية حقيقية للمستخدمين غير الناطقين بالإنجليزية.",
+      "affectedComponents_ar": "App.jsx - بطاقات متجر AdminDashboard، App.jsx - بطاقات مدرسة AdminDashboard، App.jsx - نماذج التعديل، App.jsx - عروض بيانات VCSEDashboard، App.jsx - عروض مدفوعات VendorDashboard، locales/en.json، locales/ar.json",
+      "title_pl": "Kompleksowe wsparcie i18n dla elementów UI danych",
+      "description_pl": "Zastosowano tłumaczenia do wszystkich elementów UI związanych z danymi, w tym nagłówków tabel, etykiet formularzy, etykiet statusu oraz przycisków akcji we wszystkich dashboardach.",
+      "details_pl": [
+        "Dodano klucze tłumaczeń: address, phone, shopOwner, foodToGoItems, view, actions, status, name, organization, date, amount, description, category, quantity, price, total",
+        "Zaktualizowano karty shop/vendor, aby używały t() dla wszystkich etykiet (Address, Phone, Email, Shop Owner, Food to Go Items)",
+        "Zaktualizowano karty szkoły/organizacji, aby używały t() dla wszystkich etykiet",
+        "Zaktualizowano etykiety formularzy w oknach edycji, aby korzystały z tłumaczeń",
+        "Zaktualizowano etykiety wyświetlania payout i voucher",
+        "Zastosowano tłumaczenia do wszystkich przycisków Edit i Delete",
+        "Dodano tłumaczenia na arabski: العنوان, الهاتف, صاحب المتجر, عناصر الطعام للذهاب",
+        "Zapewniono spójne pokrycie tłumaczeń w językach English, Arabic, Polish oraz Romanian"
+      ],
+      "impact_pl": "Użytkownicy mówiący po arabsku, polsku i rumuńsku widzą teraz w pełni przetłumaczone wyświetlacze danych i formularze, a nie tylko nawigację. Zapewnia to prawdziwie zlokalizowane doświadczenie dla użytkowników nieanglojęzycznych.",
+      "affectedComponents_pl": "App.jsx - AdminDashboard Shop Cards, App.jsx - AdminDashboard School Cards, App.jsx - Edit Forms, App.jsx - VCSEDashboard Data Displays, App.jsx - VendorDashboard Payout Displays, locales/en.json, locales/ar.json",
+      "title_ro": "Acoperire i18n cuprinzătoare pentru elementele UI de date",
+      "description_ro": "S-au aplicat traduceri pentru toate elementele UI legate de date, inclusiv antetele tabelelor, etichetele formularelor, etichetele de stare și butoanele de acțiune pe toate dashboard-urile",
+      "impact_ro": "Vorbititorii de arabă, poloneză și română văd acum afișaje și formulare de date complet traduse, nu doar navigarea. Aceasta oferă o experiență cu adevărat localizată pentru utilizatorii non-englezi.",
+      "details_ro": [
+        "Chei de traducere adăugate: address, phone, shopOwner, foodToGoItems, view, actions, status, name, organization, date, amount, description, category, quantity, price, total",
+        "Cardurile shop/vendor actualizate pentru a folosi t() pentru toate etichetele (Address, Phone, Email, Shop Owner, Food to Go Items)",
+        "Cardurile school/organization actualizate pentru a folosi t() pentru toate etichetele",
+        "Etichetele formularelor din modalele de editare actualizate pentru a folosi traduceri",
+        "Etichetele de afișare pentru payout și voucher actualizate",
+        "S-au aplicat traduceri pentru toate butoanele Edit și Delete",
+        "Traduceri arabe adăugate: العنوان, الهاتف, صاحب المتجر, عناصر الطعام للذهاب",
+        "S-a asigurat o acoperire consistentă a traducerilor pentru engleză, arabă, poloneză și română"
+      ],
+      "affectedComponents_ro": "App.jsx - AdminDashboard Shop Cards, App.jsx - AdminDashboard School Cards, App.jsx - Edit Forms, App.jsx - VCSEDashboard Data Displays, App.jsx - VendorDashboard Payout Displays, locales/en.json, locales/ar.json"
     },
     {
       "id": 24,
@@ -401,7 +766,58 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "نموذج تسجيل متعدد الخطوات بتصميم حديث",
+      "description_ar": "تم تحويل صفحة التسجيل إلى نموذج متعدد الخطوات مكون من 3 خطوات بتصميم جميل مع تدرج لوني أخضر لضمان توحيد العلامة التجارية",
+      "details_ar": [
+        "تم استبدال النموذج الطويل في صفحة واحدة بساحر من 3 خطوات: Account Type، Personal Info، Address Details",
+        "تمت إضافة مؤشرات خطوات بصرية مع أيقونات وتتبع التقدم",
+        "تم تنفيذ أزرار التنقل Previous/Next لتحسين تجربة المستخدم (UX)",
+        "تم تطبيق سمة التدرج الأخضر (linear-gradient(135deg, #4CAF50 0%, #45a049 100%)) لضمان اتساق العلامة التجارية",
+        "تم إزالة رمز التذكرة (ticket emoji)، واستبداله بعلامة نصية 'BAK UP'",
+        "تم إنشاء تصميم الشاشة المقسمة مع العلامة التجارية والإحصائيات على الجانب الأيسر",
+        "تمت إضافة التحقق خطوة بخطوة لاكتشاف الأخطاء مبكرًا",
+        "تم تحسين حقول الإدخال بتأثيرات التركيز وتصميم عصري",
+        "تحسين تخطيط النموذج مع تباعد وطباعة أفضل",
+        "تمت إضافة انتقالات سلسة ورسوم متحركة عند التمرير بالماوس",
+        "تصميم Responsive يتكيف مع شاشات الهواتف المحمولة وأجهزة الكمبيوتر المكتبية"
+      ],
+      "impact_ar": "تحسين كبير في تجربة التسجيل - أقل إرباكًا، أكثر سهولة في الاستخدام، وجذاب بصريًا مع توحيد العلامة التجارية باللون الأخضر. يقلل من ترك النماذج ويزيد من التسجيلات الناجحة.",
+      "affectedComponents_ar": "App.jsx - مكون RegisterPage",
+      "title_pl": "Wieloetapowy formularz rejestracyjny z nowoczesnym designem",
+      "description_pl": "Przekształcono stronę rejestracji w piękny, 3-etapowy formularz multi-stepper z zielonym gradientem dla spójności marki",
+      "impact_pl": "Znacząco poprawiono doświadczenie rejestracji – mniej przytłaczające, bardziej intuicyjne i wizualnie atrakcyjne z jednolitym zielonym brandingiem. Zmniejsza porzucanie formularza i zwiększa liczbę pomyślnych rejestracji.",
+      "details_pl": [
+        "Zastąpiono długi formularz jednokartkowy 3-etapowym kreatorem: Account Type, Personal Info, Address Details",
+        "Dodano wizualne wskaźniki kroków z ikonami i śledzeniem postępu",
+        "Wdrożono przyciski Previous/Next dla lepszego UX",
+        "Zastosowano zielony gradient (linear-gradient(135deg, #4CAF50 0%, #45a049 100%)) dla spójności marki",
+        "Usunięto emoji biletu, zastąpiono tekstem brandingowym 'BAK UP'",
+        "Stworzono projekt split-screen z brandingiem/statystykami po lewej stronie",
+        "Dodano walidację krok po kroku, aby wykrywać błędy wcześniej",
+        "Ulepszono pola input z efektami focus i nowoczesnym stylem",
+        "Poprawiono układ formularza z lepszym odstępem i typografią",
+        "Dodano płynne przejścia i animacje hover",
+        "Responsywny design dostosowujący się do ekranów mobilnych i desktopowych"
+      ],
+      "affectedComponents_pl": "App.jsx - komponent RegisterPage",
+      "title_ro": "Formular de înregistrare în mai mulți pași cu design modern",
+      "description_ro": "Pagina de înregistrare a fost transformată într-un formular frumos cu 3 pași multi-stepper, cu temă de gradient verde pentru uniformitatea brandului",
+      "impact_ro": "Experiența de înregistrare a fost semnificativ îmbunătățită - mai puțin copleșitoare, mai intuitivă și atrăgătoare vizual, cu branding verde consistent. Reduce abandonul formularului și crește înregistrările reușite.",
+      "details_ro": [
+        "Formularul lung de o singură pagină a fost înlocuit cu un wizard în 3 pași: Account Type, Personal Info, Address Details",
+        "Au fost adăugate indicatori vizuali de pași cu icoane și urmărirea progresului",
+        "Au fost implementate butoane de navigare Previous/Next pentru o experiență UX mai bună",
+        "A fost aplicată tema de gradient verde (linear-gradient(135deg, #4CAF50 0%, #45a049 100%)) pentru consistența brandului",
+        "Emoji-ul de bilet a fost eliminat, înlocuit cu branding text 'BAK UP'",
+        "A fost creat un design split-screen cu branding/statistici pe partea stângă",
+        "A fost adăugată validarea pas cu pas pentru a detecta erorile din timp",
+        "Au fost îmbunătățite câmpurile de input cu efecte de focus și stilizare modernă",
+        "Layout-ul formularului a fost îmbunătățit cu spațiere și tipografie mai bune",
+        "Au fost adăugate tranziții line și animații la hover",
+        "Designul responsive se adaptează la ecrane mobile și desktop"
+      ],
+      "affectedComponents_ro": "App.jsx - componenta RegisterPage"
     },
     {
       "id": 23,
@@ -430,7 +846,49 @@
         "vcse",
         "school"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "ميزة إلغاء تعيين القسيمة - إعادة الأموال إلى المحفظة",
+      "description_ar": "تمت إضافة إمكانية لمستخدمي VCSE وSchool لإلغاء تعيين القسائم النشطة وإرجاع الأموال إلى محفظتهم الإلكترونية",
+      "details_ar": [
+        "تمت إضافة زر 'Unassign' (❌) بجانب زر 'Reassign' في Voucher Orders",
+        "زر Unassign يظهر فقط للقسائم النشطة",
+        "يظهر مربع حوار التأكيد تحذيرًا للمستخدم حول العواقب قبل إلغاء التعيين",
+        "تم إنشاء نقطة نهاية Backend API /api/voucher/unassign",
+        "يتم إعادة الأموال تلقائيًا إلى محفظة المنظمة عند إلغاء التعيين",
+        "تم تغيير حالة Voucher إلى 'cancelled' مع تتبع السبب",
+        "تم إنشاء معاملة المحفظة بنوع 'credit' لسجل التدقيق",
+        "تتحقق فحوصات الأذونات من أن فقط مُصدر القسيمة يمكنه إلغاء التعيين"
+      ],
+      "impact_ar": "يمكن للمنظمات الآن استرجاع القسائم من المستلمين واسترداد الأموال، مما يوفر مرونة في إدارة القسائم والتحكم في الميزانية",
+      "affectedComponents_ar": "App.jsx - VCSEDashboard، main.py - نقطة نهاية unassign_voucher",
+      "title_pl": "Funkcja Odwiązania Vouchera - Zwrot Środków do Portfela",
+      "description_pl": "Dodano możliwość dla użytkowników VCSE i szkół do odwiązywania aktywnych voucherów i zwracania środków do ich portfela",
+      "impact_pl": "Organizacje mogą teraz cofać vouchery od odbiorców i odzyskiwać środki, co zapewnia elastyczność w zarządzaniu voucherami i kontrolę budżetu",
+      "details_pl": [
+        "Dodano przycisk 'Unassign' (❌) obok przycisku 'Reassign' w Voucher Orders",
+        "Przycisk Unassign pojawia się tylko dla aktywnych voucherów",
+        "Okno potwierdzenia ostrzega użytkownika o konsekwencjach przed odwiązaniem",
+        "Utworzono backendowy endpoint API /api/voucher/unassign",
+        "Środki są automatycznie zwracane do portfela organizacji po odwiązaniu",
+        "Status vouchera zmieniany na 'cancelled' z rejestrowanym powodem",
+        "Tworzona jest transakcja portfela typu 'credit' dla ścieżki audytu",
+        "Sprawdzanie uprawnień zapewnia, że tylko wystawca vouchera może go odwiązać"
+      ],
+      "affectedComponents_pl": "App.jsx - VCSEDashboard, main.py - endpoint unassign_voucher",
+      "title_ro": "Funcționalitate Voucher Unassign - Returnarea Fondurilor în Wallet",
+      "description_ro": "Adăugată posibilitatea pentru utilizatorii VCSE și School de a dezaloca vouchere active și de a returna fondurile în wallet-ul lor",
+      "impact_ro": "Organizațiile pot acum să recheme vouchere de la destinatari și să recupereze fondurile, oferind flexibilitate în gestionarea voucherelor și controlul bugetului",
+      "details_ro": [
+        "Adăugat butonul 'Unassign' (❌) lângă butonul 'Reassign' în Voucher Orders",
+        "Butonul Unassign apare doar pentru voucherele active",
+        "Dialogul de confirmare avertizează utilizatorul despre consecințe înainte de dezalocare",
+        "Creat endpoint-ul Backend API /api/voucher/unassign",
+        "Fondurile sunt returnate automat în wallet-ul organizației la dezalocare",
+        "Starea voucherului este schimbată în 'cancelled' cu motivul înregistrat",
+        "Tranzacție în wallet creată cu tipul 'credit' pentru audit trail",
+        "Verificările de permisiuni asigură că doar emitentul voucherului poate dezaloca"
+      ],
+      "affectedComponents_ro": "App.jsx - VCSEDashboard, main.py - endpoint unassign_voucher"
     },
     {
       "id": 22,
@@ -459,7 +917,46 @@
         "school",
         "admin"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "تحميل الأموال مقتصر على المسؤول فقط",
+      "description_ar": "تم إزالة خاصية تحميل الأموال مباشرة من لوحات تحكم VCSE وSchool - فقط المسؤول (Admin) يمكنه إضافة الأموال إلى محافظ المؤسسات.",
+      "details_ar": [
+        "تمت إزالة تبويب 'Load Funds' من تنقل تطبيق VCSE المحمول",
+        "تمت إزالة عرض مكون PaymentTab من لوحات تحكم VCSE و School",
+        "تم استبدال نموذج الدفع في School wallet بإشعار خاص بالمشرف فقط",
+        "تمت إضافة رسالة معلوماتية تشرح تخصيص الأموال المخصص للمسؤولين فقط",
+        "تمت إضافة تعليمات حول كيفية طلب الأموال من administrator",
+        "لا تزال المنظمات قادرة على عرض رصيد المحفظة وتاريخ المعاملات",
+        "تم الآن مركزية معالجة الدفع من خلال admin لتحكم مالي أفضل"
+      ],
+      "impact_ar": "تحسين الأمان المالي والتحكم - الآن تتطلب جميع تخصيصات الأموال موافقة المسؤول، مما يمنع تحميل الأموال غير المصرح به",
+      "affectedComponents_ar": "App.jsx - VCSEDashboard, App.jsx - SchoolDashboard",
+      "title_pl": "Ładowanie środków ograniczone tylko do administratora",
+      "description_pl": "Usunięto bezpośrednią możliwość ładowania środków z pulpitów VCSE i School - tylko administrator może dodawać środki do portfeli organizacji",
+      "impact_pl": "Ulepszono bezpieczeństwo finansowe i kontrolę - wszystkie przydziały środków wymagają teraz zatwierdzenia przez administratora, co zapobiega nieautoryzowanemu ładowaniu środków",
+      "details_pl": [
+        "Usunięto zakładkę 'Load Funds' z nawigacji mobilnej VCSE",
+        "Usunięto renderowanie komponentu PaymentTab z pulpitów VCSE i School",
+        "Zamieniono formularz płatności w portfelu School na komunikat tylko dla administratora",
+        "Dodano wiadomość informacyjną wyjaśniającą, że przydział środków jest tylko dla administratora",
+        "Dodano instrukcje, jak poprosić administratora o środki",
+        "Organizacje nadal mogą przeglądać saldo portfela i historię transakcji",
+        "Przetwarzanie płatności jest teraz scentralizowane przez administratora dla lepszej kontroli finansowej"
+      ],
+      "affectedComponents_pl": "App.jsx - VCSEDashboard, App.jsx - SchoolDashboard",
+      "title_ro": "Încărcarea fondurilor restricționată doar pentru Admin",
+      "description_ro": "Eliminată capacitatea directă de încărcare a fondurilor din dashboard-urile VCSE și School - doar Admin poate adăuga fonduri în portofelele organizațiilor",
+      "impact_ro": "Securitate financiară și control îmbunătățite - toate alocările de fonduri necesită acum aprobarea adminului, prevenind încărcarea neautorizată a fondurilor",
+      "details_ro": [
+        "Eliminată fila 'Load Funds' din navigarea mobilă VCSE",
+        "Eliminată redarea componentului PaymentTab din dashboard-urile VCSE și School",
+        "Înlocuit formularul de plată din portofelul School cu un mesaj pentru admini",
+        "Adăugat mesaj informativ care explică alocarea fondurilor doar pentru admini",
+        "Adăugate instrucțiuni despre cum să se solicite fonduri de la administrator",
+        "Organizațiile pot în continuare să vizualizeze soldul portofelului și istoricul tranzacțiilor",
+        "Procesarea plăților este acum centralizată prin admin pentru un control financiar mai bun"
+      ],
+      "affectedComponents_ro": "App.jsx - VCSEDashboard, App.jsx - SchoolDashboard"
     },
     {
       "id": 21,
@@ -483,7 +980,40 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "title_ar": "إزالة الروابط المكررة في LoginPage",
+      "description_ar": "تمت إزالة الروابط المكررة 'Forgot Password' و 'Back to Home' في أسفل صفحة LoginPage",
+      "details_ar": [
+        "تمت إزالة رابط 'Forgot Password?' المكرر في الأسفل (تم الاحتفاظ بإصدار الزر في الأعلى)",
+        "تمت إزالة رابط 'Back to Home' المكرر في الأسفل (تم الاحتفاظ بنسخة الزر في الأعلى)",
+        "تم الاحتفاظ برابط 'Sign Up' فقط في الأسفل لتصميم أنظف",
+        "تحسين التسلسل الهرمي البصري وتقليل الفوضى",
+        "تم الحفاظ على جميع الوظائف مع إصدارات الأزرار أعلى نموذج تسجيل الدخول"
+      ],
+      "impact_ar": "صفحة تسجيل دخول أنظف وأقل ازدحامًا مع تجربة مستخدم محسنة وبدون خيارات تنقل مكررة",
+      "affectedComponents_ar": "App.jsx - مكون LoginPage",
+      "title_pl": "Usunięcie zduplikowanych linków na LoginPage",
+      "description_pl": "Usunięto zduplikowane linki 'Forgot Password' i 'Back to Home' na dole LoginPage",
+      "impact_pl": "Czystsza, mniej zagracona strona logowania z lepszym doświadczeniem użytkownika i bez zduplikowanych opcji nawigacji",
+      "details_pl": [
+        "Usunięto zduplikowany link 'Forgot Password?' na dole (zachowano wersję przycisku powyżej)",
+        "Usunięto zduplikowany link 'Back to Home' na dole (zachowano wersję przycisku powyżej)",
+        "Zachowano tylko link 'Sign Up' na dole dla czystszego designu",
+        "Poprawiona hierarchia wizualna i zmniejszone zagracenie",
+        "Zachowano pełną funkcjonalność z wersjami przycisków powyżej formularza logowania"
+      ],
+      "affectedComponents_pl": "App.jsx - komponent LoginPage",
+      "title_ro": "Eliminarea linkurilor duplicate din LoginPage",
+      "description_ro": "Am eliminat linkurile duplicate 'Forgot Password' și 'Back to Home' din partea de jos a LoginPage",
+      "impact_ro": "Pagină de login mai curată, mai puțin aglomerată, cu o experiență de utilizare îmbunătățită și fără opțiuni de navigare duplicate",
+      "details_ro": [
+        "Am eliminat linkul duplicat 'Forgot Password?' din partea de jos (am păstrat versiunea buton de deasupra)",
+        "Am eliminat linkul duplicat 'Back to Home' din partea de jos (am păstrat versiunea buton de deasupra)",
+        "Am păstrat doar linkul 'Sign Up' în partea de jos pentru un design mai curat",
+        "Am îmbunătățit ierarhia vizuală și am redus aglomerația",
+        "Am menținut toată funcționalitatea cu versiunile buton de deasupra formularului de autentificare"
+      ],
+      "affectedComponents_ro": "App.jsx - componenta LoginPage"
     },
     {
       "id": 1,
@@ -511,7 +1041,43 @@
         "recipient",
         "school"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "نظام الإشعارات - وضوح النص، عرض الشارة، وعناوين URL الخاصة بـ API",
+      "description_ar": "تم إصلاح مشكلات حرجة في نظام الإشعارات كانت تمنع المستخدمين من عرض الإشعارات",
+      "details_ar": [
+        "تم إصلاح عناوين URL الخاصة بـ API الخاطئة التي كانت تمنع تحميل الإشعارات (/notifications/* → /api/notifications/*)",
+        "تم تغيير لون رسالة الإشعار من #333 إلى #000 (أسود) لتحسين قابلية القراءة",
+        "تم تغيير لون الترجمة الفرعية/البيانات الوصفية من #666 إلى #555 (رمادي أغمق)",
+        "شعار الإشعارات المحسّن: أحمر أكثر سطوعًا (#ff0000)، إطار أبيض، ظل صندوق، زيادة الحجم إلى 22px",
+        "تمت إضافة عرض ديناميكي لعرض '9+' على الشارة",
+        "تم إصلاح مشكلة لوحة الإشعارات الفارغة - الآن يتم تحميل الإشعارات من قاعدة البيانات بشكل صحيح"
+      ],
+      "impact_ar": "يمكن الآن لجميع أنواع المستخدمين (Admin، VCSE، Recipient، School) عرض الإشعارات وإدارتها بشكل صحيح",
+      "affectedComponents_ar": "NotificationSystem.jsx",
+      "title_pl": "System powiadomień - widoczność tekstu, wyświetlanie odznaki i adresy URL API",
+      "description_pl": "Naprawiono krytyczne problemy w systemie powiadomień uniemożliwiające użytkownikom przeglądanie powiadomień",
+      "impact_pl": "Wszystkie typy użytkowników (Admin, VCSE, Recipient, School) mogą teraz prawidłowo przeglądać i zarządzać powiadomieniami",
+      "details_pl": [
+        "Naprawiono niepoprawne adresy URL API uniemożliwiające ładowanie powiadomień (/notifications/* → /api/notifications/*)",
+        "Zmieniono kolor wiadomości powiadomienia z #333 na #000 (czarny) dla lepszej czytelności",
+        "Zmieniono kolor podtytułu/metadanych z #666 na #555 (ciemniejszy szary)",
+        "Ulepszono odznakę powiadomień: jaśniejsza czerwień (#ff0000), biały obrys, cień pudełka, zwiększony rozmiar do 22px",
+        "Dodano dynamiczną szerokość dla wyświetlania '9+' na odznace",
+        "Naprawiono problem pustego panelu powiadomień - powiadomienia teraz poprawnie ładują się z bazy danych"
+      ],
+      "affectedComponents_pl": "NotificationSystem.jsx",
+      "title_ro": "Sistem de notificări - Vizibilitatea textului, afișarea badge-ului și URL-urile API",
+      "description_ro": "Au fost remediate probleme critice ale sistemului de notificări care împiedicau utilizatorii să vadă notificările",
+      "impact_ro": "Toate tipurile de utilizatori (Admin, VCSE, Recipient, School) pot acum să vizualizeze și să gestioneze corect notificările",
+      "details_ro": [
+        "Au fost corectate URL-urile API incorecte care împiedicau încărcarea notificărilor (/notifications/* → /api/notifications/*)",
+        "S-a schimbat culoarea mesajului de notificare de la #333 la #000 (negru) pentru o lizibilitate mai bună",
+        "S-a schimbat culoarea subtitlului/metadatelor de la #666 la #555 (gri mai închis)",
+        "Badge-ul de notificare a fost îmbunătățit: roșu mai aprins (#ff0000), bordură albă, umbră la cutie, dimensiune mărită la 22px",
+        "A fost adăugată lățime dinamică pentru afișarea '9+' pe badge",
+        "A fost remediată problema panoului de notificări gol - notificările se încarcă acum corect din baza de date"
+      ],
+      "affectedComponents_ro": "NotificationSystem.jsx"
     },
     {
       "id": 2,
@@ -537,7 +1103,40 @@
         "vcse",
         "school"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمة بطاقات الإحصائيات في VCSE و School Dashboard",
+      "description_ar": "تم إصلاح النص الإنجليزي المكتوب بشكل ثابت في بطاقات إحصائيات نظرة عامة على لوحة تحكم VCSE و School",
+      "details_ar": [
+        "تم استبدال 'Total Vouchers Issued' بمفتاح الترجمة",
+        "تم استبدال 'Total Value Distributed' بمفتاح الترجمة",
+        "تم استبدال 'Active Vouchers' بمفتاح الترجمة",
+        "تم استبدال 'Redeemed Vouchers' بمفتاح الترجمة",
+        "تمت إضافة الترجمات لجميع اللغات الأربع: English، Arabic، Romanian، Polish"
+      ],
+      "impact_ar": "بطاقات إحصائيات لوحة تحكم VCSE والمدرسة الآن تُترجم بالكامل عند تغيير اللغة",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "Tłumaczenie kart statystyk VCSE i School Dashboard",
+      "description_pl": "Naprawiono na stałe zakodowany tekst w języku angielskim w kartach statystyk przeglądu VCSE i School dashboard",
+      "impact_pl": "Karty statystyk VCSE i School dashboard są teraz w pełni tłumaczone po zmianie języka",
+      "details_pl": [
+        "Zamieniono 'Total Vouchers Issued' na klucz tłumaczenia",
+        "Zamieniono 'Total Value Distributed' na klucz tłumaczenia",
+        "Zamieniono 'Active Vouchers' na klucz tłumaczenia",
+        "Zamieniono 'Redeemed Vouchers' na klucz tłumaczenia",
+        "Dodano tłumaczenia dla wszystkich 4 języków: angielski, arabski, rumuński, polski"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "Traducerea cardurilor de statistici din VCSE și Dashboard-ul Școlii",
+      "description_ro": "Textul în limba engleză hardcodat a fost corectat în cardurile de statistici din overview-ul VCSE și Dashboard-ul Școlii",
+      "impact_ro": "Cardurile de statistici din Dashboard-ul VCSE și Școlii se traduc acum complet când limba este schimbată",
+      "details_ro": [
+        "Înlocuit 'Total Vouchers Issued' cu cheia de traducere",
+        "Înlocuit 'Total Value Distributed' cu cheia de traducere",
+        "Înlocuit 'Active Vouchers' cu cheia de traducere",
+        "Înlocuit 'Redeemed Vouchers' cu cheia de traducere",
+        "Adăugate traduceri pentru toate cele 4 limbi: English, Arabic, Romanian, Polish"
+      ],
+      "affectedComponents_ro": "App.jsx, fișiere de traducere"
     },
     {
       "id": 3,
@@ -561,7 +1160,40 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمة بطاقات الإحصائيات في نظرة عامة على AdminDashboard",
+      "description_ar": "تم إصلاح النص الإنجليزي المكتوب بشكل ثابت في بطاقات إحصائيات نظرة عامة لوحة تحكم Admin",
+      "details_ar": [
+        "تم استبدال 'Total Vouchers' بـ t('dashboard.totalVouchers')",
+        "تم استبدال 'Active Value' بـ t('dashboard.activeValue')",
+        "تم استبدال 'VCFSE Organizations' بـ t('dashboard.vcfseOrganizations')",
+        "تم استبدال 'Local Shops' بـ t('dashboard.localShops')",
+        "تم التأكد من ترجمة جميع عناوين بطاقات الإحصائيات بشكل صحيح عبر جميع اللغات الأربع"
+      ],
+      "impact_ar": "بطاقات نظرة عامة على لوحة تحكم Admin تدعم الآن التبديل الكامل بين اللغات",
+      "affectedComponents_ar": "App.jsx",
+      "title_pl": "Tłumaczenie kart statystyk w przeglądzie AdminDashboard",
+      "description_pl": "Naprawiono na stałe zakodowany tekst w języku angielskim w kartach statystyk przeglądu panelu administratora",
+      "impact_pl": "Karty przeglądu panelu administratora teraz w pełni obsługują przełączanie języków",
+      "details_pl": [
+        "Zamieniono 'Total Vouchers' na t('dashboard.totalVouchers')",
+        "Zamieniono 'Active Value' na t('dashboard.activeValue')",
+        "Zamieniono 'VCFSE Organizations' na t('dashboard.vcfseOrganizations')",
+        "Zamieniono 'Local Shops' na t('dashboard.localShops')",
+        "Zapewniono, że wszystkie tytuły kart statystyk są poprawnie tłumaczone we wszystkich 4 językach"
+      ],
+      "affectedComponents_pl": "App.jsx",
+      "title_ro": "Traducere carduri statistici AdminDashboard Overview",
+      "description_ro": "Textul în limba engleză hardcodat a fost corectat în cardurile statistice din Admin dashboard overview",
+      "impact_ro": "Cardurile din Admin dashboard overview suportă acum complet schimbarea limbii",
+      "details_ro": [
+        "Înlocuit 'Total Vouchers' cu t('dashboard.totalVouchers')",
+        "Înlocuit 'Active Value' cu t('dashboard.activeValue')",
+        "Înlocuit 'VCFSE Organizations' cu t('dashboard.vcfseOrganizations')",
+        "Înlocuit 'Local Shops' cu t('dashboard.localShops')",
+        "S-a asigurat că toate titlurile cardurilor statistice se traduc corect în toate cele 4 limbi"
+      ],
+      "affectedComponents_ro": "App.jsx"
     },
     {
       "id": 4,
@@ -584,7 +1216,37 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمات بطاقة إحصائيات نظرة عامة على لوحة التحكم",
+      "description_ar": "تمت إضافة مفاتيح الترجمة المفقودة لبطاقات إحصائيات لوحة التحكم",
+      "details_ar": [
+        "تمت إضافة مفاتيح totalVouchers و activeValue و vcfseOrganizations و localShops",
+        "تمت إضافة مفاتيح totalVouchersIssued و activeVouchers و redeemedVouchers",
+        "تمت الترجمة إلى Polish و Arabic و Romanian",
+        "تم ضمان التناسق عبر جميع ملفات اللغة"
+      ],
+      "impact_ar": "تغطية ترجمة كاملة لجميع بطاقات إحصائيات dashboard",
+      "affectedComponents_ar": "ملفات الترجمة",
+      "title_pl": "Tłumaczenia kart statystyk w Dashboard Overview",
+      "description_pl": "Dodano brakujące klucze tłumaczeń dla kart statystyk dashboardu",
+      "impact_pl": "Kompletne pokrycie tłumaczeniami wszystkich kart statystyk dashboardu",
+      "details_pl": [
+        "Dodano klucze totalVouchers, activeValue, vcfseOrganizations, localShops",
+        "Dodano klucze totalVouchersIssued, activeVouchers, redeemedVouchers",
+        "Przetłumaczono na polski, arabski i rumuński",
+        "Zapewniono spójność we wszystkich plikach językowych"
+      ],
+      "affectedComponents_pl": "pliki tłumaczeń",
+      "title_ro": "Traduceri pentru cardurile de statistici din Dashboard Overview",
+      "description_ro": "Au fost adăugate cheile de traducere lipsă pentru cardurile de statistici din dashboard",
+      "impact_ro": "Acoperire completă a traducerii pentru toate cardurile de statistici din dashboard",
+      "details_ro": [
+        "Au fost adăugate cheile totalVouchers, activeValue, vcfseOrganizations, localShops",
+        "Au fost adăugate cheile totalVouchersIssued, activeVouchers, redeemedVouchers",
+        "Tradus în poloneză, arabă și română",
+        "S-a asigurat consistența în toate fișierele de limbă"
+      ],
+      "affectedComponents_ro": "fișiere de traducere"
     },
     {
       "id": 5,
@@ -613,7 +1275,52 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمات التنقل في الشريط الجانبي لـ AdminDashboard",
+      "description_ar": "تصحيح شامل لترجمات تنقل الشريط الجانبي في AdminDashboard",
+      "details_ar": [
+        "تم إصلاح 'Overview' → t('navigation.overview')",
+        "تم إصلاح 'Recipient Management' → t('navigation.recipientManagement')",
+        "تم إصلاح 'VCFSE Verification' → t('navigation.vcfseVerification')",
+        "تم إصلاح 'Analytics' → t('navigation.analytics')",
+        "تم إصلاح 'Global Search' → t('navigation.globalSearch')",
+        "تم إصلاح 'Transaction Search' → t('navigation.transactionSearch')",
+        "تم إصلاح 'Broadcast Messages' → t('navigation.broadcastMessages')",
+        "تم إصلاح 'Fund Allocation' → t('navigation.fundAllocation')",
+        "تمت إضافة جميع الترجمات إلى Arabic و Romanian و Polish"
+      ],
+      "impact_ar": "تم الآن ترجمة التنقل في الشريط الجانبي بالكامل بشكل صحيح لمستخدمي Admin",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "Tłumaczenia nawigacji paska bocznego AdminDashboard",
+      "description_pl": "Kompleksowa poprawka tłumaczeń nawigacji paska bocznego AdminDashboard",
+      "impact_pl": "Pełna nawigacja paska bocznego teraz poprawnie tłumaczona dla użytkowników Admin",
+      "details_pl": [
+        "Naprawiono 'Overview' → t('navigation.overview')",
+        "Naprawiono 'Recipient Management' → t('navigation.recipientManagement')",
+        "Naprawiono 'VCFSE Verification' → t('navigation.vcfseVerification')",
+        "Naprawiono 'Analytics' → t('navigation.analytics')",
+        "Naprawiono 'Global Search' → t('navigation.globalSearch')",
+        "Naprawiono 'Transaction Search' → t('navigation.transactionSearch')",
+        "Naprawiono 'Broadcast Messages' → t('navigation.broadcastMessages')",
+        "Naprawiono 'Fund Allocation' → t('navigation.fundAllocation')",
+        "Dodano wszystkie tłumaczenia na arabski, rumuński i polski"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "Traduceri pentru navigarea în bara laterală AdminDashboard",
+      "description_ro": "Remediere completă pentru traducerile navigării în bara laterală AdminDashboard",
+      "impact_ro": "Navigarea completă în bara laterală se traduce acum corect pentru utilizatorii Admin",
+      "details_ro": [
+        "Corectat 'Overview' → t('navigation.overview')",
+        "Corectat 'Recipient Management' → t('navigation.recipientManagement')",
+        "Corectat 'VCFSE Verification' → t('navigation.vcfseVerification')",
+        "Corectat 'Analytics' → t('navigation.analytics')",
+        "Corectat 'Global Search' → t('navigation.globalSearch')",
+        "Corectat 'Transaction Search' → t('navigation.transactionSearch')",
+        "Corectat 'Broadcast Messages' → t('navigation.broadcastMessages')",
+        "Corectat 'Fund Allocation' → t('navigation.fundAllocation')",
+        "Adăugate toate traducerile în arabă, română și poloneză"
+      ],
+      "affectedComponents_ro": "App.jsx, fișiere de traducere"
     },
     {
       "id": 6,
@@ -640,7 +1347,46 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "لوحة تحكم المشرف إدارة المستلمين الترجمة",
+      "description_ar": "تم إصلاح مشكلات الترجمة في قسم إدارة المستلمين في Admin",
+      "details_ar": [
+        "تم إصلاح ترجمة زر 'Add New Recipient'",
+        "تم إصلاح ترجمة العنصر النائب 'Search recipients...'",
+        "تم إصلاح ترجمة قائمة 'Filter by Status' المنسدلة",
+        "تم إصلاح ترجمة خيار 'All Statuses'",
+        "رؤوس الجداول المثبتة: Name، Email، Phone، Vouchers، Status، Actions",
+        "تم إصلاح ترجمات أزرار 'Edit' و 'Deactivate' و 'Activate'",
+        "تمت إضافة جميع الترجمات المفقودة إلى Polish و Arabic و Romanian"
+      ],
+      "impact_ar": "واجهة إدارة المستلمين الكاملة تدعم الآن جميع اللغات الأربع",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "AdminDashboard Zarządzanie odbiorcami Tłumaczenie",
+      "description_pl": "Naprawiono problemy z tłumaczeniem w sekcji zarządzania odbiorcami Admin",
+      "impact_pl": "Kompletny interfejs zarządzania odbiorcami obsługuje teraz wszystkie 4 języki",
+      "details_pl": [
+        "Naprawiono tłumaczenie przycisku 'Add New Recipient'",
+        "Naprawiono tłumaczenie pola placeholder 'Search recipients...'",
+        "Naprawiono tłumaczenie rozwijanego menu 'Filter by Status'",
+        "Naprawiono tłumaczenie opcji 'All Statuses'",
+        "Naprawiono nagłówki tabeli: Name, Email, Phone, Vouchers, Status, Actions",
+        "Naprawiono tłumaczenia przycisków 'Edit', 'Deactivate', 'Activate'",
+        "Dodano wszystkie brakujące tłumaczenia na język polski, arabski i rumuński"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "AdminDashboard Managementul Destinatarilor Traducere",
+      "description_ro": "Probleme de traducere fixate în secțiunea de management a destinatarilor Admin",
+      "impact_ro": "Interfața completă de management a destinatarilor suportă acum toate cele 4 limbi",
+      "details_ro": [
+        "Traducerea butonului 'Add New Recipient' fixată",
+        "Traducerea placeholder-ului 'Search recipients...' fixată",
+        "Traducerea dropdown-ului 'Filter by Status' fixată",
+        "Traducerea opțiunii 'All Statuses' fixată",
+        "Anteturile tabelului fixate: Name, Email, Phone, Vouchers, Status, Actions",
+        "Traducerile butoanelor 'Edit', 'Deactivate', 'Activate' fixate",
+        "Au fost adăugate toate traducerile lipsă pentru Polish, Arabic și Romanian"
+      ],
+      "affectedComponents_ro": "App.jsx, fișierele de traducere"
     },
     {
       "id": 7,
@@ -666,7 +1412,43 @@
       "userTypes": [
         "vcse"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمة عناصر الخصم في بوابة VCFSE",
+      "description_ar": "تم إصلاح مشكلات الترجمة في قسم VCFSE discounted items",
+      "details_ar": [
+        "تم إصلاح ترجمة عنوان 'Discounted Items from Local Shops'",
+        "تم إصلاح ترجمة العنصر النائب 'Search discounted items...'",
+        "تم إصلاح ترجمة قائمة 'Filter by Category' المنسدلة",
+        "تم إصلاح ترجمة خيار 'All Categories'",
+        "تم إصلاح ترجمة رسالة 'No discounted items available'",
+        "تمت إضافة الترجمات إلى جميع اللغات الأربع"
+      ],
+      "impact_ar": "قسم العناصر المخفضة في VCFSE يُترجم بالكامل الآن",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "Tłumaczenie pozycji z rabatem w portalu VCFSE",
+      "description_pl": "Naprawiono problemy z tłumaczeniem w sekcji pozycji z rabatem VCFSE",
+      "impact_pl": "Sekcja pozycji z rabatem VCFSE jest teraz w pełni przetłumaczona",
+      "details_pl": [
+        "Naprawiono tłumaczenie tytułu 'Discounted Items from Local Shops'",
+        "Naprawiono tłumaczenie pola placeholder 'Search discounted items...'",
+        "Naprawiono tłumaczenie rozwijanego menu 'Filter by Category'",
+        "Naprawiono tłumaczenie opcji 'All Categories'",
+        "Naprawiono tłumaczenie komunikatu 'No discounted items available'",
+        "Dodano tłumaczenia na wszystkie 4 języki"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "Traducerea articolelor cu discount din portalul VCFSE",
+      "description_ro": "Probleme de traducere rezolvate în secțiunea articolelor cu discount VCFSE",
+      "impact_ro": "Secțiunea articolelor cu discount VCFSE este acum complet tradusă",
+      "details_ro": [
+        "Traducerea titlului „Discounted Items from Local Shops” a fost corectată",
+        "Traducerea placeholder-ului „Search discounted items...” a fost corectată",
+        "Traducerea dropdown-ului „Filter by Category” a fost corectată",
+        "Traducerea opțiunii „All Categories” a fost corectată",
+        "Traducerea mesajului „No discounted items available” a fost corectată",
+        "Au fost adăugate traduceri pentru toate cele 4 limbi"
+      ],
+      "affectedComponents_ro": "App.jsx, fișierele de traducere"
     },
     {
       "id": 8,
@@ -687,7 +1469,31 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "تحديث البريد الإلكتروني في التذييل",
+      "description_ar": "تم تحديث عنوان البريد الإلكتروني في تذييل الصفحة للتواصل",
+      "details_ar": [
+        "تم التغيير من prince@bakupcic.co.uk إلى admin@bakupcic.co.uk",
+        "تم التحديث عبر جميع اللوحات والصفحات"
+      ],
+      "impact_ar": "يرى المستخدمون الآن عنوان البريد الإلكتروني الصحيح لمسؤول الإدارة في التذييل",
+      "affectedComponents_ar": "App.jsx  \nتحديثات في ملف App.jsx تشمل تحسينات في الأداء وإصلاحات للأخطاء المتعلقة بإدارة الحالة. تم تعديل بعض المكونات لتحسين التوافق مع React 18.",
+      "title_pl": "Aktualizacja adresu e-mail w stopce",
+      "description_pl": "Zaktualizowano adres e-mail kontaktowy w stopce",
+      "impact_pl": "Użytkownicy widzą teraz poprawny adres e-mail kontaktu do administratora w stopce",
+      "details_pl": [
+        "Zmieniono z prince@bakupcic.co.uk na admin@bakupcic.co.uk",
+        "Zaktualizowano na wszystkich dashboardach i stronach"
+      ],
+      "affectedComponents_pl": "App.jsx",
+      "title_ro": "Actualizare email footer",
+      "description_ro": "Adresa de email de contact din footer a fost actualizată",
+      "impact_ro": "Utilizatorii văd acum adresa corectă de email pentru contactul admin în footer",
+      "details_ro": [
+        "S-a schimbat de la prince@bakupcic.co.uk la admin@bakupcic.co.uk",
+        "Actualizat pe toate dashboard-urile și paginile"
+      ],
+      "affectedComponents_ro": "App.jsx"
     },
     {
       "id": 9,
@@ -711,7 +1517,37 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمة عناصر البحث والتصفية",
+      "description_ar": "تم إصلاح العناصر المتبقية من search و filter التي لم تُترجم",
+      "details_ar": [
+        "تم إصلاح عناصر نائب البحث عبر جميع لوحات التحكم",
+        "تم إصلاح قوائم التصفية المنسدلة والخيارات",
+        "تم إصلاح رسائل \"No results found\"",
+        "تمت إضافة الترجمات لجميع عناصر البحث/التصفية التفاعلية"
+      ],
+      "impact_ar": "جميع عناصر واجهة المستخدم الخاصة بالبحث والتصفية الآن تُترجم بشكل صحيح",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "Tłumaczenie elementów wyszukiwania i filtrowania",
+      "description_pl": "Naprawiono pozostałe nieprzetłumaczone elementy wyszukiwania i filtrowania",
+      "impact_pl": "Wszystkie elementy UI wyszukiwania i filtrowania są teraz poprawnie tłumaczone",
+      "details_pl": [
+        "Naprawiono placeholdery wyszukiwania we wszystkich dashboardach",
+        "Naprawiono dropdowny filtrów i opcje",
+        "Naprawiono komunikaty „No results found”",
+        "Dodano tłumaczenia dla wszystkich interaktywnych elementów wyszukiwania/filtrowania"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "Traducerea elementelor de căutare și filtrare",
+      "description_ro": "S-au corectat elementele rămase ne-traduse de căutare și filtrare",
+      "impact_ro": "Toate elementele UI de căutare și filtrare se traduc acum corect",
+      "details_ro": [
+        "S-au corectat placeholder-ele de căutare în toate dashboard-urile",
+        "S-au corectat dropdown-urile și opțiunile de filtrare",
+        "S-au corectat mesajele „No results found”",
+        "Au fost adăugate traduceri pentru toate elementele interactive de căutare/filtrare"
+      ],
+      "affectedComponents_ro": "App.jsx, fișiere de traducere"
     },
     {
       "id": 10,
@@ -734,7 +1570,37 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "الترجمات المفقودة - Arabic, Romanian, Polish",
+      "description_ar": "تمت إضافة مفاتيح الترجمة المفقودة إلى ملفات اللغات غير الإنجليزية",
+      "details_ar": [
+        "تمت إضافة أكثر من 50 مفتاح ترجمة مفقود إلى ملف الترجمة العربي",
+        "تمت إضافة أكثر من 50 مفتاح ترجمة مفقود إلى ملف الترجمة الروماني",
+        "تمت إضافة أكثر من 50 مفتاح ترجمة مفقود إلى ملف الترجمة البولندية",
+        "تم ضمان التوافق مع ملف الترجمة الإنجليزي"
+      ],
+      "impact_ar": "تغطية ترجمة كاملة عبر جميع اللغات الأربعة المدعومة",
+      "affectedComponents_ar": "ملفات الترجمة",
+      "title_pl": "Brakujące tłumaczenia - arabski, rumuński, polski",
+      "description_pl": "Dodano brakujące klucze tłumaczeń do plików języków innych niż angielski",
+      "impact_pl": "Pełne pokrycie tłumaczeń we wszystkich 4 obsługiwanych językach",
+      "details_pl": [
+        "Dodano ponad 50 brakujących kluczy tłumaczeń do pliku tłumaczenia arabskiego",
+        "Dodano ponad 50 brakujących kluczy tłumaczeń do pliku tłumaczenia rumuńskiego",
+        "Dodano ponad 50 brakujących kluczy tłumaczeń do pliku tłumaczenia polskiego",
+        "Zapewniono zgodność z plikiem tłumaczenia angielskiego"
+      ],
+      "affectedComponents_pl": "pliki tłumaczeń",
+      "title_ro": "Traduceri lipsă - Arabică, Română, Poloneză",
+      "description_ro": "Chei de traducere lipsă adăugate în fișierele de limbă non-engleză",
+      "impact_ro": "Acoperire completă a traducerii în toate cele 4 limbi suportate",
+      "details_ro": [
+        "Peste 50 de chei de traducere lipsă adăugate în fișierul de traducere Arabică",
+        "Peste 50 de chei de traducere lipsă adăugate în fișierul de traducere Română",
+        "Peste 50 de chei de traducere lipsă adăugate în fișierul de traducere Poloneză",
+        "S-a asigurat paritatea cu fișierul de traducere English"
+      ],
+      "affectedComponents_ro": "fișiere de traducere"
     },
     {
       "id": 11,
@@ -759,7 +1625,40 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ترجمات غير مكتملة عبر جميع Dashboards",
+      "description_ar": "تم إصلاح الترجمات غير المكتملة الموجودة عبر عدة لوحات تحكم",
+      "details_ar": [
+        "تم إصلاح فجوات الترجمة في RecipientDashboard",
+        "تم إصلاح فجوات الترجمة في VendorDashboard",
+        "تم إصلاح فجوات الترجمة في SchoolDashboard",
+        "تم تثبيت عناصر واجهة المستخدم الشائعة (buttons, labels, messages)",
+        "تمت إضافة المفاتيح المفقودة إلى جميع ملفات اللغة"
+      ],
+      "impact_ar": "تغطية ترجمة شاملة عبر كامل التطبيق",
+      "affectedComponents_ar": "App.jsx، ملفات الترجمة",
+      "title_pl": "Niekompletne tłumaczenia we wszystkich dashboardach",
+      "description_pl": "Naprawiono niekompletne tłumaczenia znalezione w wielu dashboardach",
+      "impact_pl": "Kompleksowe pokrycie tłumaczeń w całej aplikacji",
+      "details_pl": [
+        "Naprawiono luki w tłumaczeniach RecipientDashboard",
+        "Naprawiono luki w tłumaczeniach VendorDashboard",
+        "Naprawiono luki w tłumaczeniach SchoolDashboard",
+        "Naprawiono wspólne elementy UI (przyciski, etykiety, komunikaty)",
+        "Dodano brakujące klucze do wszystkich plików językowych"
+      ],
+      "affectedComponents_pl": "App.jsx, pliki tłumaczeń",
+      "title_ro": "Traduceri incomplete pe toate dashboard-urile",
+      "description_ro": "S-au remediat traducerile incomplete găsite pe mai multe dashboard-uri",
+      "impact_ro": "Acoperire completă a traducerilor în întreaga aplicație",
+      "details_ro": [
+        "S-au remediat lacunele de traducere din RecipientDashboard",
+        "S-au remediat lacunele de traducere din VendorDashboard",
+        "S-au remediat lacunele de traducere din SchoolDashboard",
+        "S-au corectat elementele comune de UI (butoane, etichete, mesaje)",
+        "Chei lipsă adăugate în toate fișierele de limbă"
+      ],
+      "affectedComponents_ro": "App.jsx, fișiere de traducere"
     },
     {
       "id": 12,
@@ -786,7 +1685,49 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "قوائم الهامبرغر المتجاوبة لجميع لوحات التحكم",
+      "description_ar": "تم تنفيذ قوائم التنقل الهامبرغر المتجاوبة مع الأجهزة المحمولة",
+      "details_ar": [
+        "تمت إضافة قائمة الهامبرغر إلى AdminDashboard",
+        "تمت إضافة قائمة الهامبرغر إلى VCSEDashboard",
+        "تمت إضافة قائمة الهامبرغر إلى RecipientDashboard",
+        "تمت إضافة قائمة الهمبرغر إلى SchoolDashboard",
+        "تمت إضافة قائمة الهامبرغر إلى VendorDashboard",
+        "تنهار القوائم تلقائيًا على الأجهزة المحمولة",
+        "رسوم متحركة وانتقالات سلسة",
+        "عناصر القائمة مترجمة بالكامل"
+      ],
+      "impact_ar": "جميع لوحات المعلومات أصبحت الآن متوافقة مع الأجهزة المحمولة مع تنقل متجاوب",
+      "affectedComponents_ar": "App.jsx",
+      "title_pl": "Responsywne menu hamburgerowe dla wszystkich dashboardów",
+      "description_pl": "Wdrożono mobilne, responsywne menu nawigacyjne hamburger",
+      "impact_pl": "Wszystkie dashboardy teraz przyjazne dla urządzeń mobilnych z responsywną nawigacją",
+      "details_pl": [
+        "Dodano menu hamburger do AdminDashboard",
+        "Dodano menu hamburger do VCSEDashboard",
+        "Dodano menu hamburger do RecipientDashboard",
+        "Dodano menu hamburger do SchoolDashboard",
+        "Dodano menu hamburger do VendorDashboard",
+        "Menu automatycznie zwija się na urządzeniach mobilnych",
+        "Płynne animacje i przejścia",
+        "W pełni przetłumaczone elementy menu"
+      ],
+      "affectedComponents_pl": "App.jsx",
+      "title_ro": "Meniuri Hamburger Responsive pentru Toate Dashboard-urile",
+      "description_ro": "Am implementat meniuri de navigare hamburger responsive pentru mobil",
+      "impact_ro": "Toate dashboard-urile sunt acum prietenoase cu mobilul, cu navigare responsive",
+      "details_ro": [
+        "Am adăugat meniul hamburger în AdminDashboard",
+        "Am adăugat meniul hamburger în VCSEDashboard",
+        "Am adăugat meniul hamburger în RecipientDashboard",
+        "Am adăugat meniul hamburger în SchoolDashboard",
+        "Am adăugat meniul hamburger în VendorDashboard",
+        "Meniurile se restrâng automat pe dispozitivele mobile",
+        "Animații și tranziții fluide",
+        "Elemente de meniu complet traduse"
+      ],
+      "affectedComponents_ro": "App.jsx"
     },
     {
       "id": 13,
@@ -810,7 +1751,37 @@
         "vendor",
         "vcse"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "ماسح QR - الترجمات الاحتياطية واكتشاف الكاميرا",
+      "description_ar": "تم إصلاح مشكلات الترجمة في QR scanner وتحسين اكتشاف الكاميرا",
+      "details_ar": [
+        "تمت إضافة ترجمات بديلة لمفاتيح QR scanner المفقودة",
+        "تحسين اكتشاف أذونات الكاميرا",
+        "تحسين رسائل الخطأ مع الترجمات",
+        "تم إصلاح مشكلات تهيئة الكاميرا على الأجهزة المحمولة"
+      ],
+      "impact_ar": "يعمل QR scanner الآن بشكل موثوق عبر جميع الأجهزة واللغات",
+      "affectedComponents_ar": "مكون QRScanner",
+      "title_pl": "Skaner QR - tłumaczenia zapasowe i wykrywanie kamery",
+      "description_pl": "Naprawiono problemy z tłumaczeniem skanera QR oraz ulepszono wykrywanie kamery",
+      "impact_pl": "Skaner QR działa teraz niezawodnie na wszystkich urządzeniach i we wszystkich językach",
+      "details_pl": [
+        "Dodano tłumaczenia zapasowe dla brakujących kluczy skanera QR",
+        "Ulepszono wykrywanie uprawnień do kamery",
+        "Wzbogacono komunikaty o błędach o tłumaczenia",
+        "Naprawiono problemy z inicjalizacją kamery na urządzeniach mobilnych"
+      ],
+      "affectedComponents_pl": "Komponent QRScanner",
+      "title_ro": "Scanner QR - Traduceri de rezervă și detectare cameră",
+      "description_ro": "Probleme de traducere ale scannerului QR rezolvate și detectarea camerei îmbunătățită",
+      "impact_ro": "Scannerul QR funcționează acum fiabil pe toate dispozitivele și limbile",
+      "details_ro": [
+        "Adăugate traduceri de rezervă pentru cheile lipsă ale scannerului QR",
+        "Detectarea permisiunii camerei îmbunătățită",
+        "Mesaje de eroare îmbunătățite cu traduceri",
+        "Probleme de inițializare a camerei pe dispozitive mobile rezolvate"
+      ],
+      "affectedComponents_ro": "Componenta QRScanner"
     },
     {
       "id": 14,
@@ -834,7 +1805,37 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "تحسينات واجهة مستخدم RegisterPage",
+      "description_ar": "تحسين تخطيط ووظائف RegisterPage",
+      "details_ar": [
+        "تمت إزالة قسم About لتصميم أنظف",
+        "تم استبدال أزرار التواصل الاجتماعي برابط Forgot Password",
+        "تمت إضافة زر Back to Home",
+        "تمت إضافة خلفية خضراء إلى LoginPage من أجل الاتساق"
+      ],
+      "impact_ar": "تجربة تسجيل أنظف وأكثر تركيزًا",
+      "affectedComponents_ar": "RegisterPage، LoginPage",
+      "title_pl": "Ulepszenia interfejsu RegisterPage",
+      "description_pl": "Ulepszony układ i funkcjonalność RegisterPage",
+      "impact_pl": "Czystsze, bardziej skoncentrowane doświadczenie rejestracji",
+      "details_pl": [
+        "Usunięto sekcję About dla bardziej przejrzystego designu",
+        "Zamieniono przyciski społecznościowe na link Forgot Password",
+        "Dodano przycisk Back to Home",
+        "Dodano zielone tło do LoginPage dla spójności"
+      ],
+      "affectedComponents_pl": "RegisterPage, LoginPage",
+      "title_ro": "Îmbunătățiri UI pentru RegisterPage",
+      "description_ro": "Layout și funcționalitate îmbunătățite pentru RegisterPage",
+      "impact_ro": "Experiență de înregistrare mai curată și mai concentrată",
+      "details_ro": [
+        "Secțiunea About eliminată pentru un design mai curat",
+        "Butoanele sociale înlocuite cu link-ul Forgot Password",
+        "Adăugat butonul Back to Home",
+        "Fundal verde adăugat la LoginPage pentru consistență"
+      ],
+      "affectedComponents_ro": "RegisterPage, LoginPage"
     },
     {
       "id": 15,
@@ -857,7 +1858,37 @@
       "userTypes": [
         "vendor"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "قائمة Hamburger في VendorDashboard",
+      "description_ar": "تمت إضافة قائمة هامرجر المتجاوبة مع الأجهزة المحمولة إلى VendorDashboard",
+      "details_ar": [
+        "تم تنفيذ قائمة تنقل قابلة للطي",
+        "تمت إضافة رسوم متحركة سلسة",
+        "تم تضمين جميع علامات تبويب التنقل الخاصة بالبائعين",
+        "عناصر القائمة مترجمة بالكامل"
+      ],
+      "impact_ar": "أصبح VendorDashboard الآن متوافقًا مع الأجهزة المحمولة",
+      "affectedComponents_ar": "App.jsx",
+      "title_pl": "Menu hamburgerowe VendorDashboard",
+      "description_pl": "Dodano mobilne, responsywne menu hamburgerowe do VendorDashboard",
+      "impact_pl": "VendorDashboard teraz przyjazny dla urządzeń mobilnych",
+      "details_pl": [
+        "Zaimplementowano zwijane menu nawigacyjne",
+        "Dodano płynne animacje",
+        "Uwzględniono wszystkie zakładki nawigacyjne dostawcy",
+        "W pełni przetłumaczone elementy menu"
+      ],
+      "affectedComponents_pl": "App.jsx",
+      "title_ro": "Meniul Hamburger din VendorDashboard",
+      "description_ro": "Meniu hamburger responsive pentru mobil adăugat în VendorDashboard",
+      "impact_ro": "VendorDashboard este acum prietenos cu dispozitivele mobile",
+      "details_ro": [
+        "Meniu de navigare pliabil implementat",
+        "Animații fluide adăugate",
+        "Incluse toate taburile de navigare pentru vendor",
+        "Elemente de meniu complet traduse"
+      ],
+      "affectedComponents_ro": "App.jsx"
     },
     {
       "id": 16,
@@ -881,7 +1912,40 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "إعادة تصميم LoginPage",
+      "description_ar": "إعادة تصميم LoginPage بأسلوب حديث وجذاب",
+      "details_ar": [
+        "تمت إضافة خلفية تدرج لوني",
+        "تحسين تخطيط النموذج والتباعد",
+        "تمت إضافة خيارات تسجيل الدخول الاجتماعي (Google, Facebook)",
+        "تحسين تنسيق الأزرار",
+        "تحسين استجابة الهواتف المحمولة"
+      ],
+      "impact_ar": "تجربة تسجيل دخول أكثر احترافية وسهولة للمستخدم",
+      "affectedComponents_ar": "صفحة تسجيل الدخول LoginPage",
+      "title_pl": "Przeprojektowanie LoginPage",
+      "description_pl": "Przeprojektowany LoginPage z nowoczesnym, atrakcyjnym stylem",
+      "impact_pl": "Bardziej profesjonalne i przyjazne dla użytkownika doświadczenie logowania",
+      "details_pl": [
+        "Dodano gradientowe tło",
+        "Ulepszono układ formularza i odstępy",
+        "Dodano opcje logowania społecznościowego (Google, Facebook)",
+        "Ulepszono stylizację przycisków",
+        "Poprawiono responsywność na urządzeniach mobilnych"
+      ],
+      "affectedComponents_pl": "LoginPage",
+      "title_ro": "Redesign LoginPage",
+      "description_ro": "LoginPage redesenat cu un stil modern și atractiv",
+      "impact_ro": "Experiență de autentificare mai profesională și prietenoasă cu utilizatorul",
+      "details_ro": [
+        "Fundal cu gradient adăugat",
+        "Aspect și spațiere îmbunătățite ale formularului",
+        "Opțiuni de autentificare socială adăugate (Google, Facebook)",
+        "Stilizare îmbunătățită a butoanelor",
+        "Responsivitate mobilă îmbunătățită"
+      ],
+      "affectedComponents_ro": "LoginPage"
     },
     {
       "id": 17,
@@ -903,7 +1967,34 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "إزالة قسم About في LoginPage",
+      "description_ar": "تمت إزالة قسم About من LoginPage لتصميم بسيط minimal design",
+      "details_ar": [
+        "تمت إزالة قسم About غير الضروري",
+        "تبسيط تخطيط صفحة تسجيل الدخول",
+        "تركيز انتباه المستخدم على نموذج تسجيل الدخول"
+      ],
+      "impact_ar": "صفحة تسجيل دخول أنظف وأكثر تركيزًا",
+      "affectedComponents_ar": "صفحة تسجيل الدخول LoginPage",
+      "title_pl": "Usunięcie sekcji About z LoginPage",
+      "description_pl": "Usunięto sekcję About z LoginPage dla minimalistycznego designu",
+      "impact_pl": "Czystsza, bardziej skoncentrowana strona logowania",
+      "details_pl": [
+        "Usunięto niepotrzebną sekcję About",
+        "Uproszczony układ strony logowania",
+        "Skoncentrowano uwagę użytkownika na formularzu logowania"
+      ],
+      "affectedComponents_pl": "LoginPage",
+      "title_ro": "Eliminarea secțiunii About din LoginPage",
+      "description_ro": "Secțiunea About a fost eliminată din LoginPage pentru un design minimalist",
+      "impact_ro": "Pagină de login mai curată și mai concentrată",
+      "details_ro": [
+        "Secțiunea About inutilă a fost eliminată",
+        "Aspectul paginii de login a fost simplificat",
+        "Atenția utilizatorului a fost concentrată pe formularul de login"
+      ],
+      "affectedComponents_ro": "LoginPage"
     },
     {
       "id": 18,
@@ -928,7 +2019,43 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "تسلسل حجم الخط في LandingPage",
+      "description_ar": "تم إصلاح تسلسل حجم الخط في LandingPage",
+      "details_ar": [
+        "H1: 40px (العناوين الرئيسية)",
+        "H2: 32px (عناوين الأقسام)",
+        "H3: 24px (عناوين الفروع الفرعية)",
+        "P: 16px (نص الجسم)",
+        "تذييل الصفحة: 13px (نص التذييل)",
+        "تم إنشاء التسلسل الهرمي البصري بشكل صحيح"
+      ],
+      "impact_ar": "تحسين قابلية القراءة والتسلسل البصري على صفحة الهبوط",
+      "affectedComponents_ar": "LandingPage  \nصفحة الهبوط",
+      "title_pl": "Hierarchia rozmiarów czcionek na LandingPage",
+      "description_pl": "Naprawiona hierarchia rozmiarów czcionek na LandingPage",
+      "impact_pl": "Lepsza czytelność i hierarchia wizualna na landing page",
+      "details_pl": [
+        "H1: 40px (główne nagłówki)",
+        "H2: 32px (nagłówki sekcji)",
+        "H3: 24px (nagłówki podsekcji)",
+        "P: 16px (tekst główny)",
+        "Footer: 13px (tekst stopki)",
+        "Ustanowiona właściwa hierarchia wizualna"
+      ],
+      "affectedComponents_pl": "LandingPage",
+      "title_ro": "Ierarhia dimensiunii fontului pe LandingPage",
+      "description_ro": "Ierarhia dimensiunii fontului fixată pe LandingPage",
+      "impact_ro": "Mai bună lizibilitate și ierarhie vizuală pe landing page",
+      "details_ro": [
+        "H1: 40px (titluri principale)",
+        "H2: 32px (titluri de secțiune)",
+        "H3: 24px (titluri de subsecțiune)",
+        "P: 16px (text corp)",
+        "Footer: 13px (text footer)",
+        "Ierarhie vizuală corectă stabilită"
+      ],
+      "affectedComponents_ro": "LandingPage"
     },
     {
       "id": 19,
@@ -950,7 +2077,34 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "إصلاح خطأ إعادة الإنشاء التلقائي للمسؤول",
+      "description_ar": "تم إصلاح خطأ كان يتسبب في إعادة إنشاء حساب المسؤول تلقائيًا",
+      "details_ar": [
+        "تمت إزالة منطق إنشاء المسؤول التلقائي",
+        "تم إصلاح تسلسل حجم خط الـ footer",
+        "تم منع إنشاء حسابات مشرف مكررة"
+      ],
+      "impact_ar": "لم تعد حسابات Admin تُعاد إنشاؤها تلقائيًا في كل عملية نشر",
+      "affectedComponents_ar": "تهيئة الـ Backend",
+      "title_pl": "Poprawka błędu automatycznego odtwarzania konta admina",
+      "description_pl": "Naprawiono błąd powodujący automatyczne odtwarzanie konta admina",
+      "impact_pl": "Konta admina nie są już automatycznie odtwarzane przy każdym wdrożeniu",
+      "details_pl": [
+        "Usunięto logikę automatycznego tworzenia konta admina",
+        "Naprawiono hierarchię rozmiaru czcionki w stopce",
+        "Zapobiegano duplikowaniu kont admina"
+      ],
+      "affectedComponents_pl": "Inicjalizacja backendu",
+      "title_ro": "Corecție bug auto-recreare admin",
+      "description_ro": "Bug fixat care cauza recrearea automată a contului de admin",
+      "impact_ro": "Conturile de admin nu se mai recreează automat la fiecare deployment",
+      "details_ro": [
+        "Eliminată logica de creare automată a adminului",
+        "Corectată ierarhia dimensiunii fontului din footer",
+        "Prevenite conturi duplicate de admin"
+      ],
+      "affectedComponents_ro": "Inițializare backend"
     },
     {
       "id": 20,
@@ -973,7 +2127,37 @@
       "userTypes": [
         "all"
       ],
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "title_ar": "زيادة حجم الخط عبر جميع لوحات التحكم",
+      "description_ar": "زيادة أحجام الخطوط عبر التطبيق بأكمله لتحسين قابلية القراءة",
+      "details_ar": [
+        "تم زيادة حجم نص الجسم من 14px إلى 16px",
+        "تم زيادة حجم العناوين بمقدار 2-4 بكسل",
+        "زيادة حجم نص الزر لتحسين الرؤية",
+        "تحسين قابلية القراءة على جميع أحجام الشاشات"
+      ],
+      "impact_ar": "تحسين قابلية القراءة وسهولة الوصول عبر التطبيق بأكمله",
+      "affectedComponents_ar": "جميع dashboards والمكونات",
+      "title_pl": "Zwiększenie rozmiaru czcionki we wszystkich dashboardach",
+      "description_pl": "Zwiększono rozmiary czcionek w całej aplikacji dla lepszej czytelności",
+      "impact_pl": "Lepsza czytelność i dostępność w całej aplikacji",
+      "details_pl": [
+        "Zwiększono rozmiar tekstu głównego z 14px do 16px",
+        "Zwiększono rozmiar nagłówków o 2-4px",
+        "Zwiększono rozmiar tekstu przycisków dla lepszej widoczności",
+        "Poprawiona czytelność na wszystkich rozmiarach ekranów"
+      ],
+      "affectedComponents_pl": "Wszystkie dashboardy i komponenty",
+      "title_ro": "Creșterea dimensiunii fontului pe toate dashboard-urile",
+      "description_ro": "Dimensiuni de font mărite în întreaga aplicație pentru o mai bună lizibilitate",
+      "impact_ro": "Lizibilitate și accesibilitate îmbunătățite în întreaga aplicație",
+      "details_ro": [
+        "Textul corpului mărit de la 14px la 16px",
+        "Titlurile mărite cu 2-4px",
+        "Textul butoanelor mărit pentru o vizibilitate mai bună",
+        "Lizibilitate îmbunătățită pe toate dimensiunile de ecran"
+      ],
+      "affectedComponents_ro": "Toate dashboard-urile și componentele"
     }
   ],
   "summary": {
