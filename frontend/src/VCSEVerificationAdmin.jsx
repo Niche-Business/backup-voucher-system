@@ -33,7 +33,7 @@ const VCSEVerificationAdmin = ({ apiCall }) => {
       const data = await apiCall('/admin/vcse-verifications/stats');
       setStats(data);
     } catch (error) {
-      console.error('t('vcfseVerification.error_loading_stats') + ':'', error);
+      console.error(`${t('vcfseVerification.error_loading_stats')}:`, error);
     }
   };
 
