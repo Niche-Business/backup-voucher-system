@@ -2133,7 +2133,7 @@ function AdminDashboard({ user, onLogout }) {
             🚪 {t('common.signOut')}
           </button>
           
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.1</div>
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.2</div>
         </div>
       )}
       
@@ -7162,7 +7162,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.1</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.2</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8439,7 +8439,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.1</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.2</div>
 
               <button
                 onClick={() => {
@@ -9664,6 +9664,7 @@ function SchoolDashboard({ user, onLogout }) {
   const [voucherAmount, setVoucherAmount] = useState('')
   const [message, setMessage] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
   const [assignShopMethod, setAssignShopMethod] = useState('none')
   const [specificShopId, setSpecificShopId] = useState('')
   
@@ -9809,39 +9810,132 @@ function SchoolDashboard({ user, onLogout }) {
       {/* Header */}
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px'}}>
         <div style={{maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-          <div>
-            <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
-            <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
-          </div>
-          <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
-            <NotificationBell apiCall={apiCall} userType="school" />
-            <select 
-              value={i18n.language} 
-              onChange={async (e) => {
-                await i18n.changeLanguage(e.target.value)
-                window.location.reload()
-              }}
+          <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+            <button 
+              onClick={() => setShowMenuDropdown(!showMenuDropdown)}
               style={{
-                padding: '8px 12px',
-                borderRadius: '5px',
-                border: '2px solid white',
-                backgroundColor: 'transparent',
+                background: 'none',
+                border: 'none',
                 color: 'white',
+                fontSize: '28px',
                 cursor: 'pointer',
-                fontSize: '18px'
+                padding: '5px'
               }}
             >
-              <option value="en">🇬🇧 English</option>
-              <option value="ar">🇸🇦 العربية</option>
-              <option value="ro">🇷🇴 Română</option>
-              <option value="pl">🇵🇱 Polski</option>
-            </select>
-            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.1.1</span>
-            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
-            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
+              ☰
+            </button>
+            <div>
+              <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
+              <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
+            </div>
+          </div>
+          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <NotificationBell apiCall={apiCall} userType="school" />
           </div>
         </div>
       </div>
+      {showMenuDropdown && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 999
+          }}
+          onClick={() => setShowMenuDropdown(false)}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: '80px',
+              left: '20px',
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              minWidth: '250px',
+              zIndex: 1000
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{padding: '15px', borderBottom: '1px solid #eee'}}>
+              <div style={{marginBottom: '10px', fontWeight: 'bold', color: '#333'}}>🌐 Change Language</div>
+              <select 
+                value={i18n.language} 
+                onChange={async (e) => {
+                  await i18n.changeLanguage(e.target.value)
+                  window.location.reload()
+                }}
+                style={{
+                  width: '100%',
+                  padding: '8px 12px',
+                  borderRadius: '5px',
+                  border: '1px solid #ddd',
+                  backgroundColor: 'white',
+                  color: '#333',
+                  cursor: 'pointer',
+                  fontSize: '16px'
+                }}
+              >
+                <option value="en">🇬🇧 English</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="ro">🇷🇴 Română</option>
+                <option value="pl">🇵🇱 Polski</option>
+              </select>
+            </div>
+            <div style={{padding: '10px', borderTop: '1px solid #eee', fontSize: '0.85em', color: '#666', textAlign: 'center'}}>
+              BAK UP E-Voucher System v1.1.2
+            </div>
+            <button
+              onClick={() => {
+                setShowMenuDropdown(false)
+                setShowPasswordModal(true)
+              }}
+              style={{
+                width: '100%',
+                padding: '12px 15px',
+                border: 'none',
+                borderTop: '1px solid #eee',
+                backgroundColor: 'white',
+                color: '#333',
+                cursor: 'pointer',
+                textAlign: 'left',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}
+            >
+              🔒 Change Password
+            </button>
+            <button
+              onClick={() => {
+                setShowMenuDropdown(false)
+                onLogout()
+              }}
+              style={{
+                width: '100%',
+                padding: '12px 15px',
+                border: 'none',
+                borderTop: '1px solid #eee',
+                backgroundColor: 'white',
+                color: '#d32f2f',
+                cursor: 'pointer',
+                textAlign: 'left',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                borderRadius: '0 0 8px 8px'
+              }}
+            >
+              🚪 Sign Out
+            </button>
+          </div>
+        </div>
+      )}
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
 
       {/* Main Content */}

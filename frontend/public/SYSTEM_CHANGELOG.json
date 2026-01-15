@@ -1,7 +1,60 @@
 {
-  "version": "1.1.1",
+  "version": "1.1.2",
   "lastUpdated": "2026-01-15",
   "changes": [
+    {
+      "id": 38,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "UI Enhancement",
+      "priority": "Medium",
+      "title": "Fixed School Dashboard Mobile Menu Layout",
+      "description": "Moved Password and Logout buttons from header into hamburger dropdown menu for better mobile UX",
+      "details": [
+        "Added hamburger menu button to School dashboard header (left side)",
+        "Created dropdown menu containing Language selector, Version display, Change Password, and Sign Out",
+        "Removed standalone Password and Logout buttons from header",
+        "Improved mobile layout with cleaner header showing only hamburger menu and notification bell"
+      ],
+      "impact": "School dashboard now has a clean, organized mobile interface with all settings and actions accessible through a single hamburger menu, matching the UX pattern of other dashboards.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - SchoolDashboard component"
+      ],
+      "userTypes": [
+        "school"
+      ],
+      "version": "1.1.2",
+      "title_ar": "إصلاح تخطيط قائمة الهاتف المحمول للوحة المدرسة",
+      "description_ar": "تم نقل أزرار كلمة المرور وتسجيل الخروج من الرأس إلى قائمة الهامبرغر المنسدلة لتحسين تجربة المستخدم على الهاتف المحمول",
+      "details_ar": [
+        "تمت إضافة زر قائمة الهامبرغر إلى رأس لوحة المدرسة (الجانب الأيسر)",
+        "تم إنشاء قائمة منسدلة تحتوي على محدد اللغة، وعرض الإصدار، وتغيير كلمة المرور، وتسجيل الخروج",
+        "تمت إزالة أزرار كلمة المرور وتسجيل الخروج المستقلة من الرأس",
+        "تحسين تخطيط الهاتف المحمول مع رأس أنظف يعرض فقط قائمة الهامبرغر وجرس الإشعارات"
+      ],
+      "impact_ar": "لدى لوحة المدرسة الآن واجهة هاتف محمول نظيفة ومنظمة مع جميع الإعدادات والإجراءات المتاحة من خلال قائمة هامبرغر واحدة، مما يطابق نمط تجربة المستخدم للوحات الأخرى.",
+      "affectedComponents_ar": "frontend/src/App.jsx - مكون SchoolDashboard",
+      "title_pl": "Naprawiono układ menu mobilnego panelu szkoły",
+      "description_pl": "Przeniesiono przyciski Hasło i Wyloguj z nagłówka do menu rozwijanego hamburgera w celu poprawy UX mobilnego",
+      "details_pl": [
+        "Dodano przycisk menu hamburgera do nagłówka panelu szkoły (lewa strona)",
+        "Utworzono menu rozwijane zawierające selektor języka, wyświetlanie wersji, zmianę hasła i wylogowanie",
+        "Usunięto samodzielne przyciski Hasło i Wyloguj z nagłówka",
+        "Ulepszono układ mobilny z czystszym nagłówkiem pokazującym tylko menu hamburgera i dzwonek powiadomień"
+      ],
+      "impact_pl": "Panel szkoły ma teraz czysty, zorganizowany interfejs mobilny ze wszystkimi ustawieniami i działaniami dostępnymi przez jedno menu hamburgera, zgodnie ze wzorcem UX innych paneli.",
+      "affectedComponents_pl": "frontend/src/App.jsx - komponent SchoolDashboard",
+      "title_ro": "Corectat aspectul meniului mobil al panoului școlii",
+      "description_ro": "Mutat butoanele Parolă și Deconectare din antet în meniul derulant hamburger pentru o UX mobil mai bună",
+      "details_ro": [
+        "Adăugat buton de meniu hamburger în antetul panoului școlii (partea stângă)",
+        "Creat meniu derulant conținând selectorul de limbă, afișarea versiunii, schimbarea parolei și deconectarea",
+        "Eliminate butoanele independente Parolă și Deconectare din antet",
+        "Aspect mobil îmbunătățit cu antet mai curat afișând doar meniul hamburger și clopotelul de notificări"
+      ],
+      "impact_ro": "Panoul școlii are acum o interfață mobilă curată și organizată cu toate setările și acțiunile accesibile printr-un singur meniu hamburger, potrivindu-se cu modelul UX al altor panouri.",
+      "affectedComponents_ro": "frontend/src/App.jsx - componenta SchoolDashboard"
+    },
     {
       "id": 37,
       "date": "2026-01-15",
@@ -25,7 +78,7 @@
         "school",
         "admin"
       ],
-      "version": "1.1.1",
+      "version": "1.1.2",
       "title_ar": "إصلاح خطأ DateTime في إصدار القسيمة وعرض نص واجهة المستخدم",
       "description_ar": "تم حل مشكلة نطاق استيراد datetime التي تسببت في فشل إصدار القسيمة وإصلاح التفاف النص في قسم تعيين المتجر للطعام للذهاب",
       "details_ar": [
@@ -82,7 +135,7 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.1.1",
+      "version": "1.1.2",
       "title_ar": "إصلاح قائمة الهامبرغر المكررة في لوحة الإدارة",
       "description_ar": "تمت إزالة زر قائمة الهامبرغر المكرر من لوحة الإدارة عن طريق دمج محدد اللغة وتسجيل الخروج في الشريط الجانبي الأيسر",
       "details_ar": [
@@ -156,7 +209,7 @@
         "recipient",
         "school"
       ],
-      "version": "1.1.1",
+      "version": "1.1.2",
       "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
       "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' عبر جميع لوحات المعلومات",
       "details_ar": [
@@ -2365,12 +2418,12 @@
     }
   ],
   "summary": {
-    "totalChanges": 37,
+    "totalChanges": 38,
     "categories": {
       "Bug Fix": 10,
       "Feature": 3,
       "Internationalization": 11,
-      "UI Enhancement": 9,
+      "UI Enhancement": 10,
       "Configuration": 1,
       "Security": 1,
       "Deployment": 1
