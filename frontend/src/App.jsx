@@ -979,7 +979,7 @@ function RegisterPage({ onRegister, onNavigate }) {
         color: 'white',
         display: window.innerWidth < 768 ? 'none' : 'flex'
       }}>
-        <h1 style={{fontSize: '48px', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold'}}>BAK UP</h1>
+        <h1 style={{fontSize: '48px', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold'}}>BAK UP CIC</h1>
         <h2 style={{fontSize: '28px', marginBottom: '20px', textAlign: 'center', fontWeight: '400'}}>E-Voucher System</h2>
         <p style={{fontSize: '20px', textAlign: 'center', opacity: 0.9, lineHeight: '1.6'}}>
           Join our community and start making a difference today
@@ -2069,77 +2069,9 @@ function AdminDashboard({ user, onLogout }) {
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="admin" />
-          <button 
-            onClick={() => {
-              setMenuOpen(!menuOpen)
-              if (typeof setSidebarOpen !== 'undefined') setSidebarOpen(false)
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              fontSize: '32px',
-              cursor: 'pointer',
-              padding: '10px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '5px',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-          </button>
         </div>
       </div>
       
-      {/* Dropdown Menu */}
-      {menuOpen && (
-        <div style={{
-          position: 'absolute',
-          top: '70px',
-          right: '20px',
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          zIndex: 1000,
-          minWidth: '250px',
-          overflow: 'hidden'
-        }}>
-          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-            <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
-            <LanguageSelector />
-          </div>
-          
-          <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.7</div>
-          
-          <button
-            onClick={() => {
-              onLogout()
-              setMenuOpen(false)
-            }}
-            style={{
-              width: '100%',
-              padding: '15px 20px',
-              border: 'none',
-              backgroundColor: 'white',
-              textAlign: 'left',
-              cursor: 'pointer',
-              fontSize: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              color: '#d32f2f'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-          >
-            🚺 {t('common.signOut')}
-          </button>
-        </div>
-      )}
       
       {/* Collapsible Sidebar */}
       {sidebarOpen && (
@@ -2172,7 +2104,38 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
           <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 {t('changelog.title')}</button>
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.0.7</div>
+          
+          <div style={{padding: '15px 20px', marginTop: '10px', borderTop: '1px solid #e0e0e0'}}>
+            <div style={{marginBottom: '10px', fontSize: '16px', color: '#666', fontWeight: 'bold'}}>🌐 {t('common.changeLanguage')}</div>
+            <LanguageSelector />
+          </div>
+          
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.0.7</div>
+          
+          <button
+            onClick={() => {
+              onLogout()
+              setSidebarOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              borderTop: '1px solid #e0e0e0',
+              backgroundColor: 'white',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          >
+            🚪 {t('common.signOut')}
+          </button>
         </div>
       )}
       
@@ -5225,9 +5188,7 @@ function VCSEDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
-          <NotificationBell apiCall={apiCall} userType="vcse" />
           <button 
             onClick={() => {
               setMenuOpen(!menuOpen)
@@ -5251,6 +5212,10 @@ function VCSEDashboard({ user, onLogout }) {
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           </button>
+          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        </div>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <NotificationBell apiCall={apiCall} userType="vcse" />
         </div>
       </div>
       
@@ -5259,7 +5224,7 @@ function VCSEDashboard({ user, onLogout }) {
         <div style={{
           position: 'absolute',
           top: '70px',
-          right: '20px',
+          left: '20px',
           backgroundColor: 'white',
           borderRadius: '10px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
@@ -7126,10 +7091,8 @@ function VendorDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <div>
-          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        </div>
-        <button 
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <button 
           onClick={() => setMenuOpen(!menuOpen)}
           style={{
             background: 'none',
@@ -7149,6 +7112,13 @@ function VendorDashboard({ user, onLogout }) {
           <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
         </button>
+          <div>
+            <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+          </div>
+        </div>
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <NotificationBell apiCall={apiCall} userType="vendor" />
+        </div>
       </div>
       
       {/* Dropdown Menu */}
@@ -7156,7 +7126,7 @@ function VendorDashboard({ user, onLogout }) {
         <div style={{
           position: 'absolute',
           top: '70px',
-          right: '20px',
+          left: '20px',
           backgroundColor: 'white',
           borderRadius: '10px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
@@ -8360,12 +8330,7 @@ function RecipientDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-        <div>
-          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
-        </div>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', position: 'relative'}}>
-          <NotificationBell apiCall={apiCall} userType="recipient" />
-          
+        <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           {/* Hamburger Menu Button */}
           <button 
             onClick={() => setShowMenuDropdown(!showMenuDropdown)}
@@ -8388,13 +8353,21 @@ function RecipientDashboard({ user, onLogout }) {
             <div style={{width: '24px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
             <div style={{width: '24px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           </button>
+          <div>
+            <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+          </div>
+        </div>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center', position: 'relative'}}>
+          <NotificationBell apiCall={apiCall} userType="recipient" />
+        </div>
+      </div>
 
-          {/* Dropdown Menu */}
-          {showMenuDropdown && (
-            <div style={{
-              position: 'absolute',
-              top: '60px',
-              right: '0',
+      {/* Dropdown Menu */}
+      {showMenuDropdown && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          left: '20px',
               backgroundColor: 'white',
               borderRadius: '10px',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -9703,6 +9676,7 @@ function SchoolDashboard({ user, onLogout }) {
   const [voucherAmount, setVoucherAmount] = useState('')
   const [message, setMessage] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
   const [assignShopMethod, setAssignShopMethod] = useState('none')
   const [specificShopId, setSpecificShopId] = useState('')
   
@@ -9848,12 +9822,77 @@ function SchoolDashboard({ user, onLogout }) {
       {/* Header */}
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px'}}>
         <div style={{maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
-          <div>
-            <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
-            <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
+          <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
+            <button 
+              onClick={() => setShowMenuDropdown(!showMenuDropdown)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                fontSize: '32px',
+                cursor: 'pointer',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '5px',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+              <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+              <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
+            </button>
+            <div>
+              <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
+              <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
+            </div>
           </div>
-          <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap'}}>
+          <div style={{display: 'flex', gap: '10px', alignItems: 'center', position: 'relative'}}>
             <NotificationBell apiCall={apiCall} userType="school" />
+          </div>
+        </div>
+      </div>
+      
+      {/* Dropdown Menu */}
+      {showMenuDropdown && (
+        <div style={{
+          position: 'absolute',
+          top: '90px',
+          left: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          minWidth: '250px',
+          zIndex: 1000,
+          overflow: 'hidden'
+        }}>
+          <button
+            onClick={() => {
+              setShowPasswordModal(true)
+              setShowMenuDropdown(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              borderBottom: '1px solid #eee',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+          >
+            🔒 Password
+          </button>
+          
+          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
+            <div style={{marginBottom: '10px', fontSize: '16px', color: '#666', fontWeight: 'bold'}}>🌐 {t('common.changeLanguage')}</div>
             <select 
               value={i18n.language} 
               onChange={async (e) => {
@@ -9863,11 +9902,11 @@ function SchoolDashboard({ user, onLogout }) {
               style={{
                 padding: '8px 12px',
                 borderRadius: '5px',
-                border: '2px solid white',
-                backgroundColor: 'transparent',
-                color: 'white',
+                border: '1px solid #ddd',
+                backgroundColor: 'white',
                 cursor: 'pointer',
-                fontSize: '18px'
+                fontSize: '16px',
+                width: '100%'
               }}
             >
               <option value="en">🇬🇧 English</option>
@@ -9875,12 +9914,35 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
-            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.0.7</span>
-            <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
-            <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>
+          
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderBottom: '1px solid #eee'}}>BAK UP E-Voucher System v1.0.7</div>
+          
+          <button
+            onClick={() => {
+              onLogout()
+              setShowMenuDropdown(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+          >
+            🚪 Logout
+          </button>
         </div>
-      </div>
+      )}
       {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
 
       {/* Main Content */}

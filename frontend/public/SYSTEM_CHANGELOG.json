@@ -2244,9 +2244,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 34,
+    "totalChanges": 35,
     "categories": {
-      "Bug Fix": 8,
+      "Bug Fix": 9,
       "Feature": 3,
       "Internationalization": 11,
       "UI Enhancement": 9,
@@ -2256,7 +2256,7 @@
     },
     "priorities": {
       "Critical": 5,
-      "High": 16,
+      "High": 17,
       "Medium": 12,
       "Low": 5
     },
