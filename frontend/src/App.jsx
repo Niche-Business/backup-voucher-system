@@ -1771,7 +1771,6 @@ function AdminDashboard({ user, onLogout }) {
   const [payoutStatusFilter, setPayoutStatusFilter] = useState('all')
   const [payoutSummary, setPayoutSummary] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     loadVcseOrgs()
@@ -2041,10 +2040,7 @@ function AdminDashboard({ user, onLogout }) {
       <div style={{backgroundColor: '#1976d2', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <button 
-            onClick={() => {
-              setSidebarOpen(!sidebarOpen)
-              setMenuOpen(false)
-            }}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
             style={{
               background: 'none',
               border: 'none',
@@ -2069,77 +2065,9 @@ function AdminDashboard({ user, onLogout }) {
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="admin" />
-          <button 
-            onClick={() => {
-              setMenuOpen(!menuOpen)
-              if (typeof setSidebarOpen !== 'undefined') setSidebarOpen(false)
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              fontSize: '32px',
-              cursor: 'pointer',
-              padding: '10px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '5px',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-          </button>
         </div>
       </div>
       
-      {/* Dropdown Menu */}
-      {menuOpen && (
-        <div style={{
-          position: 'absolute',
-          top: '70px',
-          right: '20px',
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          zIndex: 1000,
-          minWidth: '250px',
-          overflow: 'hidden'
-        }}>
-          <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
-            <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
-            <LanguageSelector />
-          </div>
-          
-          <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.9</div>
-          
-          <button
-            onClick={() => {
-              onLogout()
-              setMenuOpen(false)
-            }}
-            style={{
-              width: '100%',
-              padding: '15px 20px',
-              border: 'none',
-              backgroundColor: 'white',
-              textAlign: 'left',
-              cursor: 'pointer',
-              fontSize: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              color: '#d32f2f'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-          >
-            🚺 {t('common.signOut')}
-          </button>
-        </div>
-      )}
       
       {/* Collapsible Sidebar */}
       {sidebarOpen && (
@@ -2172,7 +2100,40 @@ function AdminDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('reports'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'reports' ? '#e3f2fd' : 'transparent'}}>📊 {t('admin.reports')}</button>
           <button onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'settings' ? '#e3f2fd' : 'transparent'}}>⚙️ {t('dashboard.tabs.settings')}</button>
           <button onClick={() => { setActiveTab('changelog'); setSidebarOpen(false); }} style={{...styles.sidebarButton, backgroundColor: activeTab === 'changelog' ? '#e3f2fd' : 'transparent'}}>📝 {t('changelog.title')}</button>
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.0.9</div>
+          
+          {/* Language Selector in Sidebar */}
+          <div style={{padding: '15px 20px', borderTop: '1px solid #e0e0e0', marginTop: '10px'}}>
+            <div style={{marginBottom: '8px', fontSize: '16px', color: '#666', fontWeight: 'bold'}}>🌐 {t('common.changeLanguage')}</div>
+            <LanguageSelector />
+          </div>
+          
+          {/* Sign Out Button */}
+          <button
+            onClick={() => {
+              onLogout()
+              setSidebarOpen(false)
+            }}
+            style={{
+              width: '100%',
+              padding: '15px 20px',
+              border: 'none',
+              backgroundColor: 'transparent',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#d32f2f',
+              borderTop: '1px solid #e0e0e0'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#ffebee'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+          >
+            🚪 {t('common.signOut')}
+          </button>
+          
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.0.10</div>
         </div>
       )}
       
@@ -7201,7 +7162,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.9</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.10</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8478,7 +8439,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.9</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.0.10</div>
 
               <button
                 onClick={() => {
@@ -9875,7 +9836,7 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
-            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.0.9</span>
+            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.0.10</span>
             <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
             <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>

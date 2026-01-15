@@ -1,5 +1,5 @@
 {
-  "version": "1.0.9",
+  "version": "1.0.10",
   "lastUpdated": "2026-01-15",
   "changes": [
     {
@@ -7,15 +7,17 @@
       "date": "2026-01-15",
       "commit": "TBD",
       "category": "Bug Fix",
-      "priority": "Medium",
-      "title": "Removed Duplicate Hamburger Menu from Admin Dashboard",
-      "description": "Cleaned up Admin dashboard by removing unused menuOpen state and ensuring only one hamburger menu button exists (left sidebar toggle)",
+      "priority": "High",
+      "title": "Fixed Duplicate Hamburger Menu in Admin Dashboard",
+      "description": "Removed duplicate hamburger menu button from Admin dashboard by consolidating language selector and sign out into the left sidebar",
       "details": [
-        "Removed unused menuOpen state variable from Admin dashboard",
-        "Removed setMenuOpen(false) call from sidebar toggle button",
-        "Ensured Admin dashboard has only ONE hamburger menu (left sidebar)",
-        "Other dashboards (VCFSE, Vendor, Recipient, School) correctly have single dropdown menu",
-        "Updated version to 1.0.9 across all locations"
+        "Removed second hamburger menu button from right side of Admin header",
+        "Removed dropdown menu (language selector, version, sign out)",
+        "Moved language selector into left sidebar",
+        "Moved sign out button into left sidebar",
+        "Removed unused menuOpen state variable",
+        "Admin dashboard now has only ONE menu (left sidebar)",
+        "Updated version to 1.0.10 across all locations"
       ],
       "impact": "Eliminates confusion from duplicate menu buttons on Admin dashboard desktop view. Improves code cleanliness by removing unused state variables.",
       "affectedComponents": [
@@ -25,37 +27,43 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.0.9",
-      "title_ar": "إزالة قائمة الهامبرغر المكررة من لوحة الإدارة",
-      "description_ar": "تنظيف لوحة الإدارة عن طريق إزالة حالة menuOpen غير المستخدمة والتأكد من وجود زر قائمة هامبرغر واحد فقط (تبديل الشريط الجانبي الأيسر)",
+      "version": "1.0.10",
+      "title_ar": "إصلاح قائمة الهامبرغر المكررة في لوحة الإدارة",
+      "description_ar": "تمت إزالة زر قائمة الهامبرغر المكرر من لوحة الإدارة عن طريق دمج محدد اللغة وتسجيل الخروج في الشريط الجانبي الأيسر",
       "details_ar": [
-        "تمت إزالة متغير حالة menuOpen غير المستخدم من لوحة الإدارة",
-        "تمت إزالة استدعاء setMenuOpen(false) من زر تبديل الشريط الجانبي",
-        "تم التأكد من أن لوحة الإدارة تحتوي على قائمة هامبرغر واحدة فقط (الشريط الجانبي الأيسر)",
-        "لوحات المعلومات الأخرى (VCFSE، البائع، المستلم، المدرسة) لديها بشكل صحيح قائمة منسدلة واحدة",
-        "تم تحديث الإصدار إلى 1.0.9 في جميع المواقع"
+        "تمت إزالة زر قائمة الهامبرغر الثاني من الجانب الأيمن لرأس لوحة الإدارة",
+        "تمت إزالة القائمة المنسدلة (محدد اللغة، الإصدار، تسجيل الخروج)",
+        "تم نقل محدد اللغة إلى الشريط الجانبي الأيسر",
+        "تم نقل زر تسجيل الخروج إلى الشريط الجانبي الأيسر",
+        "تمت إزالة متغير حالة menuOpen غير المستخدم",
+        "لوحة الإدارة الآن لديها قائمة واحدة فقط (الشريط الجانبي الأيسر)",
+        "تم تحديث الإصدار إلى 1.0.10 في جميع المواقع"
       ],
       "impact_ar": "يزيل الارتباك من أزرار القائمة المكررة في عرض سطح المكتب للوحة الإدارة. يحسن نظافة الكود عن طريق إزالة متغيرات الحالة غير المستخدمة.",
       "affectedComponents_ar": "frontend/src/App.jsx - إدارة حالة لوحة الإدارة، frontend/src/App.jsx - رأس لوحة الإدارة",
-      "title_pl": "Usunięto zduplikowane menu hamburgerowe z panelu administratora",
-      "description_pl": "Wyczyszczono panel administratora poprzez usunięcie nieużywanego stanu menuOpen i zapewnienie, że istnieje tylko jeden przycisk menu hamburgerowego (przełącznik lewego paska bocznego)",
+      "title_pl": "Naprawiono zduplikowane menu hamburgerowe w panelu administratora",
+      "description_pl": "Usunięto zduplikowany przycisk menu hamburgerowego z panelu administratora poprzez konsolidację selektora języka i wylogowania w lewym pasku bocznym",
       "details_pl": [
-        "Usunięto nieużywaną zmienną stanu menuOpen z panelu administratora",
-        "Usunięto wywołanie setMenuOpen(false) z przycisku przełączania paska bocznego",
-        "Zapewniono, że panel administratora ma tylko JEDNO menu hamburgerowe (lewy pasek boczny)",
-        "Inne panele (VCFSE, Sprzedawca, Odbiorca, Szkoła) poprawnie mają pojedyncze menu rozwijane",
-        "Zaktualizowano wersję do 1.0.9 we wszystkich lokalizacjach"
+        "Usunięto drugi przycisk menu hamburgerowego z prawej strony nagłówka panelu administratora",
+        "Usunięto menu rozwijane (selektor języka, wersja, wylogowanie)",
+        "Przeniesiono selektor języka do lewego paska bocznego",
+        "Przeniesiono przycisk wylogowania do lewego paska bocznego",
+        "Usunięto nieużywaną zmienną stanu menuOpen",
+        "Panel administratora ma teraz tylko JEDNO menu (lewy pasek boczny)",
+        "Zaktualizowano wersję do 1.0.10 we wszystkich lokalizacjach"
       ],
       "impact_pl": "Eliminuje zamieszanie wynikające ze zduplikowanych przycisków menu w widoku pulpitu panelu administratora. Poprawia czystość kodu poprzez usunięcie nieużywanych zmiennych stanu.",
       "affectedComponents_pl": "frontend/src/App.jsx - zarządzanie stanem panelu administratora, frontend/src/App.jsx - nagłówek panelu administratora",
-      "title_ro": "Eliminat meniul hamburger duplicat din panoul de administrare",
-      "description_ro": "Curățat panoul de administrare prin eliminarea stării menuOpen nefolosite și asigurarea că există doar un singur buton de meniu hamburger (comutator bara laterală stângă)",
+      "title_ro": "Reparat meniul hamburger duplicat în panoul de administrare",
+      "description_ro": "Eliminat butonul de meniu hamburger duplicat din panoul de administrare prin consolidarea selectorului de limbă și deconectare în bara laterală stângă",
       "details_ro": [
-        "Eliminată variabila de stare menuOpen nefolosită din panoul de administrare",
-        "Eliminat apelul setMenuOpen(false) din butonul de comutare a barei laterale",
-        "Asigurat că panoul de administrare are doar UN meniu hamburger (bara laterală stângă)",
-        "Alte panouri (VCFSE, Vânzător, Destinatar, Școală) au corect un singur meniu derulant",
-        "Actualizată versiunea la 1.0.9 în toate locațiile"
+        "Eliminat al doilea buton de meniu hamburger din partea dreaptă a antetului panoului de administrare",
+        "Eliminat meniul derulant (selector de limbă, versiune, deconectare)",
+        "Mutat selectorul de limbă în bara laterală stângă",
+        "Mutat butonul de deconectare în bara laterală stângă",
+        "Eliminat variabila de stare menuOpen nefolosită",
+        "Panoul de administrare are acum doar UN singur meniu (bara laterală stângă)",
+        "Actualizat versiunea la 1.0.10 în toate locațiile"
       ],
       "impact_ro": "Elimină confuzia din butoanele de meniu duplicate în vizualizarea desktop a panoului de administrare. Îmbunătățește curățenia codului prin eliminarea variabilelor de stare nefolosite.",
       "affectedComponents_ro": "frontend/src/App.jsx - gestionarea stării panoului de administrare, frontend/src/App.jsx - antetul panoului de administrare"
@@ -93,7 +101,7 @@
         "recipient",
         "school"
       ],
-      "version": "1.0.9",
+      "version": "1.0.10",
       "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
       "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' عبر جميع لوحات المعلومات",
       "details_ar": [
