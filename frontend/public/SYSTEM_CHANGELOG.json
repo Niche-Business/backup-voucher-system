@@ -1,7 +1,65 @@
 {
-  "version": "1.0.7",
-  "lastUpdated": "2026-01-13",
+  "version": "1.0.9",
+  "lastUpdated": "2026-01-15",
   "changes": [
+    {
+      "id": 36,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "Medium",
+      "title": "Removed Duplicate Hamburger Menu from Admin Dashboard",
+      "description": "Cleaned up Admin dashboard by removing unused menuOpen state and ensuring only one hamburger menu button exists (left sidebar toggle)",
+      "details": [
+        "Removed unused menuOpen state variable from Admin dashboard",
+        "Removed setMenuOpen(false) call from sidebar toggle button",
+        "Ensured Admin dashboard has only ONE hamburger menu (left sidebar)",
+        "Other dashboards (VCFSE, Vendor, Recipient, School) correctly have single dropdown menu",
+        "Updated version to 1.0.9 across all locations"
+      ],
+      "impact": "Eliminates confusion from duplicate menu buttons on Admin dashboard desktop view. Improves code cleanliness by removing unused state variables.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - Admin dashboard state management",
+        "frontend/src/App.jsx - Admin dashboard header"
+      ],
+      "userTypes": [
+        "admin"
+      ],
+      "version": "1.0.9",
+      "title_ar": "إزالة قائمة الهامبرغر المكررة من لوحة الإدارة",
+      "description_ar": "تنظيف لوحة الإدارة عن طريق إزالة حالة menuOpen غير المستخدمة والتأكد من وجود زر قائمة هامبرغر واحد فقط (تبديل الشريط الجانبي الأيسر)",
+      "details_ar": [
+        "تمت إزالة متغير حالة menuOpen غير المستخدم من لوحة الإدارة",
+        "تمت إزالة استدعاء setMenuOpen(false) من زر تبديل الشريط الجانبي",
+        "تم التأكد من أن لوحة الإدارة تحتوي على قائمة هامبرغر واحدة فقط (الشريط الجانبي الأيسر)",
+        "لوحات المعلومات الأخرى (VCFSE، البائع، المستلم، المدرسة) لديها بشكل صحيح قائمة منسدلة واحدة",
+        "تم تحديث الإصدار إلى 1.0.9 في جميع المواقع"
+      ],
+      "impact_ar": "يزيل الارتباك من أزرار القائمة المكررة في عرض سطح المكتب للوحة الإدارة. يحسن نظافة الكود عن طريق إزالة متغيرات الحالة غير المستخدمة.",
+      "affectedComponents_ar": "frontend/src/App.jsx - إدارة حالة لوحة الإدارة، frontend/src/App.jsx - رأس لوحة الإدارة",
+      "title_pl": "Usunięto zduplikowane menu hamburgerowe z panelu administratora",
+      "description_pl": "Wyczyszczono panel administratora poprzez usunięcie nieużywanego stanu menuOpen i zapewnienie, że istnieje tylko jeden przycisk menu hamburgerowego (przełącznik lewego paska bocznego)",
+      "details_pl": [
+        "Usunięto nieużywaną zmienną stanu menuOpen z panelu administratora",
+        "Usunięto wywołanie setMenuOpen(false) z przycisku przełączania paska bocznego",
+        "Zapewniono, że panel administratora ma tylko JEDNO menu hamburgerowe (lewy pasek boczny)",
+        "Inne panele (VCFSE, Sprzedawca, Odbiorca, Szkoła) poprawnie mają pojedyncze menu rozwijane",
+        "Zaktualizowano wersję do 1.0.9 we wszystkich lokalizacjach"
+      ],
+      "impact_pl": "Eliminuje zamieszanie wynikające ze zduplikowanych przycisków menu w widoku pulpitu panelu administratora. Poprawia czystość kodu poprzez usunięcie nieużywanych zmiennych stanu.",
+      "affectedComponents_pl": "frontend/src/App.jsx - zarządzanie stanem panelu administratora, frontend/src/App.jsx - nagłówek panelu administratora",
+      "title_ro": "Eliminat meniul hamburger duplicat din panoul de administrare",
+      "description_ro": "Curățat panoul de administrare prin eliminarea stării menuOpen nefolosite și asigurarea că există doar un singur buton de meniu hamburger (comutator bara laterală stângă)",
+      "details_ro": [
+        "Eliminată variabila de stare menuOpen nefolosită din panoul de administrare",
+        "Eliminat apelul setMenuOpen(false) din butonul de comutare a barei laterale",
+        "Asigurat că panoul de administrare are doar UN meniu hamburger (bara laterală stângă)",
+        "Alte panouri (VCFSE, Vânzător, Destinatar, Școală) au corect un singur meniu derulant",
+        "Actualizată versiunea la 1.0.9 în toate locațiile"
+      ],
+      "impact_ro": "Elimină confuzia din butoanele de meniu duplicate în vizualizarea desktop a panoului de administrare. Îmbunătățește curățenia codului prin eliminarea variabilelor de stare nefolosite.",
+      "affectedComponents_ro": "frontend/src/App.jsx - gestionarea stării panoului de administrare, frontend/src/App.jsx - antetul panoului de administrare"
+    },
     {
       "id": 35,
       "date": "2026-01-13",
@@ -9,11 +67,11 @@
       "category": "Bug Fix",
       "priority": "High",
       "title": "Fixed Menu Conflict Bug and Updated Version Display to Full System Name",
-      "description": "Resolved UI conflict where left sidebar and right dropdown menu could open simultaneously, and updated version display from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.7' across all dashboards",
+      "description": "Resolved UI conflict where left sidebar and right dropdown menu could open simultaneously, and updated version display from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.9' across all dashboards",
       "details": [
         "Fixed menu conflict in Admin dashboard - left sidebar now closes when right menu opens, and vice versa",
         "Fixed menu conflict in VCFSE dashboard - left sidebar now closes when right menu opens, and vice versa",
-        "Updated version text from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.7' in all sidebar/menu locations",
+        "Updated version text from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.9' in all sidebar/menu locations",
         "Admin: Version displays at bottom of collapsible sidebar after System Changelog button",
         "VCFSE: Version displays in dropdown menu before logout button",
         "Vendor: Version displays in dropdown menu after Food To Go button",
@@ -35,13 +93,13 @@
         "recipient",
         "school"
       ],
-      "version": "1.0.7",
+      "version": "1.0.9",
       "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
-      "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.7' عبر جميع لوحات المعلومات",
+      "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' عبر جميع لوحات المعلومات",
       "details_ar": [
         "تم إصلاح تعارض القائمة في لوحة الإدارة - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
         "تم إصلاح تعارض القائمة في لوحة VCFSE - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
-        "تم تحديث نص الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.7' في جميع مواقع الشريط الجانبي/القائمة",
+        "تم تحديث نص الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' في جميع مواقع الشريط الجانبي/القائمة",
         "المسؤول: يعرض الإصدار في أسفل الشريط الجانبي القابل للطي بعد زر سجل تغييرات النظام",
         "VCFSE: يعرض الإصدار في القائمة المنسدلة قبل زر تسجيل الخروج",
         "البائع: يعرض الإصدار في القائمة المنسدلة بعد زر الطعام للذهاب",
@@ -53,11 +111,11 @@
       "impact_ar": "يزيل سلوك واجهة المستخدم المربك حيث يمكن أن تتداخل قوائم متعددة، مما يحسن وضوح التنقل. الاسم الكامل للنظام في عرض الإصدار يوفر علامة تجارية أفضل وتحديد إصدار أوضح لجميع أنواع المستخدمين.",
       "affectedComponents_ar": "frontend/src/App.jsx - معالجات قائمة لوحة الإدارة، معالجات قائمة لوحة VCFSE، جميع نصوص عرض الإصدار (5 مواقع)",
       "title_pl": "Naprawiono błąd konfliktu menu i zaktualizowano wyświetlanie wersji do pełnej nazwy systemu",
-      "description_pl": "Rozwiązano konflikt interfejsu użytkownika, w którym lewy pasek boczny i prawe menu rozwijane mogły otworzyć się jednocześnie, oraz zaktualizowano wyświetlanie wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.7' we wszystkich pulpitach",
+      "description_pl": "Rozwiązano konflikt interfejsu użytkownika, w którym lewy pasek boczny i prawe menu rozwijane mogły otworzyć się jednocześnie, oraz zaktualizowano wyświetlanie wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.9' we wszystkich pulpitach",
       "details_pl": [
         "Naprawiono konflikt menu w pulpicie administratora - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
         "Naprawiono konflikt menu w pulpicie VCFSE - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
-        "Zaktualizowano tekst wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.7' we wszystkich lokalizacjach paska bocznego/menu",
+        "Zaktualizowano tekst wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.9' we wszystkich lokalizacjach paska bocznego/menu",
         "Administrator: Wersja wyświetla się na dole zwijane go paska bocznego po przycisku System Changelog",
         "VCFSE: Wersja wyświetla się w menu rozwijanym przed przyciskiem wylogowania",
         "Sprzedawca: Wersja wyświetla się w menu rozwijanym po przycisku Food To Go",
@@ -69,11 +127,11 @@
       "impact_pl": "Eliminuje mylące zachowanie interfejsu użytkownika, w którym wiele menu mogło się nakładać, poprawiając przejrzystość nawigacji. Pełna nazwa systemu w wyświetlaniu wersji zapewnia lepszy branding i wyraźniejszą identyfikację wersji dla wszystkich typów użytkowników.",
       "affectedComponents_pl": "frontend/src/App.jsx - obsługa menu pulpitu administratora, obsługa menu pulpitu VCFSE, wszystkie teksty wyświetlania wersji (5 lokalizacji)",
       "title_ro": "Remediat bug-ul de conflict de meniu și actualizat afișarea versiunii la numele complet al sistemului",
-      "description_ro": "Rezolvat conflictul UI unde bara laterală stângă și meniul drop-down drept puteau fi deschise simultan, și actualizat afișarea versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.7' pe toate panourile de control",
+      "description_ro": "Rezolvat conflictul UI unde bara laterală stângă și meniul drop-down drept puteau fi deschise simultan, și actualizat afișarea versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.9' pe toate panourile de control",
       "details_ro": [
         "Remediat conflictul de meniu în panoul de administrare - bara laterală stângă se închide acum când se deschide meniul drept și invers",
         "Remediat conflictul de meniu în panoul VCFSE - bara laterală stângă se închide acum când se deschide meniul drept și invers",
-        "Actualizat textul versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.7' în toate locațiile barei laterale/meniului",
+        "Actualizat textul versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.9' în toate locațiile barei laterale/meniului",
         "Administrator: Versiunea se afișează în partea de jos a barei laterale pliabile după butonul System Changelog",
         "VCFSE: Versiunea se afișează în meniul drop-down înainte de butonul de deconectare",
         "Vânzător: Versiunea se afișează în meniul drop-down după butonul Food To Go",
@@ -2244,9 +2302,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 35,
+    "totalChanges": 36,
     "categories": {
-      "Bug Fix": 9,
+      "Bug Fix": 10,
       "Feature": 3,
       "Internationalization": 11,
       "UI Enhancement": 9,
@@ -2257,7 +2315,7 @@
     "priorities": {
       "Critical": 5,
       "High": 17,
-      "Medium": 12,
+      "Medium": 13,
       "Low": 5
     },
     "affectedUserTypes": {
