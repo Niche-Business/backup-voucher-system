@@ -5599,6 +5599,14 @@ def get_school_balance():
 @app.route('/api/school/issue-voucher', methods=['POST'])
 def school_issue_voucher():
     """School/Care Organization issues a voucher to a family"""
+    # Import required modules at the top of the function
+    import random
+    import string
+    import json
+    from datetime import datetime, timedelta
+    from werkzeug.security import generate_password_hash
+    import secrets
+    
     try:
         user_id = session.get('user_id')
         if not user_id:
@@ -5638,9 +5646,6 @@ def school_issue_voucher():
         
         if not recipient:
             # Create new recipient account
-            from werkzeug.security import generate_password_hash
-            import secrets
-            
             temp_password = secrets.token_urlsafe(12)
             recipient = User(
                 email=data['recipient_email'],
@@ -5657,11 +5662,6 @@ def school_issue_voucher():
             db.session.flush()
         
         # Generate unique voucher codes and create multiple vouchers
-        import random
-        import string
-        from datetime import datetime, timedelta
-        import json
-        
         vendor_restrictions = None
         if selected_shops and selected_shops != 'all':
             vendor_restrictions = json.dumps(selected_shops)  # Store as JSON array

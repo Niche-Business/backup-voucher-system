@@ -2133,7 +2133,7 @@ function AdminDashboard({ user, onLogout }) {
             🚪 {t('common.signOut')}
           </button>
           
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.0</div>
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.1</div>
         </div>
       )}
       
@@ -6065,7 +6065,7 @@ function VCSEDashboard({ user, onLogout }) {
                   <option value="recipient_choice">Recipient to choose shop</option>
                   <option value="specific_shop">Assign specific shop</option>
                 </select>
-                <small style={{color: '#666', display: 'block', marginTop: '5px'}}>
+                <small style={{color: '#666', display: 'block', marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'normal'}}>
                   Choose how the shop will be assigned for discounted food items
                 </small>
                 
@@ -7162,7 +7162,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.0</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.1</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8439,7 +8439,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.0</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.1</div>
 
               <button
                 onClick={() => {
@@ -9836,7 +9836,7 @@ function SchoolDashboard({ user, onLogout }) {
               <option value="ro">🇷🇴 Română</option>
               <option value="pl">🇵🇱 Polski</option>
             </select>
-            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.1.0</span>
+            <span style={{fontSize: '0.85em', opacity: 0.8, padding: '0 10px'}}>BAK UP E-Voucher System v1.1.1</span>
             <button onClick={() => setShowPasswordModal(true)} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>🔒 Password</button>
             <button onClick={onLogout} style={{...styles.secondaryButton, borderColor: 'white', padding: '10px 16px', fontSize: '18px', whiteSpace: 'nowrap'}}>Logout</button>
           </div>
@@ -10071,7 +10071,7 @@ function SchoolDashboard({ user, onLogout }) {
                   <option value="recipient_choice">Recipient to choose shop</option>
                   <option value="specific_shop">Assign specific shop</option>
                 </select>
-                <small style={{color: '#666', display: 'block', marginTop: '5px'}}>
+                <small style={{color: '#666', display: 'block', marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'normal'}}>
                   Choose how the shop will be assigned for discounted food items
                 </small>
                 

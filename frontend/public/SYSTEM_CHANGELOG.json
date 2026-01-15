@@ -1,7 +1,62 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "lastUpdated": "2026-01-15",
   "changes": [
+    {
+      "id": 37,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Voucher Issuance DateTime Error and UI Text Display",
+      "description": "Resolved datetime import scope issue causing voucher issuance failures and fixed text wrapping in Food To Go shop assignment section",
+      "details": [
+        "Moved datetime and other imports to top of school_issue_voucher function to prevent scope errors",
+        "Fixed 'cannot access local variable datetime' error that prevented voucher issuance",
+        "Added proper CSS styling (wordWrap and whiteSpace) to Food To Go shop assignment helper text",
+        "Ensured text 'Choose how the shop will be assigned for discounted food items' displays completely on mobile"
+      ],
+      "impact": "Schools and Care Organizations can now successfully issue vouchers without datetime errors. Improved mobile UX with properly wrapped text in voucher issuance form.",
+      "affectedComponents": [
+        "backend/src/main.py - school_issue_voucher function",
+        "frontend/src/App.jsx - Food To Go shop assignment section"
+      ],
+      "userTypes": [
+        "school",
+        "admin"
+      ],
+      "version": "1.1.1",
+      "title_ar": "إصلاح خطأ DateTime في إصدار القسيمة وعرض نص واجهة المستخدم",
+      "description_ar": "تم حل مشكلة نطاق استيراد datetime التي تسببت في فشل إصدار القسيمة وإصلاح التفاف النص في قسم تعيين المتجر للطعام للذهاب",
+      "details_ar": [
+        "تم نقل datetime والاستيرادات الأخرى إلى أعلى دالة school_issue_voucher لمنع أخطاء النطاق",
+        "تم إصلاح خطأ 'لا يمكن الوصول إلى متغير محلي datetime' الذي منع إصدار القسيمة",
+        "تمت إضافة تصميم CSS مناسب (wordWrap و whiteSpace) إلى نص المساعدة لتعيين متجر الطعام للذهاب",
+        "التأكد من عرض النص 'اختر كيفية تعيين المتجر لعناصر الطعام المخفضة' بالكامل على الهاتف المحمول"
+      ],
+      "impact_ar": "يمكن للمدارس ومنظمات الرعاية الآن إصدار القسائم بنجاح دون أخطاء datetime. تحسين تجربة المستخدم على الهاتف المحمول مع نص ملفوف بشكل صحيح في نموذج إصدار القسيمة.",
+      "affectedComponents_ar": "backend/src/main.py - دالة school_issue_voucher، frontend/src/App.jsx - قسم تعيين متجر الطعام للذهاب",
+      "title_pl": "Naprawiono błąd DateTime przy wydawaniu vouchera i wyświetlanie tekstu UI",
+      "description_pl": "Rozwiązano problem zakresu importu datetime powodujący niepowodzenia wydawania voucherów i naprawiono zawijanie tekstu w sekcji przypisywania sklepu Food To Go",
+      "details_pl": [
+        "Przeniesiono datetime i inne importy na górę funkcji school_issue_voucher, aby zapobiec błędom zakresu",
+        "Naprawiono błąd 'nie można uzyskać dostępu do zmiennej lokalnej datetime', który uniemożliwiał wydawanie voucherów",
+        "Dodano odpowiednie style CSS (wordWrap i whiteSpace) do tekstu pomocniczego przypisywania sklepu Food To Go",
+        "Zapewniono pełne wyświetlanie tekstu 'Wybierz sposób przypisania sklepu dla produktów spożywczych ze zniżką' na urządzeniach mobilnych"
+      ],
+      "impact_pl": "Szkoły i organizacje opieki mogą teraz pomyślnie wydawać vouchery bez błędów datetime. Ulepszone UX mobilne z prawidłowo zawijanym tekstem w formularzu wydawania voucherów.",
+      "affectedComponents_pl": "backend/src/main.py - funkcja school_issue_voucher, frontend/src/App.jsx - sekcja przypisywania sklepu Food To Go",
+      "title_ro": "Corectat eroare DateTime la emiterea voucherului și afișare text UI",
+      "description_ro": "Rezolvată problema de domeniu de import datetime care cauza eșecuri la emiterea voucherelor și corectat înfășurarea textului în secțiunea de atribuire magazin Food To Go",
+      "details_ro": [
+        "Mutat datetime și alte importuri în partea de sus a funcției school_issue_voucher pentru a preveni erori de domeniu",
+        "Corectat eroarea 'nu se poate accesa variabila locală datetime' care împiedica emiterea voucherelor",
+        "Adăugat stilizare CSS corespunzătoare (wordWrap și whiteSpace) la textul de ajutor pentru atribuirea magazinului Food To Go",
+        "Asigurat afișarea completă a textului 'Alegeți cum va fi atribuit magazinul pentru articolele alimentare reduse' pe mobil"
+      ],
+      "impact_ro": "Școlile și organizațiile de îngrijire pot acum emite cu succes vouchere fără erori datetime. UX mobil îmbunătățit cu text înfășurat corect în formularul de emitere vouchere.",
+      "affectedComponents_ro": "backend/src/main.py - funcția school_issue_voucher, frontend/src/App.jsx - secțiunea de atribuire magazin Food To Go"
+    },
     {
       "id": 36,
       "date": "2026-01-15",
@@ -27,7 +82,7 @@
       "userTypes": [
         "admin"
       ],
-      "version": "1.1.0",
+      "version": "1.1.1",
       "title_ar": "إصلاح قائمة الهامبرغر المكررة في لوحة الإدارة",
       "description_ar": "تمت إزالة زر قائمة الهامبرغر المكرر من لوحة الإدارة عن طريق دمج محدد اللغة وتسجيل الخروج في الشريط الجانبي الأيسر",
       "details_ar": [
@@ -101,7 +156,7 @@
         "recipient",
         "school"
       ],
-      "version": "1.1.0",
+      "version": "1.1.1",
       "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
       "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' عبر جميع لوحات المعلومات",
       "details_ar": [
@@ -2310,7 +2365,7 @@
     }
   ],
   "summary": {
-    "totalChanges": 36,
+    "totalChanges": 37,
     "categories": {
       "Bug Fix": 10,
       "Feature": 3,
@@ -2322,7 +2377,7 @@
     },
     "priorities": {
       "Critical": 5,
-      "High": 17,
+      "High": 18,
       "Medium": 13,
       "Low": 5
     },
