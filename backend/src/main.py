@@ -5747,15 +5747,19 @@ def school_issue_voucher():
                     user.organization_name
                 )
             else:
-                # For multiple vouchers, send batch email
-                email_result = email_service.send_batch_vouchers_email(
-                    recipient.email,
-                    f"{recipient.first_name} {recipient.last_name}",
-                    voucher_codes,
-                    voucher_amounts,
-                    amount,
-                    user.organization_name
-                )
+                # For multiple vouchers, send individual emails for each voucher
+                email_result = True
+                for i, voucher_code in enumerate(voucher_codes):
+                    individual_result = email_service.send_voucher_issued_email(
+                        recipient.email,
+                        f"{recipient.first_name} {recipient.last_name}",
+                        voucher_code,
+                        voucher_amounts[i],
+                        user.organization_name
+                    )
+                    if not individual_result:
+                        email_result = False
+                        print(f"Failed to send email for voucher {voucher_code}")
             if not email_result:
                 print(f"Failed to send email to {recipient.email}")
         

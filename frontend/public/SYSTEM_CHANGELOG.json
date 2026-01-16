@@ -1,7 +1,60 @@
 {
-  "version": "1.1.2",
-  "lastUpdated": "2026-01-15",
+  "version": "1.1.3",
+  "lastUpdated": "2026-01-16",
   "changes": [
+    {
+      "id": 39,
+      "date": "2026-01-16",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed EmailService Error in School Voucher Issuance",
+      "description": "Resolved 'EmailService' object has no attribute 'send_batch_vouchers_email' error by implementing individual email sends for multiple vouchers",
+      "details": [
+        "Replaced non-existent send_batch_vouchers_email() method with loop sending individual emails",
+        "Each voucher in a batch now receives its own email notification with correct amount",
+        "Maintained error handling and logging for failed email sends",
+        "Fixed critical bug preventing schools from issuing multiple vouchers to families"
+      ],
+      "impact": "Schools and Care Organizations can now successfully issue multiple vouchers to families without email service errors. Recipients receive individual email notifications for each voucher issued.",
+      "affectedComponents": [
+        "backend/src/main.py - school_issue_voucher function (lines 5749-5762)"
+      ],
+      "userTypes": [
+        "school"
+      ],
+      "version": "1.1.3",
+      "title_ar": "إصلاح خطأ EmailService في إصدار قسيمة المدرسة",
+      "description_ar": "تم حل خطأ 'كائن EmailService ليس له سمة send_batch_vouchers_email' من خلال تنفيذ إرسال بريد إلكتروني فردي للقسائم المتعددة",
+      "details_ar": [
+        "استبدال طريقة send_batch_vouchers_email() غير الموجودة بحلقة ترسل رسائل بريد إلكتروني فردية",
+        "تتلقى كل قسيمة في دفعة الآن إشعار بريد إلكتروني خاص بها بالمبلغ الصحيح",
+        "الحفاظ على معالجة الأخطاء والتسجيل لإرسال البريد الإلكتروني الفاشل",
+        "إصلاح خطأ حرج يمنع المدارس من إصدار قسائم متعددة للعائلات"
+      ],
+      "impact_ar": "يمكن للمدارس ومنظمات الرعاية الآن إصدار قسائم متعددة للعائلات بنجاح دون أخطاء خدمة البريد الإلكتروني. يتلقى المستلمون إشعارات بريد إلكتروني فردية لكل قسيمة صادرة.",
+      "affectedComponents_ar": "backend/src/main.py - دالة school_issue_voucher (الأسطر 5749-5762)",
+      "title_pl": "Naprawiono błąd EmailService przy wydawaniu vouchera szkolnego",
+      "description_pl": "Rozwiązano błąd 'obiekt EmailService nie ma atrybutu send_batch_vouchers_email' przez implementację indywidualnych wysyłek e-mail dla wielu voucherów",
+      "details_pl": [
+        "Zastąpiono nieistniejącą metodę send_batch_vouchers_email() pętlą wysyłającą indywidualne e-maile",
+        "Każdy voucher w partii otrzymuje teraz własne powiadomienie e-mail z poprawną kwotą",
+        "Utrzymano obsługę błędów i logowanie dla nieudanych wysyłek e-mail",
+        "Naprawiono krytyczny błąd uniemożliwiający szkołom wydawanie wielu voucherów rodzinom"
+      ],
+      "impact_pl": "Szkoły i organizacje opieki mogą teraz pomyślnie wydawać wiele voucherów rodzinom bez błędów usługi e-mail. Odbiorcy otrzymują indywidualne powiadomienia e-mail dla każdego wydanego vouchera.",
+      "affectedComponents_pl": "backend/src/main.py - funkcja school_issue_voucher (linie 5749-5762)",
+      "title_ro": "Corectat eroarea EmailService la emiterea voucherului școlar",
+      "description_ro": "Rezolvat eroarea 'obiectul EmailService nu are atributul send_batch_vouchers_email' prin implementarea trimiterii individuale de e-mailuri pentru vouchere multiple",
+      "details_ro": [
+        "Înlocuit metoda inexistentă send_batch_vouchers_email() cu buclă care trimite e-mailuri individuale",
+        "Fiecare voucher dintr-un lot primește acum propria notificare prin e-mail cu suma corectă",
+        "Menținut gestionarea erorilor și înregistrarea pentru trimiteri de e-mail eșuate",
+        "Corectat bug critic care împiedica școlile să emită vouchere multiple familiilor"
+      ],
+      "impact_ro": "Școlile și organizațiile de îngrijire pot acum emite cu succes vouchere multiple familiilor fără erori de serviciu e-mail. Destinatarii primesc notificări individuale prin e-mail pentru fiecare voucher emis.",
+      "affectedComponents_ro": "backend/src/main.py - funcția school_issue_voucher (liniile 5749-5762)"
+    },
     {
       "id": 38,
       "date": "2026-01-15",
@@ -2418,9 +2471,9 @@
     }
   ],
   "summary": {
-    "totalChanges": 38,
+    "totalChanges": 39,
     "categories": {
-      "Bug Fix": 10,
+      "Bug Fix": 11,
       "Feature": 3,
       "Internationalization": 11,
       "UI Enhancement": 10,
@@ -2430,7 +2483,7 @@
     },
     "priorities": {
       "Critical": 5,
-      "High": 18,
+      "High": 19,
       "Medium": 13,
       "Low": 5
     },
@@ -2439,7 +2492,7 @@
       "admin": 6,
       "vcse": 5,
       "recipient": 2,
-      "school": 4,
+      "school": 5,
       "vendor": 2
     }
   }
