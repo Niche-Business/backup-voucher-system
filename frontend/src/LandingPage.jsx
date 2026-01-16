@@ -454,7 +454,7 @@ const LandingPage = ({ onNavigate }) => {
               Charity Company Registration Number: 12994379
             </p>
             <p style={{ margin: '0', fontSize: '13px', fontStyle: 'italic' }}>
-              BAK UP E-Voucher System v1.1.3
+              BAK UP E-Voucher System v1.1.4
             </p>
           </div>
         </div>

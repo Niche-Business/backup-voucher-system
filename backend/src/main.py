@@ -750,31 +750,31 @@ def register():
             if not data.get(field):
                 return jsonify({'error': f'{field} is required'}), 400
         
-        # VCFSE-specific validation: Charity Commission number is mandatory
+        # VCFSE-specific validation: Charity Commission number is now optional
         if data['user_type'] == 'vcse':
-            if not data.get('charity_commission_number'):
-                return jsonify({'error': 'Charity Commission Registration Number is required for VCFSE organizations'}), 400
             if not data.get('organization_name'):
                 return jsonify({'error': 'Organization name is required for VCFSE organizations'}), 400
             
-            # Verify charity number AND organization name with UK Charity Commission
-            verification_result = verify_charity_number(
-                data['charity_commission_number'],
-                data['organization_name']  # Pass organization name for matching
-            )
-            
-            if not verification_result['valid']:
-                error_message = verification_result['message']
+            # Only verify charity number if provided (optional field)
+            if data.get('charity_commission_number'):
+                # Verify charity number AND organization name with UK Charity Commission
+                verification_result = verify_charity_number(
+                    data['charity_commission_number'],
+                    data['organization_name']  # Pass organization name for matching
+                )
                 
-                # If name mismatch, provide the registered name
-                if verification_result.get('name_match') == False:
-                    error_message += f"\n\nThe registered charity name is: '{verification_result.get('charity_name')}'\nPlease use this exact name when registering."
-                
-                return jsonify({
-                    'error': error_message,
-                    'charity_number': data['charity_commission_number'],
-                    'registered_name': verification_result.get('charity_name')
-                }), 400
+                if not verification_result['valid']:
+                    error_message = verification_result['message']
+                    
+                    # If name mismatch, provide the registered name
+                    if verification_result.get('name_match') == False:
+                        error_message += f"\n\nThe registered charity name is: '{verification_result.get('charity_name')}'\nPlease use this exact name when registering."
+                    
+                    return jsonify({
+                        'error': error_message,
+                        'charity_number': data['charity_commission_number'],
+                        'registered_name': verification_result.get('charity_name')
+                    }), 400
         
         # Check if user already exists
         if User.query.filter_by(email=data['email']).first():

@@ -846,10 +846,7 @@ function RegisterPage({ onRegister, onNavigate }) {
           setError('Please enter your organization name')
           return false
         }
-        if (!formData.charityCommissionNumber) {
-          setError('Please enter your charity commission number')
-          return false
-        }
+        // Charity number is now optional - removed validation
       }
       if (formData.userType === 'school' && !formData.organizationName) {
         setError('Please enter your school/organization name')
@@ -1354,7 +1351,7 @@ function RegisterPage({ onRegister, onNavigate }) {
                     </div>
                     <div style={{marginBottom: '20px'}}>
                       <label style={{display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '16px', color: '#333'}}>
-                        {t('register.charityNumberLabel')} <span style={{color: '#f44336'}}>*</span>
+                        {t('register.charityNumberLabel')} <span style={{color: '#666', fontWeight: 'normal', fontSize: '14px'}}>(Optional)</span>
                       </label>
                       <input
                         type="text"
@@ -1373,12 +1370,11 @@ function RegisterPage({ onRegister, onNavigate }) {
                         }}
                         onFocus={(e) => e.target.style.borderColor = '#4CAF50'}
                         onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
-                        required
                       />
-                      <div style={{backgroundColor: '#fff3e0', border: '1px solid #ff9800', borderRadius: '8px', padding: '12px', marginTop: '8px'}}>
-                        <small style={{color: '#e65100', fontSize: '14px', display: 'block', lineHeight: '1.5'}}>
-                          <strong>🔒 Verification Required:</strong><br/>
-                          Your charity number will be verified with the UK Charity Commission
+                      <div style={{backgroundColor: '#e3f2fd', border: '1px solid #2196F3', borderRadius: '8px', padding: '12px', marginTop: '8px'}}>
+                        <small style={{color: '#0d47a1', fontSize: '14px', display: 'block', lineHeight: '1.5'}}>
+                          <strong>ℹ️ Optional Field:</strong><br/>
+                          If you have a charity number, it will be verified with the UK Charity Commission. Organizations without a charity number can still register.
                         </small>
                       </div>
                     </div>
@@ -2133,7 +2129,7 @@ function AdminDashboard({ user, onLogout }) {
             🚪 {t('common.signOut')}
           </button>
           
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.3</div>
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.4</div>
         </div>
       )}
       
@@ -7162,7 +7158,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.3</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.4</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8439,7 +8435,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.3</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.4</div>
 
               <button
                 onClick={() => {
@@ -9886,7 +9882,7 @@ function SchoolDashboard({ user, onLogout }) {
               </select>
             </div>
             <div style={{padding: '10px', borderTop: '1px solid #eee', fontSize: '0.85em', color: '#666', textAlign: 'center'}}>
-              BAK UP E-Voucher System v1.1.3
+              BAK UP E-Voucher System v1.1.4
             </div>
             <button
               onClick={() => {

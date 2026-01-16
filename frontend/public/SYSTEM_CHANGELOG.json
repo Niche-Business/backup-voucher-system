@@ -1,7 +1,70 @@
 {
-  "version": "1.1.3",
+  "version": "1.1.4",
   "lastUpdated": "2026-01-16",
   "changes": [
+    {
+      "id": 40,
+      "date": "2026-01-16",
+      "commit": "TBD",
+      "category": "Feature",
+      "priority": "Medium",
+      "title": "Made Charity Number Optional for VCFSE Registration",
+      "description": "Removed requirement for charity commission number to allow non-registered local organizations to join the scheme",
+      "details": [
+        "Charity number field is now optional during VCFSE signup",
+        "Removed frontend validation requiring charity number",
+        "Updated backend to only verify charity number if provided",
+        "Changed UI label from required (*) to (Optional)",
+        "Updated help text to clarify organizations without charity numbers can register",
+        "Admin dashboard still displays charity number field for tracking purposes"
+      ],
+      "impact": "Great local organizations without charity registration numbers can now join the BAK UP E-Voucher Scheme. The system still collects charity numbers when available for future reference and verification.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - VCFSE signup form validation and UI",
+        "backend/src/main.py - VCFSE registration validation logic"
+      ],
+      "userTypes": [
+        "vcse",
+        "admin"
+      ],
+      "version": "1.1.4",
+      "title_ar": "جعل رقم الجمعية الخيرية اختياريًا لتسجيل VCFSE",
+      "description_ar": "تمت إزالة متطلب رقم لجنة الجمعيات الخيرية للسماح للمنظمات المحلية غير المسجلة بالانضمام إلى المخطط",
+      "details_ar": [
+        "حقل رقم الجمعية الخيرية الآن اختياري أثناء تسجيل VCFSE",
+        "تمت إزالة التحقق من الواجهة الأمامية الذي يتطلب رقم الجمعية الخيرية",
+        "تم تحديث الخلفية للتحقق من رقم الجمعية الخيرية فقط إذا تم توفيره",
+        "تم تغيير تسمية واجهة المستخدم من مطلوب (*) إلى (اختياري)",
+        "تم تحديث نص المساعدة لتوضيح أن المنظمات بدون أرقام الجمعيات الخيرية يمكنها التسجيل",
+        "لوحة الإدارة لا تزال تعرض حقل رقم الجمعية الخيرية لأغراض التتبع"
+      ],
+      "impact_ar": "يمكن للمنظمات المحلية الرائعة بدون أرقام تسجيل الجمعيات الخيرية الآن الانضمام إلى مخطط BAK UP E-Voucher. لا يزال النظام يجمع أرقام الجمعيات الخيرية عند توفرها للرجوع والتحقق في المستقبل.",
+      "affectedComponents_ar": "frontend/src/App.jsx - نموذج تسجيل VCFSE والتحقق من صحة واجهة المستخدم، backend/src/main.py - منطق التحقق من تسجيل VCFSE",
+      "title_pl": "Uczyniono numer organizacji charytatywnej opcjonalnym dla rejestracji VCFSE",
+      "description_pl": "Usunięto wymóg numeru komisji charytatywnej, aby umożliwić niezarejestrowanym lokalnym organizacjom dołączenie do programu",
+      "details_pl": [
+        "Pole numeru organizacji charytatywnej jest teraz opcjonalne podczas rejestracji VCFSE",
+        "Usunięto walidację frontendu wymagającą numeru organizacji charytatywnej",
+        "Zaktualizowano backend, aby weryfikować numer organizacji charytatywnej tylko wtedy, gdy jest podany",
+        "Zmieniono etykietę UI z wymagane (*) na (Opcjonalne)",
+        "Zaktualizowano tekst pomocy, aby wyjaśnić, że organizacje bez numerów charytatywnych mogą się rejestrować",
+        "Panel administratora nadal wyświetla pole numeru organizacji charytatywnej do celów śledzenia"
+      ],
+      "impact_pl": "Wspaniałe lokalne organizacje bez numerów rejestracyjnych organizacji charytatywnych mogą teraz dołączyć do programu BAK UP E-Voucher. System nadal zbiera numery organizacji charytatywnych, gdy są dostępne, do przyszłego odniesienia i weryfikacji.",
+      "affectedComponents_pl": "frontend/src/App.jsx - formularz rejestracji VCFSE i walidacja UI, backend/src/main.py - logika walidacji rejestracji VCFSE",
+      "title_ro": "Numărul organizației caritabile a devenit opțional pentru înregistrarea VCFSE",
+      "description_ro": "Eliminat cerința numărului comisiei caritabile pentru a permite organizațiilor locale neînregistrate să se alăture schemei",
+      "details_ro": [
+        "Câmpul numărului organizației caritabile este acum opțional în timpul înregistrării VCFSE",
+        "Eliminată validarea frontend care necesita numărul organizației caritabile",
+        "Actualizat backend-ul pentru a verifica numărul organizației caritabile doar dacă este furnizat",
+        "Schimbată eticheta UI de la obligatoriu (*) la (Opțional)",
+        "Actualizat textul de ajutor pentru a clarifica că organizațiile fără numere caritabile se pot înregistra",
+        "Panoul de administrare afișează în continuare câmpul numărului organizației caritabile în scopuri de urmărire"
+      ],
+      "impact_ro": "Organizațiile locale grozave fără numere de înregistrare caritabilă pot acum să se alăture schemei BAK UP E-Voucher. Sistemul colectează în continuare numerele organizațiilor caritabile când sunt disponibile pentru referință și verificare viitoare.",
+      "affectedComponents_ro": "frontend/src/App.jsx - formular de înregistrare VCFSE și validare UI, backend/src/main.py - logica de validare a înregistrării VCFSE"
+    },
     {
       "id": 39,
       "date": "2026-01-16",
@@ -2471,10 +2534,10 @@
     }
   ],
   "summary": {
-    "totalChanges": 39,
+    "totalChanges": 40,
     "categories": {
       "Bug Fix": 11,
-      "Feature": 3,
+      "Feature": 4,
       "Internationalization": 11,
       "UI Enhancement": 10,
       "Configuration": 1,
@@ -2484,13 +2547,13 @@
     "priorities": {
       "Critical": 5,
       "High": 19,
-      "Medium": 13,
+      "Medium": 14,
       "Low": 5
     },
     "affectedUserTypes": {
       "all": 15,
-      "admin": 6,
-      "vcse": 5,
+      "admin": 7,
+      "vcse": 6,
       "recipient": 2,
       "school": 5,
       "vendor": 2
