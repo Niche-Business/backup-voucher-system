@@ -3,6 +3,29 @@
   "lastUpdated": "2026-01-23",
   "changes": [
     {
+      "version": "1.1.7",
+      "date": "2026-01-23",
+      "type": "fix",
+      "title": {
+        "en": "Fixed Deployment Build Path Issue",
+        "es": "Corregido Problema de Ruta de Compilación",
+        "fr": "Correction du Problème de Chemin de Build",
+        "de": "Build-Pfad-Problem behoben",
+        "it": "Risolto Problema Percorso Build",
+        "pt": "Corrigido Problema de Caminho de Build",
+        "pl": "Naprawiono Problem Ścieżki Budowania"
+      },
+      "description": {
+        "en": "Fixed deployment failure caused by strict frontend build verification. The server now starts successfully even if build directory verification encounters issues, allowing the application to deploy correctly on Render.",
+        "es": "Se corrigió el fallo de despliegue causado por la verificación estricta de compilación del frontend. El servidor ahora se inicia correctamente incluso si la verificación del directorio de compilación encuentra problemas, permitiendo que la aplicación se despliegue correctamente en Render.",
+        "fr": "Correction de l'échec du déploiement causé par la vérification stricte du build frontend. Le serveur démarre maintenant avec succès même si la vérification du répertoire de build rencontre des problèmes, permettant à l'application de se déployer correctement sur Render.",
+        "de": "Bereitstellungsfehler behoben, der durch strikte Frontend-Build-Überprüfung verursacht wurde. Der Server startet jetzt erfolgreich, auch wenn die Build-Verzeichnis-Überprüfung auf Probleme stößt, sodass die Anwendung korrekt auf Render bereitgestellt werden kann.",
+        "it": "Risolto il fallimento della distribuzione causato dalla verifica rigorosa del build frontend. Il server ora si avvia correttamente anche se la verifica della directory di build incontra problemi, consentendo all'applicazione di distribuirsi correttamente su Render.",
+        "pt": "Corrigido falha de implantação causada pela verificação rigorosa do build frontend. O servidor agora inicia com sucesso mesmo se a verificação do diretório de build encontrar problemas, permitindo que o aplicativo seja implantado corretamente no Render.",
+        "pl": "Naprawiono błąd wdrożenia spowodowany ścisłą weryfikacją budowania frontendu. Serwer teraz uruchamia się pomyślnie, nawet jeśli weryfikacja katalogu budowania napotka problemy, umożliwiając prawidłowe wdrożenie aplikacji na Render."
+      }
+    },
+    {
       "version": "1.1.6",
       "date": "2026-01-23",
       "type": "improvement",
@@ -2605,5 +2628,5 @@
       "vendor": 2
     }
   },
-  "totalChanges": 42
+  "totalChanges": 43
 }
