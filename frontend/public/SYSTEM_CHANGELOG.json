@@ -3,6 +3,29 @@
   "lastUpdated": "2026-01-23",
   "changes": [
     {
+      "version": "1.1.6",
+      "date": "2026-01-23",
+      "type": "improvement",
+      "title": {
+        "en": "Removed Twilio SMS Dependency",
+        "es": "Eliminada Dependencia SMS de Twilio",
+        "fr": "Suppression de la Dépendance SMS Twilio",
+        "de": "Twilio SMS-Abhängigkeit entfernt",
+        "it": "Rimossa Dipendenza SMS Twilio",
+        "pt": "Removida Dependência SMS Twilio",
+        "pl": "Usunięto Zależność SMS Twilio"
+      },
+      "description": {
+        "en": "Completely removed Twilio SMS service to reduce costs and simplify deployment. SMS notifications are now disabled. Email notifications via Gmail remain fully functional. This change eliminates deployment warnings and reduces infrastructure complexity.",
+        "es": "Se eliminó completamente el servicio SMS de Twilio para reducir costos y simplificar el despliegue. Las notificaciones por SMS ahora están deshabilitadas. Las notificaciones por correo electrónico a través de Gmail siguen siendo completamente funcionales. Este cambio elimina las advertencias de despliegue y reduce la complejidad de la infraestructura.",
+        "fr": "Suppression complète du service SMS Twilio pour réduire les coûts et simplifier le déploiement. Les notifications SMS sont désormais désactivées. Les notifications par e-mail via Gmail restent entièrement fonctionnelles. Ce changement élimine les avertissements de déploiement et réduit la complexité de l'infrastructure.",
+        "de": "Twilio SMS-Service vollständig entfernt, um Kosten zu senken und die Bereitstellung zu vereinfachen. SMS-Benachrichtigungen sind jetzt deaktiviert. E-Mail-Benachrichtigungen über Gmail bleiben voll funktionsfähig. Diese Änderung beseitigt Bereitstellungswarnungen und reduziert die Infrastrukturkomplexität.",
+        "it": "Rimosso completamente il servizio SMS Twilio per ridurre i costi e semplificare la distribuzione. Le notifiche SMS sono ora disabilitate. Le notifiche email tramite Gmail rimangono completamente funzionali. Questa modifica elimina gli avvisi di distribuzione e riduce la complessità dell'infrastruttura.",
+        "pt": "Removido completamente o serviço SMS Twilio para reduzir custos e simplificar a implantação. As notificações por SMS agora estão desabilitadas. As notificações por email via Gmail permanecem totalmente funcionais. Esta alteração elimina avisos de implantação e reduz a complexidade da infraestrutura.",
+        "pl": "Całkowicie usunięto usługę SMS Twilio, aby obniżyć koszty i uprościć wdrożenie. Powiadomienia SMS są teraz wyłączone. Powiadomienia e-mail przez Gmail pozostają w pełni funkcjonalne. Ta zmiana eliminuje ostrzeżenia wdrożeniowe i zmniejsza złożoność infrastruktury."
+      }
+    },
+    {
       "version": "1.1.5",
       "date": "2026-01-23",
       "type": "fix",
@@ -2582,5 +2605,5 @@
       "vendor": 2
     }
   },
-  "totalChanges": 41
+  "totalChanges": 42
 }

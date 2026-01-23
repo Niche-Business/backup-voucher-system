@@ -28,7 +28,7 @@ class SMSService:
         if not TWILIO_AVAILABLE:
             self.client = None
             self.enabled = False
-            print("WARNING: Twilio library not installed. SMS service disabled.")
+            # Twilio library not installed - SMS service disabled silently
             return
         
         # Initialize client only if credentials are available
@@ -38,7 +38,7 @@ class SMSService:
         else:
             self.client = None
             self.enabled = False
-            print("WARNING: Twilio credentials not configured. SMS service disabled.")
+            # Twilio credentials not configured - SMS service disabled silently
     
     def send_sms(self, to_number, message):
         """
