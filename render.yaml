@@ -29,6 +29,9 @@ services:
         generateValue: true
       - key: FLASK_ENV
         value: production
+    healthCheckPath: /api/health
+    healthCheckTimeout: 30
+    healthCheckInterval: 10
 
 databases:
   - name: bakup-db

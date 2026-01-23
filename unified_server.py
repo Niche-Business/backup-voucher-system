@@ -25,10 +25,20 @@ if os.environ.get('RENDER'):
 else:
     frontend_build = Path(__file__).parent / 'frontend' / 'dist'
 
+# Health check endpoint (must be before redirect middleware)
+@app.route('/api/health')
+def health_check():
+    """Simple health check endpoint for Render deployment"""
+    return {'status': 'healthy', 'service': 'bakup-evoucher'}, 200
+
 # Redirect middleware to force custom domain
 @app.before_request
 def redirect_to_custom_domain():
     """Redirect from Render domain and old domain to new custom domain"""
+    # Skip redirect for health check endpoint
+    if request.path == '/api/health':
+        return None
+    
     host = request.host.lower()
     # Redirect if accessed via Render domain or old domain
     if 'onrender.com' in host or 'backup-voucher-system' in host or 'breezeconsult.org' in host:
