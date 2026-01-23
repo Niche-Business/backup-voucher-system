@@ -18,7 +18,12 @@ from main import app, db, Category, User
 from werkzeug.security import generate_password_hash
 
 # Configure frontend serving
-frontend_build = Path(__file__).parent / 'frontend' / 'dist'
+# In production (Render), the build is at /opt/render/project/src/frontend/dist
+# In development, it's relative to this file
+if os.environ.get('RENDER'):
+    frontend_build = Path('/opt/render/project/src/frontend/dist')
+else:
+    frontend_build = Path(__file__).parent / 'frontend' / 'dist'
 
 # Redirect middleware to force custom domain
 @app.before_request

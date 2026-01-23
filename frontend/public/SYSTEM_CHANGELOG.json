@@ -1,7 +1,30 @@
 {
   "version": "1.1.4",
-  "lastUpdated": "2026-01-16",
+  "lastUpdated": "2026-01-23",
   "changes": [
+    {
+      "version": "1.1.5",
+      "date": "2026-01-23",
+      "type": "fix",
+      "title": {
+        "en": "Fixed Deployment and Email Service",
+        "es": "Corrección de Despliegue y Servicio de Correo",
+        "fr": "Correction du Déploiement et du Service de Messagerie",
+        "de": "Bereitstellung und E-Mail-Service behoben",
+        "it": "Correzione Distribuzione e Servizio Email",
+        "pt": "Correção de Implantação e Serviço de Email",
+        "pl": "Naprawiono Wdrożenie i Usługę Email"
+      },
+      "description": {
+        "en": "Switched from SendGrid to Gmail SMTP for email notifications (free tier, 500 emails/day). Fixed frontend build path error that prevented deployment. Email service now uses Gmail App Password for reliable delivery.",
+        "es": "Cambio de SendGrid a Gmail SMTP para notificaciones por correo (nivel gratuito, 500 correos/día). Se corrigió el error de ruta de compilación del frontend que impedía el despliegue. El servicio de correo ahora usa contraseña de aplicación de Gmail para entrega confiable.",
+        "fr": "Passage de SendGrid à Gmail SMTP pour les notifications par e-mail (niveau gratuit, 500 e-mails/jour). Correction de l'erreur de chemin de compilation frontend qui empêchait le déploiement. Le service de messagerie utilise désormais le mot de passe d'application Gmail pour une livraison fiable.",
+        "de": "Wechsel von SendGrid zu Gmail SMTP für E-Mail-Benachrichtigungen (kostenlose Stufe, 500 E-Mails/Tag). Frontend-Build-Pfadfehler behoben, der die Bereitstellung verhinderte. E-Mail-Service verwendet jetzt Gmail-App-Passwort für zuverlässige Zustellung.",
+        "it": "Passaggio da SendGrid a Gmail SMTP per le notifiche email (livello gratuito, 500 email/giorno). Corretto errore percorso build frontend che impediva la distribuzione. Il servizio email ora utilizza la password app Gmail per consegna affidabile.",
+        "pt": "Mudança de SendGrid para Gmail SMTP para notificações por email (nível gratuito, 500 emails/dia). Corrigido erro de caminho de compilação do frontend que impedia a implantação. O serviço de email agora usa senha de aplicativo do Gmail para entrega confiável.",
+        "pl": "Przełączenie z SendGrid na Gmail SMTP dla powiadomień e-mail (poziom bezpłatny, 500 e-maili/dzień). Naprawiono błąd ścieżki kompilacji frontendu, który uniemożliwiał wdrożenie. Usługa e-mail używa teraz hasła aplikacji Gmail dla niezawodnej dostawy."
+      }
+    },
     {
       "id": 40,
       "date": "2026-01-16",
@@ -2558,5 +2581,6 @@
       "school": 5,
       "vendor": 2
     }
-  }
+  },
+  "totalChanges": 41
 }

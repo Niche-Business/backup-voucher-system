@@ -1,54 +1,51 @@
 """
-SendGrid Email Service for BAK UP E-Voucher System
+Gmail SMTP Email Service for BAK UP E-Voucher System
+This service uses Gmail SMTP instead of SendGrid for easier setup
 """
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Email, To, Content
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 class EmailService:
     def __init__(self):
-        # Get SendGrid API key
-        self.api_key = os.environ.get('SENDGRID_API_KEY', '').strip()
-        self.from_email = os.environ.get('FROM_EMAIL', 'noreply@backup-voucher.com').strip()
-        self.app_url = os.environ.get('APP_URL', 'https://backup-voucher-system-1.onrender.com')
-        self.enabled = bool(self.api_key and len(self.api_key) > 20)
+        self.smtp_server = 'smtp.gmail.com'
+        self.smtp_port = 587
+        self.smtp_user = os.environ.get('GMAIL_USER')
+        self.smtp_password = os.environ.get('GMAIL_APP_PASSWORD')
+        self.from_email = os.environ.get('FROM_EMAIL', self.smtp_user)
+        self.app_url = os.environ.get('APP_URL', 'https://backup-voucher-system.onrender.com')
+        self.enabled = bool(self.smtp_user and self.smtp_password)
         
         if not self.enabled:
-            print("⚠️  SendGrid not configured. Set SENDGRID_API_KEY environment variable.")
-            print(f"   SENDGRID_API_KEY: {'SET' if self.api_key else 'NOT SET'}")
-            print(f"   API Key Length: {len(self.api_key) if self.api_key else 0} characters")
-        else:
-            print("✓ SendGrid configured successfully")
-            print(f"   From Email: {self.from_email}")
-            print(f"   API Key Length: {len(self.api_key)} characters")
-    
+            print("⚠️  Gmail SMTP not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD environment variables.")
+        
     def send_email(self, to_email, subject, html_content):
-        """Send an email using SendGrid"""
+        """Send an email using Gmail SMTP"""
         if not self.enabled:
-            print(f"⚠️  Email not sent to {to_email} (SendGrid not configured)")
+            print(f"⚠️  Email not sent to {to_email} (SMTP not configured)")
             print(f"   Subject: {subject}")
             return False
             
         try:
-            message = Mail(
-                from_email=Email(self.from_email, 'BAK UP E-Voucher System'),
-                to_emails=To(to_email),
-                subject=subject,
-                html_content=Content("text/html", html_content)
-            )
+            # Create message
+            message = MIMEMultipart('alternative')
+            message['From'] = f"BAK UP E-Voucher System <{self.from_email}>"
+            message['To'] = to_email
+            message['Subject'] = subject
             
-            sg = SendGridAPIClient(self.api_key)
-            response = sg.send(message)
+            # Attach HTML content
+            html_part = MIMEText(html_content, 'html')
+            message.attach(html_part)
             
-            # SendGrid returns 202 for successful email acceptance
-            if response.status_code == 202:
-                print(f"✓ Email sent to {to_email}: {subject} (Status: {response.status_code})")
-                return True
-            else:
-                print(f"✗ SendGrid returned error status {response.status_code} for {to_email}")
-                print(f"   Response body: {response.body}")
-                print(f"   Response headers: {response.headers}")
-                return False
+            # Connect to Gmail SMTP server
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_user, self.smtp_password)
+                server.send_message(message)
+            
+            print(f"✓ Email sent to {to_email}: {subject}")
+            return True
             
         except Exception as e:
             print(f"✗ Failed to send email to {to_email}: {str(e)}")
@@ -73,34 +70,53 @@ class EmailService:
             <style>
                 body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                 .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
-                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+                .header {{ background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
                 .button {{ display: inline-block; padding: 12px 30px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+                .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Welcome to BAK UP E-Voucher System!</h1>
+                    <h1>Welcome to BAK UP! 🎉</h1>
                 </div>
                 <div class="content">
-                    <p>Hello {user_name},</p>
-                    <p>Welcome to the BAK UP E-Voucher System! Your account has been successfully created as a <strong>{role_name}</strong>.</p>
-                    <p>You can now log in to access your dashboard and start using the system.</p>
-                    <a href="{self.app_url}" class="button">Go to Dashboard</a>
+                    <h2>Hello {user_name}!</h2>
+                    <p>Thank you for joining the BAK UP E-Voucher System as a <strong>{role_name}</strong>.</p>
+                    
+                    <p>Your account has been successfully created and you can now access all the features available to you.</p>
+                    
+                    <h3>What's Next?</h3>
+                    <ul>
+                        <li>Log in to your dashboard</li>
+                        <li>Complete your profile information</li>
+                        <li>Start using the platform</li>
+                    </ul>
+                    
+                    <div style="text-align: center;">
+                        <a href="{self.app_url}" class="button">Go to Dashboard</a>
+                    </div>
+                    
                     <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-                    <p>Best regards,<br>BAK UP E-Voucher Team</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
                 </div>
                 <div class="footer">
-                    <p>© 2025 BAK UP E-Voucher System. All rights reserved.</p>
+                    <p>This email was sent by BAK UP E-Voucher System<br>
+                    Connecting surplus food with those who need it most</p>
                 </div>
             </div>
         </body>
         </html>
         """
         
-        return self.send_email(user_email, f"Welcome to BAK UP E-Voucher System - {role_name}", html_content)
+        return self.send_email(
+            to_email=user_email,
+            subject=f"Welcome to BAK UP - Your {role_name} Account is Ready!",
+            html_content=html_content
+        )
     
     def send_password_reset_email(self, user_email, user_name, reset_token):
         """Send password reset email with secure link"""
@@ -113,53 +129,188 @@ class EmailService:
             <style>
                 body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                 .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background-color: #2196F3; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
-                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+                .header {{ background: linear-gradient(135deg, #2196F3 0%, #1976d2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
                 .button {{ display: inline-block; padding: 12px 30px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
                 .warning {{ background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🔒 Password Reset Request</h1>
+                    <h1>🔐 Password Reset Request</h1>
                 </div>
                 <div class="content">
                     <h2>Hello {user_name},</h2>
                     <p>We received a request to reset your password for your BAK UP account.</p>
                     
                     <p>Click the button below to create a new password:</p>
-                    <a href="{reset_link}" class="button">Reset Password</a>
                     
-                    <p>Or copy and paste this link into your browser:</p>
-                    <p style="word-break: break-all; background-color: #f0f0f0; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 12px;">{reset_link}</p>
+                    <div style="text-align: center;">
+                        <a href="{reset_link}" class="button">Reset My Password</a>
+                    </div>
                     
                     <div class="warning">
-                        <p style="margin: 0;"><strong>⚠️ Security Notice:</strong></p>
-                        <ul style="margin: 10px 0 0 0;">
-                            <li>This link will expire in 1 hour</li>
+                        <strong>⚠️ Security Notice:</strong>
+                        <ul style="margin: 10px 0;">
+                            <li>This link will expire in <strong>1 hour</strong></li>
                             <li>If you didn't request this reset, please ignore this email</li>
-                            <li>Never share this link with anyone</li>
+                            <li>Your password will remain unchanged</li>
                         </ul>
                     </div>
                     
-                    <p>Best regards,<br>BAK UP E-Voucher Team</p>
+                    <p>If the button doesn't work, copy and paste this link into your browser:</p>
+                    <p style="word-break: break-all; color: #2196F3; font-size: 12px;">{reset_link}</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
                 </div>
                 <div class="footer">
-                    <p>© 2025 BAK UP E-Voucher System. All rights reserved.</p>
+                    <p>This email was sent by BAK UP E-Voucher System<br>
+                    If you didn't request a password reset, please contact support immediately.</p>
                 </div>
             </div>
         </body>
         </html>
         """
         
-        return self.send_email(user_email, "🔒 Password Reset Request - BAK UP E-Voucher System", html_content)
-    
-    def send_new_item_notification(self, user_email, user_name, item_name, item_type, quantity, shop_name, shop_address='', item_description=''):
-        """Send notification email when new item is posted"""
-        item_type_emoji = '🆓' if item_type == 'free' else '🎁'
-        item_type_text = 'Free Item' if item_type == 'free' else 'Discounted Item'
+        return self.send_email(
+            to_email=user_email,
+            subject="Reset Your BAK UP Password",
+            html_content=html_content
+        )
+
+    def send_voucher_issued_email(self, recipient_email, recipient_name, voucher_code, amount, issuer_name):
+        """Send email when a voucher is issued"""
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .voucher-code {{ 
+                    background-color: #fff; 
+                    border: 2px dashed #4CAF50; 
+                    padding: 20px; 
+                    text-align: center; 
+                    font-size: 32px; 
+                    font-weight: bold; 
+                    color: #4CAF50;
+                    margin: 20px 0;
+                }}
+                .amount {{ font-size: 24px; color: #FF9800; font-weight: bold; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+                .button {{
+                    display: inline-block;
+                    padding: 12px 24px;
+                    background-color: #4CAF50;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎉 Your BAK UP Voucher is Ready!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <p>You have received a food voucher from <strong>{issuer_name}</strong>.</p>
+                    
+                    <div class="voucher-code">{voucher_code}</div>
+                    
+                    <p style="text-align: center;">
+                        <span class="amount">£{amount:.2f}</span>
+                    </p>
+                    
+                    <h3>How to Use Your Voucher:</h3>
+                    <ol>
+                        <li>Visit any participating local food shop</li>
+                        <li>Select the items you need</li>
+                        <li>Show your voucher code at checkout</li>
+                        <li>The amount will be deducted from your voucher balance</li>
+                    </ol>
+                    
+                    <p style="text-align: center;">
+                        <a href="{self.app_url}" class="button">View Your Voucher</a>
+                    </p>
+                    
+                    <p><strong>Important:</strong> Keep this code safe and only share it with authorized vendors.</p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP E-Voucher System - Connecting surplus food with those who need it most</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=recipient_email,
+            subject=f"Your BAK UP Voucher Code: {voucher_code}",
+            html_content=html_content
+        )
+
+    def send_redemption_receipt_email(self, recipient_email, recipient_name, voucher_code, amount_spent, remaining_balance, vendor_name):
+        """Send email when voucher is redeemed"""
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #2196F3; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .receipt {{ background-color: #fff; border: 1px solid #ddd; padding: 20px; margin: 20px 0; }}
+                .amount {{ font-size: 20px; font-weight: bold; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✓ Voucher Redeemed</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {recipient_name},</p>
+                    
+                    <p>Your voucher has been successfully redeemed at <strong>{vendor_name}</strong>.</p>
+                    
+                    <div class="receipt">
+                        <p><strong>Voucher Code:</strong> {voucher_code}</p>
+                        <p><strong>Amount Spent:</strong> <span class="amount" style="color: #f44336;">-£{amount_spent:.2f}</span></p>
+                        <p><strong>Remaining Balance:</strong> <span class="amount" style="color: #4CAF50;">£{remaining_balance:.2f}</span></p>
+                        <p><strong>Vendor:</strong> {vendor_name}</p>
+                    </div>
+                    
+                    <p>Thank you for using BAK UP!</p>
+                </div>
+                <div class="footer">
+                    <p>BAK UP E-Voucher System</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=recipient_email,
+            subject="BAK UP Voucher Redeemed",
+            html_content=html_content
+        )
+
+    def send_payout_request_notification(self, vendor_name, shop_name, amount):
+        """Send notification to admin when payout is requested"""
+        admin_email = os.environ.get('ADMIN_EMAIL', 'admin@bakup.com')
         
         html_content = f"""
         <!DOCTYPE html>
@@ -168,46 +319,53 @@ class EmailService:
             <style>
                 body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                 .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background-color: #FF9800; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
-                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
-                .item-box {{ background-color: white; padding: 20px; border-left: 4px solid #FF9800; margin: 20px 0; }}
-                .button {{ display: inline-block; padding: 12px 30px; background-color: #FF9800; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+                .header {{ background-color: #FF9800; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .amount {{ font-size: 24px; font-weight: bold; color: #FF9800; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>{item_type_emoji} New {item_type_text} Available!</h1>
+                    <h1>💰 New Payout Request</h1>
                 </div>
                 <div class="content">
-                    <p>Hello {user_name},</p>
-                    <p>A new {item_type_text.lower()} has just been posted and is available now!</p>
-                    <div class="item-box">
-                        <h2 style="margin-top: 0; color: #FF9800;">{item_name}</h2>
-                        <p><strong>Shop:</strong> {shop_name}</p>
-                        {f'<p><strong>Location:</strong> {shop_address}</p>' if shop_address else ''}
-                        <p><strong>Quantity Available:</strong> {quantity}</p>
-                        <p><strong>Type:</strong> {item_type_text}</p>
-                        {f'<p><strong>Description:</strong> {item_description}</p>' if item_description else ''}
-                    </div>
-                    <p>Log in now to view details and place your order before it's gone!</p>
-                    <a href="{self.app_url}" class="button">View Item Now</a>
-                    <p>Best regards,<br>BAK UP E-Voucher Team</p>
-                </div>
-                <div class="footer">
-                    <p>© 2025 BAK UP E-Voucher System. All rights reserved.</p>
-                    <p>You're receiving this email because you have notifications enabled in your account settings.</p>
+                    <p>A new payout request has been submitted:</p>
+                    
+                    <p><strong>Vendor:</strong> {vendor_name}</p>
+                    <p><strong>Shop:</strong> {shop_name}</p>
+                    <p><strong>Amount:</strong> <span class="amount">£{amount:.2f}</span></p>
+                    
+                    <p>Please review and process this request in the admin dashboard.</p>
                 </div>
             </div>
         </body>
         </html>
         """
         
-        return self.send_email(user_email, f"🔔 New {item_type_text}: {item_name}", html_content)
-    
-    def send_voucher_issued_email(self, recipient_email, recipient_name, voucher_code, voucher_value, expiry_date):
-        """Send email when voucher is issued to recipient"""
+        return self.send_email(
+            to_email=admin_email,
+            subject=f"New Payout Request from {vendor_name}",
+            html_content=html_content
+        )
+
+    def send_payout_status_notification(self, vendor_email, vendor_name, shop_name, amount, status, admin_notes=''):
+        """Send notification to vendor when payout status changes"""
+        status_colors = {
+            'approved': '#4CAF50',
+            'rejected': '#f44336',
+            'pending': '#FF9800'
+        }
+        
+        status_text = {
+            'approved': '✓ Approved',
+            'rejected': '✗ Rejected',
+            'pending': '⏳ Pending'
+        }
+        
+        color = status_colors.get(status, '#666')
+        status_display = status_text.get(status, status.title())
+        
         html_content = f"""
         <!DOCTYPE html>
         <html>
@@ -215,42 +373,84 @@ class EmailService:
             <style>
                 body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                 .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
-                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
-                .voucher-box {{ background-color: white; padding: 30px; border: 3px dashed #4CAF50; margin: 20px 0; text-align: center; }}
-                .voucher-code {{ font-size: 32px; font-weight: bold; color: #4CAF50; letter-spacing: 3px; font-family: monospace; }}
-                .button {{ display: inline-block; padding: 12px 30px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+                .header {{ background-color: {color}; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .amount {{ font-size: 24px; font-weight: bold; color: {color}; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🎉 Your Voucher is Ready!</h1>
+                    <h1>{status_display}</h1>
                 </div>
                 <div class="content">
-                    <p>Hello {recipient_name},</p>
-                    <p>Great news! A new food voucher has been issued to you.</p>
-                    <div class="voucher-box">
-                        <p style="margin: 0; color: #666;">Your Voucher Code</p>
-                        <div class="voucher-code">{voucher_code}</div>
-                        <p style="margin: 10px 0 0 0;"><strong>Value:</strong> £{voucher_value:.2f}</p>
-                        <p style="margin: 5px 0 0 0;"><strong>Expires:</strong> {expiry_date}</p>
-                    </div>
-                    <p>You can use this voucher at any participating local food shop. Simply show your voucher code at checkout.</p>
-                    <a href="{self.app_url}" class="button">View My Vouchers</a>
-                    <p><strong>Important:</strong> Please use your voucher before the expiry date.</p>
-                    <p>Best regards,<br>BAK UP E-Voucher Team</p>
-                </div>
-                <div class="footer">
-                    <p>© 2025 BAK UP E-Voucher System. All rights reserved.</p>
+                    <p>Dear {vendor_name},</p>
+                    
+                    <p>Your payout request has been <strong>{status}</strong>.</p>
+                    
+                    <p><strong>Shop:</strong> {shop_name}</p>
+                    <p><strong>Amount:</strong> <span class="amount">£{amount:.2f}</span></p>
+                    
+                    {f'<p><strong>Admin Notes:</strong> {admin_notes}</p>' if admin_notes else ''}
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
                 </div>
             </div>
         </body>
         </html>
         """
         
-        return self.send_email(recipient_email, f"🎉 Your Food Voucher: £{voucher_value:.2f}", html_content)
+        return self.send_email(
+            to_email=vendor_email,
+            subject=f"Payout Request {status.title()} - {shop_name}",
+            html_content=html_content
+        )
+
+    def send_payout_paid_notification(self, vendor_email, vendor_name, shop_name, amount):
+        """Send notification when payout is marked as paid"""
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .amount {{ font-size: 24px; font-weight: bold; color: #4CAF50; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✓ Payment Sent!</h1>
+                </div>
+                <div class="content">
+                    <p>Dear {vendor_name},</p>
+                    
+                    <p>Great news! Your payout has been processed and sent.</p>
+                    
+                    <p><strong>Shop:</strong> {shop_name}</p>
+                    <p><strong>Amount:</strong> <span class="amount">£{amount:.2f}</span></p>
+                    
+                    <p>The payment should arrive in your account within 2-3 business days.</p>
+                    
+                    <p>Thank you for being part of BAK UP!</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>The BAK UP Team</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return self.send_email(
+            to_email=vendor_email,
+            subject=f"Payment Sent - £{amount:.2f}",
+            html_content=html_content
+        )
 
 # Create global instance
 email_service = EmailService()
