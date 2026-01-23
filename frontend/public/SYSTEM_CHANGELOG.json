@@ -3,6 +3,29 @@
   "lastUpdated": "2026-01-23",
   "changes": [
     {
+      "version": "1.1.8",
+      "date": "2026-01-23",
+      "type": "feature",
+      "title": {
+        "en": "Custom Domain Migration",
+        "es": "Migración de Dominio Personalizado",
+        "fr": "Migration de Domaine Personnalisé",
+        "de": "Benutzerdefinierte Domain-Migration",
+        "it": "Migrazione Dominio Personalizzato",
+        "pt": "Migração de Domínio Personalizado",
+        "pl": "Migracja Domeny Niestandardowej"
+      },
+      "description": {
+        "en": "Migrated application to new custom domain evoucher.bakupservices.co.uk. All traffic from old domains (app.breezeconsult.org and Render domains) automatically redirects to the new domain with SSL certificate.",
+        "es": "Se migró la aplicación al nuevo dominio personalizado evoucher.bakupservices.co.uk. Todo el tráfico de los dominios antiguos (app.breezeconsult.org y dominios Render) se redirige automáticamente al nuevo dominio con certificado SSL.",
+        "fr": "Migration de l'application vers le nouveau domaine personnalisé evoucher.bakupservices.co.uk. Tout le trafic des anciens domaines (app.breezeconsult.org et domaines Render) est automatiquement redirigé vers le nouveau domaine avec certificat SSL.",
+        "de": "Anwendung auf neue benutzerdefinierte Domain evoucher.bakupservices.co.uk migriert. Aller Verkehr von alten Domains (app.breezeconsult.org und Render-Domains) wird automatisch zur neuen Domain mit SSL-Zertifikat umgeleitet.",
+        "it": "Migrata l'applicazione al nuovo dominio personalizzato evoucher.bakupservices.co.uk. Tutto il traffico dai vecchi domini (app.breezeconsult.org e domini Render) viene automaticamente reindirizzato al nuovo dominio con certificato SSL.",
+        "pt": "Migrou o aplicativo para o novo domínio personalizado evoucher.bakupservices.co.uk. Todo o tráfego dos domínios antigos (app.breezeconsult.org e domínios Render) é automaticamente redirecionado para o novo domínio com certificado SSL.",
+        "pl": "Migracja aplikacji do nowej domeny niestandardowej evoucher.bakupservices.co.uk. Cały ruch ze starych domen (app.breezeconsult.org i domen Render) jest automatycznie przekierowywany do nowej domeny z certyfikatem SSL."
+      }
+    },
+    {
       "version": "1.1.7",
       "date": "2026-01-23",
       "type": "fix",
@@ -2628,5 +2651,5 @@
       "vendor": 2
     }
   },
-  "totalChanges": 43
+  "totalChanges": 44
 }

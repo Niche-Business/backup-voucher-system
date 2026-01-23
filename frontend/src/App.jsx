@@ -2129,7 +2129,7 @@ function AdminDashboard({ user, onLogout }) {
             🚪 {t('common.signOut')}
           </button>
           
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.7</div>
+          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.1.8</div>
         </div>
       )}
       
@@ -7158,7 +7158,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.7</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.8</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -8435,7 +8435,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.7</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.1.8</div>
 
               <button
                 onClick={() => {
@@ -9882,7 +9882,7 @@ function SchoolDashboard({ user, onLogout }) {
               </select>
             </div>
             <div style={{padding: '10px', borderTop: '1px solid #eee', fontSize: '0.85em', color: '#666', textAlign: 'center'}}>
-              BAK UP E-Voucher System v1.1.7
+              BAK UP E-Voucher System v1.1.8
             </div>
             <button
               onClick={() => {

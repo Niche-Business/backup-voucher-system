@@ -28,13 +28,13 @@ else:
 # Redirect middleware to force custom domain
 @app.before_request
 def redirect_to_custom_domain():
-    """Redirect from Render domain to custom domain"""
+    """Redirect from Render domain and old domain to new custom domain"""
     host = request.host.lower()
-    # Redirect if accessed via Render domain
-    if 'onrender.com' in host or 'backup-voucher-system' in host:
-        # Redirect to custom domain while preserving path and query string
+    # Redirect if accessed via Render domain or old domain
+    if 'onrender.com' in host or 'backup-voucher-system' in host or 'breezeconsult.org' in host:
+        # Redirect to new custom domain while preserving path and query string
         return redirect(
-            'https://app.breezeconsult.org' + request.full_path.replace(host, 'app.breezeconsult.org'),
+            'https://evoucher.bakupservices.co.uk' + request.full_path.replace(host, 'evoucher.bakupservices.co.uk'),
             code=301
         )
 
