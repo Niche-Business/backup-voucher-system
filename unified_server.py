@@ -25,12 +25,6 @@ if os.environ.get('RENDER'):
 else:
     frontend_build = Path(__file__).parent / 'frontend' / 'dist'
 
-# Health check endpoint (must be before redirect middleware)
-@app.route('/api/health')
-def health_check():
-    """Simple health check endpoint for Render deployment"""
-    return {'status': 'healthy', 'service': 'bakup-evoucher'}, 200
-
 # Redirect middleware to force custom domain
 @app.before_request
 def redirect_to_custom_domain():
