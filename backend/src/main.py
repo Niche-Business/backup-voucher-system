@@ -685,6 +685,7 @@ def track_login(user_id, ip_address=None, user_agent=None):
 
 # API Routes
 @app.route('/api/health', methods=['GET'])
+@limiter.exempt
 def health_check():
     return jsonify({
         'status': 'healthy',
