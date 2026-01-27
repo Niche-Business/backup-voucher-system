@@ -1,7 +1,487 @@
 {
-  "version": "1.0.6",
-  "lastUpdated": "2026-01-12",
+  "version": "1.2.5",
+  "lastUpdated": "2026-01-23",
   "changes": [
+    {
+      "version": "1.2.5",
+      "date": "2026-01-23",
+      "type": "fix",
+      "title": {
+        "en": "Fix deployment health check timeout",
+        "fr": "Correction du délai d'expiration de la vérification de santé du déploiement",
+        "es": "Corregir tiempo de espera de verificación de salud de implementación"
+      },
+      "description": {
+        "en": "Increased health check timeout to 120 seconds to prevent deployment failures during service wake-up",
+        "fr": "Augmentation du délai d'expiration de la vérification de santé à 120 secondes pour éviter les échecs de déploiement pendant le réveil du service",
+        "es": "Aumentado el tiempo de espera de verificación de salud a 120 segundos para evitar fallos de implementación durante el inicio del servicio"
+      }
+    },
+    {
+      "version": "1.1.8",
+      "date": "2026-01-23",
+      "type": "feature",
+      "title": {
+        "en": "Custom Domain Migration",
+        "es": "Migración de Dominio Personalizado",
+        "fr": "Migration de Domaine Personnalisé",
+        "de": "Benutzerdefinierte Domain-Migration",
+        "it": "Migrazione Dominio Personalizzato",
+        "pt": "Migração de Domínio Personalizado",
+        "pl": "Migracja Domeny Niestandardowej"
+      },
+      "description": {
+        "en": "Migrated application to new custom domain evoucher.bakupservices.co.uk. All traffic from old domains (app.breezeconsult.org and Render domains) automatically redirects to the new domain with SSL certificate.",
+        "es": "Se migró la aplicación al nuevo dominio personalizado evoucher.bakupservices.co.uk. Todo el tráfico de los dominios antiguos (app.breezeconsult.org y dominios Render) se redirige automáticamente al nuevo dominio con certificado SSL.",
+        "fr": "Migration de l'application vers le nouveau domaine personnalisé evoucher.bakupservices.co.uk. Tout le trafic des anciens domaines (app.breezeconsult.org et domaines Render) est automatiquement redirigé vers le nouveau domaine avec certificat SSL.",
+        "de": "Anwendung auf neue benutzerdefinierte Domain evoucher.bakupservices.co.uk migriert. Aller Verkehr von alten Domains (app.breezeconsult.org und Render-Domains) wird automatisch zur neuen Domain mit SSL-Zertifikat umgeleitet.",
+        "it": "Migrata l'applicazione al nuovo dominio personalizzato evoucher.bakupservices.co.uk. Tutto il traffico dai vecchi domini (app.breezeconsult.org e domini Render) viene automaticamente reindirizzato al nuovo dominio con certificato SSL.",
+        "pt": "Migrou o aplicativo para o novo domínio personalizado evoucher.bakupservices.co.uk. Todo o tráfego dos domínios antigos (app.breezeconsult.org e domínios Render) é automaticamente redirecionado para o novo domínio com certificado SSL.",
+        "pl": "Migracja aplikacji do nowej domeny niestandardowej evoucher.bakupservices.co.uk. Cały ruch ze starych domen (app.breezeconsult.org i domen Render) jest automatycznie przekierowywany do nowej domeny z certyfikatem SSL."
+      }
+    },
+    {
+      "version": "1.1.7",
+      "date": "2026-01-23",
+      "type": "fix",
+      "title": {
+        "en": "Fixed Deployment Build Path Issue",
+        "es": "Corregido Problema de Ruta de Compilación",
+        "fr": "Correction du Problème de Chemin de Build",
+        "de": "Build-Pfad-Problem behoben",
+        "it": "Risolto Problema Percorso Build",
+        "pt": "Corrigido Problema de Caminho de Build",
+        "pl": "Naprawiono Problem Ścieżki Budowania"
+      },
+      "description": {
+        "en": "Fixed deployment failure caused by strict frontend build verification. The server now starts successfully even if build directory verification encounters issues, allowing the application to deploy correctly on Render.",
+        "es": "Se corrigió el fallo de despliegue causado por la verificación estricta de compilación del frontend. El servidor ahora se inicia correctamente incluso si la verificación del directorio de compilación encuentra problemas, permitiendo que la aplicación se despliegue correctamente en Render.",
+        "fr": "Correction de l'échec du déploiement causé par la vérification stricte du build frontend. Le serveur démarre maintenant avec succès même si la vérification du répertoire de build rencontre des problèmes, permettant à l'application de se déployer correctement sur Render.",
+        "de": "Bereitstellungsfehler behoben, der durch strikte Frontend-Build-Überprüfung verursacht wurde. Der Server startet jetzt erfolgreich, auch wenn die Build-Verzeichnis-Überprüfung auf Probleme stößt, sodass die Anwendung korrekt auf Render bereitgestellt werden kann.",
+        "it": "Risolto il fallimento della distribuzione causato dalla verifica rigorosa del build frontend. Il server ora si avvia correttamente anche se la verifica della directory di build incontra problemi, consentendo all'applicazione di distribuirsi correttamente su Render.",
+        "pt": "Corrigido falha de implantação causada pela verificação rigorosa do build frontend. O servidor agora inicia com sucesso mesmo se a verificação do diretório de build encontrar problemas, permitindo que o aplicativo seja implantado corretamente no Render.",
+        "pl": "Naprawiono błąd wdrożenia spowodowany ścisłą weryfikacją budowania frontendu. Serwer teraz uruchamia się pomyślnie, nawet jeśli weryfikacja katalogu budowania napotka problemy, umożliwiając prawidłowe wdrożenie aplikacji na Render."
+      }
+    },
+    {
+      "version": "1.1.6",
+      "date": "2026-01-23",
+      "type": "improvement",
+      "title": {
+        "en": "Removed Twilio SMS Dependency",
+        "es": "Eliminada Dependencia SMS de Twilio",
+        "fr": "Suppression de la Dépendance SMS Twilio",
+        "de": "Twilio SMS-Abhängigkeit entfernt",
+        "it": "Rimossa Dipendenza SMS Twilio",
+        "pt": "Removida Dependência SMS Twilio",
+        "pl": "Usunięto Zależność SMS Twilio"
+      },
+      "description": {
+        "en": "Completely removed Twilio SMS service to reduce costs and simplify deployment. SMS notifications are now disabled. Email notifications via Gmail remain fully functional. This change eliminates deployment warnings and reduces infrastructure complexity.",
+        "es": "Se eliminó completamente el servicio SMS de Twilio para reducir costos y simplificar el despliegue. Las notificaciones por SMS ahora están deshabilitadas. Las notificaciones por correo electrónico a través de Gmail siguen siendo completamente funcionales. Este cambio elimina las advertencias de despliegue y reduce la complejidad de la infraestructura.",
+        "fr": "Suppression complète du service SMS Twilio pour réduire les coûts et simplifier le déploiement. Les notifications SMS sont désormais désactivées. Les notifications par e-mail via Gmail restent entièrement fonctionnelles. Ce changement élimine les avertissements de déploiement et réduit la complexité de l'infrastructure.",
+        "de": "Twilio SMS-Service vollständig entfernt, um Kosten zu senken und die Bereitstellung zu vereinfachen. SMS-Benachrichtigungen sind jetzt deaktiviert. E-Mail-Benachrichtigungen über Gmail bleiben voll funktionsfähig. Diese Änderung beseitigt Bereitstellungswarnungen und reduziert die Infrastrukturkomplexität.",
+        "it": "Rimosso completamente il servizio SMS Twilio per ridurre i costi e semplificare la distribuzione. Le notifiche SMS sono ora disabilitate. Le notifiche email tramite Gmail rimangono completamente funzionali. Questa modifica elimina gli avvisi di distribuzione e riduce la complessità dell'infrastruttura.",
+        "pt": "Removido completamente o serviço SMS Twilio para reduzir custos e simplificar a implantação. As notificações por SMS agora estão desabilitadas. As notificações por email via Gmail permanecem totalmente funcionais. Esta alteração elimina avisos de implantação e reduz a complexidade da infraestrutura.",
+        "pl": "Całkowicie usunięto usługę SMS Twilio, aby obniżyć koszty i uprościć wdrożenie. Powiadomienia SMS są teraz wyłączone. Powiadomienia e-mail przez Gmail pozostają w pełni funkcjonalne. Ta zmiana eliminuje ostrzeżenia wdrożeniowe i zmniejsza złożoność infrastruktury."
+      }
+    },
+    {
+      "version": "1.1.5",
+      "date": "2026-01-23",
+      "type": "fix",
+      "title": {
+        "en": "Fixed Deployment and Email Service",
+        "es": "Corrección de Despliegue y Servicio de Correo",
+        "fr": "Correction du Déploiement et du Service de Messagerie",
+        "de": "Bereitstellung und E-Mail-Service behoben",
+        "it": "Correzione Distribuzione e Servizio Email",
+        "pt": "Correção de Implantação e Serviço de Email",
+        "pl": "Naprawiono Wdrożenie i Usługę Email"
+      },
+      "description": {
+        "en": "Switched from SendGrid to Gmail SMTP for email notifications (free tier, 500 emails/day). Fixed frontend build path error that prevented deployment. Email service now uses Gmail App Password for reliable delivery.",
+        "es": "Cambio de SendGrid a Gmail SMTP para notificaciones por correo (nivel gratuito, 500 correos/día). Se corrigió el error de ruta de compilación del frontend que impedía el despliegue. El servicio de correo ahora usa contraseña de aplicación de Gmail para entrega confiable.",
+        "fr": "Passage de SendGrid à Gmail SMTP pour les notifications par e-mail (niveau gratuit, 500 e-mails/jour). Correction de l'erreur de chemin de compilation frontend qui empêchait le déploiement. Le service de messagerie utilise désormais le mot de passe d'application Gmail pour une livraison fiable.",
+        "de": "Wechsel von SendGrid zu Gmail SMTP für E-Mail-Benachrichtigungen (kostenlose Stufe, 500 E-Mails/Tag). Frontend-Build-Pfadfehler behoben, der die Bereitstellung verhinderte. E-Mail-Service verwendet jetzt Gmail-App-Passwort für zuverlässige Zustellung.",
+        "it": "Passaggio da SendGrid a Gmail SMTP per le notifiche email (livello gratuito, 500 email/giorno). Corretto errore percorso build frontend che impediva la distribuzione. Il servizio email ora utilizza la password app Gmail per consegna affidabile.",
+        "pt": "Mudança de SendGrid para Gmail SMTP para notificações por email (nível gratuito, 500 emails/dia). Corrigido erro de caminho de compilação do frontend que impedia a implantação. O serviço de email agora usa senha de aplicativo do Gmail para entrega confiável.",
+        "pl": "Przełączenie z SendGrid na Gmail SMTP dla powiadomień e-mail (poziom bezpłatny, 500 e-maili/dzień). Naprawiono błąd ścieżki kompilacji frontendu, który uniemożliwiał wdrożenie. Usługa e-mail używa teraz hasła aplikacji Gmail dla niezawodnej dostawy."
+      }
+    },
+    {
+      "id": 40,
+      "date": "2026-01-16",
+      "commit": "TBD",
+      "category": "Feature",
+      "priority": "Medium",
+      "title": "Made Charity Number Optional for VCFSE Registration",
+      "description": "Removed requirement for charity commission number to allow non-registered local organizations to join the scheme",
+      "details": [
+        "Charity number field is now optional during VCFSE signup",
+        "Removed frontend validation requiring charity number",
+        "Updated backend to only verify charity number if provided",
+        "Changed UI label from required (*) to (Optional)",
+        "Updated help text to clarify organizations without charity numbers can register",
+        "Admin dashboard still displays charity number field for tracking purposes"
+      ],
+      "impact": "Great local organizations without charity registration numbers can now join the BAK UP E-Voucher Scheme. The system still collects charity numbers when available for future reference and verification.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - VCFSE signup form validation and UI",
+        "backend/src/main.py - VCFSE registration validation logic"
+      ],
+      "userTypes": [
+        "vcse",
+        "admin"
+      ],
+      "version": "1.1.4",
+      "title_ar": "جعل رقم الجمعية الخيرية اختياريًا لتسجيل VCFSE",
+      "description_ar": "تمت إزالة متطلب رقم لجنة الجمعيات الخيرية للسماح للمنظمات المحلية غير المسجلة بالانضمام إلى المخطط",
+      "details_ar": [
+        "حقل رقم الجمعية الخيرية الآن اختياري أثناء تسجيل VCFSE",
+        "تمت إزالة التحقق من الواجهة الأمامية الذي يتطلب رقم الجمعية الخيرية",
+        "تم تحديث الخلفية للتحقق من رقم الجمعية الخيرية فقط إذا تم توفيره",
+        "تم تغيير تسمية واجهة المستخدم من مطلوب (*) إلى (اختياري)",
+        "تم تحديث نص المساعدة لتوضيح أن المنظمات بدون أرقام الجمعيات الخيرية يمكنها التسجيل",
+        "لوحة الإدارة لا تزال تعرض حقل رقم الجمعية الخيرية لأغراض التتبع"
+      ],
+      "impact_ar": "يمكن للمنظمات المحلية الرائعة بدون أرقام تسجيل الجمعيات الخيرية الآن الانضمام إلى مخطط BAK UP E-Voucher. لا يزال النظام يجمع أرقام الجمعيات الخيرية عند توفرها للرجوع والتحقق في المستقبل.",
+      "affectedComponents_ar": "frontend/src/App.jsx - نموذج تسجيل VCFSE والتحقق من صحة واجهة المستخدم، backend/src/main.py - منطق التحقق من تسجيل VCFSE",
+      "title_pl": "Uczyniono numer organizacji charytatywnej opcjonalnym dla rejestracji VCFSE",
+      "description_pl": "Usunięto wymóg numeru komisji charytatywnej, aby umożliwić niezarejestrowanym lokalnym organizacjom dołączenie do programu",
+      "details_pl": [
+        "Pole numeru organizacji charytatywnej jest teraz opcjonalne podczas rejestracji VCFSE",
+        "Usunięto walidację frontendu wymagającą numeru organizacji charytatywnej",
+        "Zaktualizowano backend, aby weryfikować numer organizacji charytatywnej tylko wtedy, gdy jest podany",
+        "Zmieniono etykietę UI z wymagane (*) na (Opcjonalne)",
+        "Zaktualizowano tekst pomocy, aby wyjaśnić, że organizacje bez numerów charytatywnych mogą się rejestrować",
+        "Panel administratora nadal wyświetla pole numeru organizacji charytatywnej do celów śledzenia"
+      ],
+      "impact_pl": "Wspaniałe lokalne organizacje bez numerów rejestracyjnych organizacji charytatywnych mogą teraz dołączyć do programu BAK UP E-Voucher. System nadal zbiera numery organizacji charytatywnych, gdy są dostępne, do przyszłego odniesienia i weryfikacji.",
+      "affectedComponents_pl": "frontend/src/App.jsx - formularz rejestracji VCFSE i walidacja UI, backend/src/main.py - logika walidacji rejestracji VCFSE",
+      "title_ro": "Numărul organizației caritabile a devenit opțional pentru înregistrarea VCFSE",
+      "description_ro": "Eliminat cerința numărului comisiei caritabile pentru a permite organizațiilor locale neînregistrate să se alăture schemei",
+      "details_ro": [
+        "Câmpul numărului organizației caritabile este acum opțional în timpul înregistrării VCFSE",
+        "Eliminată validarea frontend care necesita numărul organizației caritabile",
+        "Actualizat backend-ul pentru a verifica numărul organizației caritabile doar dacă este furnizat",
+        "Schimbată eticheta UI de la obligatoriu (*) la (Opțional)",
+        "Actualizat textul de ajutor pentru a clarifica că organizațiile fără numere caritabile se pot înregistra",
+        "Panoul de administrare afișează în continuare câmpul numărului organizației caritabile în scopuri de urmărire"
+      ],
+      "impact_ro": "Organizațiile locale grozave fără numere de înregistrare caritabilă pot acum să se alăture schemei BAK UP E-Voucher. Sistemul colectează în continuare numerele organizațiilor caritabile când sunt disponibile pentru referință și verificare viitoare.",
+      "affectedComponents_ro": "frontend/src/App.jsx - formular de înregistrare VCFSE și validare UI, backend/src/main.py - logica de validare a înregistrării VCFSE"
+    },
+    {
+      "id": 39,
+      "date": "2026-01-16",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed EmailService Error in School Voucher Issuance",
+      "description": "Resolved 'EmailService' object has no attribute 'send_batch_vouchers_email' error by implementing individual email sends for multiple vouchers",
+      "details": [
+        "Replaced non-existent send_batch_vouchers_email() method with loop sending individual emails",
+        "Each voucher in a batch now receives its own email notification with correct amount",
+        "Maintained error handling and logging for failed email sends",
+        "Fixed critical bug preventing schools from issuing multiple vouchers to families"
+      ],
+      "impact": "Schools and Care Organizations can now successfully issue multiple vouchers to families without email service errors. Recipients receive individual email notifications for each voucher issued.",
+      "affectedComponents": [
+        "backend/src/main.py - school_issue_voucher function (lines 5749-5762)"
+      ],
+      "userTypes": [
+        "school"
+      ],
+      "version": "1.1.3",
+      "title_ar": "إصلاح خطأ EmailService في إصدار قسيمة المدرسة",
+      "description_ar": "تم حل خطأ 'كائن EmailService ليس له سمة send_batch_vouchers_email' من خلال تنفيذ إرسال بريد إلكتروني فردي للقسائم المتعددة",
+      "details_ar": [
+        "استبدال طريقة send_batch_vouchers_email() غير الموجودة بحلقة ترسل رسائل بريد إلكتروني فردية",
+        "تتلقى كل قسيمة في دفعة الآن إشعار بريد إلكتروني خاص بها بالمبلغ الصحيح",
+        "الحفاظ على معالجة الأخطاء والتسجيل لإرسال البريد الإلكتروني الفاشل",
+        "إصلاح خطأ حرج يمنع المدارس من إصدار قسائم متعددة للعائلات"
+      ],
+      "impact_ar": "يمكن للمدارس ومنظمات الرعاية الآن إصدار قسائم متعددة للعائلات بنجاح دون أخطاء خدمة البريد الإلكتروني. يتلقى المستلمون إشعارات بريد إلكتروني فردية لكل قسيمة صادرة.",
+      "affectedComponents_ar": "backend/src/main.py - دالة school_issue_voucher (الأسطر 5749-5762)",
+      "title_pl": "Naprawiono błąd EmailService przy wydawaniu vouchera szkolnego",
+      "description_pl": "Rozwiązano błąd 'obiekt EmailService nie ma atrybutu send_batch_vouchers_email' przez implementację indywidualnych wysyłek e-mail dla wielu voucherów",
+      "details_pl": [
+        "Zastąpiono nieistniejącą metodę send_batch_vouchers_email() pętlą wysyłającą indywidualne e-maile",
+        "Każdy voucher w partii otrzymuje teraz własne powiadomienie e-mail z poprawną kwotą",
+        "Utrzymano obsługę błędów i logowanie dla nieudanych wysyłek e-mail",
+        "Naprawiono krytyczny błąd uniemożliwiający szkołom wydawanie wielu voucherów rodzinom"
+      ],
+      "impact_pl": "Szkoły i organizacje opieki mogą teraz pomyślnie wydawać wiele voucherów rodzinom bez błędów usługi e-mail. Odbiorcy otrzymują indywidualne powiadomienia e-mail dla każdego wydanego vouchera.",
+      "affectedComponents_pl": "backend/src/main.py - funkcja school_issue_voucher (linie 5749-5762)",
+      "title_ro": "Corectat eroarea EmailService la emiterea voucherului școlar",
+      "description_ro": "Rezolvat eroarea 'obiectul EmailService nu are atributul send_batch_vouchers_email' prin implementarea trimiterii individuale de e-mailuri pentru vouchere multiple",
+      "details_ro": [
+        "Înlocuit metoda inexistentă send_batch_vouchers_email() cu buclă care trimite e-mailuri individuale",
+        "Fiecare voucher dintr-un lot primește acum propria notificare prin e-mail cu suma corectă",
+        "Menținut gestionarea erorilor și înregistrarea pentru trimiteri de e-mail eșuate",
+        "Corectat bug critic care împiedica școlile să emită vouchere multiple familiilor"
+      ],
+      "impact_ro": "Școlile și organizațiile de îngrijire pot acum emite cu succes vouchere multiple familiilor fără erori de serviciu e-mail. Destinatarii primesc notificări individuale prin e-mail pentru fiecare voucher emis.",
+      "affectedComponents_ro": "backend/src/main.py - funcția school_issue_voucher (liniile 5749-5762)"
+    },
+    {
+      "id": 38,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "UI Enhancement",
+      "priority": "Medium",
+      "title": "Fixed School Dashboard Mobile Menu Layout",
+      "description": "Moved Password and Logout buttons from header into hamburger dropdown menu for better mobile UX",
+      "details": [
+        "Added hamburger menu button to School dashboard header (left side)",
+        "Created dropdown menu containing Language selector, Version display, Change Password, and Sign Out",
+        "Removed standalone Password and Logout buttons from header",
+        "Improved mobile layout with cleaner header showing only hamburger menu and notification bell"
+      ],
+      "impact": "School dashboard now has a clean, organized mobile interface with all settings and actions accessible through a single hamburger menu, matching the UX pattern of other dashboards.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - SchoolDashboard component"
+      ],
+      "userTypes": [
+        "school"
+      ],
+      "version": "1.1.2",
+      "title_ar": "إصلاح تخطيط قائمة الهاتف المحمول للوحة المدرسة",
+      "description_ar": "تم نقل أزرار كلمة المرور وتسجيل الخروج من الرأس إلى قائمة الهامبرغر المنسدلة لتحسين تجربة المستخدم على الهاتف المحمول",
+      "details_ar": [
+        "تمت إضافة زر قائمة الهامبرغر إلى رأس لوحة المدرسة (الجانب الأيسر)",
+        "تم إنشاء قائمة منسدلة تحتوي على محدد اللغة، وعرض الإصدار، وتغيير كلمة المرور، وتسجيل الخروج",
+        "تمت إزالة أزرار كلمة المرور وتسجيل الخروج المستقلة من الرأس",
+        "تحسين تخطيط الهاتف المحمول مع رأس أنظف يعرض فقط قائمة الهامبرغر وجرس الإشعارات"
+      ],
+      "impact_ar": "لدى لوحة المدرسة الآن واجهة هاتف محمول نظيفة ومنظمة مع جميع الإعدادات والإجراءات المتاحة من خلال قائمة هامبرغر واحدة، مما يطابق نمط تجربة المستخدم للوحات الأخرى.",
+      "affectedComponents_ar": "frontend/src/App.jsx - مكون SchoolDashboard",
+      "title_pl": "Naprawiono układ menu mobilnego panelu szkoły",
+      "description_pl": "Przeniesiono przyciski Hasło i Wyloguj z nagłówka do menu rozwijanego hamburgera w celu poprawy UX mobilnego",
+      "details_pl": [
+        "Dodano przycisk menu hamburgera do nagłówka panelu szkoły (lewa strona)",
+        "Utworzono menu rozwijane zawierające selektor języka, wyświetlanie wersji, zmianę hasła i wylogowanie",
+        "Usunięto samodzielne przyciski Hasło i Wyloguj z nagłówka",
+        "Ulepszono układ mobilny z czystszym nagłówkiem pokazującym tylko menu hamburgera i dzwonek powiadomień"
+      ],
+      "impact_pl": "Panel szkoły ma teraz czysty, zorganizowany interfejs mobilny ze wszystkimi ustawieniami i działaniami dostępnymi przez jedno menu hamburgera, zgodnie ze wzorcem UX innych paneli.",
+      "affectedComponents_pl": "frontend/src/App.jsx - komponent SchoolDashboard",
+      "title_ro": "Corectat aspectul meniului mobil al panoului școlii",
+      "description_ro": "Mutat butoanele Parolă și Deconectare din antet în meniul derulant hamburger pentru o UX mobil mai bună",
+      "details_ro": [
+        "Adăugat buton de meniu hamburger în antetul panoului școlii (partea stângă)",
+        "Creat meniu derulant conținând selectorul de limbă, afișarea versiunii, schimbarea parolei și deconectarea",
+        "Eliminate butoanele independente Parolă și Deconectare din antet",
+        "Aspect mobil îmbunătățit cu antet mai curat afișând doar meniul hamburger și clopotelul de notificări"
+      ],
+      "impact_ro": "Panoul școlii are acum o interfață mobilă curată și organizată cu toate setările și acțiunile accesibile printr-un singur meniu hamburger, potrivindu-se cu modelul UX al altor panouri.",
+      "affectedComponents_ro": "frontend/src/App.jsx - componenta SchoolDashboard"
+    },
+    {
+      "id": 37,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Voucher Issuance DateTime Error and UI Text Display",
+      "description": "Resolved datetime import scope issue causing voucher issuance failures and fixed text wrapping in Food To Go shop assignment section",
+      "details": [
+        "Moved datetime and other imports to top of school_issue_voucher function to prevent scope errors",
+        "Fixed 'cannot access local variable datetime' error that prevented voucher issuance",
+        "Added proper CSS styling (wordWrap and whiteSpace) to Food To Go shop assignment helper text",
+        "Ensured text 'Choose how the shop will be assigned for discounted food items' displays completely on mobile"
+      ],
+      "impact": "Schools and Care Organizations can now successfully issue vouchers without datetime errors. Improved mobile UX with properly wrapped text in voucher issuance form.",
+      "affectedComponents": [
+        "backend/src/main.py - school_issue_voucher function",
+        "frontend/src/App.jsx - Food To Go shop assignment section"
+      ],
+      "userTypes": [
+        "school",
+        "admin"
+      ],
+      "version": "1.1.2",
+      "title_ar": "إصلاح خطأ DateTime في إصدار القسيمة وعرض نص واجهة المستخدم",
+      "description_ar": "تم حل مشكلة نطاق استيراد datetime التي تسببت في فشل إصدار القسيمة وإصلاح التفاف النص في قسم تعيين المتجر للطعام للذهاب",
+      "details_ar": [
+        "تم نقل datetime والاستيرادات الأخرى إلى أعلى دالة school_issue_voucher لمنع أخطاء النطاق",
+        "تم إصلاح خطأ 'لا يمكن الوصول إلى متغير محلي datetime' الذي منع إصدار القسيمة",
+        "تمت إضافة تصميم CSS مناسب (wordWrap و whiteSpace) إلى نص المساعدة لتعيين متجر الطعام للذهاب",
+        "التأكد من عرض النص 'اختر كيفية تعيين المتجر لعناصر الطعام المخفضة' بالكامل على الهاتف المحمول"
+      ],
+      "impact_ar": "يمكن للمدارس ومنظمات الرعاية الآن إصدار القسائم بنجاح دون أخطاء datetime. تحسين تجربة المستخدم على الهاتف المحمول مع نص ملفوف بشكل صحيح في نموذج إصدار القسيمة.",
+      "affectedComponents_ar": "backend/src/main.py - دالة school_issue_voucher، frontend/src/App.jsx - قسم تعيين متجر الطعام للذهاب",
+      "title_pl": "Naprawiono błąd DateTime przy wydawaniu vouchera i wyświetlanie tekstu UI",
+      "description_pl": "Rozwiązano problem zakresu importu datetime powodujący niepowodzenia wydawania voucherów i naprawiono zawijanie tekstu w sekcji przypisywania sklepu Food To Go",
+      "details_pl": [
+        "Przeniesiono datetime i inne importy na górę funkcji school_issue_voucher, aby zapobiec błędom zakresu",
+        "Naprawiono błąd 'nie można uzyskać dostępu do zmiennej lokalnej datetime', który uniemożliwiał wydawanie voucherów",
+        "Dodano odpowiednie style CSS (wordWrap i whiteSpace) do tekstu pomocniczego przypisywania sklepu Food To Go",
+        "Zapewniono pełne wyświetlanie tekstu 'Wybierz sposób przypisania sklepu dla produktów spożywczych ze zniżką' na urządzeniach mobilnych"
+      ],
+      "impact_pl": "Szkoły i organizacje opieki mogą teraz pomyślnie wydawać vouchery bez błędów datetime. Ulepszone UX mobilne z prawidłowo zawijanym tekstem w formularzu wydawania voucherów.",
+      "affectedComponents_pl": "backend/src/main.py - funkcja school_issue_voucher, frontend/src/App.jsx - sekcja przypisywania sklepu Food To Go",
+      "title_ro": "Corectat eroare DateTime la emiterea voucherului și afișare text UI",
+      "description_ro": "Rezolvată problema de domeniu de import datetime care cauza eșecuri la emiterea voucherelor și corectat înfășurarea textului în secțiunea de atribuire magazin Food To Go",
+      "details_ro": [
+        "Mutat datetime și alte importuri în partea de sus a funcției school_issue_voucher pentru a preveni erori de domeniu",
+        "Corectat eroarea 'nu se poate accesa variabila locală datetime' care împiedica emiterea voucherelor",
+        "Adăugat stilizare CSS corespunzătoare (wordWrap și whiteSpace) la textul de ajutor pentru atribuirea magazinului Food To Go",
+        "Asigurat afișarea completă a textului 'Alegeți cum va fi atribuit magazinul pentru articolele alimentare reduse' pe mobil"
+      ],
+      "impact_ro": "Școlile și organizațiile de îngrijire pot acum emite cu succes vouchere fără erori datetime. UX mobil îmbunătățit cu text înfășurat corect în formularul de emitere vouchere.",
+      "affectedComponents_ro": "backend/src/main.py - funcția school_issue_voucher, frontend/src/App.jsx - secțiunea de atribuire magazin Food To Go"
+    },
+    {
+      "id": 36,
+      "date": "2026-01-15",
+      "commit": "TBD",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Duplicate Hamburger Menu in Admin Dashboard",
+      "description": "Removed duplicate hamburger menu button from Admin dashboard by consolidating language selector and sign out into the left sidebar",
+      "details": [
+        "Removed second hamburger menu button from right side of Admin header",
+        "Removed dropdown menu (language selector, version, sign out)",
+        "Moved language selector into left sidebar",
+        "Moved sign out button into left sidebar",
+        "Removed unused menuOpen state variable",
+        "Admin dashboard now has only ONE menu (left sidebar)",
+        "Updated version to 1.0.10 across all locations"
+      ],
+      "impact": "Eliminates confusion from duplicate menu buttons on Admin dashboard desktop view. Improves code cleanliness by removing unused state variables.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - Admin dashboard state management",
+        "frontend/src/App.jsx - Admin dashboard header"
+      ],
+      "userTypes": [
+        "admin"
+      ],
+      "version": "1.1.2",
+      "title_ar": "إصلاح قائمة الهامبرغر المكررة في لوحة الإدارة",
+      "description_ar": "تمت إزالة زر قائمة الهامبرغر المكرر من لوحة الإدارة عن طريق دمج محدد اللغة وتسجيل الخروج في الشريط الجانبي الأيسر",
+      "details_ar": [
+        "تمت إزالة زر قائمة الهامبرغر الثاني من الجانب الأيمن لرأس لوحة الإدارة",
+        "تمت إزالة القائمة المنسدلة (محدد اللغة، الإصدار، تسجيل الخروج)",
+        "تم نقل محدد اللغة إلى الشريط الجانبي الأيسر",
+        "تم نقل زر تسجيل الخروج إلى الشريط الجانبي الأيسر",
+        "تمت إزالة متغير حالة menuOpen غير المستخدم",
+        "لوحة الإدارة الآن لديها قائمة واحدة فقط (الشريط الجانبي الأيسر)",
+        "تم تحديث الإصدار إلى 1.0.10 في جميع المواقع"
+      ],
+      "impact_ar": "يزيل الارتباك من أزرار القائمة المكررة في عرض سطح المكتب للوحة الإدارة. يحسن نظافة الكود عن طريق إزالة متغيرات الحالة غير المستخدمة.",
+      "affectedComponents_ar": "frontend/src/App.jsx - إدارة حالة لوحة الإدارة، frontend/src/App.jsx - رأس لوحة الإدارة",
+      "title_pl": "Naprawiono zduplikowane menu hamburgerowe w panelu administratora",
+      "description_pl": "Usunięto zduplikowany przycisk menu hamburgerowego z panelu administratora poprzez konsolidację selektora języka i wylogowania w lewym pasku bocznym",
+      "details_pl": [
+        "Usunięto drugi przycisk menu hamburgerowego z prawej strony nagłówka panelu administratora",
+        "Usunięto menu rozwijane (selektor języka, wersja, wylogowanie)",
+        "Przeniesiono selektor języka do lewego paska bocznego",
+        "Przeniesiono przycisk wylogowania do lewego paska bocznego",
+        "Usunięto nieużywaną zmienną stanu menuOpen",
+        "Panel administratora ma teraz tylko JEDNO menu (lewy pasek boczny)",
+        "Zaktualizowano wersję do 1.0.10 we wszystkich lokalizacjach"
+      ],
+      "impact_pl": "Eliminuje zamieszanie wynikające ze zduplikowanych przycisków menu w widoku pulpitu panelu administratora. Poprawia czystość kodu poprzez usunięcie nieużywanych zmiennych stanu.",
+      "affectedComponents_pl": "frontend/src/App.jsx - zarządzanie stanem panelu administratora, frontend/src/App.jsx - nagłówek panelu administratora",
+      "title_ro": "Reparat meniul hamburger duplicat în panoul de administrare",
+      "description_ro": "Eliminat butonul de meniu hamburger duplicat din panoul de administrare prin consolidarea selectorului de limbă și deconectare în bara laterală stângă",
+      "details_ro": [
+        "Eliminat al doilea buton de meniu hamburger din partea dreaptă a antetului panoului de administrare",
+        "Eliminat meniul derulant (selector de limbă, versiune, deconectare)",
+        "Mutat selectorul de limbă în bara laterală stângă",
+        "Mutat butonul de deconectare în bara laterală stângă",
+        "Eliminat variabila de stare menuOpen nefolosită",
+        "Panoul de administrare are acum doar UN singur meniu (bara laterală stângă)",
+        "Actualizat versiunea la 1.0.10 în toate locațiile"
+      ],
+      "impact_ro": "Elimină confuzia din butoanele de meniu duplicate în vizualizarea desktop a panoului de administrare. Îmbunătățește curățenia codului prin eliminarea variabilelor de stare nefolosite.",
+      "affectedComponents_ro": "frontend/src/App.jsx - gestionarea stării panoului de administrare, frontend/src/App.jsx - antetul panoului de administrare"
+    },
+    {
+      "id": 35,
+      "date": "2026-01-13",
+      "commit": "8e7cd02",
+      "category": "Bug Fix",
+      "priority": "High",
+      "title": "Fixed Menu Conflict Bug and Updated Version Display to Full System Name",
+      "description": "Resolved UI conflict where left sidebar and right dropdown menu could open simultaneously, and updated version display from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.9' across all dashboards",
+      "details": [
+        "Fixed menu conflict in Admin dashboard - left sidebar now closes when right menu opens, and vice versa",
+        "Fixed menu conflict in VCFSE dashboard - left sidebar now closes when right menu opens, and vice versa",
+        "Updated version text from 'v1.0.6' to 'BAK UP E-Voucher System v1.0.9' in all sidebar/menu locations",
+        "Admin: Version displays at bottom of collapsible sidebar after System Changelog button",
+        "VCFSE: Version displays in dropdown menu before logout button",
+        "Vendor: Version displays in dropdown menu after Food To Go button",
+        "Recipient: Version displays in dropdown menu before logout button",
+        "School: Version displays in header area near logout button",
+        "Implemented mutual exclusion logic: setSidebarOpen closes menuOpen and vice versa",
+        "Prevents UI overlap and improves user experience"
+      ],
+      "impact": "Eliminates confusing UI behavior where multiple menus could overlap, improving navigation clarity. Full system name in version display provides better branding and clearer version identification for all user types.",
+      "affectedComponents": [
+        "frontend/src/App.jsx - Admin dashboard menu handlers",
+        "frontend/src/App.jsx - VCFSE dashboard menu handlers",
+        "frontend/src/App.jsx - All version display text (5 locations)"
+      ],
+      "userTypes": [
+        "admin",
+        "vcse",
+        "vendor",
+        "recipient",
+        "school"
+      ],
+      "version": "1.1.2",
+      "title_ar": "إصلاح خطأ تعارض القائمة وتحديث عرض الإصدار إلى اسم النظام الكامل",
+      "description_ar": "تم حل تعارض واجهة المستخدم حيث يمكن فتح الشريط الجانبي الأيسر والقائمة المنسدلة اليمنى في وقت واحد، وتم تحديث عرض الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' عبر جميع لوحات المعلومات",
+      "details_ar": [
+        "تم إصلاح تعارض القائمة في لوحة الإدارة - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
+        "تم إصلاح تعارض القائمة في لوحة VCFSE - يغلق الشريط الجانبي الأيسر الآن عند فتح القائمة اليمنى، والعكس صحيح",
+        "تم تحديث نص الإصدار من 'v1.0.6' إلى 'BAK UP E-Voucher System v1.0.9' في جميع مواقع الشريط الجانبي/القائمة",
+        "المسؤول: يعرض الإصدار في أسفل الشريط الجانبي القابل للطي بعد زر سجل تغييرات النظام",
+        "VCFSE: يعرض الإصدار في القائمة المنسدلة قبل زر تسجيل الخروج",
+        "البائع: يعرض الإصدار في القائمة المنسدلة بعد زر الطعام للذهاب",
+        "المستلم: يعرض الإصدار في القائمة المنسدلة قبل زر تسجيل الخروج",
+        "المدرسة: يعرض الإصدار في منطقة الرأس بالقرب من زر تسجيل الخروج",
+        "تم تنفيذ منطق الاستبعاد المتبادل: setSidebarOpen يغلق menuOpen والعكس صحيح",
+        "يمنع تداخل واجهة المستخدم ويحسن تجربة المستخدم"
+      ],
+      "impact_ar": "يزيل سلوك واجهة المستخدم المربك حيث يمكن أن تتداخل قوائم متعددة، مما يحسن وضوح التنقل. الاسم الكامل للنظام في عرض الإصدار يوفر علامة تجارية أفضل وتحديد إصدار أوضح لجميع أنواع المستخدمين.",
+      "affectedComponents_ar": "frontend/src/App.jsx - معالجات قائمة لوحة الإدارة، معالجات قائمة لوحة VCFSE، جميع نصوص عرض الإصدار (5 مواقع)",
+      "title_pl": "Naprawiono błąd konfliktu menu i zaktualizowano wyświetlanie wersji do pełnej nazwy systemu",
+      "description_pl": "Rozwiązano konflikt interfejsu użytkownika, w którym lewy pasek boczny i prawe menu rozwijane mogły otworzyć się jednocześnie, oraz zaktualizowano wyświetlanie wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.9' we wszystkich pulpitach",
+      "details_pl": [
+        "Naprawiono konflikt menu w pulpicie administratora - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
+        "Naprawiono konflikt menu w pulpicie VCFSE - lewy pasek boczny zamyka się teraz po otwarciu prawego menu i odwrotnie",
+        "Zaktualizowano tekst wersji z 'v1.0.6' na 'BAK UP E-Voucher System v1.0.9' we wszystkich lokalizacjach paska bocznego/menu",
+        "Administrator: Wersja wyświetla się na dole zwijane go paska bocznego po przycisku System Changelog",
+        "VCFSE: Wersja wyświetla się w menu rozwijanym przed przyciskiem wylogowania",
+        "Sprzedawca: Wersja wyświetla się w menu rozwijanym po przycisku Food To Go",
+        "Odbiorca: Wersja wyświetla się w menu rozwijanym przed przyciskiem wylogowania",
+        "Szkoła: Wersja wyświetla się w obszarze nagłówka w pobliżu przycisku wylogowania",
+        "Zaimplementowano logikę wzajemnego wykluczania: setSidebarOpen zamyka menuOpen i odwrotnie",
+        "Zapobiega nakładaniu się interfejsu użytkownika i poprawia doświadczenie użytkownika"
+      ],
+      "impact_pl": "Eliminuje mylące zachowanie interfejsu użytkownika, w którym wiele menu mogło się nakładać, poprawiając przejrzystość nawigacji. Pełna nazwa systemu w wyświetlaniu wersji zapewnia lepszy branding i wyraźniejszą identyfikację wersji dla wszystkich typów użytkowników.",
+      "affectedComponents_pl": "frontend/src/App.jsx - obsługa menu pulpitu administratora, obsługa menu pulpitu VCFSE, wszystkie teksty wyświetlania wersji (5 lokalizacji)",
+      "title_ro": "Remediat bug-ul de conflict de meniu și actualizat afișarea versiunii la numele complet al sistemului",
+      "description_ro": "Rezolvat conflictul UI unde bara laterală stângă și meniul drop-down drept puteau fi deschise simultan, și actualizat afișarea versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.9' pe toate panourile de control",
+      "details_ro": [
+        "Remediat conflictul de meniu în panoul de administrare - bara laterală stângă se închide acum când se deschide meniul drept și invers",
+        "Remediat conflictul de meniu în panoul VCFSE - bara laterală stângă se închide acum când se deschide meniul drept și invers",
+        "Actualizat textul versiunii de la 'v1.0.6' la 'BAK UP E-Voucher System v1.0.9' în toate locațiile barei laterale/meniului",
+        "Administrator: Versiunea se afișează în partea de jos a barei laterale pliabile după butonul System Changelog",
+        "VCFSE: Versiunea se afișează în meniul drop-down înainte de butonul de deconectare",
+        "Vânzător: Versiunea se afișează în meniul drop-down după butonul Food To Go",
+        "Destinatar: Versiunea se afișează în meniul drop-down înainte de butonul de deconectare",
+        "Școală: Versiunea se afișează în zona antetului lângă butonul de deconectare",
+        "Implementată logica de excludere mutuală: setSidebarOpen închide menuOpen și invers",
+        "Previne suprapunerea UI și îmbunătățește experiența utilizatorului"
+      ],
+      "impact_ro": "Elimină comportamentul confuz al UI unde mai multe meniuri se puteau suprapune, îmbunătățind claritatea navigării. Numele complet al sistemului în afișarea versiunii oferă un branding mai bun și o identificare mai clară a versiunii pentru toate tipurile de utilizatori.",
+      "affectedComponents_ro": "frontend/src/App.jsx - gestionare meniu panou administrare, gestionare meniu panou VCFSE, toate textele de afișare versiune (5 locații)"
+    },
     {
       "id": 34,
       "date": "2026-01-13",
@@ -2161,29 +2641,30 @@
     }
   ],
   "summary": {
-    "totalChanges": 34,
+    "totalChanges": 40,
     "categories": {
-      "Bug Fix": 8,
-      "Feature": 3,
+      "Bug Fix": 11,
+      "Feature": 4,
       "Internationalization": 11,
-      "UI Enhancement": 9,
+      "UI Enhancement": 10,
       "Configuration": 1,
       "Security": 1,
       "Deployment": 1
     },
     "priorities": {
       "Critical": 5,
-      "High": 16,
-      "Medium": 12,
+      "High": 19,
+      "Medium": 14,
       "Low": 5
     },
     "affectedUserTypes": {
       "all": 15,
-      "admin": 6,
-      "vcse": 5,
+      "admin": 7,
+      "vcse": 6,
       "recipient": 2,
-      "school": 4,
+      "school": 5,
       "vendor": 2
     }
-  }
+  },
+  "totalChanges": 44
 }

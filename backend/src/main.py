@@ -55,12 +55,12 @@ db = SQLAlchemy(app)
 # Cannot use origins=['*'] with supports_credentials=True
 CORS(app, 
      supports_credentials=True, 
-     origins=['https://backup-voucher-system-1.onrender.com', 'http://localhost:3000', 'http://localhost:5000'],
+     origins=['https://evoucher.bakupservices.co.uk', 'https://backup-voucher-system-1.onrender.com', 'http://localhost:3000', 'http://localhost:5000'],
      allow_headers=['Content-Type', 'Authorization'],
      expose_headers=['Content-Type'],
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 mail = Mail(app)
-socketio = SocketIO(app, cors_allowed_origins=['https://backup-voucher-system-1.onrender.com', 'https://app.breezeconsult.org', 'http://localhost:3000', 'http://localhost:5000'], manage_session=False)
+socketio = SocketIO(app, cors_allowed_origins=['https://evoucher.bakupservices.co.uk', 'https://backup-voucher-system-1.onrender.com', 'https://app.breezeconsult.org', 'http://localhost:3000', 'http://localhost:5000'], manage_session=False)
 
 # Session configuration for production
 # CRITICAL: Must set SECURE=True for HTTPS sites, otherwise cookies won't persist!
@@ -8556,5 +8556,5 @@ def check_and_migrate_database():
 check_and_migrate_database()
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True, allow_unsafe_werkzeug=True)
 

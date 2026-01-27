@@ -577,6 +577,7 @@ function AdminLoginPage({ onLogin, onNavigate }) {
 
 // Forgot Password Page Component
 function ForgotPasswordPage({ onNavigate }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -646,6 +647,7 @@ function ForgotPasswordPage({ onNavigate }) {
 
 // Reset Password Page Component
 function ResetPasswordPage({ token, onNavigate }) {
+  const { t } = useTranslation()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -1767,6 +1769,7 @@ function AdminDashboard({ user, onLogout }) {
   const [payoutStatusFilter, setPayoutStatusFilter] = useState('all')
   const [payoutSummary, setPayoutSummary] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     loadVcseOrgs()
@@ -2056,7 +2059,7 @@ function AdminDashboard({ user, onLogout }) {
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           </button>
           <div>
-            <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+            <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
           </div>
         </div>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
@@ -2103,6 +2106,26 @@ function AdminDashboard({ user, onLogout }) {
             <LanguageSelector />
           </div>
           
+          {/* Change Password Button */}
+          <button
+            onClick={() => {
+              setShowPasswordModal(true)
+              setSidebarOpen(false)
+            }}
+            style={{
+              ...styles.sidebarButton,
+              borderTop: '1px solid #e0e0e0',
+              marginTop: '10px'
+            }}
+          >
+            🔑 Change Password
+          </button>
+          
+          {/* Version Number */}
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>
+            BAK UP E-Voucher System v1.4.0
+          </div>
+          
           {/* Sign Out Button */}
           <button
             onClick={() => {
@@ -2128,8 +2151,6 @@ function AdminDashboard({ user, onLogout }) {
           >
             🚪 {t('common.signOut')}
           </button>
-          
-          <div style={{padding: '10px 20px', marginTop: '10px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #e0e0e0'}}>BAK UP E-Voucher System v1.2.5</div>
         </div>
       )}
       
@@ -4801,11 +4822,13 @@ function StripePaymentForm({ clientSecret, paymentIntentId, amount, onSuccess, o
         <p style={{margin: 0, fontSize: '18px', color: '#666'}}>
           🔒 <strong>Secure Payment:</strong> Powered by Stripe. Your payment information is encrypted and secure.
         </p>
-      </div>
+       </div>
+      
+      {/* Password Change Modal */}
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
     </div>
   )
 }
-
 // VCFSE DASHBOARD
 function VCSEDashboard({ user, onLogout }) {
   const { t } = useTranslation()
@@ -5182,7 +5205,7 @@ function VCSEDashboard({ user, onLogout }) {
   return (
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#4CAF50', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+        <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
         <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
           <NotificationBell apiCall={apiCall} userType="vcse" />
           <button 
@@ -5245,12 +5268,16 @@ function VCSEDashboard({ user, onLogout }) {
             onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
           >
-            🔒 {t('common.password')}
+            🔑 Change Password
           </button>
           
           <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
             <div style={{marginBottom: '5px', fontSize: '18px', color: '#666'}}>🌐 {t('common.changeLanguage')}</div>
             <LanguageSelector />
+          </div>
+          
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderBottom: '1px solid #eee'}}>
+            BAK UP E-Voucher System v1.4.0
           </div>
           
           <button
@@ -5334,22 +5361,7 @@ function VCSEDashboard({ user, onLogout }) {
               </div>
             </div>
             
-            <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px'}}>
-              <p style={{margin: 0, color: '#1565c0'}}>ℹ️ <strong>Note:</strong> You can load funds directly using a credit/debit card, or receive allocated funds from the administrator.</p>
-            </div>
-            
-            <div style={{backgroundColor: '#e8f5e9', padding: '25px', borderRadius: '12px', marginTop: '20px', border: '2px solid #4CAF50'}}>
-              <h3 style={{marginTop: 0, color: '#2e7d32'}}>🤝 {t('vcseWelcome.title')}</h3>
-              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                {t('vcseWelcome.paragraph1')}
-              </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', color: '#333'}}>
-                {t('vcseWelcome.paragraph2')}
-              </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', color: '#555'}}>
-                🌟 {t('vcseWelcome.paragraph3')}
-              </p>
-            </div>
+
           </div>
         )}
         
@@ -5766,34 +5778,7 @@ function VCSEDashboard({ user, onLogout }) {
               <p style={{margin: '10px 0 0'}}>Combined balance from admin allocation and self-loaded funds</p>
             </div>
             
-            {/* Instructions Banner */}
-            <div style={{backgroundColor: '#f3e5f5', border: '2px solid #9C27B0', borderRadius: '10px', padding: '20px', marginBottom: '20px'}}>
-              <h3 style={{color: '#7B1FA2', marginTop: 0, marginBottom: '15px', fontSize: '22px'}}>ℹ️ How to Issue Vouchers</h3>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px'}}>
-                <div>
-                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '19px'}}>👥 Single Recipient</h4>
-                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '18px', lineHeight: '1.8'}}>
-                    <li>Fill in recipient details in the form below</li>
-                    <li>Enter voucher value and expiry days</li>
-                    <li>Select which shops can accept the voucher</li>
-                    <li>Click "Issue Voucher"</li>
-                  </ol>
-                </div>
-                <div>
-                  <h4 style={{color: '#9C27B0', marginBottom: '10px', fontSize: '19px'}}>📄 Bulk Upload</h4>
-                  <ol style={{margin: 0, paddingLeft: '20px', color: '#555', fontSize: '18px', lineHeight: '1.8'}}>
-                    <li>Download the CSV template</li>
-                    <li>Fill in recipient details in Excel/Sheets</li>
-                    <li>Upload the completed CSV file</li>
-                    <li>Recipients will be created automatically</li>
-                  </ol>
-                </div>
-              </div>
-              <p style={{margin: '15px 0 0 0', fontSize: '17px', color: '#666', backgroundColor: '#fff', padding: '10px', borderRadius: '5px'}}>
-                💡 <strong>Tips:</strong> Recipients receive email & SMS notifications automatically. If an email already exists, the existing account will be used.
-              </p>
-            </div>
-            
+
             {/* Bulk Upload Section */}
             <div style={{backgroundColor: '#fff3e0', padding: '20px', borderRadius: '10px', marginBottom: '30px', border: '2px solid #ff9800'}}>
               <h3 style={{marginTop: 0, color: '#e65100'}}>📤 Bulk Upload Recipients</h3>
@@ -6561,7 +6546,14 @@ function VCSEDashboard({ user, onLogout }) {
           </div>
         )}
         
-        {/* Payment tab removed - only Admin can add funds to organization wallets */}
+        {activeTab === 'payment' && (
+          <PaymentTab user={user} onBalanceUpdate={async () => {
+            const data = await apiCall('/check-auth');
+            if (data.user) {
+              setUser(prev => ({...prev, balance: data.user.balance}));
+            }
+          }} />
+        )}
       </div>
       
       {/* Reassign Voucher Modal */}
@@ -7084,7 +7076,7 @@ function VendorDashboard({ user, onLogout }) {
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#FF9800', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div>
-          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+          <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
         </div>
         <button 
           onClick={() => setMenuOpen(!menuOpen)}
@@ -7142,7 +7134,7 @@ function VendorDashboard({ user, onLogout }) {
             onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
           >
-            🔒 {t('common.password')}
+            🔑 Change Password
           </button>
           
           <div style={{padding: '15px 20px', borderBottom: '1px solid #eee'}}>
@@ -7158,7 +7150,7 @@ function VendorDashboard({ user, onLogout }) {
           <button onClick={() => { setActiveTab('payout'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'payout' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>💰 {t('payout.requestPayout')}</button>
           <button onClick={() => { setActiveTab('togo'); setMenuOpen(false); }} style={{width: '100%', padding: '12px 20px', border: 'none', backgroundColor: activeTab === 'togo' ? '#fff3e0' : 'transparent', textAlign: 'left', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px'}}>🍔 {t('dashboard.toGo')}</button>
           
-          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.2.5</div>
+          <div style={{padding: '10px 20px', textAlign: 'center', fontSize: '0.85em', color: '#666', borderTop: '1px solid #eee'}}>BAK UP E-Voucher System v1.4.0</div>
           
           <hr style={{margin: '10px 0', border: 'none', borderTop: '1px solid #eee'}} />
           
@@ -7798,10 +7790,26 @@ function VendorDashboard({ user, onLogout }) {
                         id="payout-shop-select"
                         name="shop_id"
                         value={payoutForm.shop_id}
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const shopId = parseInt(e.target.value) || '';
                           console.log('Shop selected:', shopId, typeof shopId);
-                          setPayoutForm({...payoutForm, shop_id: shopId});
+                          
+                          // Auto-fetch shop redemption balance for security
+                          if (shopId) {
+                            try {
+                              const data = await apiCall(`/vendor/shop/${shopId}/balance`);
+                              const redeemableAmount = data.redeemable_amount || 0;
+                              setPayoutForm({...payoutForm, shop_id: shopId, amount: redeemableAmount.toFixed(2)});
+                            } catch (error) {
+                              console.error('Failed to fetch shop balance:', error);
+                              // Fallback: calculate from shops array if available
+                              const selectedShop = shops.find(s => s.id === shopId);
+                              const amount = selectedShop?.redeemable_amount || selectedShop?.total_redemptions || 0;
+                              setPayoutForm({...payoutForm, shop_id: shopId, amount: amount.toFixed(2)});
+                            }
+                          } else {
+                            setPayoutForm({...payoutForm, shop_id: shopId, amount: ''});
+                          }
                         }}
                         style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
                         required
@@ -7819,11 +7827,13 @@ function VendorDashboard({ user, onLogout }) {
                         type="number"
                         step="0.01"
                         value={payoutForm.amount}
-                        onChange={(e) => setPayoutForm({...payoutForm, amount: e.target.value})}
-                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd'}}
-                        placeholder="0.00"
+                        readOnly
+                        disabled
+                        style={{width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', backgroundColor: '#f5f5f5', cursor: 'not-allowed', color: '#333'}}
+                        placeholder="Select a shop first"
                         required
                       />
+                      <small style={{color: '#666', fontSize: '14px', marginTop: '5px', display: 'block'}}>💡 Amount auto-calculated from total redemptions at selected shop</small>
                     </div>
                     
                     <h4 style={{marginTop: '10px', marginBottom: '5px'}}>{t('payout.bankDetails')}</h4>
@@ -8318,7 +8328,7 @@ function RecipientDashboard({ user, onLogout }) {
     <div style={{minHeight: '100vh', backgroundColor: '#f5f5f5'}}>
       <div style={{backgroundColor: '#9C27B0', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px'}}>
         <div>
-          <h1 style={{margin: 0, fontSize: '1.5rem'}}>{t('dashboard.welcome')}, {user.name}</h1>
+          <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
         </div>
         <div style={{display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', position: 'relative'}}>
           <NotificationBell apiCall={apiCall} userType="recipient" />
@@ -8435,7 +8445,7 @@ function RecipientDashboard({ user, onLogout }) {
                 </select>
               </div>
 
-              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.2.5</div>
+              <div style={{padding: '10px 20px', borderBottom: '1px solid #eee', textAlign: 'center', fontSize: '0.85em', color: '#666'}}>BAK UP E-Voucher System v1.4.0</div>
 
               <button
                 onClick={() => {
@@ -9821,8 +9831,7 @@ function SchoolDashboard({ user, onLogout }) {
               ☰
             </button>
             <div>
-              <h1 style={{margin: '0 0 5px 0', fontSize: '1.5rem'}}>School/Care Organization Portal</h1>
-              <p style={{margin: 0, opacity: 0.9}}>Welcome, {organizationName || user.name}</p>
+              <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
             </div>
           </div>
           <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
@@ -9882,7 +9891,7 @@ function SchoolDashboard({ user, onLogout }) {
               </select>
             </div>
             <div style={{padding: '10px', borderTop: '1px solid #eee', fontSize: '0.85em', color: '#666', textAlign: 'center'}}>
-              BAK UP E-Voucher System v1.2.5
+              BAK UP E-Voucher System v1.4.0
             </div>
             <button
               onClick={() => {
@@ -9960,9 +9969,15 @@ function SchoolDashboard({ user, onLogout }) {
               <div style={{fontSize: '52px', fontWeight: 'bold', color: '#9C27B0', marginBottom: '10px'}}>
                 £{balance.toFixed(2)}
               </div>
-              <p style={{color: '#666', fontSize: '18px', marginBottom: 0}}>
+              <p style={{color: '#666', fontSize: '18px', marginBottom: '15px'}}>
                 💡 This balance is allocated by BAK UP administrators to support families in your community
               </p>
+              <button
+                onClick={() => setActiveTab('payment')}
+                style={{...styles.primaryButton, width: '100%', backgroundColor: '#4CAF50', fontSize: '18px'}}
+              >
+                💳 Load Funds
+              </button>
             </div>
 
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px'}}>
@@ -10021,18 +10036,7 @@ function SchoolDashboard({ user, onLogout }) {
               </div>
             </div>
 
-            <div style={{backgroundColor: '#E1BEE7', padding: '20px', borderRadius: '10px', marginTop: '20px'}}>
-              <h3 style={{marginTop: 0, color: '#6A1B9A'}}>🎓 Supporting Families Through Education & Care</h3>
-              <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                Welcome to the <strong>Northamptonshire Community E-Voucher Scheme</strong>, led by BAK UP CIC. As a school or care organisation, you play a vital role in identifying and supporting families from underrepresented communities.
-              </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6'}}>
-                Use your allocated balance to issue e-vouchers directly to families, giving them <strong>dignity and choice</strong> in accessing culturally appropriate food and essentials from local participating shops. Every voucher you issue supports both families in need and strengthens our local economy.
-              </p>
-              <p style={{margin: '10px 0', lineHeight: '1.6', fontSize: '1.25em', opacity: 0.9}}>
-                💡 Our scheme replaces traditional food parcels with flexible vouchers, respecting dietary preferences and ensuring families can choose what they truly need.
-              </p>
-            </div>
+
           </div>
         )}
 
@@ -10436,7 +10440,14 @@ function SchoolDashboard({ user, onLogout }) {
         )}
         
         {/* Payment/Load Funds Tab */}
-        {/* Payment tab removed - only Admin can add funds to organization wallets */}
+        {activeTab === 'payment' && (
+          <PaymentTab user={user} onBalanceUpdate={async () => {
+            const data = await apiCall('/check-auth');
+            if (data.user) {
+              setUser(prev => ({...prev, balance: data.user.balance}));
+            }
+          }} />
+        )}
         
         {/* Voucher Orders Tab */}
         {activeTab === 'orders' && (
