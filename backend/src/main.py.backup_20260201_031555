@@ -2053,7 +2053,7 @@ def vcse_issue_voucher():
             dob = None
             if recipient_date_of_birth:
                 try:
-                    # datetime already imported at top
+                    from datetime import datetime
                     dob = datetime.strptime(recipient_date_of_birth, '%Y-%m-%d').date()
                 except:
                     pass

@@ -8573,6 +8573,7 @@ function RecipientDashboard({ user, onLogout }) {
             {label: t('dashboard.myVouchers'), value: 'vouchers', icon: '💳'},
             {label: t('dashboard.participatingShops'), value: 'shops', icon: '🏪'},
             {label: 'Discounted Items', value: 'discounted', icon: '🎁'},
+            {label: t('dashboard.browseToGo'), value: 'togo', icon: '📱'},
             {label: t('dashboard.voucherHistory'), value: 'history', icon: '📜'},
             {label: t('dashboard.shoppingCart') + (cartCount > 0 ? ` (${cartCount})` : ''), value: 'cart', icon: '🛒'}
           ]}
@@ -9723,7 +9724,7 @@ function SchoolDashboard({ user, onLogout }) {
   const loadWalletBalance = async () => {
     try {
       const data = await apiCall('/school/wallet/balance')
-      setWalletBalance((data.current_balance || 0) + (data.allocated_balance || 0))
+      setWalletBalance(data.current_balance || 0)
       setAllocatedBalance(data.allocated_balance || 0)
       setWalletStats(data)
     } catch (error) {

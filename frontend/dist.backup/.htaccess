@@ -1,0 +1,18 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Proxy API requests to Flask backend on port 5000
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^api/(.*)$ http://localhost:5000/api/$1 [P,L]
+
+# Proxy socket.io requests to Flask backend
+RewriteCond %{REQUEST_URI} ^/socket.io/
+RewriteRule ^socket.io/(.*)$ http://localhost:5000/socket.io/$1 [P,L]
+
+# Serve React app - redirect all non-file requests to index.html
+RewriteRule ^ index.html [L]
+
+# Set CORS headers for API responses
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"

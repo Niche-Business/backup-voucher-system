@@ -1,0 +1,5 @@
+● evoucher.service - BAK UP E-Voucher
+   Loaded: loaded (/etc/systemd/system/evoucher.service; enabled; vendor preset: disabled)
+   Active: activating (auto-restart) (Result: exit-code) since Sat 2026-01-24 13:26:56 EST; 2s ago
+  Process: 1442018 ExecStart=/usr/bin/python3.9 unified_server.py [0;1;31m(code=exited, status=1/FAILURE)[0m
+ Main PID: 1442018 (code=exited, status=1/FAILURE)

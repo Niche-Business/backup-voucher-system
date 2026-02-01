@@ -1,0 +1,19 @@
+[0;1;32m●[0m evoucher.service - BAK UP E-Voucher
+   Loaded: loaded (/etc/systemd/system/evoucher.service; enabled; vendor preset: disabled)
+   Active: [0;1;32mactive (running)[0m since Sat 2026-01-24 16:45:18 EST; 3s ago
+ Main PID: 1465909 (python3.9)
+    Tasks: 4 (limit: 98209)
+   Memory: 72.8M
+   CGroup: /system.slice/evoucher.service
+           └─1465909 /usr/bin/python3.9 unified_server.py
+
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]: Frontend: React app from /home/backupse/domains/bakupservices.co.uk/public_html/evoucher/frontend/dist
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]: Server: http://0.0.0.0:5000
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]: ============================================================
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]:  * Serving Flask app 'main'
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]:  * Debug mode: off
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]: 2026-01-24 16:45:20,415 [INFO] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]:  * Running on all addresses (0.0.0.0)
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]:  * Running on http://127.0.0.1:5000
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]:  * Running on http://162.246.22.202:5000
+Jan 24 16:45:20 server.bakupservices.co.uk python3.9[1465909]: 2026-01-24 16:45:20,415 [INFO] Press CTRL+C to quit

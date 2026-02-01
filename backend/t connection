@@ -1,0 +1,10 @@
+[0;1;32m●[0m evoucher.service - BAK UP E-Voucher
+   Loaded: loaded (/etc/systemd/system/evoucher.service; enabled; vendor preset: disabled)
+   Active: [0;1;32mactive (running)[0m since Sat 2026-01-24 12:09:21 EST; 26ms ago
+ Main PID: 1435197 (python3.9)
+    Tasks: 1 (limit: 98209)
+   Memory: 4.0M
+   CGroup: /system.slice/evoucher.service
+           └─1435197 /usr/bin/python3.9 unified_server.py
+
+Jan 24 12:09:21 server.bakupservices.co.uk systemd[1]: Started BAK UP E-Voucher.
