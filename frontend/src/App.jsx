@@ -2056,7 +2056,6 @@ function AdminDashboard({ user, onLogout }) {
           >
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
             <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
-            <div style={{width: '30px', height: '3px', backgroundColor: 'white', borderRadius: '2px'}}></div>
           </button>
           <div>
             <h1 style={{margin: 0, fontSize: '1.5rem'}}>BAK UP E-Voucher System</h1>
@@ -5315,7 +5314,6 @@ function VCSEDashboard({ user, onLogout }) {
             {label: t('tabs.reports'), value: 'reports', icon: '📈'},
             {label: t('dashboard.issueVouchers'), value: 'issue', icon: '🎫'},
             {label: t('tabs.recipientsVouchers'), value: 'recipients', icon: '👥'},
-            {label: t('dashboard.toGo'), value: 'togo', icon: '📦'},
             {label: t('tabs.discountedItems'), value: 'discounted', icon: '💰'},
             {label: 'Surplus Food Collection', value: 'surplus-collection', icon: '🍞'}
           ]}
@@ -8573,6 +8571,7 @@ function RecipientDashboard({ user, onLogout }) {
             {label: t('dashboard.myVouchers'), value: 'vouchers', icon: '💳'},
             {label: t('dashboard.participatingShops'), value: 'shops', icon: '🏪'},
             {label: 'Discounted Items', value: 'discounted', icon: '🎁'},
+            {label: t('dashboard.browseToGo'), value: 'togo', icon: '📱'},
             {label: t('dashboard.voucherHistory'), value: 'history', icon: '📜'},
             {label: t('dashboard.shoppingCart') + (cartCount > 0 ? ` (${cartCount})` : ''), value: 'cart', icon: '🛒'}
           ]}
@@ -9723,8 +9722,8 @@ function SchoolDashboard({ user, onLogout }) {
   const loadWalletBalance = async () => {
     try {
       const data = await apiCall('/school/wallet/balance')
-      setWalletBalance((data.current_balance || 0) + (data.allocated_balance || 0))
-      setAllocatedBalance(data.allocated_balance || 0)
+      setWalletBalance(data.current_balance || 0)
+    const walletBalance = (data.current_balance || 0) + (data.allocated_balance || 0)
       setWalletStats(data)
     } catch (error) {
       console.error('Failed to load wallet balance:', error)
