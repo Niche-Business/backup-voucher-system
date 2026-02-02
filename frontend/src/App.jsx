@@ -5098,9 +5098,16 @@ function VCSEDashboard({ user, onLogout }) {
   const loadVendorShops = async () => {
     try {
       const data = await apiCall('/vendor/shops/all')
-      setVendorShops(data || [])
+      console.log('Loaded vendor shops:', data)
+      if (Array.isArray(data)) {
+        setVendorShops(data)
+      } else {
+        console.error('Invalid shop data format:', data)
+        setVendorShops([])
+      }
     } catch (error) {
       console.error('Failed to load vendor shops:', error)
+      setVendorShops([])
     }
   }
 
@@ -9666,6 +9673,7 @@ function SchoolDashboard({ user, onLogout }) {
   const [recipientPhone, setRecipientPhone] = useState('')
   const [recipientAddress, setRecipientAddress] = useState('')
   const [voucherAmount, setVoucherAmount] = useState('')
+  const [customAmount, setCustomAmount] = useState('')
   const [message, setMessage] = useState('')
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [showMenuDropdown, setShowMenuDropdown] = useState(false)
@@ -9780,7 +9788,7 @@ function SchoolDashboard({ user, onLogout }) {
           recipient_last_name: recipientLastName,
           recipient_phone: recipientPhone,
           recipient_address: recipientAddress,
-          amount: parseFloat(voucherAmount),
+          amount: parseFloat(voucherAmount === 'custom' ? customAmount : voucherAmount),
           assign_shop_method: assignShopMethod || 'none',
           specific_shop_id: assignShopMethod === 'specific_shop' ? parseInt(specificShopId) : null
         })
@@ -9802,6 +9810,7 @@ function SchoolDashboard({ user, onLogout }) {
       setRecipientPhone('')
       setRecipientAddress('')
       setVoucherAmount('')
+      setCustomAmount('')
       loadBalance()
       loadVouchers()
     } catch (error) {
@@ -10142,8 +10151,9 @@ function SchoolDashboard({ user, onLogout }) {
                     step="0.01"
                     min="0.01"
                     max={balance}
+                    value={customAmount}
                     placeholder="Enter custom amount"
-                    onChange={(e) => setVoucherAmount(e.target.value)}
+                    onChange={(e) => setCustomAmount(e.target.value)}
                     style={{...styles.input, marginTop: '10px'}}
                     required
                   />
