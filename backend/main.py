@@ -2932,9 +2932,9 @@ def create_payment_intent():
         if user:
             logger.info(f"[PAYMENT DEBUG] User type: {user.user_type}, Email: {user.email}")
         
-        if not user or user.user_type != 'vcse':
+        if not user or user.user_type not in ['vcse', 'school']:
             logger.error(f"[PAYMENT DEBUG] Auth failed - user: {user}, user_type: {user.user_type if user else 'N/A'}")
-            return jsonify({'error': 'Only VCFSE organizations can load funds'}), 403
+            return jsonify({'error': 'Only VCFSE organizations and Schools can load funds'}), 403
         
         data = request.get_json()
         amount = data.get('amount')
@@ -2999,8 +2999,8 @@ def verify_payment():
             return jsonify({'error': 'Not authenticated'}), 401
         
         user = User.query.get(user_id)
-        if not user or user.user_type != 'vcse':
-            return jsonify({'error': 'Only VCFSE organizations can load funds'}), 403
+        if not user or user.user_type not in ['vcse', 'school']:
+            return jsonify({'error': 'Only VCFSE organizations and Schools can load funds'}), 403
         
         data = request.get_json()
         payment_intent_id = data.get('payment_intent_id')
