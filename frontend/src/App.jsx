@@ -5404,13 +5404,28 @@ function VCSEDashboard({ user, onLogout }) {
               
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
                 <strong>Total Vouchers: {vouchers.length}</strong>
-                <a 
-                  href="/api/vcse/export-vouchers" 
-                  download
-                  style={{...styles.primaryButton, textDecoration: 'none', display: 'inline-block', backgroundColor: '#2e7d32'}}
+                <button
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/vcse/export-vouchers', { credentials: 'include' });
+                      if (!response.ok) throw new Error('Export failed');
+                      const blob = await response.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `vcse_vouchers_${new Date().toISOString().slice(0,10)}.xlsx`;
+                      document.body.appendChild(a);
+                      a.click();
+                      a.remove();
+                      window.URL.revokeObjectURL(url);
+                    } catch (err) {
+                      alert('Export failed: ' + err.message);
+                    }
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#2e7d32'}}
                 >
                   📄 Export to Excel
-                </a>
+                </button>
               </div>
               
               {vouchers.length === 0 ? (
@@ -8769,32 +8784,7 @@ function RecipientDashboard({ user, onLogout }) {
                             >
                               📄 Download PDF
                             </button>
-                            <button 
-                              onClick={async () => {
-                                try {
-                                  const response = await fetch(`/api/recipient/vouchers/${voucher.id}/resend-sms`, {
-                                    method: 'POST',
-                                    credentials: 'include'
-                                  })
-                                  const data = await response.json()
-                                  if (!response.ok) throw new Error(data.error || 'Failed to send SMS')
-                                  alert('✅ SMS sent successfully!')
-                                } catch (error) {
-                                  alert('Failed to send SMS: ' + error.message)
-                                }
-                              }}
-                              style={{
-                                ...styles.primaryButton,
-                                backgroundColor: '#9C27B0',
-                                padding: '10px 20px',
-                                fontSize: '18px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '5px'
-                              }}
-                            >
-                              💬 Resend SMS
-                            </button>
+
                           </div>
                         )}
                       </div>
@@ -10492,13 +10482,28 @@ function SchoolDashboard({ user, onLogout }) {
               
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
                 <strong>Total Vouchers: {vouchers.length}</strong>
-                <a 
-                  href="/api/school/export-vouchers" 
-                  download
-                  style={{...styles.primaryButton, textDecoration: 'none', display: 'inline-block', backgroundColor: '#2e7d32'}}
+                <button
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/school/export-vouchers', { credentials: 'include' });
+                      if (!response.ok) throw new Error('Export failed');
+                      const blob = await response.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `voucher_orders_${new Date().toISOString().slice(0,10)}.xlsx`;
+                      document.body.appendChild(a);
+                      a.click();
+                      a.remove();
+                      window.URL.revokeObjectURL(url);
+                    } catch (err) {
+                      alert('Export failed: ' + err.message);
+                    }
+                  }}
+                  style={{...styles.primaryButton, backgroundColor: '#2e7d32'}}
                 >
                   📄 Export to Excel
-                </a>
+                </button>
               </div>
               
               {vouchers.length === 0 ? (

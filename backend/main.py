@@ -5894,6 +5894,90 @@ def get_school_to_go_items():
 
 
 # ============================================
+# School Export Vouchers Route
+# ============================================
+
+@app.route('/api/school/export-vouchers', methods=['GET'])
+def school_export_vouchers():
+    """Export all vouchers issued by this school to Excel"""
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment
+        from io import BytesIO
+        from flask import send_file
+        
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        user = User.query.get(user_id)
+        if not user or user.user_type != 'school':
+            return jsonify({'error': 'School/Care Organization access required'}), 403
+        
+        # Get all vouchers issued by this school
+        vouchers = Voucher.query.filter_by(issued_by=user_id).order_by(Voucher.created_at.desc()).all()
+        
+        # Create Excel workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Voucher Orders"
+        
+        # Header styling
+        header_fill = PatternFill(start_color="1565C0", end_color="1565C0", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+        
+        # Headers
+        headers = ['Voucher Code', 'Recipient Name', 'Email', 'Phone', 'Value (£)', 'Status', 'Issue Date', 'Expiry Date', 'Redeemed Date']
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+        
+        # Data rows
+        for row_idx, voucher in enumerate(vouchers, 2):
+            recipient = User.query.get(voucher.recipient_id)
+            
+            ws.cell(row=row_idx, column=1, value=voucher.code)
+            ws.cell(row=row_idx, column=2, value=f"{recipient.first_name} {recipient.last_name}" if recipient else 'Unknown')
+            ws.cell(row=row_idx, column=3, value=recipient.email if recipient else '')
+            ws.cell(row=row_idx, column=4, value=recipient.phone if recipient else '')
+            ws.cell(row=row_idx, column=5, value=float(voucher.value))
+            ws.cell(row=row_idx, column=6, value=voucher.status.upper())
+            ws.cell(row=row_idx, column=7, value=voucher.created_at.strftime('%Y-%m-%d %H:%M') if voucher.created_at else '')
+            ws.cell(row=row_idx, column=8, value=voucher.expiry_date.strftime('%Y-%m-%d') if voucher.expiry_date else '')
+            ws.cell(row=row_idx, column=9, value=voucher.redeemed_date.strftime('%Y-%m-%d %H:%M') if hasattr(voucher, 'redeemed_date') and voucher.redeemed_date else '-')
+        
+        # Auto-adjust column widths
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if cell.value and len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        # Save to BytesIO
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=f'voucher_orders_{datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.xlsx'
+        )
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to export vouchers: {str(e)}'}), 500
+
+
+# ============================================
 # Vendor Voucher Redemption Routes
 # ============================================
 
@@ -6208,11 +6292,11 @@ def get_recipient_shops():
 
 @app.route('/api/recipient/to-go-items', methods=['GET'])
 def get_recipient_to_go_items():
-    """Get discounted items + unclaimed free items (after 5-hour VCFSE priority window)"""
+    """Get discounted items only - recipients do not see free VCFSE items"""
     try:
         from datetime import datetime, timedelta
         
-        # Get discounted items (always visible to recipients)
+        # Get discounted items only (recipients never see free VCFSE items)
         # Must have item_type='discount' AND have a price > 0
         discounted_items = SurplusItem.query.filter(
             SurplusItem.status == 'available',
@@ -6220,29 +6304,13 @@ def get_recipient_to_go_items():
             SurplusItem.price > 0
         ).all()
         
-        # Get free items that have been posted for more than 5 hours (unclaimed by VCFSE)
-        # Must have item_type='free' AND price = 0 or NULL
-        five_hours_ago = datetime.utcnow() - timedelta(hours=5)
-        unclaimed_free_items = SurplusItem.query.filter(
-            SurplusItem.status == 'available',
-            SurplusItem.item_type == 'free',
-            db.or_(SurplusItem.price == 0, SurplusItem.price == None),
-            SurplusItem.posted_at <= five_hours_ago
-        ).all()
-        
-        # Combine both lists
-        all_items = list(discounted_items) + list(unclaimed_free_items)
+        # Only discounted items for recipients - no free items
+        all_items = list(discounted_items)
         items_data = []
         
         for item in all_items:
             # Get shop information
             shop = VendorShop.query.get(item.shop_id)
-            
-            # Calculate hours since posted (for unclaimed free items)
-            hours_since_posted = None
-            if item.item_type == 'free' and item.posted_at:
-                time_diff = datetime.utcnow() - item.posted_at
-                hours_since_posted = round(time_diff.total_seconds() / 3600, 1)
             
             items_data.append({
                 'id': item.id,
@@ -6250,7 +6318,7 @@ def get_recipient_to_go_items():
                 'quantity': item.quantity,
                 'category': item.category,
                 'description': item.description or '',
-                'item_type': item.item_type or 'free',
+                'item_type': 'discount',
                 'price': float(item.price) if item.price else 0.0,
                 'original_price': float(item.original_price) if item.original_price else 0.0,
                 'quantity_available': item.quantity or '0',
@@ -6259,8 +6327,7 @@ def get_recipient_to_go_items():
                 'shop_city': shop.city if shop else '',
                 'shop_postcode': shop.postcode if shop else '',
                 'posted_at': item.posted_at.isoformat() if item.posted_at else None,
-                'hours_since_posted': hours_since_posted,
-                'is_unclaimed_free': item.item_type == 'free'
+                'is_unclaimed_free': False
             })
         
         return jsonify({'items': items_data}), 200
