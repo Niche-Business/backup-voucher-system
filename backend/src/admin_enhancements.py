@@ -308,8 +308,6 @@ def init_admin_enhancements(app, db, User, VendorShop, Voucher, Transaction, ema
     # ============================================
     
     @app.route("/api/admin/broadcast", methods=["POST"])
-    @login_required
-    @admin_required
     def admin_broadcast_message():
         """
         Send broadcast messages to selected user groups

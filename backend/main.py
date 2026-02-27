@@ -7103,8 +7103,6 @@ def admin_edit_shop(shop_id):
 
 
 @app.route('/api/admin/shops/<int:shop_id>', methods=['DELETE'])
-@login_required
-@admin_required
 def admin_delete_shop(shop_id):
     """Admin deletes a local shop"""
     try:
