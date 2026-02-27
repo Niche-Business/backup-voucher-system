@@ -1728,6 +1728,7 @@ function Dashboard({ user, onLogout }) {
   console.log('Dashboard received user:', user)
   console.log('User type:', user.userType)
   if (user.userType === 'admin') return <AdminDashboard user={user} onLogout={onLogout} />
+  if (user.userType === 'school') return <SchoolDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vcse') return <VCSEDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'vendor') return <VendorDashboard user={user} onLogout={onLogout} />
   if (user.userType === 'recipient') return <RecipientDashboard user={user} onLogout={onLogout} />
@@ -6551,7 +6552,7 @@ function VCSEDashboard({ user, onLogout }) {
           </div>
         )}
         
-        {activeTab === 'payment' && (
+        {activeTab === 'payment' && user.userType !== 'school' && (
           <PaymentTab user={user} onBalanceUpdate={async () => {
             const data = await apiCall('/check-auth');
             if (data.user) {
@@ -10448,7 +10449,7 @@ function SchoolDashboard({ user, onLogout }) {
         )}
         
         {/* Payment/Load Funds Tab */}
-        {activeTab === 'payment' && (
+        {activeTab === 'payment' && user.userType !== 'school' && (
           <PaymentTab user={user} onBalanceUpdate={async () => {
             const data = await apiCall('/check-auth');
             if (data.user) {

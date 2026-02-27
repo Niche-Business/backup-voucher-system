@@ -5331,6 +5331,19 @@ def vcse_accept_food_item():
                 'collection_time': collection_dt.isoformat(),
                 'message': f"{user.first_name} {user.last_name} will collect {item.item_name} at {collection_dt.strftime('%I:%M %p')}"
             }, room=f'vendor_{vendor.id}')
+
+            # Send email notification to vendor
+            email_service.send_email(
+                vendor.email,
+                'Surplus Food Item Accepted',
+                f"Your surplus food item '{item.item_name}' has been accepted for collection by {user.organization_name}. They will collect it at {collection_dt.strftime('%I:%M %p')}."
+            )
+
+            # Send SMS notification to vendor
+            sms_service.send_sms(
+                vendor.phone,
+                f"Surplus food item '{item.item_name}' accepted for collection by {user.organization_name} at {collection_dt.strftime('%I:%M %p')}."
+            )
         
         # Send notification to admin
         socketio.emit('food_item_accepted', {
@@ -5406,6 +5419,19 @@ def vcse_mark_collected():
                 'vcse_name': f"{user.first_name} {user.last_name}",
                 'message': f"{user.first_name} {user.last_name} collected {item.item_name}"
             }, room=f'vendor_{vendor.id}')
+
+            # Send email notification to vendor
+            email_service.send_email(
+                vendor.email,
+                'Surplus Food Item Accepted',
+                f"Your surplus food item '{item.item_name}' has been accepted for collection by {user.organization_name}. They will collect it at {collection_dt.strftime('%I:%M %p')}."
+            )
+
+            # Send SMS notification to vendor
+            sms_service.send_sms(
+                vendor.phone,
+                f"Surplus food item '{item.item_name}' accepted for collection by {user.organization_name} at {collection_dt.strftime('%I:%M %p')}."
+            )
         
         # Send notification to admin
         socketio.emit('food_item_collected', {
@@ -7077,6 +7103,8 @@ def admin_edit_shop(shop_id):
 
 
 @app.route('/api/admin/shops/<int:shop_id>', methods=['DELETE'])
+@login_required
+@admin_required
 def admin_delete_shop(shop_id):
     """Admin deletes a local shop"""
     try:
