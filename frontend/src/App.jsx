@@ -8939,133 +8939,6 @@ function RecipientDashboard({ user, onLogout }) {
           </div>
         )}
         
-        {activeTab === 'togo' && (
-          <div>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
-              <div>
-                <h2 style={{margin: 0}}>🍎 {t('dashboard.browseToGo')} ({toGoItems.length})</h2>
-                <p style={{margin: '5px 0 0 0', color: '#666'}}>Discounted surplus food items from local shops</p>
-              </div>
-              <button
-                onClick={() => setSoundEnabled(!soundEnabled)}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: soundEnabled ? '#4CAF50' : '#9e9e9e',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                title={soundEnabled ? 'Disable notification sounds' : 'Enable notification sounds'}
-              >
-                {soundEnabled ? '🔔' : '🔕'} {soundEnabled ? 'Sound ON' : 'Sound OFF'}
-              </button>
-            </div>
-            
-            {/* Informative Banner */}
-            <div style={{
-              backgroundColor: '#e3f2fd',
-              padding: '20px',
-              borderRadius: '10px',
-              marginBottom: '20px',
-              border: '2px solid #2196F3'
-            }}>
-              <h3 style={{margin: '0 0 10px 0', color: '#1976d2', fontSize: '22px'}}>ℹ️ How "Browse Food To Go" Works</h3>
-              <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
-                <strong>Browse Food To Go</strong> displays <strong>discounted surplus food items</strong> that participating shops have actively posted, 
-                plus <strong style={{color: '#FF9800'}}>🆓 FREE items</strong> that were originally posted for VCFSE organizations but remain unclaimed after 5 hours.
-              </p>
-              <p style={{margin: '0 0 10px 0', color: '#555', lineHeight: '1.6'}}>
-                While there are {shops.length} participating shops in total, only shops that have posted available items will appear here.
-              </p>
-              <p style={{margin: '0', color: '#555', lineHeight: '1.6'}}>
-                💡 <strong>Tip:</strong> Check back regularly! Shops post new items throughout the day as surplus becomes available. 
-                You can also enable sound notifications above to be alerted when new items are posted.
-              </p>
-            </div>
-            
-            <div style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
-              {toGoItems.length === 0 ? (
-                <p>{t('dashboard.noToGoItems')}</p>
-              ) : (
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '15px'}}>
-                  {toGoItems.map(item => {
-                    const isUnclaimedFree = item.is_unclaimed_free || item.item_type === 'free';
-                    const borderColor = isUnclaimedFree ? '#FF9800' : '#9C27B0';
-                    const bgColor = isUnclaimedFree ? '#fff3e0' : '#f3e5f5';
-                    const titleColor = isUnclaimedFree ? '#FF9800' : '#9C27B0';
-                    
-                    return (
-                    <div key={item.id} style={{padding: '20px', border: `2px solid ${borderColor}`, borderRadius: '10px', backgroundColor: bgColor}}>
-                      {isUnclaimedFree && (
-                        <div style={{
-                          backgroundColor: '#FF9800',
-                          color: 'white',
-                          padding: '8px 12px',
-                          borderRadius: '5px',
-                          marginBottom: '10px',
-                          fontSize: '18px',
-                          fontWeight: 'bold',
-                          textAlign: 'center'
-                        }}>
-                          🆓 FREE - Unclaimed VCFSE Item (Posted {item.hours_since_posted}h ago)
-                        </div>
-                      )}
-                      <h3 style={{margin: '0 0 10px 0', color: titleColor}}>{item.item_name}</h3>
-                      <p style={{margin: '8px 0', fontSize: '20px', fontWeight: 'bold', color: isUnclaimedFree ? '#FF9800' : '#4CAF50'}}>
-                        {isUnclaimedFree ? '🆓 FREE' : `💰 £${item.price ? item.price.toFixed(2) : '0.00'} per ${item.unit || 'unit'}`}
-                      </p>
-                      <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>{t('recipient.available')}</strong> {item.quantity} {item.unit}
-                      </p>
-                      <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>{t('recipient.category')}</strong> {item.category}
-                      </p>
-                      <p style={{margin: '5px 0', fontSize: '18px'}}>
-                        <strong>{t('recipient.description')}</strong> {item.description || t('recipient.freshReady')}
-                      </p>
-                      <div style={{marginTop: '15px', padding: '15px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0'}}>
-                        <p style={{margin: '3px 0', fontSize: '18px', fontWeight: 'bold', color: '#1976d2'}}>
-                          🏪 {item.shop_name}
-                        </p>
-                        <p style={{margin: '3px 0', fontSize: '17px'}}>
-                          📍 {item.shop_address}
-                        </p>
-                        <p style={{margin: '3px 0', fontSize: '17px'}}>
-                          📞 {item.shop_phone}
-                        </p>
-                      </div>
-                      <div style={{marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                        <button 
-                          onClick={() => addToCart(item.id)}
-                          style={{
-                            ...styles.primaryButton,
-                            backgroundColor: isUnclaimedFree ? '#FF9800' : '#4CAF50',
-                            width: '100%',
-                            padding: '12px',
-                            fontSize: '20px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                         {isUnclaimedFree ? '🆓 Collect FREE Item' : `🛍️ ${t('recipient.addToCart')}`}
-                        </button>
-                        <p style={{fontSize: '16px', color: '#666', fontStyle: 'italic', textAlign: 'center', margin: 0}}>
-                          {isUnclaimedFree ? '🆓 No voucher needed - completely FREE!' : `💳 ${t('recipient.useVoucher')}`}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
         
         {activeTab === 'cart' && (
           <div>
@@ -9074,12 +8947,6 @@ function RecipientDashboard({ user, onLogout }) {
               {cart.length === 0 ? (
                 <div style={{textAlign: 'center', padding: '40px'}}>
                   <p style={{fontSize: '22px', color: '#666'}}>{t('dashboard.emptyCart')}</p>
-                  <button 
-                    onClick={() => setActiveTab('togo')}
-                    style={{...styles.primaryButton, marginTop: '20px'}}
-                  >
-                    {t('dashboard.browseToGo')}
-                  </button>
                 </div>
               ) : (
                 <div>
@@ -9157,7 +9024,7 @@ function RecipientDashboard({ user, onLogout }) {
                         {t('cart.viewVouchers')}
                       </button>
                       <button
-                        onClick={() => setActiveTab('togo')}
+                        onClick={() => setActiveTab('discounted')}
                         style={{...styles.primaryButton, backgroundColor: '#4CAF50'}}
                       >
                         {t('cart.continueShopping')}
