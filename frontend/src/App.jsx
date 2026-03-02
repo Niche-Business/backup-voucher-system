@@ -8594,7 +8594,6 @@ function RecipientDashboard({ user, onLogout }) {
             {label: t('dashboard.myVouchers'), value: 'vouchers', icon: '💳'},
             {label: t('dashboard.participatingShops'), value: 'shops', icon: '🏪'},
             {label: 'Discounted Items', value: 'discounted', icon: '🎁'},
-            {label: t('dashboard.browseToGo'), value: 'togo', icon: '📱'},
             {label: t('dashboard.voucherHistory'), value: 'history', icon: '📜'},
             {label: t('dashboard.shoppingCart') + (cartCount > 0 ? ` (${cartCount})` : ''), value: 'cart', icon: '🛒'}
           ]}
@@ -8755,7 +8754,7 @@ function RecipientDashboard({ user, onLogout }) {
                             <button 
                               onClick={async () => {
                                 try {
-                                  const response = await fetch(`/api/vcse/voucher-pdf/${voucher.id}`, {
+                                  const response = await fetch(`/api/recipient/vouchers/${voucher.id}/pdf`, {
                                     credentials: 'include'
                                   })
                                   if (!response.ok) throw new Error('Failed to download PDF')
